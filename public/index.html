@@ -1,0 +1,2105 @@
+2<!DOCTYPE html>
+<html>
+<!-- Descargar SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<head>
+  <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <!-- Agrega el SDK de Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Cloud Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+  <!-- Agrega la biblioteca para enviar correos -->  
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+  <!-- ACÁ SE PUEDE ENCONTRAR LA CONFIGURACIÓN INICIAL DE FIREBASE PARA ACCEDER AL PROYECTO -->
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
+      authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
+      projectId: "bddreservaaneiapuninorte",
+      storageBucket: "bddreservaaneiapuninorte.appspot.com",
+      messagingSenderId: "227754886829",
+      appId: "1:227754886829:web:00047755b1aaa727242824",
+      measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
+  </script>
+
+
+  <title>SIEA (Sistema Integrado de Espacios ANEIAP)</title>
+  <style>
+    /* Estilos para el contenedor de la imagen */
+    .centered-text {
+      text-align: center;
+    }
+    .image-container {
+      display: flex;
+      justify-content: center;
+    }
+    .image-container img {
+      max-width: 15%; /* Ajusta el valor según tus preferencias */
+      height: auto; /* Mantiene la proporción de aspecto original */
+    }
+    /* Estilos para el cuadro de datos generales del evento */
+    .datos-generales,
+    .datos-organizador,
+    .datos-ponente {
+      background-color: rgb(253, 198, 166);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    /* Estilos para los campos de formulario */
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    select, textarea, input[type="text"], input[type="date"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      margin-top: 5px;
+      font-size: 18px;
+    }
+    h2 {
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+    .reserva {
+      background-color: darkgreen;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .row .half {
+      width: 48%;
+    }
+    .third {
+      flex-basis: 33.33%;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    .disponibilidad-group {
+      margin-bottom: 15px;
+      background-color: #c3d6ff; /* Color de fondo azul muy claro */
+      padding: 10px;
+      border: 1px solid #0004ff; /* Borde azul */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }    
+    .reservar-group {
+      margin-bottom: 15px;
+      background-color: #a8f7a1; /* Color de fondo verde muy claro */
+      padding: 10px;
+      border: 1px solid #15ff00; /* Borde verde claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .editar-group {
+      margin-bottom: 15px;
+      background-color: #ffc67c; /* Color de fondo naranja muy claro */
+      padding: 10px;
+      border: 1px solid #ff9100; /* Borde naranja claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .eliminar-group {
+      margin-bottom: 15px;
+      background-color: #fd8c8ca4; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #ff0000a4; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .radio-buttons-container {
+          display: flex;
+          justify-content: center;
+          gap: 20px; /* Espacio entre los botones SÍ y NO */
+        }
+        .custom-file-input {
+      display: inline-block;
+      position: relative;
+    }
+    .custom-file-input input[type="file"] {
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+    .custom-file-input label {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }    
+    .field-container {
+      background-color: #fff;
+      padding: 10px; /* Ajusta el valor según el espacio deseado entre el contenido y el borde */
+      border-radius: 5px; /* Ajusta el valor para cambiar la curvatura de las esquinas */
+    }
+    .acordeon0 {
+      background-color: rgb(17, 0, 255);
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .acordeon0-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .acordeon1 {
+      background-color: rgb(0, 141, 37);
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .acordeon1-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .acordeon2 {
+      background-color: orange;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .acordeon2-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .acordeon3 {
+      background-color: red;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .acordeon3-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .button-reservar {
+      background-color: rgb(0, 141, 37);
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+    }
+    .button-consultar {
+      background-color: orange;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+    }
+    .button-eliminar {
+      background-color: red;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+    }
+    
+    .disponibilidad-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .disponibilidad-item {
+      width: 100px;
+      height: 50px;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .disponibilidad-item.green {
+      background-color: green;
+    }
+    .disponibilidad-item.red {
+      background-color: red;
+    }
+    .disponibilidad-item.gray {
+      background-color: rgb(185, 185, 185);
+    }
+  </style>
+</head>
+<body>
+  <!-- Proceso para insertar el logo de la herramienta y adicionalmente detalles iniciales y generales de la página -->
+  <h1 style="text-align: center;">Bienvenido a SIEA (Sistema Integrado de Espacios ANEIAP)</h1>
+  <div class="image-container">
+    <img src="https://drive.google.com/uc?id=1L-NkVXT382o6UtiyNPTGCSSi-PYgFvJG" alt="Descripción de la imagen">
+  </div>
+  <div class="disponibilidad-group">
+  <label for="texto1"><b>I  N  S  T  R  U  C  C  IO  N  E  S      G  E  N  E  R  A  L  E  S:</b></label>
+  <div class="row">
+  <div class="half">
+  <label for="texto2"><b>- Todo campo con un asterisco (*) es obligatorio diligenciarlo.</b></label>
+  <label for="texto3"><b>- Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
+  </div>
+  <div class="half">
+  <label for="texto4"><b>- Las claves de eventos son personales e intransferibles.</b></label>
+  <label for="texto5"><b>- Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
+  </div>
+  </div>
+  <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
+  <label for="texto7"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
+  </div>
+
+  <!-- DETALLES DEL ACORDEÓN 0 QUE CORRESPONDE A CONSULTAR LA DISPONIBILIDAD DE RESERVAS-->
+  <div class="acordeon0" onclick="toggleConsultaDisponibilidad()">CLICK AQUÍ PARA CONSULTAR DISPONIBILIDAD</div>
+  <div id="acordeon0-content" style="display: none;">
+    <div class="acordeon0-content-inner">
+      <div class="disponibilidad-group">
+      <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
+      <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
+      <button class="button-reservar" onclick="ConsultarDisponibilidadReservas()">Consultar la disponibilidad de reservas</button>
+      <div class="disponibilidad-container">
+        <!-- Lógica para mostrar la disponibilidad -->
+        <div class="disponibilidad-item gray">08:00 - 08:30</div>
+        <div class="disponibilidad-item gray">08:30 - 09:00</div>
+        <div class="disponibilidad-item gray">09:00 - 09:30</div>
+        <div class="disponibilidad-item gray">09:30 - 10:00</div>
+        <div class="disponibilidad-item gray">10:00 - 10:30</div>
+        <div class="disponibilidad-item gray">10:30 - 11:00</div>
+        <div class="disponibilidad-item gray">11:00 - 11:30</div>
+        <div class="disponibilidad-item gray">11:30 - 12:00</div>
+        <div class="disponibilidad-item gray">12:00 - 12:30</div>
+        <div class="disponibilidad-item gray">12:30 - 13:00</div>
+        <div class="disponibilidad-item gray">13:00 - 13:30</div>
+        <div class="disponibilidad-item gray">13:30 - 14:00</div>
+        <div class="disponibilidad-item gray">14:00 - 14:30</div>
+        <div class="disponibilidad-item gray">14:30 - 15:00</div>
+        <div class="disponibilidad-item gray">15:00 - 15:30</div>
+        <div class="disponibilidad-item gray">15:30 - 16:00</div>
+        <div class="disponibilidad-item gray">16:00 - 16:30</div>
+        <div class="disponibilidad-item gray">16:30 - 17:00</div>
+        <div class="disponibilidad-item gray">17:00 - 17:30</div>
+        <div class="disponibilidad-item gray">17:30 - 18:00</div>
+        <div class="disponibilidad-item gray">18:00 - 18:30</div>
+        <div class="disponibilidad-item gray">18:30 - 19:00</div>
+        <div class="disponibilidad-item gray">19:00 - 19:30</div>
+        <div class="disponibilidad-item gray">19:30 - 20:00</div>
+        <div class="disponibilidad-item gray">20:00 - 20:30</div>
+        <div class="disponibilidad-item gray">20:30 - 21:00</div>
+        <div class="disponibilidad-item gray">21:00 - 21:30</div>
+        <div class="disponibilidad-item gray">21:30 - 22:00</div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- DETALLES DEL ACORDEÓN 1 QUE CORRESPONDE A REGISTRAR LA RESERVA DEL EVENTO-->
+  <div class="acordeon1" onclick="toggleRegistrarEvento()">CLICK AQUÍ PARA REGISTRAR TU EVENTO</div>
+  <div id="acordeon1-content" style="display: none;">
+    <div class="acordeon1-content-inner">
+      <div class="reservar-group">
+      <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL EVENTO</p></h2>
+      <div class="row">
+      <div class="half">
+      <label for="nombre-evento"><b>Nombre del evento: *</b></label>
+      <input type="text" id="nombre-evento" placeholder="Ingresa el nombre de tu evento.">
+      <label for="fecha-evento"><b>Fecha del evento: *</b></label>
+      <input type="date" id="fecha-evento">
+      <label for="hora-evento"><b>Hora del evento: *</b></label>
+      <select id="hora-evento">
+        <option value="" disabled selected hidden>Selecciona la hora de la reserva.</option>
+        <option value="480">08:00</option>
+        <option value="510">08:30</option>
+        <option value="540">09:00</option>
+        <option value="570">09:30</option>
+        <option value="600">10:00</option>
+        <option value="630">10:30</option>
+        <option value="660">11:00</option>
+        <option value="690">11:30</option>
+        <option value="720">12:00</option>
+        <option value="750">12:30</option>
+        <option value="780">13:00</option>
+        <option value="810">13:30</option>
+        <option value="840">14:00</option>
+        <option value="870">14:30</option>
+        <option value="900">15:00</option>
+        <option value="930">15:30</option>
+        <option value="960">16:00</option>
+        <option value="990">16:30</option>
+        <option value="1020">17:00</option>
+        <option value="1050">17:30</option>
+        <option value="1080">18:00</option>
+        <option value="1110">18:30</option>
+        <option value="1140">19:00</option>
+        <option value="1170">19:30</option>
+        <option value="1200">20:00</option>
+        <option value="1230">20:30</option>
+        <option value="1260">21:00</option>
+      </select>
+      </div>
+      <div class="half">
+      <label for="duracion-evento"><b>Duración del evento (en horas): *</b></label>
+      <select id="duracion-evento">
+        <option value="" disabled selected hidden>Selecciona la duración del evento.</option>
+        <option value="30">media hora</option>
+        <option value="60">1 hora</option>
+        <option value="90">1 hora y media</option>
+        <option value="120">2 horas</option>
+        <option value="150">2 horas y media</option>
+        <option value="180">3 horas</option>
+        <option value="210">3 horas y media</option>
+        <option value="240">4 horas</option>
+        <option value="270">4 horas y media</option>
+        <option value="300">5 horas</option>
+        <option value="330">5 horas y media</option>
+        <option value="360">6 horas</option>
+      </select>
+      <label for="modalidad-evento"><b>Modalidad del evento: *</b></label>
+      <select id="modalidad-evento" onchange="toggleUbicacionPlataforma()">
+        <option value="" disabled selected hidden>Selecciona la modalidad del evento.</option>
+        <option value="virtual">Virtual</option>
+        <option value="presencial">Presencial</option>
+      </select>
+      <div id="ubicacion-plataforma-container" style="display: none;">
+        <label for="ubicacion-plataforma"><b>Ubicación/Plataforma en la reserva: *</b></label>
+        <select id="ubicacion-plataforma">
+          <option value="" disabled selected hidden>Selecciona la plataforma para el evento.</option>
+          <option value="meet">Meet</option>
+          <option value="zoom">Zoom</option>
+          <option value="teams">Teams</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div id="lugar-presencial-container" style="display: none;">
+        <label for="lugar-presencial"><b>Especifica el lugar físico del evento en la reserva: *</b></label>
+        <input type="text" id="lugar-presencial" placeholder="Escribe el lugar donde el evento se realizará.">
+      </div>
+      </div>
+      </div>
+      <div class="row">
+      <div class="half">
+      <label for="plan-evento"><b>Plan del evento: *</b></label>
+      <textarea id="plan-evento" rows="5" placeholder="Detalla el paso a paso de lo que se realizará en el evento y cuáles son las estrategias para garantizar que este sí se lleve a cabo de forma exitosa."></textarea>
+      </div>
+      <div class="half">
+      <label for="observaciones-evento"><b>Observaciones del evento:</b></label>
+      <textarea id="observaciones-evento" rows="5" placeholder="Especifica cualquier observación adicional que desees que sea tenida en cuenta para el desarrollo del evento."></textarea>
+      </div>
+      </div>
+      <div class="row">
+        <div class="half">
+          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL ORGANIZADOR</p></h2>
+          <label for="nombre-organizador"><b>Nombre del organizador: *</b></label>
+          <input type="text" id="nombre-organizador" placeholder="Ingresa tu nombre.">
+          <label for="email-organizador"><b>Email del organizador: *</b></label>
+          <input type="email" id="email-organizador" placeholder="Ingresa tu email.">
+          <label for="telefono-organizador"><b>Teléfono del organizador: *</b></label>
+          <input type="tel" id="telefono-organizador" placeholder="Ingresa tu número de teléfono.">
+        </div>
+        <div class="half">
+          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL PONENTE</p></h2>
+          <label for="nombre-ponente"><b>Nombre del ponente: *</b></label>
+          <input type="text" id="nombre-ponente" placeholder="Ingresa el nombre del ponente.">
+          <label for="email-ponente"><b>Email del ponente:</b></label>
+          <input type="email" id="email-ponente" placeholder="Ingresa el email del ponente.">
+          <label for="telefono-ponente"><b>Teléfono del ponente:</b></label>
+          <input type="tel" id="telefono-ponente" placeholder="Ingresa el número de teléfono del ponente.">
+        </div>
+      </div>
+      <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS PARA EL COMITÉ DE PIEZAS</p></h2>
+      <div class="row">
+        <div class="third">
+          <label for="publicidad-comite"><b>¿Deseas que el comité de piezas capitular te realice la publicidad del espacio? *</b></label>
+          <select id="publicidad-comite">
+            <option value="si">SÍ</option>
+            <option value="no">NO</option>
+          </select>
+        </div>
+        <div class="third">
+          <label for="observaciones-publicidad"><b>Observaciones a tener en cuenta para que el comité de piezas tenga en cuenta al hacer tu publicidad:</b></label>
+          <textarea id="observaciones-publicidad" rows="1" placeholder="Ingresa observaciones para la publicidad del evento."></textarea>
+        </div>
+        <div class="third">
+          <label for="foto-ponente"><b>Enlace de Google Drive de la foto del ponente para que el comité de publicidad la coloque en la pieza:</b></label>
+          <input type="text" id="foto-ponente" placeholder="Ingresa el enlace de Google Drive, debe estar compartido para cualquier correo.">
+        </div>
+      </div>
+      </div>
+      <button class="button-reservar" onclick="registrarEvento()">Registrar evento</button>
+    </div>
+  </div>
+  <!-- DETALLES DEL ACORDEÓN 2 QUE CORRESPONDE A CONSULTAR LA RESERVA DE UN EVENTO-->
+  <div class="acordeon2" onclick="toggleEditarReserva()">CLICK AQUÍ PARA EDITAR TU RESERVA</div>
+  <div id="acordeon2-content" style="display: none;">
+    <div class="acordeon2-content-inner">
+      <div class="editar-group">
+      <label for="clave-evento-reserva"><b>Digita la clave del evento en la reserva: *</b></label>
+      <input type="text" id="clave-evento-reserva" placeholder="Ingresa la clave del evento que fue enviada a tu correo de forma automática al momento de reservar el espacio.">
+      
+      <button class="button-consultar" onclick="consultarReserva()">Consultar reserva</button>
+      </div>
+      
+      <!-- Campos para la consulta de reserva -->
+      <div id="datos-reserva-container" style="display: none;">
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DE TU RESERVA</p></h2>
+        <div class="editar-group">
+        <div class="row">
+        <div class="half">
+        <label for="nombre-evento-reserva"><b>Nombre del evento en la reserva: *</b></label>
+        <input type="text" id="nombre-evento-reserva" placeholder="Acá aparecerá el nombre del evento de la reserva.">
+        <label for="fecha-evento-reserva"><b>Fecha del evento en la reserva: *</b></label>
+        <input type="date" id="fecha-evento-reserva">
+        <label for="hora-evento-reserva"><b>Hora del evento en la reserva: *</b></label>
+        <select id="hora-evento-reserva">
+            <option value="" disabled selected hidden>Selecciona la hora que tiene la reserva.</option>
+            <option value="480">08:00</option>
+            <option value="510">08:30</option>
+            <option value="540">09:00</option>
+            <option value="570">09:30</option>
+            <option value="600">10:00</option>
+            <option value="630">10:30</option>
+            <option value="660">11:00</option>
+            <option value="690">11:30</option>
+            <option value="720">12:00</option>
+            <option value="750">12:30</option>
+            <option value="780">13:00</option>
+            <option value="810">13:30</option>
+            <option value="840">14:00</option>
+            <option value="870">14:30</option>
+            <option value="900">15:00</option>
+            <option value="930">15:30</option>
+            <option value="960">16:00</option>
+            <option value="990">16:30</option>
+            <option value="1020">17:00</option>
+            <option value="1050">17:30</option>
+            <option value="1080">18:00</option>
+            <option value="1110">18:30</option>
+            <option value="1140">19:00</option>
+            <option value="1170">19:30</option>
+            <option value="1200">20:00</option>
+            <option value="1230">20:30</option>
+            <option value="1260">21:00</option>
+        </select>
+        </div>
+        <div class="half">
+        <label for="duracion-evento-reserva"><b>Duración del evento en la reserva (en horas): *</b></label>
+        <select id="duracion-evento-reserva">
+            <option value="" disabled selected hidden>Selecciona la duración de la reserva.</option>
+            <option value="30">media hora</option>
+            <option value="60">1 hora</option>
+            <option value="90">1 hora y media</option>
+            <option value="120">2 horas</option>
+            <option value="150">2 horas y media</option>
+            <option value="180">3 horas</option>
+            <option value="210">3 horas y media</option>
+            <option value="240">4 horas</option>
+            <option value="270">4 horas y media</option>
+            <option value="300">5 horas</option>
+            <option value="330">5 horas y media</option>
+            <option value="360">6 horas</option>
+        </select>
+        <label for="modalidad-evento-reserva"><b>Modalidad del evento en la reserva: *</b></label>
+        <select id="modalidad-evento-reserva" onchange="toggleUbicacionPlataformaReserva()">
+            <option value="" disabled selected hidden>Selecciona la modalidad que colocaste en la reserva.</option>
+          <option value="virtual">Virtual</option>
+          <option value="presencial">Presencial</option>
+        </select>
+        <div id="ubicacion-plataforma-reserva-container" style="display: none;">
+          <label for="ubicacion-plataforma-reserva"><b>Ubicación/Plataforma en la reserva: *</b></label>
+          <select id="ubicacion-plataforma-reserva">
+            <option value="" disabled selected hidden>Selecciona la plataforma que colocaste en la reserva.</option>
+            <option value="meet">Meet</option>
+            <option value="zoom">Zoom</option>
+            <option value="teams">Teams</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div id="lugar-presencial-reserva-container" style="display: none;">
+          <label for="lugar-presencial-reserva"><b>Especifica el lugar físico del evento en la reserva: *</b></label>
+          <input type="text" id="lugar-presencial-reserva" placeholder="Escribe el lugar donde el evento se realizará.">
+        </div>
+        </div>
+        </div>
+        <div class="row">
+        <div class="half">
+        <label for="plan-evento-reserva"><b>Plan del evento en la reserva: *</b></label>
+        <textarea id="plan-evento-reserva" rows="5" placeholder="Acá aparecerá el plan del evento de la reserva."></textarea>
+        </div>
+        <div class="half">
+        <label for="observaciones-evento-reserva"><b>Observaciones del evento en la reserva:</b></label>
+        <textarea id="observaciones-evento-reserva" rows="5" placeholder="Acá aparecerán las observaciones adicionales de la reserva."></textarea>
+        </div>    
+        </div>
+        <div class="row">
+          <div class="half">
+            <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL ORGANIZADOR</p></h2>
+            <label for="nombre-organizador-reserva"><b>Nombre del organizador en la reserva: *</b></label>
+            <input type="text" id="nombre-organizador-reserva" placeholder="Acá aparecerá el nombre del organizador de la reserva.">
+            <label for="email-organizador-reserva"><b>Email del organizador en la reserva: *</b></label>
+            <input type="email" id="email-organizador-reserva" placeholder="Acá aparecerá el email del organizador de la reserva.">
+            <label for="telefono-organizador-reserva"><b>Teléfono del organizador en la reserva: *</b></label>
+            <input type="tel" id="telefono-organizador-reserva" placeholder="Acá aparecerá el número de teléfono del organizador de la reserva.">
+          </div>
+          <div class="half">
+            <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL PONENTE</p></h2>
+            <label for="nombre-ponente-reserva"><b>Nombre del ponente en la reserva: *</b></label>
+            <input type="text" id="nombre-ponente-reserva" placeholder="Acá aparecerá el nombre del ponente de la reserva.">
+            <label for="email-ponente-reserva"><b>Email del ponente en la reserva:</b></label>
+            <input type="email" id="email-ponente-reserva" placeholder="Acá aparecerá el email del ponente de la reserva.">
+            <label for="telefono-ponente-reserva"><b>Teléfono del ponente en la reserva:</b></label>
+            <input type="tel" id="telefono-ponente-reserva" placeholder="Acá aparecerá el número de teléfono del ponente de la reserva.">
+          </div>
+        </div>
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS PARA EL COMITÉ DE PIEZAS</p></h2>
+        <div class="row">
+          <div class="third">
+            <label for="publicidad-comite-reserva"><b>¿Deseas que el comité de piezas capitular te realice la publicidad del espacio? *</b></label>
+            <select id="publicidad-comite-reserva">
+              <option value="si">SÍ</option>
+              <option value="no">NO</option>
+            </select>
+          </div>
+          <div class="third">
+            <label for="observaciones-publicidad-reserva"><b>Observaciones a tener en cuenta para que el comité de piezas tenga en cuenta al hacer tu publicidad:</b></label>
+            <textarea id="observaciones-publicidad-reserva" rows="1" placeholder="Ingresa observaciones para la publicidad del evento."></textarea>
+          </div>
+          <div class="third">
+            <label for="foto-ponente-reserva"><b>Enlace de Google Drive de la foto del ponente para que el comité de publicidad la coloque en la pieza:</b></label>
+            <input type="text" id="foto-ponente-reserva" placeholder="Ingresa el enlace de Google Drive, debe estar compartido para cualquier correo.">
+          </div>
+        </div>        
+        </div>
+        <button class="button-consultar" onclick="editarReserva()">Enviar edición de reserva</button>
+      </div>
+    </div>
+  </div>
+  <!-- DETALLES Y CAMPOS DEL ACORDEÓN 3 QUE CORRESPONDE A ELIMINAR (CANCELAR) LA RESERVA DE UN EVENTO-->
+  <div class="acordeon3" onclick="toggleEliminarReserva()">CLICK AQUÍ PARA ELIMINAR TU RESERVA</div>
+  <div id="acordeon3-content" style="display: none;">
+    <div class="acordeon3-content-inner">
+      <div class="eliminar-group">
+      <div class="row">
+      <div class="half">
+      <label for="fecha-evento-eliminar"><b>Fecha del evento que deseas cancelar: *</b></label>
+      <input type="date" id="fecha-evento-eliminar" placeholder="Selecciona la fecha del evento que deseas cancelar.">
+      </div>
+      <div class="half">
+      <label for="hora-evento-eliminar"><b>Hora del evento que deseas cancelar: *</b></label>
+      <select id="hora-evento-eliminar">
+        <option value="" disabled selected hidden>Selecciona la hora de la reserva que deseas cancelar.</option>
+        <option value="08:00">08:00</option>
+        <option value="08:30">08:30</option>
+        <option value="09:00">09:00</option>
+        <option value="09:30">09:30</option>
+        <option value="10:00">10:00</option>
+        <option value="10:30">10:30</option>
+        <option value="11:00">11:00</option>
+        <option value="11:30">11:30</option>
+        <option value="12:00">12:00</option>
+        <option value="12:30">12:30</option>
+        <option value="13:00">13:00</option>
+        <option value="13:30">13:30</option>
+        <option value="14:00">14:00</option>
+        <option value="14:30">14:30</option>
+        <option value="15:00">15:00</option>
+        <option value="15:30">15:30</option>
+        <option value="16:00">16:00</option>
+        <option value="16:30">16:30</option>
+        <option value="17:00">17:00</option>
+        <option value="17:30">17:30</option>
+        <option value="18:00">18:00</option>
+        <option value="18:30">18:30</option>
+        <option value="19:00">19:00</option>
+        <option value="19:30">19:30</option>
+        <option value="20:00">20:00</option>
+        <option value="20:30">20:30</option>
+        <option value="21:00">21:00</option>
+      </select>
+      </div>
+      </div>
+      <label for="clave-evento-eliminar"><b>Digita la clave del evento en la reserva: *</b></label>
+      <input type="text" id="clave-evento-eliminar" placeholder="Ingresa la clave del evento que fue enviada a tu correo de forma automática al momento de reservar el espacio.">
+      </div>
+      <button class="button-eliminar" onclick="eliminarReserva()">Eliminar reserva</button>
+    </div>
+  </div>
+
+  <script>
+
+    // Definición de la función para convertir la fecha del formulario al formato de Firestore
+    function convertirFechaFormulario(fechaFormulario) {
+    if (typeof fechaFormulario !== "string") {
+      // Si fechaFormulario no es una cadena, intentamos convertirlo a string
+      fechaFormulario = fechaFormulario.toString();
+    }
+    // La fecha del formulario está en formato "yyyy-mm-dd" (ejemplo: "2023-08-15")
+    // Debemos convertirla a formato de Firestore, que es un objeto Date de JavaScript
+    var partesFecha = fechaFormulario.split("/"); // Separamos año, mes y día
+    var anio = parseInt(partesFecha[0]);
+    var mes = parseInt(partesFecha[1]);
+    var dia = parseInt(partesFecha[2]);
+
+    // Construimos la fecha en formato de Firestore
+    var fechaFirestore = new Date(anio, mes - 1, dia); // Restamos 1 al mes ya que en JavaScript los meses van de 0 a 11
+    return fechaFirestore;
+  }
+
+    // Esta función hace que cuando des click en la barra "CONSULTAR DISPONIBILIDAD (AC0)" las demás barras se oculten.
+    function toggleConsultaDisponibilidad() {
+      var content = document.getElementById("acordeon0-content");
+      if (content.style.display === "none") {
+        content.style.display = "block";
+      } else {
+        content.style.display = "none";
+      }
+      var content = document.getElementById("acordeon3-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon2-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon1-content");
+      content.style.display = "none";
+
+    }
+
+    // Esta función hace que cuando des click en la barra "REGISTRAR RESERVA (AC1)" las demás barras se oculten.
+    function toggleRegistrarEvento() {
+      var content = document.getElementById("acordeon1-content");
+      if (content.style.display === "none") {
+        content.style.display = "block";
+      } else {
+        content.style.display = "none";
+      }
+      var content = document.getElementById("acordeon3-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon2-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon0-content");
+      content.style.display = "none";
+    }
+
+    // Esta función permite en la sección "REGISTRAR RESERVA (AC1)" que se muestre la ubicación/plataforma o lugar evento.
+    // Si es "virtual" entonces muestra el campo "ubicación/plataforma", si es "presencial" muestra "lugar presencial".
+    function toggleUbicacionPlataforma() {
+      var ubicacionPlataformaContainer = document.getElementById("ubicacion-plataforma-container");
+      var lugarPresencialContainer = document.getElementById("lugar-presencial-container");
+      var modalidadEvento = document.getElementById("modalidad-evento").value;
+
+      if (modalidadEvento === "virtual") {
+        ubicacionPlataformaContainer.style.display = "block";
+        lugarPresencialContainer.style.display = "none";
+      } else if (modalidadEvento === "presencial") {
+        ubicacionPlataformaContainer.style.display = "none";
+        lugarPresencialContainer.style.display = "block";
+      } else {
+        ubicacionPlataformaContainer.style.display = "none";
+        lugarPresencialContainer.style.display = "none";
+      }
+    }
+
+    // Esta función hace que cuando des click en la barra "EDITAR RESERVA (AC2)" las demás barras se oculten.
+    function toggleEditarReserva() {
+      var content = document.getElementById("acordeon2-content");
+      if (content.style.display === "none") {
+        content.style.display = "block";
+      } else {
+        content.style.display = "none";
+      }
+      var content = document.getElementById("acordeon3-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon0-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon1-content");
+      content.style.display = "none";
+      document.getElementById("clave-evento-reserva").value = "";
+      // Resetear los campos
+      document.getElementById("nombre-evento-reserva").value = "";
+      document.getElementById("fecha-evento-reserva").value = "";
+      document.getElementById("hora-evento-reserva").value = "";
+      document.getElementById("duracion-evento-reserva").value = "";
+      document.getElementById("modalidad-evento-reserva").value = "";
+      document.getElementById("ubicacion-plataforma-reserva").value = "";
+      document.getElementById("lugar-presencial-reserva").value = "";
+      document.getElementById("plan-evento-reserva").value = "";
+      document.getElementById("observaciones-evento-reserva").value = "";
+      document.getElementById("nombre-organizador-reserva").value = "";
+      document.getElementById("email-organizador-reserva").value = "";
+      document.getElementById("telefono-organizador-reserva").value = "";
+      document.getElementById("nombre-ponente-reserva").value = "";
+      document.getElementById("email-ponente-reserva").value = "";
+      document.getElementById("telefono-ponente-reserva").value = "";
+      document.getElementById("publicidad-comite-reserva").value = "";       
+      document.getElementById("foto-ponente-reserva").value = "";
+      // Mostrar el contenido del acordeón datos-reserva-container
+      var datosReservaContainer = document.getElementById("datos-reserva-container");
+      datosReservaContainer.style.display = "none";
+    }
+
+    // Esta función permite en la sección "EDITAR RESERVA (AC2)" que se muestre la ubicación/plataforma o lugar evento.
+    // Si es "virtual" entonces muestra el campo "ubicación/plataforma", si es "presencial" muestra "lugar presencial".
+    function toggleUbicacionPlataformaReserva() {
+      var UbicacionPlataformaReservaContainer = document.getElementById("ubicacion-plataforma-reserva-container");
+      var lugarPresencialReservaContainer = document.getElementById("lugar-presencial-reserva-container");
+      var ModalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
+
+      if (ModalidadEventoReserva === "virtual") {
+        UbicacionPlataformaReservaContainer.style.display = "block";
+        lugarPresencialReservaContainer.style.display = "none";
+      } else if (ModalidadEventoReserva === "presencial") {
+        UbicacionPlataformaReservaContainer.style.display = "none";
+        lugarPresencialReservaContainer.style.display = "block";
+      } else {
+        UbicacionPlataformaReservaContainer.style.display = "none";
+        lugarPresencialReservaContainer.style.display = "none";
+      }
+    }    
+
+    // Esta función hace que cuando des click en la barra "ELIMINAR RESERVA (AC3)", las demás barras se oculten.
+    function toggleEliminarReserva() {
+      var content = document.getElementById("acordeon3-content");
+      if (content.style.display === "none") {
+        content.style.display = "block";
+      } else {
+        content.style.display = "none";
+      }
+      var content = document.getElementById("acordeon0-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon2-content");
+      content.style.display = "none";
+      var content = document.getElementById("acordeon1-content");
+      content.style.display = "none";
+    }
+
+    // Acá está la función para agregar un evento en la colección "reservas" y documento "basededatos",
+    // también tiene en cuenta la posibilidad de adjuntar imagen del ponente y reiniciará los campos cuando se registren.
+    function agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL) {
+      // Obtener una referencia a la colección "reservas" en Firestore
+      const db = firebase.firestore().collection("reservas").doc(claveEvento);
+
+      db.set({
+        nombreEvento: nombreEvento,
+        claveEvento: claveEvento,
+        fechaEvento: fechaEvento,
+        horaEvento: horaEvento,
+        duracionEvento: duracionEvento,
+        modalidadEvento: modalidadEvento,
+        ubicacionPlataforma: ubicacionPlataforma,
+        lugarPresencial: lugarPresencial,
+        planEvento: planEvento,
+        observacionesEvento: observacionesEvento,
+        nombreOrganizador: nombreOrganizador,
+        emailOrganizador: emailOrganizador,
+        telefonoOrganizador: telefonoOrganizador,
+        nombrePonente: nombrePonente,
+        emailPonente: emailPonente,
+        telefonoPonente: telefonoPonente,
+        publicidadComite: publicidadComite,
+        observacionesPublicidad: observacionesPublicidad,
+        fotoPonenteURL: fotoPonenteURL,
+        // Agrega aquí los demás campos del evento que deseas guardar
+        // ...
+      })
+      .then((docRef) => {
+        // Éxito: el evento se ha registrado correctamente en el documento existente
+        // Aquí puedes agregar cualquier otra lógica que desees después de agregar el evento
+        // Limpia los campos del formulario después de registrar el evento
+        document.getElementById("nombre-evento").value = "";
+        document.getElementById("fecha-evento").value = "";
+        document.getElementById("hora-evento").value = "";
+        document.getElementById("duracion-evento").value = "";
+        document.getElementById("modalidad-evento").value = "";
+        document.getElementById("ubicacion-plataforma").value = "";
+        document.getElementById("lugar-presencial").value = "";
+        document.getElementById("plan-evento").value = "";
+        document.getElementById("observaciones-evento").value = "";
+        document.getElementById("nombre-organizador").value = "";
+        document.getElementById("email-organizador").value = "";
+        document.getElementById("telefono-organizador").value = "";
+        document.getElementById("nombre-ponente").value = "";
+        document.getElementById("email-ponente").value = "";
+        document.getElementById("telefono-ponente").value = "";
+        document.getElementById("publicidad-comite").value = "";
+        document.getElementById("observaciones-publicidad").value = "";
+        document.getElementById("foto-ponente").value = "";
+
+        // Muestra el mensaje de reserva completada
+        mostrarMensajeReservar();
+
+        // Oculta el contenido del acordeón
+        var content = document.getElementById("acordeon1-content");
+        content.style.display = "none";
+      })
+      .catch((error) => {
+        // Error: hubo un problema al registrar el evento
+        console.error("ERROR AL REGISTRAR EL EVENTO: ", error);
+        Swal.fire({
+          title: '¡ERROR!',
+          text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      });
+    }    
+
+    function editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva) {
+      // Obtener una referencia al documento del evento en Firestore
+      const eventoRef = firebase.firestore().collection("reservas").doc(claveEventoReserva);
+
+      eventoRef.get()
+        .then((doc) => {
+          if (doc.exists) {
+            // El documento existe, actualizar los datos del evento
+            return eventoRef.update({
+              nombreEvento: nombreEventoReserva,
+              fechaEvento: fechaEventoReserva,
+              horaEvento: horaEventoReserva,
+              duracionEvento: duracionEventoReserva,
+              modalidadEvento: modalidadEventoReserva,
+              ubicacionPlataforma: ubicacionPlataformaReserva,
+              lugarPresencial: lugarPresencialReserva,
+              planEvento: planEventoReserva,
+              observacionesEvento: observacionesEventoReserva,
+              nombreOrganizador: nombreOrganizadorReserva,
+              emailOrganizador: emailOrganizadorReserva,
+              telefonoOrganizador: telefonoOrganizadorReserva,
+              nombrePonente: nombrePonenteReserva,
+              emailPonente: emailPonenteReserva,
+              telefonoPonente: telefonoPonenteReserva,
+              publicidadComite: publicidadComiteReserva,
+              observacionesPublicidad: observacionesPublicidadReserva,
+              fotoPonenteURL: fotoPonenteURLReserva,
+              // Agrega aquí los demás campos del evento que deseas actualizar
+              // ...
+            });
+          } else {
+            // El documento no existe, mostrar un mensaje indicando que el evento no se encontró
+            Swal.fire({
+              title: 'Evento no encontrado',
+              text: 'No se ha encontrado un evento con la clave proporcionada.',
+              icon: 'warning',
+              confirmButtonText: 'Aceptar'
+            });
+            return Promise.reject("Evento no encontrado");
+          }
+        })
+        .then(() => {
+          // Éxito: el evento se ha actualizado correctamente en el documento existente
+          // Aquí puedes agregar cualquier otra lógica que desees después de actualizar el evento
+          // Muestra el mensaje de actualización completada
+          mostrarMensajeEditar();
+
+          // Oculta el contenido del acordeón
+          var content = document.getElementById("acordeon1-content");
+          content.style.display = "none";
+        })
+        .catch((error) => {
+          // Error: hubo un problema al actualizar el evento
+          console.error("ERROR AL ACTUALIZAR EL EVENTO: ", error);
+          if (error !== "Evento no encontrado") {
+            Swal.fire({
+              title: '¡ERROR!',
+              text: 'Ha ocurrido un error al actualizar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+    }
+
+    // Acá está la función para generar una clave de evento aleatoria,
+    // esta clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
+    function generarClaveEvento() {
+      var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789";
+      var longitud = 15;
+      var claveGenerada = "";
+
+      for (var i = 0; i < longitud; i++) {
+        var indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+        claveGenerada += caracteres.charAt(indiceAleatorio);
+      }
+
+      return claveGenerada;
+    }
+
+    function registrarEvento() {
+      // Validar que todos los campos estén llenos
+      var camposValidos = validarCamposRegistrarReserva();
+
+      // Si todos los campos están llenos, proceder con la reserva
+      if (camposValidos) {
+        // Verificar si la fecha del evento es válida (mayor a la fecha actual)
+        var fechaEvento = new Date(document.getElementById("fecha-evento").value);
+        var fechaActual = new Date();
+
+        // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
+        if (fechaEvento <= fechaActual) {
+          Swal.fire({
+            title: '¡FECHA INCORRECTA!',
+            text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // Detener el registro del evento
+        }
+
+        // Verificar el formato del teléfono del organizador (debe empezar por 3 y tener 10 dígitos)
+        var telefonoOrganizador = document.getElementById("telefono-organizador").value;
+        var telefonoOrganizadorRegex = /^3\d{9}$/;
+
+        // Validación de datos para que el teléfono del organizador efectivamente sea un celular válido.
+        if (!telefonoOrganizadorRegex.test(telefonoOrganizador)) {
+          Swal.fire({
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
+            text: 'Digita un número de teléfono válido.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // Detener el registro del evento
+        }
+
+        // Verificar el formato del teléfono del ponente (si fue diligenciado)
+        var telefonoPonente = document.getElementById("telefono-ponente").value;
+
+        // En caso de haber diligenciado el teléfono del ponente, valida que sea una celular válido.
+        if (telefonoPonente !== "") {
+          var telefonoPonenteRegex = /^3\d{9}$/;
+
+          if (!telefonoPonenteRegex.test(telefonoPonente)) {
+            Swal.fire({
+              title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
+              text: 'Digita un número de teléfono válido.',
+              icon: 'warning',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener el registro del evento
+          }
+        }
+
+          // Obtener el enlace del usuario
+          var enlaceGoogleDrive = document.getElementById("foto-ponente").value;
+          // Expresión regular para verificar el formato del enlace de Google Drive
+          var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
+          var publicidadComite = document.getElementById("publicidad-comite").value
+
+          // Validar el enlace utilizando la expresión regular
+          if (publicidadComite === "si") {
+          if (enlaceGoogleDrive !== "") {
+          if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
+            Swal.fire({
+              title: "¡ENLACE INVÁLIDO!",
+              text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
+              icon: "warning",
+              confirmButtonText: "Aceptar",
+            });
+            return; // Detener el registro del evento
+            }
+          }
+
+          }
+                  
+
+        // Si todas las verificaciones son exitosas, continuar con el registro del evento
+                // Guardar los datos del registro.
+
+        //PRIMERO VERIFICA QUE HAYA DISPONIBILIDAD PARA CUANDO INGRESÓ LA FECHA, HORA Y DURACIÓN
+        verificarDisponibilidadRegistro().then(function(result) {
+          if (!result) {
+          // Si no se muestra ningún swal.fire, ejecuta el código a continuación
+          } else {
+            // Generar clave evento aleatoria de 10 caracteres (mayúsculas y números)
+            var claveEvento = generarClaveEvento();
+            // ACÁ EMPIEZA EL PROCESO PARA INSERTAR LA DATA EN LA BASE DE DATOS.
+            // Obtenemos todos los campos individualmente
+            var nombreEvento = document.getElementById("nombre-evento").value;
+            var fechaEvento = document.getElementById("fecha-evento").value;
+            var horaEvento = document.getElementById("hora-evento").value;
+            var duracionEvento = document.getElementById("duracion-evento").value;
+            var modalidadEvento = document.getElementById("modalidad-evento").value;
+            var ubicacionPlataforma = document.getElementById("ubicacion-plataforma").value;
+            var lugarPresencial = document.getElementById("lugar-presencial").value;
+            var planEvento = document.getElementById("plan-evento").value;
+            var observacionesEvento = document.getElementById("observaciones-evento").value;
+            var nombreOrganizador = document.getElementById("nombre-organizador").value;
+            var emailOrganizador = document.getElementById("email-organizador").value;
+            var telefonoOrganizador = document.getElementById("telefono-organizador").value;
+            var nombrePonente = document.getElementById("nombre-ponente").value;
+            var emailPonente = document.getElementById("email-ponente").value;
+            var telefonoPonente = document.getElementById("telefono-ponente").value;
+            var publicidadComite = document.getElementById("publicidad-comite").value;
+            var observacionesPublicidad = document.getElementById("observaciones-publicidad").value;
+            var fotoPonenteURL = document.getElementById("foto-ponente").value;
+
+            agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
+
+          }
+      }).catch(function(error) {
+        // Maneja cualquier error que pueda ocurrir durante la verificación
+        console.error("Error al verificar la disponibilidad:", error);
+      }); 
+    }
+  }
+
+    function consultarReserva() {
+
+    var claveEventoConsultar = document.getElementById("clave-evento-reserva").value;
+
+    // Verificar si el campo está vacío
+    if (claveEventoConsultar.trim() === "") {
+      // Mostrar alerta si el campo está vacío
+      Swal.fire({
+        title: '¡NO HAS DILIGENCIADO NINGUNA CLAVE!',
+        text: 'Por favor, ingresa la clave de la reserva de tu evento.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return; // Salir de la función si el campo está vacío
+    }
+
+    // Obtener la referencia al documento de la reserva en la base de datos
+    var reservasRef = firebase.firestore().collection("reservas").doc(claveEventoConsultar);
+
+    reservasRef.get().then((doc) => {
+      if (doc.exists) {
+        // El documento existe, obtener los datos de la reserva
+        var reserva = doc.data();
+
+        // Asignar los valores de la reserva a los campos del formulario
+        document.getElementById("nombre-evento-reserva").value = reserva.nombreEvento;
+        document.getElementById("fecha-evento-reserva").value = reserva.fechaEvento;
+        document.getElementById("hora-evento-reserva").value = reserva.horaEvento;
+        document.getElementById("duracion-evento-reserva").value = reserva.duracionEvento;
+        document.getElementById("modalidad-evento-reserva").value = reserva.modalidadEvento;
+        document.getElementById("ubicacion-plataforma-reserva").value = reserva.ubicacionPlataforma;
+        document.getElementById("lugar-presencial-reserva").value = reserva.lugarPresencial;
+        document.getElementById("plan-evento-reserva").value = reserva.planEvento;
+        document.getElementById("observaciones-evento-reserva").value = reserva.observacionesEvento;
+        document.getElementById("nombre-organizador-reserva").value = reserva.nombreOrganizador;
+        document.getElementById("email-organizador-reserva").value = reserva.emailOrganizador;
+        document.getElementById("telefono-organizador-reserva").value = reserva.telefonoOrganizador;
+        document.getElementById("nombre-ponente-reserva").value = reserva.nombrePonente;
+        document.getElementById("email-ponente-reserva").value = reserva.emailPonente;
+        document.getElementById("telefono-ponente-reserva").value = reserva.telefonoPonente;
+        document.getElementById("publicidad-comite-reserva").value = reserva.publicidadComite;       
+        document.getElementById("foto-ponente-reserva").value = reserva.fotoPonenteURL;
+
+        // Mostrar el contenido del acordeón datos-reserva-container
+        var datosReservaContainer = document.getElementById("datos-reserva-container");
+        datosReservaContainer.style.display = "block";
+        var content = document.getElementById("acordeon2-content");
+        content.style.display = "block";
+      } else {
+        // El documento no existe, mostrar un mensaje indicando que la reserva no se encontró
+        Swal.fire({
+          title: '¡NO EXISTE LA RESERVA QUE BUSCAS!',
+          text: 'No se ha encontrado una reserva con la clave proporcionada, rectifica que de verdad exista y que estás escribiendo bien la clave,',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    }).catch((error) => {
+      // Error al consultar el documento
+      console.error("Error al consultar la reserva: ", error);
+      Swal.fire({
+        title: '¡ERROR!',
+        text: 'Ha ocurrido un error al consultar la reserva. Inténtalo nuevamente más tarde o consulta con el administrador/creador del sistema.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    });
+    }
+
+    function editarReserva() {
+      // Validar que todos los campos estén llenos y sean válidos
+      var camposValidos = validarCamposEdicion();
+
+      // Si todos los campos están llenos y son válidos, proceder con la edición de la reserva
+      if (camposValidos) {
+        // Verificar si la fecha del evento es válida (mayor a la fecha actual)
+        var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
+        console.log("la fecha nueva es:" + fechaEventoReserva);
+        var fechaActual = new Date();
+
+        if (fechaEventoReserva <= fechaActual) {
+          Swal.fire({
+            title: '¡FECHA INCORRECTA!',
+            text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // Detener la edición de la reserva
+        }
+
+        // Verificar el formato del teléfono del organizador (debe empezar por 3 y tener 10 dígitos)
+        var telefonoOrganizadorReserva = document.getElementById("telefono-organizador-reserva").value;
+        var telefonoOrganizadorReservaRegex = /^3\d{9}$/;
+
+        if (!telefonoOrganizadorReservaRegex.test(telefonoOrganizadorReserva)) {
+          Swal.fire({
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
+            text: 'Digita un número de teléfono válido.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // Detener la edición de la reserva
+        }
+
+        // Verificar el formato del teléfono del ponente (debe empezar por 3 y tener 10 dígitos) si está diligenciado
+        var telefonoPonenteReserva = document.getElementById("telefono-ponente-reserva").value;
+        if (telefonoPonenteReserva !== "" && !telefonoOrganizadorReservaRegex.test(telefonoPonenteReserva)) {
+          Swal.fire({
+            title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
+            text: 'Digita un número de teléfono válido.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // Detener la edición de la reserva
+        }
+
+        // Aquí realizarías la lógica para verificar la disponibilidad de horarios
+        var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
+        var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
+        var horaEventoReserva = document.getElementById("hora-evento-reserva").value;
+        var duracionEventoReserva = document.getElementById("duracion-evento-reserva").value;
+
+        // Lógica para verificar disponibilidad (puedes basarte en tu función ConsultarDisponibilidadReservas)
+        // Obtener la fecha del evento con claveEventoReserva de la base de datos
+        var eventoRef = firebase.firestore().collection("reservas").doc(claveEventoReserva);
+
+        eventoRef.get().then((doc) => {
+          if (doc.exists) {
+            // El documento existe, realizar operaciones relacionadas con el evento
+            // El documento existe, obtener los datos de la reserva
+            var reserva = doc.data();
+            //var fechaEventoDB = doc.data().fechaEvento.toDate();
+            var fechaEventoDB = reserva.fechaEvento;
+            console.log("la fecha en la database es:" + fechaEventoDB);
+
+            // Verificar si hay disponibilidad para esa fecha y hora de edición
+            verificarDisponibilidadEdicion().then(function(result) {
+              if (!result) {
+                // Si no se muestra ningún swal.fire, ejecuta el código a continuación
+              } else {
+                // Obtenemos todos los campos individualmente
+                var nombreEventoReserva = document.getElementById("nombre-evento-reserva").value;
+                var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
+                var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
+                var horaEventoReserva = document.getElementById("hora-evento-reserva").value;
+                var duracionEventoReserva = document.getElementById("duracion-evento-reserva").value;
+                var modalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
+                var ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
+                var lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
+                var planEventoReserva = document.getElementById("plan-evento-reserva").value;
+                var observacionesEventoReserva = document.getElementById("observaciones-evento-reserva").value;
+                var nombreOrganizadorReserva = document.getElementById("nombre-organizador-reserva").value;
+                var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+                var telefonoOrganizadorReserva = document.getElementById("telefono-organizador-reserva").value;
+                var nombrePonenteReserva = document.getElementById("nombre-ponente-reserva").value;
+                var emailPonenteReserva = document.getElementById("email-ponente-reserva").value;
+                var telefonoPonenteReserva = document.getElementById("telefono-ponente-reserva").value;
+                var publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
+                var observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
+                var fotoPonenteURLReserva = document.getElementById("foto-ponente-reserva").value;
+
+                editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
+                enviarCorreoEdicion();
+                // Restablecer los campos a su valor por defecto (vacío)
+                // Ocultar el contenido del acordeón datos-reserva-container
+                var datosReservaContainer = document.getElementById("datos-reserva-container");
+                datosReservaContainer.style.display = "none";
+                var content = document.getElementById("acordeon2-content");
+                content.style.display = "none";
+              }
+            }).catch(function(error) {
+              // Maneja cualquier error que pueda ocurrir durante la verificación
+              console.error("Error al verificar la disponibilidad:", error);
+            });
+
+              // Mostrar mensaje de éxito
+              // El mensaje de editar lo arroja la función editarDisponibilidad
+          } else {
+            // El documento no existe, mostrar mensaje de error
+            Swal.fire({
+              title: '¡NO EXISTE EL EVENTO QUE BUSCAS!',
+              text: 'Verifica que estés escribiendo una clave de evento que de verdad exista.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return;
+          }
+        }).catch(function(error) {
+          // Manejar errores de consulta aquí
+          // Mostrar una alerta tipo SweetAlert en caso de error
+          console.log("Error al consultar Firebase: " + error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo en error con el código, consulta al administrador/creador del sistema.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+          return;
+        });
+      }
+    }
+
+    // Esta función elimina cada reserva que el usuario desee eliminar, también 
+    function eliminarReserva() {
+        // Obtener los valores de los campos a verificar
+        var fechaEventoEliminar = document.getElementById("fecha-evento-eliminar").value;
+        var horaEventoEliminar = document.getElementById("hora-evento-eliminar").value;
+        var claveEventoEliminar = document.getElementById("clave-evento-eliminar").value;
+
+        // Crear una lista para almacenar los nombres de los campos faltantes
+        var camposFaltantes = [];
+
+        // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
+        if (fechaEventoEliminar.trim() === "") {
+            camposFaltantes.push("Fecha del evento. ");
+        }
+        if (horaEventoEliminar.trim() === "") {
+            camposFaltantes.push("Hora del evento. ");
+        }
+        if (claveEventoEliminar.trim() === "") {
+            camposFaltantes.push("Clave del evento.");
+        }
+
+        // Si hay campos faltantes, mostrar mensaje de error personalizado
+        if (camposFaltantes.length > 0) {
+            var mensajeError = "Faltan campos por diligenciar:\n\n" + camposFaltantes.join("\n");
+            Swal.fire({
+            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+            text: mensajeError,
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+            });
+        } else {
+            // Si no hay campos faltantes, proceder con la eliminación de la reserva
+            Swal.fire({
+            title: '¿CONFIRMAS QUE DESEAS ELIMINAR LA RESERVA?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'CONFIRMO',
+            cancelButtonText: 'NO'
+            }).then((result) => {
+            // Si el usuario hizo clic en el botón "CONFIRMO", proceder a eliminar la reserva
+            if (result.isConfirmed) {
+                // Realizar la eliminación de la reserva en la base de datos
+                var claveEventoEliminar = document.getElementById("clave-evento-eliminar").value;
+
+                // Obtener una referencia al documento que se desea eliminar
+                var reservaRef = firebase.firestore().collection("reservas").doc(claveEventoEliminar);
+
+                // Verificar si el documento existe antes de intentar eliminarlo
+                reservaRef.get().then((doc) => {
+                  if (doc.exists) {
+                    // El documento existe, proceder con la eliminación
+                    reservaRef.delete().then(() => {
+                      // Eliminación exitosa
+                      console.log("Reserva eliminada con éxito.");
+                      // Resetear los campos del acordeón 3 a sus valores por defecto.
+                      document.getElementById("fecha-evento-eliminar").value = "";
+                      document.getElementById("hora-evento-eliminar").value = "";
+                      document.getElementById("clave-evento-eliminar").value = "";
+                      // Ocultar el acordeón 3
+                      var content = document.getElementById("acordeon3-content");
+                      content.style.display = "none";
+                      // Mostrar mensaje de éxito
+                      mostrarMensajeEliminar();
+                    }).catch((error) => {
+                      // Error al intentar eliminar el documento
+                      console.error("NO SE PUDO ELIMINAR LA RESERVA", error);
+                      Swal.fire({
+                        title: '¡ERROR!',
+                        text: 'Ha ocurrido un error al eliminar la reserva. Inténtalo nuevamente más tarde o ponte en contacto con el administrador de la plataforma.',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                      });
+                    });
+                  } else {
+                    // El documento no existe, mostrar un mensaje indicando que la reserva no se encontró
+                    Swal.fire({
+                      title: 'NO EXISTE ESTA RESERVA',
+                      text: 'No se ha encontrado una reserva con la clave proporcionada, rectifica que estás diligenciando la clave correcta.',
+                      icon: 'warning',
+                      confirmButtonText: 'Aceptar'
+                    });
+                  }
+                }).catch((error) => {
+                  // Error al consultar el documento
+                  console.error("ERROR AL CONSULTAR LA RESERVA", error);
+                  Swal.fire({
+                    title: '¡ERROR!',
+                    text: 'Ha ocurrido un error al consultar la reserva. Inténtalo nuevamente más tarde o ponte en contacto con el administrador de la plataforma',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                  });
+                });
+                // Resetear los campos del acordeón 3 a sus valores por defecto.
+                document.getElementById("fecha-evento-eliminar").value = "";
+                document.getElementById("hora-evento-eliminar").value = "";
+                document.getElementById("clave-evento-eliminar").value = "";
+                // Ocultar el acordeón 3
+                var content = document.getElementById("acordeon3-content");
+                content.style.display = "none";
+                // Mostrar mensaje de éxito
+                //mostrarMensajeEliminar();
+            }
+            });
+        }
+        }
+
+    // Esta función permite la acción de mostrar un mensaje de éxito al momento de registrar una reserva.        
+    function mostrarMensajeReservar() {
+      Swal.fire({
+      title: '¡RESERVA COMPLETADA!',
+      text: 'Su reserva ha sido registrada y APROBADA con ÉXITO, revisa tu correo para confirmar la reserva y obtener tu CLAVE de evento.',
+      icon: 'success',
+      showConfirmButton: true, // Muestra el botón de confirmación
+      allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
+      allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
+      }).then((result) => {
+      // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+      });
+    }
+
+    // Esta función permite la acción de mostrar un mensaje de éxito al momento de actualizar una reserva.    
+    function mostrarMensajeEditar() {
+      Swal.fire({
+      title: '¡ACTUALIZACIÓN DE RESERVA COMPLETADA!',
+      text: 'Su reserva ha sido ACTUALIZADA con ÉXITO, revisa tu correo para confirmar la actualización y obtener tu nueva CLAVE de evento.',
+      icon: 'success',
+      showConfirmButton: true, // Muestra el botón de confirmación
+      allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
+      allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
+      }).then((result) => {
+      // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+      });
+    }
+
+    // Esta función permite la acción de mostrar un mensaje de éxito al momento de eliminar una reserva.
+    function mostrarMensajeEliminar() {
+      Swal.fire({
+      title: '¡ELIMININACIÓN DE RESERVA COMPLETADA!',
+      text: 'Su reserva ha sido ELIMINADA con ÉXITO, revisa tu correo para confirmar que ha sido eliminada',
+      icon: 'success',
+      showConfirmButton: true, // Muestra el botón de confirmación
+      allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
+      allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
+      }).then((result) => {
+      // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+      });
+    }
+
+    // Esta función verifica si hacen falta campos obligatorios en la sección "REGISTRAR RESERVA" y en caso de hacer 
+    // falta arrojará una alerta diciendo que hacen falta campos y te dirá también cuáles campos son los que faltan.
+    function validarCamposRegistrarReserva() {
+      // Obtener los valores de los campos
+      var nombreEvento = document.getElementById("nombre-evento").value;
+      var fechaEvento = document.getElementById("fecha-evento").value;
+      var horaEvento = document.getElementById("hora-evento").value;
+      var duracionEvento = document.getElementById("duracion-evento").value;
+      var modalidadEvento = document.getElementById("modalidad-evento").value;
+      var ubicacionPlataforma = document.getElementById("ubicacion-plataforma").value;
+      var lugarPresencial = document.getElementById("lugar-presencial").value;
+      var planEvento = document.getElementById("plan-evento").value;
+      var observacionesEvento = document.getElementById("observaciones-evento").value;
+      var nombreOrganizador = document.getElementById("nombre-organizador").value;
+      var emailOrganizador = document.getElementById("email-organizador").value;
+      var telefonoOrganizador = document.getElementById("telefono-organizador").value;
+      var nombrePonente = document.getElementById("nombre-ponente").value;
+      var emailPonente = document.getElementById("email-ponente").value;
+      var telefonoPonente = document.getElementById("telefono-ponente").value;
+      var publicidadComite = document.getElementById("publicidad-comite").value.toLowerCase();
+      var fotoPonente = document.getElementById("foto-ponente").value;
+
+      // Lista para almacenar los campos faltantes
+      var camposFaltantes = [];
+
+      // Verificar qué campos están vacíos y agregar sus nombres a la lista
+      if (nombreEvento.trim() === "") {
+        camposFaltantes.push("Nombre del evento");
+      }
+      if (fechaEvento.trim() === "") {
+        camposFaltantes.push("Fecha del evento");
+      }
+      if (horaEvento.trim() === "") {
+        camposFaltantes.push("Hora del evento");
+      }
+      if (duracionEvento.trim() === "") {
+        camposFaltantes.push("Duración del evento");
+      }
+      if (modalidadEvento.trim() === "") {
+        camposFaltantes.push("Modalidad del evento");
+      }
+      if (ubicacionPlataforma.trim() === "" && lugarPresencial.trim() === "") {
+            camposFaltantes.push("Ubicación en plataforma o Lugar presencial");
+        }
+      if (planEvento.trim() === "") {
+        camposFaltantes.push("Plan del evento");
+      }
+      if (nombreOrganizador.trim() === "") {
+        camposFaltantes.push("Nombre del organizador");
+      }
+      if (emailOrganizador.trim() === "") {
+        camposFaltantes.push("Email del organizador");
+      }
+      if (telefonoOrganizador.trim() === "") {
+        camposFaltantes.push("Teléfono del organizador");
+      }
+      if (nombrePonente.trim() === "") {
+        camposFaltantes.push("Nombre del ponente");
+      }
+      if (publicidadComite === "si" && fotoPonente.trim() === "") {
+        camposFaltantes.push("Foto del ponente");
+      }
+
+      // Mostrar la alerta si hay campos faltantes con la concatenación de los campos faltantes.
+      if (camposFaltantes.length > 0) {
+        var mensaje = "Faltan campos por diligenciar:\n";
+        for (var i = 0; i < camposFaltantes.length; i++) {
+          mensaje += "- " + camposFaltantes[i] + "\n";
+        }
+
+        Swal.fire({
+          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA!',
+          text: mensaje,
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        });
+        return false;
+      }
+
+      return true; // Todos los campos están llenos
+    }
+   
+    // Esta función verifica si hacen falta campos obligatorios en la sección "EDITAR RESERVA" y en caso de hacer 
+    // falta arrojará una alerta diciendo que hacen falta campos y te dirá también cuáles campos son los que faltan.
+    function validarCamposEdicion() {
+        var camposFaltantes = [];
+
+        // Obtener los valores de los campos a verificar
+        var nombreEventoReserva = document.getElementById("nombre-evento-reserva").value;
+        var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
+        var horaEventoReserva = document.getElementById("hora-evento-reserva").value;
+        var duracionEventoReserva = document.getElementById("duracion-evento-reserva").value;
+        var modalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
+        var ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
+        var lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
+        var planEventoReserva = document.getElementById("plan-evento-reserva").value;
+        var observacionesEventoReserva = document.getElementById("observaciones-evento-reserva").value;
+        var nombreOrganizadorReserva = document.getElementById("nombre-organizador-reserva").value;
+        var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+        var telefonoOrganizadorReserva = document.getElementById("telefono-organizador-reserva").value;
+        var nombrePonenteReserva = document.getElementById("nombre-ponente-reserva").value;
+        var emailPonenteReserva = document.getElementById("email-ponente-reserva").value;
+        var telefonoPonenteReserva = document.getElementById("telefono-ponente-reserva").value;
+        var publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
+        var fotoPonenteReserva = document.getElementById("foto-ponente-reserva").value;
+
+        // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
+        if (nombreEventoReserva.trim() === "") {
+            camposFaltantes.push("Nombre del evento");
+        }
+        if (fechaEventoReserva.trim() === "") {
+            camposFaltantes.push("Fecha del evento");
+        }
+        if (horaEventoReserva.trim() === "") {
+            camposFaltantes.push("Hora del evento");
+        }
+        if (duracionEventoReserva.trim() === "") {
+            camposFaltantes.push("Duración del evento");
+        }
+        if (modalidadEventoReserva.trim() === "") {
+            camposFaltantes.push("Modalidad del evento");
+        }
+        if (ubicacionPlataformaReserva.trim() === "" && lugarPresencialReserva.trim() === "") {
+            camposFaltantes.push("Ubicación en plataforma o Lugar presencial");
+        }
+        if (planEventoReserva.trim() === "") {
+            camposFaltantes.push("Plan del evento");
+        }
+        if (nombreOrganizadorReserva.trim() === "") {
+            camposFaltantes.push("Nombre del organizador");
+        }
+        if (emailOrganizadorReserva.trim() === "") {
+            camposFaltantes.push("Email del organizador");
+        }
+        if (telefonoOrganizadorReserva.trim() === "") {
+            camposFaltantes.push("Teléfono del organizador");
+        }
+        if (nombrePonenteReserva.trim() === "") {
+            camposFaltantes.push("Nombre del ponente");
+        }
+        if (publicidadComiteReserva === "si" && fotoPonenteReserva.trim() === "") {
+          camposFaltantes.push("Foto del ponente");
+        }
+
+        // Mostrar la alerta si hay campos faltantes con la concatenación de cada uno de ellos (los faltantes).
+        if (camposFaltantes.length > 0) {
+            var mensaje = "Faltan campos por diligenciar:\n";
+            for (var i = 0; i < camposFaltantes.length; i++) {
+            mensaje += "- " + camposFaltantes[i] + "\n";
+            }
+
+            Swal.fire({
+            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+            text: mensaje,
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            });
+
+            return false;
+        }
+
+        return true; // Todos los campos están llenos y son válidos
+        }
+
+    function ConsultarDisponibilidadReservas() {
+      var fechaConsulta = document.getElementById("fecha-consulta").value;
+      var fechaHoy = new Date().toISOString().slice(0, 10);
+
+      // Acá se verifica que se haya insertado una fecha, si no insertaste nada, para el proceso y le notifica al usuario.
+      if (fechaConsulta.trim() === "") {
+        // Mostrar mensaje de error si no se ha seleccionado una fecha válida
+        Swal.fire({
+          title: '¡FECHA NO SELECCIONADA!',
+          text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        });
+        return;
+      }
+
+      if (fechaConsulta <= fechaHoy) {
+        // Mostrar mensaje de error si la fecha seleccionada es menor o igual a la fecha actual
+        Swal.fire({
+          title: '¡FECHA INCORRECTA!',
+          text: 'Por favor, selecciona una fecha mayor a la fecha de HOY para consultar la disponibilidad.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        });
+        return;
+      }
+
+      // Aquí realizarías la lógica para consultar la disponibilidad de reservas con la fecha seleccionada
+      var fechaConsulta = document.getElementById("fecha-consulta").value;
+      // Resto del código para validar la fecha y mostrar mensajes de error...
+      // Obtener todos los eventos reservados para la fecha seleccionada
+      var reservasRef = firebase.firestore().collection("reservas");
+      var consulta = reservasRef.where("fechaEvento", "==", fechaConsulta);
+
+      consulta.get().then(function(querySnapshot) {
+        // Arreglo que representará el estado de disponibilidad de cada intervalo
+        var disponibilidad = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles (verde)
+
+        // Ciclo para revisar cada evento reservado para la fecha seleccionada
+        querySnapshot.forEach(function(doc) {
+          var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 480 para 08:00)
+          var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
+
+          // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+          var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+          var finIntervalo = inicioIntervalo+(duracionEvento/30);
+          
+          // Marcar los intervalos como ocupados (rojo) en el arreglo de disponibilidad
+          for (var i = inicioIntervalo; i < finIntervalo; i++) {
+            disponibilidad[i] = false;
+          }
+        });
+
+        // Actualizar la visualización de disponibilidad en el HTML
+        var disponibilidadContainer = document.querySelector(".disponibilidad-container");
+        var disponibilidadItems = disponibilidadContainer.getElementsByClassName("disponibilidad-item");
+        for (var i = 0; i < disponibilidad.length; i++) {
+          if (disponibilidad[i]) {
+            disponibilidadItems[i].style.backgroundColor = "green"; // Establecer fondo verde para intervalo disponible
+          } else {
+            disponibilidadItems[i].style.backgroundColor = "red"; // Establecer fondo rojo para intervalo ocupado
+          }
+        }
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          title: '¡CONSULTA DE DISPONIBILIDAD REALIZADA!',
+          text: 'La consulta se realizó con éxito para la fecha seleccionada. Los horarios en rojo representan que ya están reservados, los que están en color verde son los disponibles.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+      }).catch(function(error) {
+        console.log("Error obteniendo reservas:", error);
+        // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
+      });
+    }    
+
+    // Función para convertir los minutos del campo hora a formato HH:MM
+    function convertirMinutosAHora(minutos) {
+      // Divide los minutos en horas y minutos
+      var horas = Math.floor(minutos / 60);
+      var minutosRestantes = minutos % 60;
+
+      // Formatea las horas y minutos como cadena
+      var horaFormateada = horas.toString().padStart(2, '0'); // Asegura que tenga 2 dígitos, rellenando con 0 si es necesario
+      var minutosFormateados = minutosRestantes.toString().padStart(2, '0');
+
+      // Retorna la hora en formato HH:MM
+      return horaFormateada + ':' + minutosFormateados;
+    }
+
+    // Función para enviar el correo de edición de reserva
+    function enviarCorreoEdicionx(emailOrganizadorReserva,claveEventoReserva,nombreEventoReserva,fechaEventoReserva,horaEventoReserva) {
+      var asunto = "ACTUALIZACIÓN DE RESERVA - " + claveEventoReserva;
+      var cuerpoMensaje = "SU RESERVA CON CLAVE DE EVENTO <" + claveEventoReserva + "> CON NOMBRE <" + nombreEventoReserva + "> PARA EL DÍA" + fechaEventoReserva + "A LAS " + horaEventoReserva + "HA SIDO ACTUALIZADA EFECTIVAMENTE, RECUERDE QUE SU CLAVE DE EVENTO NO CAMBIA Y QUE LA RESERVA SIGUE VIGENTE Y ACEPTA, SOLAMENTE HAS MODIFICADO SUS ATRIBUTOS, SI TIENES INQUIETUDES O DUDAS, CONTÁCTATE CON EL ADMINISTRADOR/CREADOR DE SIEA.";
+
+      // Construir el enlace mailto con la información del correo
+      var mailtoLink = "mailto:" + emailOrganizadorReserva +
+        "?subject=" + encodeURIComponent(asunto) +
+        "&body=" + encodeURIComponent(cuerpoMensaje);
+
+      // Abrir el cliente de correo predeterminado con la información del correo
+      window.location.href = mailtoLink;
+    }
+
+    // Función para enviar el correo
+    function enviarCorreoEdicion() {
+      // Obtener los inputs clave para el correo personalizado
+      var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
+      var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
+      var minutosDesdeMedianoche = document.getElementById("hora-evento-reserva").value;
+      var nombreEventoReserva = document.getElementById("nombre-evento-reserva").value;
+      var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+
+      // Convertir los minutos desde la medianoche a formato HH:MM
+      var horaEventoReserva = convertirMinutosAHora(minutosDesdeMedianoche);
+
+      var asunto = "ACTUALIZACIÓN DE RESERVA - " + claveEventoReserva;
+
+      var templateParams = {
+        to_email: emailOrganizadorReserva, // Coloca aquí la dirección de correo electrónico del organizador
+        from_email: "siea@aneiap.co",
+        public_key: "LU2FEUSJNDECVCALW", // Reemplaza con tu clave pública
+        password: "alesvica",
+        subject: asunto,
+        claveEventoReserva: claveEventoReserva,
+        nombreEventoReserva: nombreEventoReserva,
+        fechaEventoReserva: fechaEventoReserva,
+        horaEventoReserva: horaEventoReserva,
+      };
+
+      emailjs
+        .send("RESPUESTAS_SIEA", "respuestas_siea_id", templateParams)
+        .then(function (response) {
+          console.log("Correo enviado con éxito", response);
+        })
+        .catch(function (error) {
+          console.error("Error al enviar el correo", error);
+        });
+    }
+
+    function calcularIntervalosNuevaFecha(nuevaFecha, nuevaHora, nuevaDuracion) {
+      var nuevosIntervalos = [];
+
+      // Calcula los índices de inicio y fin del intervalo que ocupará el evento en la nueva fecha
+      var inicioIntervalo = Math.floor((nuevaHora - 480) / 30);
+      var finIntervalo = inicioIntervalo + nuevaDuracion/30;
+
+      // Agrega los nuevos intervalos al arreglo nuevosIntervalos
+      for (var i = inicioIntervalo; i < finIntervalo; i++) {
+        nuevosIntervalos.push(i);
+      }
+
+      return nuevosIntervalos;
+    }
+
+    function calcularDisponibilidadPorFecha(nuevaFecha) {
+      var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
+
+      // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
+      var reservasRef = firebase.firestore().collection("reservas");
+      var consulta = reservasRef.where("fechaEvento", "==", nuevaFecha);
+
+      consulta.get().then(function(querySnapshot) {
+        // Ciclo para revisar cada evento reservado para la nueva fecha
+        querySnapshot.forEach(function(doc) {
+          var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 540 para 09:00)
+          var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
+
+          // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+          var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+          var finIntervalo = inicioIntervalo + duracionEvento / 30;
+
+          // Marcar los intervalos como ocupados en el arreglo de disponibilidad
+          for (var i = inicioIntervalo; i < finIntervalo; i++) {
+            disponibilidadHorarios[i] = false;
+          }
+        });
+
+        // Ahora disponibilidadHorarios tiene la disponibilidad de los intervalos en la nueva fecha
+        // Realiza el resto de la lógica aquí
+      }).catch(function(error) {
+        Swal.fire({
+          title: 'Error de Consulta',
+          text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      });
+    }
+
+    function verificarDisponibilidadEdicion() {
+      return new Promise((resolve, reject) => {
+
+      // Obtener una referencia al documento del evento en Firestore
+      var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
+      const eventoRef = firebase.firestore().collection("reservas").doc(claveEventoReserva);
+
+      console.log("actualizaremos la fecha a 31-dic");
+      // Actualizar el evento como si la nueva fecha fuera el 31 de diciembre de 2023, esto es con fines prácticas para
+      // lograr que este evento no sea tomado nunca dentro de la colección reservas debido a que cuando la
+      // nueva fecha sea igual a la actual (no cambió de fecha) no queremos que el evento se autobloquee la disponibilidad
+      return eventoRef.update({fechaEvento: "2023-12-31"})
+      .then(() => {
+        console.log("actualización exitosa, ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
+        // Resto del código
+
+        var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
+
+        var claveEvento = document.getElementById("clave-evento-reserva").value;
+        var nuevaFecha = document.getElementById("fecha-evento-reserva").value;
+        var nuevaHora = document.getElementById("hora-evento-reserva").value;
+        var nuevaDuracion = document.getElementById("duracion-evento-reserva").value;
+
+        // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
+        var reservasRef = firebase.firestore().collection("reservas");
+
+          console.log("ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
+        // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
+        var consulta = reservasRef.where("fechaEvento", "==", nuevaFecha);
+
+        console.log("queremos empezar a hacer la consulta");
+
+        // Realizar el filtrado para obtener intervalos disponibles y no disponibles
+        consulta.get().then(function(querySnapshot) {
+          console.log("entramos a hacer consulta");
+          // Ciclo para revisar cada evento reservado para la nueva fecha
+          querySnapshot.forEach(function(doc) {
+            console.log("este es el doc: " + doc);
+            var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 540 para 09:00)
+            var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
+            console.log("hora del evento con clave: " + doc.data().claveEvento + ": " + horaEvento);
+            console.log("duracion del evento con clave: " + doc.data().claveEvento + ": " + duracionEvento);
+            // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+            var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+            var finIntervalo = inicioIntervalo + duracionEvento / 30;
+            console.log("inicio intervalo: " + inicioIntervalo);
+            console.log("fin intervalo: " + finIntervalo);
+
+            // Marcar los intervalos como ocupados en el arreglo de disponibilidad
+            for (var i = inicioIntervalo; i < finIntervalo; i++) {
+              disponibilidadHorarios[i] = false;
+            }
+            console.log("estas son las disponibilidades de los intervalos:");
+            console.log(disponibilidadHorarios);
+          });
+
+          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
+          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
+          var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
+
+          // Verifica si alguno de los nuevos intervalos está ocupado
+          var algunIntervaloOcupado = false;
+          for (var i = inicioNuevoIntervalo; i < finNuevoIntervalo; i++) {
+            console.log("esta es la disponibilidad del intervalo " + i + ": " + disponibilidadHorarios[i]);
+            if (!disponibilidadHorarios[i]) {
+              console.log("está ocupado el intervalo " + i);
+              algunIntervaloOcupado = true;
+              break; // Si uno está ocupado, no es necesario verificar los demás
+            }
+          }
+
+          if (algunIntervaloOcupado) {
+            // Al menos uno de los intervalos no está disponible
+            // Mostrar alerta al usuario con SweetAlert2
+            Swal.fire({
+              title: '¡SIN DISPONIBILIDAD!',
+              text: 'Alguno de los intervalos seleccionados no está disponible. Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+          } else {
+            // Todos los intervalos están disponibles
+            // Realiza la edición de la reserva
+            // ...
+            resolve(true); // Resolver la promesa con 'true' si todos los intervalos están disponibles
+          }
+        }).catch(function(error) {
+          Swal.fire({
+            title: '¡ERROR DE CONSULTA!',
+            text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+          console.log(error);
+          resolve(false); // Resolver la promesa con 'false' en caso de error
+          return;
+        });
+        
+      })
+      .catch(error => console.error("Error al actualizar el evento:", error));
+
+    }
+  )}
+
+    function verificarDisponibilidadRegistro() {
+        return new Promise((resolve, reject) => {
+        var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
+
+        // var claveEvento = document.getElementById("clave-evento").value; // ya no es necesario esto
+        var nuevaFecha = document.getElementById("fecha-evento").value;
+        var nuevaHora = document.getElementById("hora-evento").value;
+        var nuevaDuracion = document.getElementById("duracion-evento").value;
+
+        // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
+        var reservasRef = firebase.firestore().collection("reservas");
+
+        // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
+        var consulta = reservasRef.where("fechaEvento", "==", nuevaFecha);
+        console.log("queremos empezar a hacer la consulta");
+
+        // Realizar el filtrado para obtener intervalos disponibles y no disponibles
+        consulta.get().then(function(querySnapshot) {
+          console.log("entramos a hacer consulta");
+          // Ciclo para revisar cada evento reservado para la nueva fecha
+          querySnapshot.forEach(function(doc) {
+            console.log("este es el doc: " + doc);
+            var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 540 para 09:00)
+            var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
+            console.log("hora del evento con clave: " + doc.data().claveEvento + ": " + horaEvento);
+            console.log("duracion del evento con clave: " + doc.data().claveEvento + ": " + duracionEvento);
+            // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+            var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+            var finIntervalo = inicioIntervalo + duracionEvento / 30;
+            console.log("inicio intervalo: " + inicioIntervalo);
+            console.log("fin intervalo: " + finIntervalo);
+
+            // Marcar los intervalos como ocupados en el arreglo de disponibilidad
+            for (var i = inicioIntervalo; i < finIntervalo; i++) {
+              disponibilidadHorarios[i] = false;
+            }
+            console.log("estas son las disponibilidades de los intervalos:");
+            console.log(disponibilidadHorarios);
+          });
+
+          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
+          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
+          var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
+
+          // Verifica si alguno de los nuevos intervalos está ocupado
+          var algunIntervaloOcupado = false;
+          for (var i = inicioNuevoIntervalo; i < finNuevoIntervalo; i++) {
+            console.log("esta es la disponibilidad del intervalo " + i + ": " + disponibilidadHorarios[i]);
+            if (!disponibilidadHorarios[i]) {
+              console.log("está ocupado el intervalo " + i);
+              algunIntervaloOcupado = true;
+              break; // Si uno está ocupado, no es necesario verificar los demás
+            }
+          }
+
+          if (algunIntervaloOcupado) {
+            // Al menos uno de los intervalos no está disponible
+            // Mostrar alerta al usuario con SweetAlert2
+            Swal.fire({
+              title: '¡SIN DISPONIBILIDAD!',
+              text: 'Alguno de los intervalos seleccionados no está disponible. Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+          } else {
+            // Todos los intervalos están disponibles
+            // Realiza la edición de la reserva
+            // ...
+            resolve(true); // Resolver la promesa con 'true' si todos los intervalos están disponibles
+          }
+        }).catch(function(error) {
+          Swal.fire({
+            title: '¡ERROR DE CONSULTA!',
+            text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+          console.log(error);
+          resolve(false); // Resolver la promesa con 'false' en caso de error
+          return;
+        });
+      }
+    )}
+
+    function verificarDisponibilidadCambioFechax(claveEvento, nuevaFecha, nuevaHora, nuevaDuracion) {
+      var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
+
+      // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
+      var reservasRef = firebase.firestore().collection("reservas");
+      reservasRef
+        .where("fechaEvento", "==", nuevaFecha)
+        .get()
+        .then(function(querySnapshot) {
+          // Ciclo para revisar cada evento reservado para la nueva fecha
+          querySnapshot.forEach(function(doc) {
+            var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 540 para 09:00)
+            var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
+
+            // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+            var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+            var finIntervalo = inicioIntervalo + duracionEvento / 30;
+
+            // Marcar los intervalos como ocupados en el arreglo de disponibilidad
+            for (var i = inicioIntervalo; i < finIntervalo; i++) {
+              disponibilidadHorarios[i] = false;
+            }
+          });
+
+          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
+          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
+          var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
+
+          // Verifica si alguno de los nuevos intervalos está ocupado
+          var algunIntervaloOcupado = false;
+          for (var i = inicioNuevoIntervalo; i < finNuevoIntervalo; i++) {
+            if (!disponibilidadHorarios[i]) {
+              algunIntervaloOcupado = true;
+              break; // Si uno está ocupado, no es necesario verificar los demás
+            }
+          }
+
+          if (algunIntervaloOcupado) {
+            // Al menos uno de los intervalos no está disponible
+            // Mostrar alerta al usuario con SweetAlert2
+            Swal.fire({
+              title: '¡SIN DISPONIBILIDAD!',
+              text: 'Alguno de los intervalos seleccionados no está disponible. Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+          } else {
+            // Todos los intervalos están disponibles
+            // Realiza la edición de la reserva
+            // ...
+          }
+        })
+        .catch(function(error) {
+          Swal.fire({
+            title: '¡ERROR DE CONSULTA!',
+            text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+          return; // Detener la ejecución de la función
+        });
+    }
+
+    function verificarDisponibilidadMismaFecha(claveEvento, nuevaFecha, horaEvento, duracionEvento, nuevaHora, nuevaDuracion) {      
+      // Realiza una consulta a la base de datos para obtener las reservas en la fecha original del evento
+      var eventoRef = firebase.firestore().collection("reservas").doc(claveEvento);
+      
+      eventoRef.get().then(function(doc) {
+        if (doc.exists) {
+          var horaEventoOriginal = doc.data().horaEvento; // Hora original en minutos (ej. 540 para 09:00)
+          var duracionEventoOriginal = doc.data().duracionEvento; // Duración original en minutos (ej. 120 para 2 horas)
+
+          // Calcula los intervalos ocupados por el evento original
+          var intervalosEventoOriginal = [];
+          var inicioIntervaloOriginal = Math.floor((horaEventoOriginal - 480) / 30);
+          var finIntervaloOriginal = inicioIntervaloOriginal + duracionEventoOriginal / 30;
+          for (var i = inicioIntervaloOriginal; i < finIntervaloOriginal; i++) {
+            intervalosEventoOriginal.push(i);
+          }
+
+          // Calcula los nuevos intervalos del evento con el nuevo horario
+          var intervalosNuevoHorario = [];
+          var inicioIntervaloNuevo = Math.floor((nuevaHora - 480) / 30);
+          var finIntervaloNuevo = inicioIntervaloNuevo + nuevaDuracion / 30;
+          for (var j = inicioIntervaloNuevo; j < finIntervaloNuevo; j++) {
+            intervalosNuevoHorario.push(j);
+          }
+
+          // Encuentra los intervalos que quedan por fuera del evento original
+          var intervalosFuera = intervalosNuevoHorario.filter(function(intervalo) {
+            return !intervalosEventoOriginal.includes(intervalo);
+          });
+
+          // Verificar si todos los intervalos fuera del evento original están disponibles
+          var todosDisponibles = intervalosFuera.every(function(intervalo) {
+            return disponibilidadHorarios[intervalo];
+          });
+
+          if (!todosDisponibles) {
+            // Algunos intervalos fuera del evento original están ocupados
+            // Mostrar alerta al usuario con SweetAlert2
+            Swal.fire({
+              title: 'HORARIO NO DISPONIBLE',
+              text: 'Algunos intervalos del nuevo horario están ocupados.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return;
+          }
+
+          // Todos los intervalos fuera del evento original están disponibles
+          // Realiza la edición de la reserva
+          // ...
+        }
+      }).catch(function(error) {
+        Swal.fire({
+          title: '¡ERROR EN LA CONSULTA!',
+          text: 'Ocurrió un error al obtener los detalles del evento. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      });
+    }
+
+  </script>
+</body>
+</html>
