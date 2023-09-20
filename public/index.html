@@ -37,7 +37,7 @@
   </script>
 
 
-  <title>SIEA (Sistema Integrado de Espacios ANEIAP)</title>
+  <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
     /* Estilos para el contenedor de la imagen */
     .centered-text {
@@ -1671,68 +1671,32 @@
       });
     }    
 
-    // Función para convertir los minutos del campo hora a formato HH:MM
-    function convertirMinutosAHora(minutos) {
-      // Divide los minutos en horas y minutos
-      var horas = Math.floor(minutos / 60);
-      var minutosRestantes = minutos % 60;
-
-      // Formatea las horas y minutos como cadena
-      var horaFormateada = horas.toString().padStart(2, '0'); // Asegura que tenga 2 dígitos, rellenando con 0 si es necesario
-      var minutosFormateados = minutosRestantes.toString().padStart(2, '0');
-
-      // Retorna la hora en formato HH:MM
-      return horaFormateada + ':' + minutosFormateados;
-    }
-
     // Función para enviar el correo de edición de reserva
-    function enviarCorreoEdicionx(emailOrganizadorReserva,claveEventoReserva,nombreEventoReserva,fechaEventoReserva,horaEventoReserva) {
-      var asunto = "ACTUALIZACIÓN DE RESERVA - " + claveEventoReserva;
-      var cuerpoMensaje = "SU RESERVA CON CLAVE DE EVENTO <" + claveEventoReserva + "> CON NOMBRE <" + nombreEventoReserva + "> PARA EL DÍA" + fechaEventoReserva + "A LAS " + horaEventoReserva + "HA SIDO ACTUALIZADA EFECTIVAMENTE, RECUERDE QUE SU CLAVE DE EVENTO NO CAMBIA Y QUE LA RESERVA SIGUE VIGENTE Y ACEPTA, SOLAMENTE HAS MODIFICADO SUS ATRIBUTOS, SI TIENES INQUIETUDES O DUDAS, CONTÁCTATE CON EL ADMINISTRADOR/CREADOR DE SIEA.";
-
-      // Construir el enlace mailto con la información del correo
-      var mailtoLink = "mailto:" + emailOrganizadorReserva +
-        "?subject=" + encodeURIComponent(asunto) +
-        "&body=" + encodeURIComponent(cuerpoMensaje);
-
-      // Abrir el cliente de correo predeterminado con la información del correo
-      window.location.href = mailtoLink;
-    }
-
-    // Función para enviar el correo
     function enviarCorreoEdicion() {
-      // Obtener los inputs clave para el correo personalizado
-      var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
-      var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
-      var minutosDesdeMedianoche = document.getElementById("hora-evento-reserva").value;
-      var nombreEventoReserva = document.getElementById("nombre-evento-reserva").value;
-      var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
-
-      // Convertir los minutos desde la medianoche a formato HH:MM
-      var horaEventoReserva = convertirMinutosAHora(minutosDesdeMedianoche);
-
-      var asunto = "ACTUALIZACIÓN DE RESERVA - " + claveEventoReserva;
-
-      var templateParams = {
-        to_email: emailOrganizadorReserva, // Coloca aquí la dirección de correo electrónico del organizador
-        from_email: "siea@aneiap.co",
-        public_key: "LU2FEUSJNDECVCALW", // Reemplaza con tu clave pública
-        password: "alesvica",
-        subject: asunto,
-        claveEventoReserva: claveEventoReserva,
-        nombreEventoReserva: nombreEventoReserva,
-        fechaEventoReserva: fechaEventoReserva,
-        horaEventoReserva: horaEventoReserva,
+      const emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+      const data = {
+        emailDestinatario: emailOrganizadorReserva, // Usamos el valor obtenido del campo de entrada
+        asunto: 'Confirmación de reserva',
+        mensaje: 'Tu edición reserva ha sido confirmada'
       };
 
-      emailjs
-        .send("RESPUESTAS_SIEA", "respuestas_siea_id", templateParams)
-        .then(function (response) {
-          console.log("Correo enviado con éxito", response);
+      fetch('https://alessvilla.github.io/SIEA/public/enviar-correo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Respuesta del servidor:', data);
+          // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o error en tu aplicación web
         })
-        .catch(function (error) {
-          console.error("Error al enviar el correo", error);
+        .catch(error => {
+          console.error('Error al enviar la solicitud:', error);
+          // Maneja el error en tu aplicación web
         });
+
     }
 
     function calcularIntervalosNuevaFecha(nuevaFecha, nuevaHora, nuevaDuracion) {
