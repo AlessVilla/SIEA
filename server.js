@@ -1,3 +1,12 @@
+// Configura encabezados CORS en tu servidor Express
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://alessvilla.github.io'); // Reemplaza con tu dominio de GitHub Pages
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+  });
+  
+  // Resto de la configuración de tu servidor y definición de rutas aquí...  
 const express = require('express');
 const app = express();
 const nodemailer = require('nodemailer');
