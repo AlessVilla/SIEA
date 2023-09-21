@@ -14,8 +14,12 @@
   <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
   <!-- Agrega el bloque del SDK de Firebase Cloud Firestore -->
   <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
-  <!-- Agrega la biblioteca para enviar correos -->  
+  <!-- Agrega la biblioteca para enviar correos en Email.js -->  
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <!-- Agrega la biblioteca para enviar correos por API Gmail -->  
+  <script src="https://apis.google.com/js/client.js"></script>
+  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
 
   <!-- ACÁ SE PUEDE ENCONTRAR LA CONFIGURACIÓN INICIAL DE FIREBASE PARA ACCEDER AL PROYECTO -->
   <script>
@@ -35,7 +39,6 @@
     const auth = firebase.auth();
     const firestore = firebase.firestore();
   </script>
-
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
@@ -1673,14 +1676,64 @@
 
     // Función para enviar el correo de edición de reserva
     function enviarCorreoEdicion() {
+      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      const destinatario = "alessandro.villanueva@aneiap.co"; // Reemplaza con la dirección de correo del destinatario
+      const asunto = "Confirmación de edición/registro de reserva";
+      const mensaje = `
+        <html>
+          <body>
+            <h1 style="color: #007BFF;">Su edición de reserva ha sido confirmada</h1>
+            <p>Estimado usuario,</p>
+            <p>Le confirmamos que su edición/registro de reserva ha sido procesada correctamente.</p>
+            <p>Gracias por utilizar nuestros servicios.</p>
+            <p>Atentamente,</p>
+            <p>SIEA</p>
+          </body>
+        </html>
+      `;
+
+      Email.send({
+        Host: emailHost,
+        Username: emailUsername,
+        Password: emailPassword,
+        To: destinatario,
+        From: emailUsername, // Debería ser la misma dirección de correo de Username
+        Subject: asunto,
+        Body: mensaje,
+        // Indicar que el mensaje es de tipo HTML
+        ContentType: "text/html",
+      })
+        .then((message) => {
+          console.log("Mensaje de SMTPJS:", message);
+
+          if (message === "OK") {
+            console.log("Correo enviado con éxito");
+            // Puedes eliminar la alerta ya que no es necesaria
+          } else {
+            console.error("Error al enviar el correo:", message);
+            // Puedes manejar el error de otra manera si lo deseas
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la función de envío de correo:", error);
+          // Puedes manejar el error de otra manera si lo deseas
+        });
+    }
+
+    function enviarCorreoEdicionx() {
       const emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+      const asuntxo = 'Confirmación de edición/registro de reserva';
+      const mensaje = 'Tu modificación/reserva ha sido registrada.';
+
       const data = {
-        emailDestinatario: emailOrganizadorReserva, // Usamos el valor obtenido del campo de entrada
-        asunto: 'Confirmación de reserva',
-        mensaje: 'Tu edición reserva ha sido confirmada'
+        emailDestinatario: emailOrganizadorReserva,
+        asunto,
+        mensaje
       };
 
-      fetch('https://alessvilla.github.io/SIEA/public/enviar-correo', {
+      fetch('http://localhost:3000/enviar-correo-confirmacion', { // Cambia la URL a la dirección de tu servidor
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -1696,7 +1749,6 @@
           console.error('Error al enviar la solicitud:', error);
           // Maneja el error en tu aplicación web
         });
-
     }
 
     function calcularIntervalosNuevaFecha(nuevaFecha, nuevaHora, nuevaDuracion) {
