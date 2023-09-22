@@ -276,7 +276,7 @@
   <!-- Proceso para insertar el logo de la herramienta y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;">Bienvenido a SIEA (Sistema Integrado de Espacios ANEIAP)</h1>
   <div class="image-container">
-    <img src="https://drive.google.com/uc?id=1L-NkVXT382o6UtiyNPTGCSSi-PYgFvJG" alt="Descripción de la imagen">
+    <img src="https://drive.google.com/file/d/1dQv-QzOvOTHm0RzktR7ypQsXdGVJIiD9" alt="Descripción de la imagen">
   </div>
   <div class="disponibilidad-group">
   <label for="texto1"><b>I  N  S  T  R  U  C  C  IO  N  E  S      G  E  N  E  R  A  L  E  S:</b></label>
@@ -1081,6 +1081,15 @@
     }
   }
 
+    // Variable auxiliar para el apoyo de la edición de una reserva
+    var fechaEventoGuardar = 'n/a';
+    function guardarBackupFechaEventoReserva() {
+      if (fechaEventoGuardar === 'n/a') {
+        fechaEventoGuardar = document.getElementById("fecha-evento-reserva").value;
+      }
+      return fechaEventoGuardar;
+    }
+
     function consultarReserva() {
 
     var claveEventoConsultar = document.getElementById("clave-evento-reserva").value;
@@ -1104,7 +1113,6 @@
       if (doc.exists) {
         // El documento existe, obtener los datos de la reserva
         var reserva = doc.data();
-
         // Asignar los valores de la reserva a los campos del formulario
         document.getElementById("nombre-evento-reserva").value = reserva.nombreEvento;
         document.getElementById("fecha-evento-reserva").value = reserva.fechaEvento;
@@ -1123,6 +1131,8 @@
         document.getElementById("telefono-ponente-reserva").value = reserva.telefonoPonente;
         document.getElementById("publicidad-comite-reserva").value = reserva.publicidadComite;       
         document.getElementById("foto-ponente-reserva").value = reserva.fotoPonenteURL;
+        // Guardar el valor de la fecha actual para reponerla en caso de que la validación de disponibiildad falle
+        guardarBackupFechaEventoReserva();
 
         // Mostrar el contenido del acordeón datos-reserva-container
         var datosReservaContainer = document.getElementById("datos-reserva-container");
@@ -1196,6 +1206,28 @@
           });
           return; // Detener la edición de la reserva
         }
+
+          // Obtener el enlace del usuario
+          var enlaceGoogleDriveReserva = document.getElementById("foto-ponente-reserva").value;
+          // Expresión regular para verificar el formato del enlace de Google Drive
+          var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
+          var publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value
+
+          // Validar el enlace utilizando la expresión regular
+          if (publicidadComiteReserva === "si") {
+          if (enlaceGoogleDriveReserva !== "") {
+          if (!enlaceGoogleDriveRegex.test(enlaceGoogleDriveReserva)) {
+            Swal.fire({
+              title: "¡ENLACE INVÁLIDO!",
+              text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
+              icon: "warning",
+              confirmButtonText: "Aceptar",
+            });
+            return; // Detener el registro del evento
+            }
+          }
+
+          }
 
         // Aquí realizarías la lógica para verificar la disponibilidad de horarios
         var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
@@ -1681,15 +1713,67 @@
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
       const destinatario = "alessandro.villanueva@aneiap.co"; // Reemplaza con la dirección de correo del destinatario
       const asunto = "Confirmación de edición/registro de reserva";
+
+      // Datos adicionales de la reserva
+      const nombreOrganizadorReserva= document.getElementById("nombre-organizador-reserva").value;
+      const nombreEventoReserva= document.getElementById("nombre-evento-reserva").value;
+      const claveReserva = document.getElementById("clave-evento-reserva").value;
+      const fechaReserva = document.getElementById("fecha-evento-reserva").value;
+      const horaReserva = document.getElementById("hora-evento-reserva").value;
+      const duracionReserva = document.getElementById("duracion-evento-reserva").value;
+      const planEvento = document.getElementById("plan-evento-reserva").value;
+      const modalidadReserva = document.getElementById("modalidad-evento-reserva").value;
+      const nombrePonente = document.getElementById("nombre-ponente-reserva").value;
+      const publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
+      const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
+      const fotoPonenteURLReserva = document.getElementById("foto-ponente-reserva").value;
+      const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
+      const lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
+
+      // Convertir duración a formato horas + minutos
+      const duracionHoras = Math.floor(duracionReserva / 60);
+      const duracionMinutos = duracionReserva % 60;
+
+      // Convertir minutos a formato militar (HH:MM)
+      const horasMilitar = Math.floor(horaReserva / 60);
+      const minutosMilitar = horaReserva % 60;
+      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
+
+      // Datos adicionales para la publicidad
+      let publicidad = "";
+      if (publicidadComiteReserva === "si") {
+        publicidad = `
+          <p>El organizador ha solicitado la realización de la publicidad para el evento. A continuación, se adjuntan las observaciones:</p>
+          <p>${observacionesPublicidadReserva}</p>
+          <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
+        `;
+      }
+
+      // Mensaje de correo con los datos adicionales
       const mensaje = `
         <html>
           <body>
-            <h1 style="color: #007BFF;">Su edición de reserva ha sido confirmada</h1>
-            <p>Estimado usuario,</p>
-            <p>Le confirmamos que su edición/registro de reserva ha sido procesada correctamente.</p>
-            <p>Gracias por utilizar nuestros servicios.</p>
-            <p>Atentamente,</p>
-            <p>SIEA</p>
+            <h1 style="color: #007BFF;">Su edición de reserva ha sido confirmada ☑️</h1>
+            <p>Estimado(a) <strong>${nombreOrganizadorReserva}</strong>,</p>
+            <p>Le confirmamos que su edición de reserva para el evento <strong>${nombreEventoReserva}</strong> ha sido procesada correctamente.</p>
+            <p>A continuación, encontrará los detalles de su reserva:</p>
+            <ul>
+              <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
+              <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
+              <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
+              <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
+              <li><strong>Plan del evento:</strong> ${planEvento}</li>
+              <li><strong>Modalidad de la reserva:</strong> ${modalidadReserva}</li>
+              ${modalidadReserva === "virtual" ? `<li><strong>Plataforma:</strong> ${ubicacionPlataformaReserva}</li>` : `<li><strong>Ubicación/Salón:</strong> ${lugarPresencialReserva}</li>`}
+              <li><strong>Nombre del ponente:</strong> ${nombrePonente}</li>
+            </ul>
+            ${publicidad}
+            <p>Si tiene alguna pregunta, inquietud o necesita asistencia adicional, no dude en <a href="http://wa.me/3002252099" target="_blank">hacer clic aquí</a> para comunicarse con nosotros a través de WhatsApp.</p>
+            <p>Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚</p>
+            <p>Agradecemos su confianza en nosotros, recuerde que este correo es automático y NO debe ser respondido. Esperamos seguir construyendo A.L.M.A. 💙💚</p>
+            <p style="font-style: italic;">Cordialmente,</p>
+            <p style="font-style: italic;">Alessandro Villanueva Cantillo</p>
+            <p style="font-style: italic;">Administrador y creador SIEA</p>
           </body>
         </html>
       `;
@@ -1702,8 +1786,7 @@
         From: emailUsername, // Debería ser la misma dirección de correo de Username
         Subject: asunto,
         Body: mensaje,
-        // Indicar que el mensaje es de tipo HTML
-        ContentType: "text/html",
+        ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
       })
         .then((message) => {
           console.log("Mensaje de SMTPJS:", message);
@@ -1719,35 +1802,6 @@
         .catch((error) => {
           console.error("Error en la función de envío de correo:", error);
           // Puedes manejar el error de otra manera si lo deseas
-        });
-    }
-
-    function enviarCorreoEdicionx() {
-      const emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
-      const asuntxo = 'Confirmación de edición/registro de reserva';
-      const mensaje = 'Tu modificación/reserva ha sido registrada.';
-
-      const data = {
-        emailDestinatario: emailOrganizadorReserva,
-        asunto,
-        mensaje
-      };
-
-      fetch('http://localhost:3000/enviar-correo-confirmacion', { // Cambia la URL a la dirección de tu servidor
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Respuesta del servidor:', data);
-          // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o error en tu aplicación web
-        })
-        .catch(error => {
-          console.error('Error al enviar la solicitud:', error);
-          // Maneja el error en tu aplicación web
         });
     }
 
@@ -1856,6 +1910,44 @@
             console.log("estas son las disponibilidades de los intervalos:");
             console.log(disponibilidadHorarios);
           });
+          
+          var disponibilidadMatutino = true;
+          var disponibilidadVesperino = true;
+          var disponibilidadNocturno = true;
+
+          // Colocar los intervalos de un mismo paquete horario (matutino, vesperino o nocturno) ocupados
+          // Verificar el paquete horario matutino (intervalos 1 al 10, es decir, 8:00 a 13:00)
+          for (var i = 0; i <= 9; i++) {
+            if (!disponibilidadHorarios[i]) {
+              for (var j = 0; j <= 9; j++) {
+                disponibilidadHorarios[j] = false;
+              }
+              disponibilidadMatutino = false;
+              break; // Al menos un intervalo está ocupado, salir del ciclo
+            }
+          }
+
+          // Verificar el paquete horario vesperino (intervalos 11 al 20, es decir, 13:00 a 18:00)
+          for (var i = 10; i <= 19; i++) {
+            if (!disponibilidadHorarios[i]) {
+              for (var j = 10; j <= 19; j++) {
+                disponibilidadHorarios[j] = false;
+              }
+              disponibilidadVesperino = false;
+              break; // Al menos un intervalo está ocupado, salir del ciclo
+            }
+          }
+
+          // Verificar el paquete horario nocturno (intervalos 21 al 28, es decir, 18:00 a 22:00)
+          for (var i = 20; i <= 27; i++) {
+            if (!disponibilidadHorarios[i]) {
+              for (var j = 20; j <= 27; j++) {
+                disponibilidadHorarios[j] = false;
+              }
+              disponibilidadNocturno = false;
+              break; // Al menos un intervalo está ocupado, salir del ciclo
+            }
+          }
 
           // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
           var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
@@ -1874,14 +1966,50 @@
 
           if (algunIntervaloOcupado) {
             // Al menos uno de los intervalos no está disponible
-            // Mostrar alerta al usuario con SweetAlert2
-            Swal.fire({
-              title: '¡SIN DISPONIBILIDAD!',
-              text: 'Alguno de los intervalos seleccionados no está disponible. Prueba cambiar el día, hora o duración.',
+            // Actualizar la fecha del evento de vuelta a la fecha que tenía porque ahora mismo está en 31 de diciembre.
+            var fechaEventoReservaBackup = guardarBackupFechaEventoReserva();
+            console.log('fecha evento reserva backup' + fechaEventoReservaBackup);
+            eventoRef.update({fechaEvento: fechaEventoReservaBackup});
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
+            if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
+              text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar'
             });
             return; // Detener la ejecución de la función
+            }
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
+            if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
+              text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+            }
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vesperino.
+            if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERINO! ☀️',
+              text: 'El horario vesperino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+            }
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
+            if (!disponibilidadNocturno) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
+              text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+            }
           } else {
             // Todos los intervalos están disponibles
             // Realiza la edición de la reserva
