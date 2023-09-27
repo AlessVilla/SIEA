@@ -1072,7 +1072,7 @@
             var fotoPonenteURL = document.getElementById("foto-ponente").value;
 
             agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-
+            enviarCorreoRegistro(claveEvento);
           }
       }).catch(function(error) {
         // Maneja cualquier error que pueda ocurrir durante la verificación
@@ -1805,6 +1805,105 @@
         });
     }
 
+    // Función para enviar el correo de edición de reserva
+    function enviarCorreoRegistro(claveReservaCreada) {
+      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      const destinatario = "alessandro.villanueva@aneiap.co"; // Reemplaza con la dirección de correo del destinatario
+      const asunto = "Confirmación de registro de reserva";
+
+      // Datos adicionales de la reserva
+      const nombreOrganizadorReserva= document.getElementById("nombre-organizador").value;
+      const nombreEventoReserva= document.getElementById("nombre-evento").value;
+      const claveReserva = claveReservaCreada;
+      const fechaReserva = document.getElementById("fecha-evento").value;
+      const horaReserva = document.getElementById("hora-evento").value;
+      const duracionReserva = document.getElementById("duracion-evento").value;
+      const planEvento = document.getElementById("plan-evento").value;
+      const modalidadReserva = document.getElementById("modalidad-evento").value;
+      const nombrePonente = document.getElementById("nombre-ponente").value;
+      const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
+      const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad").value;
+      const fotoPonenteURLReserva = document.getElementById("foto-ponente").value;
+      const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma").value;
+      const lugarPresencialReserva = document.getElementById("lugar-presencial").value;
+
+      // Convertir duración a formato horas + minutos
+      const duracionHoras = Math.floor(duracionReserva / 60);
+      const duracionMinutos = duracionReserva % 60;
+
+      // Convertir minutos a formato militar (HH:MM)
+      const horasMilitar = Math.floor(horaReserva / 60);
+      const minutosMilitar = horaReserva % 60;
+      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
+
+      // Datos adicionales para la publicidad
+      let publicidad = "";
+      if (publicidadComiteReserva === "si") {
+        publicidad = `
+          <p>El organizador ha solicitado la realización de la publicidad para el evento. A continuación, se adjuntan las observaciones:</p>
+          <p>${observacionesPublicidadReserva}</p>
+          <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
+        `;
+      }
+
+      // Mensaje de correo con los datos adicionales
+      const mensaje = `
+        <html>
+          <body>
+            <h1 style="color: #007BFF;">Su registro de reserva ha sido confirmado ☑️</h1>
+            <p>Estimado(a) <strong>${nombreOrganizadorReserva}</strong>,</p>
+            <p>Le confirmamos que su registro de reserva para el evento <strong>${nombreEventoReserva}</strong> ha sido procesado correctamente.</p>
+            <p>A continuación, encontrará los detalles de su reserva:</p>
+            <ul>
+              <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
+              <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
+              <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
+              <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
+              <li><strong>Plan del evento:</strong> ${planEvento}</li>
+              <li><strong>Modalidad de la reserva:</strong> ${modalidadReserva}</li>
+              ${modalidadReserva === "virtual" ? `<li><strong>Plataforma:</strong> ${ubicacionPlataformaReserva}</li>` : `<li><strong>Ubicación/Salón:</strong> ${lugarPresencialReserva}</li>`}
+              <li><strong>Nombre del ponente:</strong> ${nombrePonente}</li>
+            </ul>
+            ${publicidad}
+            <p>Si tiene alguna pregunta, inquietud o necesita asistencia adicional, no dude en <a href="http://wa.me/3002252099" target="_blank">hacer clic aquí</a> para comunicarse con nosotros a través de WhatsApp.</p>
+            <p>Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚</p>
+            <p>Agradecemos su confianza en nosotros, recuerde que este correo es automático y NO debe ser respondido. Esperamos seguir construyendo A.L.M.A. 💙💚</p>
+            <p style="font-style: italic;">Cordialmente,</p>
+            <p style="font-style: italic;">Alessandro Villanueva Cantillo</p>
+            <p style="font-style: italic;">Administrador y creador SIEA</p>
+          </body>
+        </html>
+      `;
+
+      Email.send({
+        Host: emailHost,
+        Username: emailUsername,
+        Password: emailPassword,
+        To: destinatario,
+        From: emailUsername, // Debería ser la misma dirección de correo de Username
+        Subject: asunto,
+        Body: mensaje,
+        ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
+      })
+        .then((message) => {
+          console.log("Mensaje de SMTPJS:", message);
+
+          if (message === "OK") {
+            console.log("Correo enviado con éxito");
+            // Puedes eliminar la alerta ya que no es necesaria
+          } else {
+            console.error("Error al enviar el correo:", message);
+            // Puedes manejar el error de otra manera si lo deseas
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la función de envío de correo:", error);
+          // Puedes manejar el error de otra manera si lo deseas
+        });
+    }
+
     function calcularIntervalosNuevaFecha(nuevaFecha, nuevaHora, nuevaDuracion) {
       var nuevosIntervalos = [];
 
@@ -2078,6 +2177,48 @@
           var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
           var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
 
+          var disponibilidadMatutino = true;
+          var disponibilidadVesperino = true;
+          var disponibilidadNocturno = true;
+
+          // Colocar los intervalos de un mismo paquete horario (matutino, vesperino o nocturno) ocupados
+          // Verificar el paquete horario matutino (intervalos 1 al 10, es decir, 8:00 a 13:00)
+          for (var i = 0; i <= 9; i++) {
+            if (!disponibilidadHorarios[i]) {
+              for (var j = 0; j <= 9; j++) {
+                disponibilidadHorarios[j] = false;
+              }
+              disponibilidadMatutino = false;
+              break; // Al menos un intervalo está ocupado, salir del ciclo
+            }
+          }
+
+          // Verificar el paquete horario vesperino (intervalos 11 al 20, es decir, 13:00 a 18:00)
+          for (var i = 10; i <= 19; i++) {
+            if (!disponibilidadHorarios[i]) {
+              for (var j = 10; j <= 19; j++) {
+                disponibilidadHorarios[j] = false;
+              }
+              disponibilidadVesperino = false;
+              break; // Al menos un intervalo está ocupado, salir del ciclo
+            }
+          }
+
+          // Verificar el paquete horario nocturno (intervalos 21 al 28, es decir, 18:00 a 22:00)
+          for (var i = 20; i <= 27; i++) {
+            if (!disponibilidadHorarios[i]) {
+              for (var j = 20; j <= 27; j++) {
+                disponibilidadHorarios[j] = false;
+              }
+              disponibilidadNocturno = false;
+              break; // Al menos un intervalo está ocupado, salir del ciclo
+            }
+          }
+
+          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
+          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
+          var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
+
           // Verifica si alguno de los nuevos intervalos está ocupado
           var algunIntervaloOcupado = false;
           for (var i = inicioNuevoIntervalo; i < finNuevoIntervalo; i++) {
@@ -2091,14 +2232,50 @@
 
           if (algunIntervaloOcupado) {
             // Al menos uno de los intervalos no está disponible
-            // Mostrar alerta al usuario con SweetAlert2
-            Swal.fire({
-              title: '¡SIN DISPONIBILIDAD!',
-              text: 'Alguno de los intervalos seleccionados no está disponible. Prueba cambiar el día, hora o duración.',
+            // Actualizar la fecha del evento de vuelta a la fecha que tenía porque ahora mismo está en 31 de diciembre.
+            var fechaEventoReservaBackup = guardarBackupFechaEventoReserva();
+            console.log('fecha evento reserva backup' + fechaEventoReservaBackup);
+            eventoRef.update({fechaEvento: fechaEventoReservaBackup});
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
+            if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
+              text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar'
             });
             return; // Detener la ejecución de la función
+            }
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
+            if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
+              text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+            }
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vesperino.
+            if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERINO! ☀️',
+              text: 'El horario vesperino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+            }
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
+            if (!disponibilidadNocturno) {
+              Swal.fire({
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
+              text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            return; // Detener la ejecución de la función
+            }
           } else {
             // Todos los intervalos están disponibles
             // Realiza la edición de la reserva
