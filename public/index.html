@@ -1318,7 +1318,7 @@
     // Esta función elimina cada reserva que el usuario desee eliminar, también 
     function eliminarReserva() {
         // Obtener los valores de los campos a verificar
-        var fechaEventoEliminar = document.getElementById("fecha-evento-eliminar").value;
+        var fechaEventoEliminarsub = document.getElementById("fecha-evento-eliminar").value;
         var horaEventoEliminar = document.getElementById("hora-evento-eliminar").value;
         var claveEventoEliminar = document.getElementById("clave-evento-eliminar").value;
 
@@ -1326,7 +1326,7 @@
         var camposFaltantes = [];
 
         // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
-        if (fechaEventoEliminar.trim() === "") {
+        if (fechaEventoEliminarsub.trim() === "") {
             camposFaltantes.push("Fecha del evento. ");
         }
         if (horaEventoEliminar.trim() === "") {
@@ -1335,7 +1335,7 @@
         if (claveEventoEliminar.trim() === "") {
             camposFaltantes.push("Clave del evento.");
         }
-
+        var fechaEventoEliminarSub = new Date(document.getElementById("fecha-evento-eliminar").value);
         // Si hay campos faltantes, mostrar mensaje de error personalizado
         if (camposFaltantes.length > 0) {
             var mensajeError = "Faltan campos por diligenciar:\n\n" + camposFaltantes.join("\n");
@@ -1358,7 +1358,7 @@
             if (result.isConfirmed) {
                 // Realizar la eliminación de la reserva en la base de datos
                 var claveEventoEliminar = document.getElementById("clave-evento-eliminar").value;
-
+                console.log(claveEventoEliminar);
                 // Obtener una referencia al documento que se desea eliminar
                 var reservaRef = firebase.firestore().collection("reservas").doc(claveEventoEliminar);
 
@@ -1366,10 +1366,44 @@
                 reservaRef.get().then((doc) => {
                   if (doc.exists) {
                     // El documento existe, proceder con la eliminación
+                    var fechaReservaSub = new Date(doc.data().fechaEvento);
+                    var fechaReserva = fechaReservaSub.toISOString().slice(0, 10);
+                    var fechaEventoEliminar = fechaEventoEliminarSub.toISOString().slice(0, 10);
+                    var horaReserva = doc.data().horaEvento;
+                    var duracionReserva = doc.data().duracionEvento;
+                    var nombreEventoReserva= doc.data().nombreEvento;
+                    var nombreOrganizadorReserva = doc.data().nombreOrganizador;
+                    var correoReserva = doc.data().emailOrganizador;
+                    // Dividir la hora y los minutos en variables
+                    var partesHora = horaEventoEliminar.split(":");
+                    var hora = parseInt(partesHora[0], 10); // Convertir la hora en número entero
+                    var minutos = parseInt(partesHora[1], 10); // Convertir los minutos en número entero
+                    // Calcular el número total de minutos después de la medianoche
+                    var minutosDespuesDeMedianoche = hora * 60 + minutos;
+                    // Verificar si la fecha es la apropiada
+                    if (fechaReserva !== fechaEventoEliminar) {
+                      Swal.fire({
+                        title: '¡FECHA INCORRECTA!',
+                        text: 'La fecha del evento debe ser exactamente igual a la que tiene la reserva.',
+                        icon: 'warning',
+                        confirmButtonText: 'Aceptar'
+                      });
+                      return; // Detener la edición de la reserva
+                    }
+                    if (horaReserva !== '' + minutosDespuesDeMedianoche) {
+                      Swal.fire({
+                        title: '¡HORA INCORRECTA!',
+                        text: 'La hora del evento debe ser exactamente igual a la que tiene la reserva.',
+                        icon: 'warning',
+                        confirmButtonText: 'Aceptar'
+                      });
+                      return; // Detener la edición de la reserva
+                    }
                     reservaRef.delete().then(() => {
                       // Eliminación exitosa
                       console.log("Reserva eliminada con éxito.");
-                      // Resetear los campos del acordeón 3 a sus valores por defecto.
+                      // Resetear los campos del acordeón 3 a sus valores por defect luego de enviar correo.
+                      enviarCorreoEliminar(claveEventoEliminar,nombreOrganizadorReserva,correoReserva,nombreEventoReserva,fechaReserva,horaReserva,duracionReserva);
                       document.getElementById("fecha-evento-eliminar").value = "";
                       document.getElementById("hora-evento-eliminar").value = "";
                       document.getElementById("clave-evento-eliminar").value = "";
@@ -1378,6 +1412,11 @@
                       content.style.display = "none";
                       // Mostrar mensaje de éxito
                       mostrarMensajeEliminar();
+                      // Ocultar el acordeón 3
+                      var content = document.getElementById("acordeon3-content");
+                      content.style.display = "none";
+                      // Mostrar mensaje de éxito
+                      //mostrarMensajeEliminar();
                     }).catch((error) => {
                       // Error al intentar eliminar el documento
                       console.error("NO SE PUDO ELIMINAR LA RESERVA", error);
@@ -1407,15 +1446,6 @@
                     confirmButtonText: 'Aceptar'
                   });
                 });
-                // Resetear los campos del acordeón 3 a sus valores por defecto.
-                document.getElementById("fecha-evento-eliminar").value = "";
-                document.getElementById("hora-evento-eliminar").value = "";
-                document.getElementById("clave-evento-eliminar").value = "";
-                // Ocultar el acordeón 3
-                var content = document.getElementById("acordeon3-content");
-                content.style.display = "none";
-                // Mostrar mensaje de éxito
-                //mostrarMensajeEliminar();
             }
             });
         }
@@ -1886,6 +1916,80 @@
             <p style="font-style: italic;">Alessandro Villanueva Cantillo</p>
             <p style="font-style: italic;">Administrador y creador SIEA</p>
           </body>
+        </html>
+      `;
+
+      Email.send({
+        Host: emailHost,
+        Username: emailUsername,
+        Password: emailPassword,
+        To: `${destinatario}, siea@aneiap.co`, // Usuario que está registrando la reserva
+     //   Cc: "siea@aneiap.co", // Copia a siea para siempre tener registro de correos
+        From: emailUsername, // Debería ser la misma dirección de correo de Username
+        Subject: asunto,
+        Body: mensaje,
+        ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
+      })
+        .then((message) => {
+          console.log("Mensaje de SMTPJS:", message);
+
+          if (message === "OK") {
+            console.log("Correo enviado con éxito");
+            // Puedes eliminar la alerta ya que no es necesaria
+          } else {
+            console.error("Error al enviar el correo:", message);
+            // Puedes manejar el error de otra manera si lo deseas
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la función de envío de correo:", error);
+          // Puedes manejar el error de otra manera si lo deseas
+        });
+    }
+
+    // Función para enviar el correo de edición de reserva
+    function enviarCorreoEliminar(claveReservaCreada,nombreOrganizadorReserva,correoReserva,nombreEventoReserva,fechaReserva,horaReserva,duracionReserva) {
+
+      // Obtener la clave de la reserva para enviar el correo
+      const claveReserva = claveReservaCreada;
+
+      // Restpo de datos para el correo, datos generales
+      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      const destinatario = correoReserva; // Reemplaza con la dirección de correo del destinatario
+      const asunto = `Confirmación de eliminación de reserva - Clave: ${claveReserva}`;
+
+      // Convertir duración a formato horas + minutos
+      const duracionHoras = Math.floor(duracionReserva / 60);
+      const duracionMinutos = duracionReserva % 60;
+
+      // Convertir minutos a formato militar (HH:MM)
+      const horasMilitar = Math.floor(horaReserva / 60);
+      const minutosMilitar = horaReserva % 60;
+      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
+
+      // Mensaje de correo con los datos adicionales
+      const mensaje = `
+        <html>
+          <body>
+            <h1 style="color: #C3002C;">Su eliminación de reserva ha sido confirmada ☑️</h1>
+            <p>Estimado(a) <strong>${nombreOrganizadorReserva}</strong>,</p>
+            <p>Le confirmamos que su registro de reserva para el evento <strong>${nombreEventoReserva}</strong> ha sido procesado correctamente.</p>
+            <p>A continuación, encontrará los detalles mínimos de su reserva eliminada:</p>
+            <ul>
+              <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
+              <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
+              <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
+              <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
+            </ul>
+            <p>Si tiene alguna pregunta, inquietud o necesita asistencia adicional, no dude en <a href="http://wa.me/3002252099" target="_blank">hacer clic aquí</a> para comunicarse con nosotros a través de WhatsApp.</p>
+            <p>Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚</p>
+            <p>Agradecemos su confianza en nosotros, recuerde que este correo es automático y NO debe ser respondido. Esperamos seguir construyendo A.L.M.A. 💙💚</p>
+            <p style="font-style: italic;">Cordialmente,</p>
+            <p style="font-style: italic;">Alessandro Villanueva Cantillo</p>
+            <p style="font-style: italic;">Administrador y creador SIEA</p>
+            </body>
         </html>
       `;
 
