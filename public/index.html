@@ -1791,8 +1791,7 @@
         Host: emailHost,
         Username: emailUsername,
         Password: emailPassword,
-        To: destinatario,
-        Cc: "siea@aneiap.co",
+        To: `${destinatario}, siea@aneiap.co`, // Usuario que está registrando la reserva
         From: emailUsername, // Debería ser la misma dirección de correo de Username
         Subject: asunto,
         Body: mensaje,
