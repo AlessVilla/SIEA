@@ -971,7 +971,7 @@
       if (camposValidos) {
         // Verificar si la fecha del evento es válida (mayor a la fecha actual)
         var fechaEvento = new Date(document.getElementById("fecha-evento").value);
-        var fechaActual = new Date();
+        var fechaActual = new Date().toISOString().slice(0, 10);
 
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if (fechaEvento <= fechaActual) {
@@ -1071,8 +1071,8 @@
             var observacionesPublicidad = document.getElementById("observaciones-publicidad").value;
             var fotoPonenteURL = document.getElementById("foto-ponente").value;
 
+            enviarCorreoRegistro(claveEvento,emailOrganizador);
             agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-            enviarCorreoRegistro(claveEvento);
           }
       }).catch(function(error) {
         // Maneja cualquier error que pueda ocurrir durante la verificación
@@ -1169,7 +1169,7 @@
         // Verificar si la fecha del evento es válida (mayor a la fecha actual)
         var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
         console.log("la fecha nueva es:" + fechaEventoReserva);
-        var fechaActual = new Date();
+        var fechaActual = new Date().toISOString().slice(0, 10);
 
         if (fechaEventoReserva <= fechaActual) {
           Swal.fire({
@@ -1274,8 +1274,8 @@
                 var observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
                 var fotoPonenteURLReserva = document.getElementById("foto-ponente-reserva").value;
 
-                editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
                 enviarCorreoEdicion();
+                editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
                 // Restablecer los campos a su valor por defecto (vacío)
                 // Ocultar el contenido del acordeón datos-reserva-container
                 var datosReservaContainer = document.getElementById("datos-reserva-container");
@@ -1522,6 +1522,9 @@
       if (nombrePonente.trim() === "") {
         camposFaltantes.push("Nombre del ponente");
       }
+      if (publicidadComite === "") {
+          camposFaltantes.push("Publicidad SÍ/NO");
+      }   
       if (publicidadComite === "si" && fotoPonente.trim() === "") {
         camposFaltantes.push("Foto del ponente");
       }
@@ -1603,6 +1606,9 @@
         if (nombrePonenteReserva.trim() === "") {
             camposFaltantes.push("Nombre del ponente");
         }
+        if (publicidadComiteReserva === "") {
+          camposFaltantes.push("Publicidad SÍ/NO");
+        }        
         if (publicidadComiteReserva === "si" && fotoPonenteReserva.trim() === "") {
           camposFaltantes.push("Foto del ponente");
         }
@@ -1708,16 +1714,19 @@
 
     // Función para enviar el correo de edición de reserva
     function enviarCorreoEdicion() {
+      // Obtener el correo del organizador para enviarle el correo
+      const correoDestino = document.getElementById("email-organizador-reserva").value;
+      const claveReserva = document.getElementById("clave-evento-reserva").value;
+
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-      const destinatario = "alessandro.villanueva@aneiap.co"; // Reemplaza con la dirección de correo del destinatario
-      const asunto = "Confirmación de edición/registro de reserva";
+      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
+      const asunto = `Confirmación de edición de reserva - Clave: ${claveReserva}`;
 
       // Datos adicionales de la reserva
       const nombreOrganizadorReserva= document.getElementById("nombre-organizador-reserva").value;
       const nombreEventoReserva= document.getElementById("nombre-evento-reserva").value;
-      const claveReserva = document.getElementById("clave-evento-reserva").value;
       const fechaReserva = document.getElementById("fecha-evento-reserva").value;
       const horaReserva = document.getElementById("hora-evento-reserva").value;
       const duracionReserva = document.getElementById("duracion-evento-reserva").value;
@@ -1783,6 +1792,7 @@
         Username: emailUsername,
         Password: emailPassword,
         To: destinatario,
+        Cc: "siea@aneiap.co",
         From: emailUsername, // Debería ser la misma dirección de correo de Username
         Subject: asunto,
         Body: mensaje,
@@ -1807,16 +1817,19 @@
 
     // Función para enviar el correo de edición de reserva
     function enviarCorreoRegistro(claveReservaCreada) {
+      // Obtener el correo del organizador para enviarle el correo
+      const correoDestino = document.getElementById("email-organizador").value;
+      const claveReserva = claveReservaCreada;
+
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-      const destinatario = "alessandro.villanueva@aneiap.co"; // Reemplaza con la dirección de correo del destinatario
-      const asunto = "Confirmación de registro de reserva";
+      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
+      const asunto = `Confirmación de registro de reserva - Clave: ${claveReserva}`;
 
       // Datos adicionales de la reserva
       const nombreOrganizadorReserva= document.getElementById("nombre-organizador").value;
       const nombreEventoReserva= document.getElementById("nombre-evento").value;
-      const claveReserva = claveReservaCreada;
       const fechaReserva = document.getElementById("fecha-evento").value;
       const horaReserva = document.getElementById("hora-evento").value;
       const duracionReserva = document.getElementById("duracion-evento").value;
@@ -1881,7 +1894,8 @@
         Host: emailHost,
         Username: emailUsername,
         Password: emailPassword,
-        To: destinatario,
+        To: `${destinatario}, siea@aneiap.co`, // Usuario que está registrando la reserva
+     //   Cc: "siea@aneiap.co", // Copia a siea para siempre tener registro de correos
         From: emailUsername, // Debería ser la misma dirección de correo de Username
         Subject: asunto,
         Body: mensaje,
@@ -2232,10 +2246,6 @@
 
           if (algunIntervaloOcupado) {
             // Al menos uno de los intervalos no está disponible
-            // Actualizar la fecha del evento de vuelta a la fecha que tenía porque ahora mismo está en 31 de diciembre.
-            var fechaEventoReservaBackup = guardarBackupFechaEventoReserva();
-            console.log('fecha evento reserva backup' + fechaEventoReservaBackup);
-            eventoRef.update({fechaEvento: fechaEventoReservaBackup});
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
             if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
               Swal.fire({
@@ -2295,131 +2305,6 @@
         });
       }
     )}
-
-    function verificarDisponibilidadCambioFechax(claveEvento, nuevaFecha, nuevaHora, nuevaDuracion) {
-      var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
-
-      // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
-      var reservasRef = firebase.firestore().collection("reservas");
-      reservasRef
-        .where("fechaEvento", "==", nuevaFecha)
-        .get()
-        .then(function(querySnapshot) {
-          // Ciclo para revisar cada evento reservado para la nueva fecha
-          querySnapshot.forEach(function(doc) {
-            var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 540 para 09:00)
-            var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
-
-            // Calcular los índices de inicio y fin del intervalo que ocupará el evento
-            var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
-            var finIntervalo = inicioIntervalo + duracionEvento / 30;
-
-            // Marcar los intervalos como ocupados en el arreglo de disponibilidad
-            for (var i = inicioIntervalo; i < finIntervalo; i++) {
-              disponibilidadHorarios[i] = false;
-            }
-          });
-
-          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
-          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
-          var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
-
-          // Verifica si alguno de los nuevos intervalos está ocupado
-          var algunIntervaloOcupado = false;
-          for (var i = inicioNuevoIntervalo; i < finNuevoIntervalo; i++) {
-            if (!disponibilidadHorarios[i]) {
-              algunIntervaloOcupado = true;
-              break; // Si uno está ocupado, no es necesario verificar los demás
-            }
-          }
-
-          if (algunIntervaloOcupado) {
-            // Al menos uno de los intervalos no está disponible
-            // Mostrar alerta al usuario con SweetAlert2
-            Swal.fire({
-              title: '¡SIN DISPONIBILIDAD!',
-              text: 'Alguno de los intervalos seleccionados no está disponible. Prueba cambiar el día, hora o duración.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
-            });
-            return; // Detener la ejecución de la función
-          } else {
-            // Todos los intervalos están disponibles
-            // Realiza la edición de la reserva
-            // ...
-          }
-        })
-        .catch(function(error) {
-          Swal.fire({
-            title: '¡ERROR DE CONSULTA!',
-            text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-          });
-          return; // Detener la ejecución de la función
-        });
-    }
-
-    function verificarDisponibilidadMismaFecha(claveEvento, nuevaFecha, horaEvento, duracionEvento, nuevaHora, nuevaDuracion) {      
-      // Realiza una consulta a la base de datos para obtener las reservas en la fecha original del evento
-      var eventoRef = firebase.firestore().collection("reservas").doc(claveEvento);
-      
-      eventoRef.get().then(function(doc) {
-        if (doc.exists) {
-          var horaEventoOriginal = doc.data().horaEvento; // Hora original en minutos (ej. 540 para 09:00)
-          var duracionEventoOriginal = doc.data().duracionEvento; // Duración original en minutos (ej. 120 para 2 horas)
-
-          // Calcula los intervalos ocupados por el evento original
-          var intervalosEventoOriginal = [];
-          var inicioIntervaloOriginal = Math.floor((horaEventoOriginal - 480) / 30);
-          var finIntervaloOriginal = inicioIntervaloOriginal + duracionEventoOriginal / 30;
-          for (var i = inicioIntervaloOriginal; i < finIntervaloOriginal; i++) {
-            intervalosEventoOriginal.push(i);
-          }
-
-          // Calcula los nuevos intervalos del evento con el nuevo horario
-          var intervalosNuevoHorario = [];
-          var inicioIntervaloNuevo = Math.floor((nuevaHora - 480) / 30);
-          var finIntervaloNuevo = inicioIntervaloNuevo + nuevaDuracion / 30;
-          for (var j = inicioIntervaloNuevo; j < finIntervaloNuevo; j++) {
-            intervalosNuevoHorario.push(j);
-          }
-
-          // Encuentra los intervalos que quedan por fuera del evento original
-          var intervalosFuera = intervalosNuevoHorario.filter(function(intervalo) {
-            return !intervalosEventoOriginal.includes(intervalo);
-          });
-
-          // Verificar si todos los intervalos fuera del evento original están disponibles
-          var todosDisponibles = intervalosFuera.every(function(intervalo) {
-            return disponibilidadHorarios[intervalo];
-          });
-
-          if (!todosDisponibles) {
-            // Algunos intervalos fuera del evento original están ocupados
-            // Mostrar alerta al usuario con SweetAlert2
-            Swal.fire({
-              title: 'HORARIO NO DISPONIBLE',
-              text: 'Algunos intervalos del nuevo horario están ocupados.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
-            });
-            return;
-          }
-
-          // Todos los intervalos fuera del evento original están disponibles
-          // Realiza la edición de la reserva
-          // ...
-        }
-      }).catch(function(error) {
-        Swal.fire({
-          title: '¡ERROR EN LA CONSULTA!',
-          text: 'Ocurrió un error al obtener los detalles del evento. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
-      });
-    }
 
   </script>
 </body>
