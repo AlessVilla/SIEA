@@ -974,7 +974,7 @@
         var fechaActual = new Date().toISOString().slice(0, 10);
 
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
-        if (fechaEvento <= fechaActual) {
+        if (fechaEvento < fechaActual) {
           Swal.fire({
             title: '¡FECHA INCORRECTA!',
             text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
@@ -1171,7 +1171,7 @@
         console.log("la fecha nueva es:" + fechaEventoReserva);
         var fechaActual = new Date().toISOString().slice(0, 10);
 
-        if (fechaEventoReserva <= fechaActual) {
+        if (fechaEventoReserva < fechaActual) {
           Swal.fire({
             title: '¡FECHA INCORRECTA!',
             text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
@@ -1439,7 +1439,7 @@
     function mostrarMensajeEditar() {
       Swal.fire({
       title: '¡ACTUALIZACIÓN DE RESERVA COMPLETADA!',
-      text: 'Su reserva ha sido ACTUALIZADA con ÉXITO, revisa tu correo para confirmar la actualización y obtener tu nueva CLAVE de evento.',
+      text: 'Su reserva ha sido ACTUALIZADA con ÉXITO, revisa tu correo para confirmar la actualización, recuerda que no cambias de CLAVE de evento.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
       allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
