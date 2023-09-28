@@ -1171,7 +1171,7 @@
         console.log("la fecha nueva es:" + fechaEventoReserva);
         var fechaActual = new Date().toISOString().slice(0, 10);
 
-        if (fechaEventoReserva < fechaActual) {
+        if (fechaEventoReserva <= fechaActual) {
           Swal.fire({
             title: '¡FECHA INCORRECTA!',
             text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
@@ -1681,7 +1681,7 @@
         return;
       }
 
-      if (fechaConsulta <= fechaHoy) {
+      if (fechaConsulta < fechaHoy) {
         // Mostrar mensaje de error si la fecha seleccionada es menor o igual a la fecha actual
         Swal.fire({
           title: '¡FECHA INCORRECTA!',
