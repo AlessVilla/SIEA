@@ -319,7 +319,7 @@
 </head>
 <body>
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
-  <h1 style="text-align: center;">Bienvenido a SIEA (Sistema Integrado de Espacios ANEIAP)</h1>
+  <h1 style="text-align: center;">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
   <div class="image-container">
     <img src="https://i.ibb.co/p3gtpkX/Logos-SIEA-2023-2-1-removebg-preview.png" alt="Logos-SIEA-2023-2-1" border="0">
   </div>
@@ -803,6 +803,8 @@
   </div>
 
   <script>
+
+    let numeroTicket = 1; // Inicializamos el contador en 1
 
     // Definición de la función para convertir la fecha del formulario al formato de Firestore
     function convertirFechaFormulario(fechaFormulario) {
@@ -2641,6 +2643,162 @@
       document.getElementById("explicacion").value = "";
       document.getElementById("celular").value = "";
       document.getElementById("link-drive").value = "";
+    }
+
+    function enviarTicket() {
+      // Obtener los valores de los campos
+      var nombre = document.getElementById("nombre").value;
+      var correo = document.getElementById("correo").value;
+      var tipoTicket = document.getElementById("tipo-ticket").value;
+      var explicacion = document.getElementById("explicacion").value;
+      var celular = document.getElementById("celular").value;
+      var linkDrive = document.getElementById("link-drive").value;
+
+      // Crear una lista para almacenar los nombres de los campos faltantes
+      var camposFaltantes = [];
+
+      // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
+      if (nombre.trim() === "") {
+        camposFaltantes.push(" - Nombre completo");
+      }
+      if (correo.trim() === "") {
+        camposFaltantes.push(" - Correo ANEIAP");
+      }
+      if (tipoTicket === "") {
+        camposFaltantes.push(" - Tipo de ticket");
+      }
+      if (explicacion.trim() === "") {
+        camposFaltantes.push(" - Explicación del caso");
+      }
+      if (celular.trim() === "") {
+        camposFaltantes.push(" - Número de celular");
+      }
+
+      // Verificar si hay campos faltantes
+      if (camposFaltantes.length > 0) {
+        // Mostrar una alerta con los campos faltantes
+        Swal.fire({
+          icon: 'error',
+          title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+          text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true,
+        });
+      } else {
+        // Verificar el número de celular
+        if (!/^3\d{9}$/.test(celular)) {
+          // El número de celular no cumple con el patrón
+          Swal.fire({
+            icon: 'error',
+            title: '¡NÚMERO DE CELULAR INVÁLIDO!',
+            text: 'Estás escribiendo un número de celular no válido, vuelve a rectificar por favor.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+          });
+        } else if (!/^[\w.%+-]+@aneiap\.co$/.test(correo)) {
+          // El correo ANEIAP no cumple con el patrón
+          Swal.fire({
+            icon: 'error',
+            title: '¡CORREO ANEIAP INVÁLIDO!',
+            text: 'Escribe bien tu correo ANEIAP. Vuelve y verifica.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+          });
+        } else if (linkDrive && !/^https:\/\/drive\.google\.com\/.*$/.test(linkDrive)) {
+          // El link de Drive no cumple con el patrón
+          Swal.fire({
+            icon: 'error',
+            title: '¡LINK DE DRIVE DE EVIDENCIAS INVÁLIDO!',
+            text: 'El link de Google Drive no es válido. Vuelve y verifica que lo estés diligenciando correctamente.".',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+          });
+        } else {
+          // Todos los campos son válidos, aquí puedes agregar la lógica para enviar el ticket al servidor o realizar otras acciones.
+          // Por ejemplo, puedes enviar una solicitud HTTP para procesar el ticket en el servidor.
+          // Aquí puedes agregar tu lógica de envío del ticket.
+          EnviarCorreoTicket(nombre,correo,tipoTicket,explicacion,celular,linkDrive);
+        }
+      }
+    }
+
+    function EnviarCorreoTicket(nombre,correo,tipoTicket,explicacion,celular,linkDrive) {
+
+      // Obtén el número de ticket actual y luego incrementa el contador
+      const numeroDeTicket = numeroTicket++;
+
+      // Configuración del servicio de correo (en este caso, Elastic Email)
+      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+
+      // Mensaje de correo con los datos adicionales
+      const asunto = `GENERACIÓN TICKET - TIPO ${tipoTicket}`;
+      const mensaje = `
+        <html>
+          <body>
+            <h1 style="color: #007BFF;">GENERACIÓN DE TICKET - TIPO ${tipoTicket}</h1>
+            <p>Estimado(a) <strong>Administrador</strong>,</p>
+            <p>Se ha generado un nuevo ticket de soporte con la siguiente información:</p>
+            <ul>
+              <li><strong>Nombre Solicitante:</strong> ${nombre}</li>
+              <li><strong>Correo ANEIAP:</strong> ${correo}</li>
+              <li><strong>Tipo de Ticket:</strong> ${tipoTicket}</li>
+              <li><strong>Explicación detallada del Caso:</strong> ${explicacion}</li>
+              <li><strong>Número de Celular:</strong> ${celular}</li>
+              <li><strong>Link de Google Drive con evidencias:</strong> ${linkDrive || 'No proporcionado'}</li>
+            </ul>
+            <p>Por favor, revise y atienda este ticket lo antes posible.</p>
+            <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en responder a este correo o escribir a <a href="http://wa.me/${celular}" target="_blank">WhatsApp</a>.</p>
+            <p>Gracias por su atención y servicio.</p>
+            <p style="font-style: italic;">Cordialmente,</p>
+            <p style="font-style: italic;">${nombre}</p>
+            <p style="font-style: italic;">Solicitante de Ticket</p>
+          </body>
+        </html>
+      `;
+
+      Email.send({
+        Host: emailHost,
+        Username: emailUsername,
+        Password: emailPassword,
+        To: `siea@aneiap.co, ${correo}`, // Usuario que está registrando la reserva
+     //   Cc: "siea@aneiap.co", // Copia a siea para siempre tener registro de correos
+        From: emailUsername, // Debería ser la misma dirección de correo de Username
+        Subject: asunto,
+        Body: mensaje,
+        ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
+      })
+        .then((message) => {
+          console.log("Mensaje de SMTPJS:", message);
+
+          if (message === "OK") {
+            console.log("Correo enviado con éxito");
+            // Puedes eliminar la alerta ya que no es necesaria
+            swal.fire({
+              title: "¡Ticket Enviado!",
+              text: "El ticket ha sido enviado correctamente.",
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+          } else {
+            console.error("Error al enviar el correo:", message);
+            // Puedes manejar el error de otra manera si lo deseas
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la función de envío de correo:", error);
+          // Puedes manejar el error de otra manera si lo deseas
+        });
+
     }
 
   </script>
