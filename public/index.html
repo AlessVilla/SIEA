@@ -1,5 +1,5 @@
 2<!DOCTYPE html>
-<html>
+<html lang="en">
 <!-- Descargar SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
@@ -20,6 +20,12 @@
   <script src="https://apis.google.com/js/client.js"></script>
   <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
   <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pestañas con Contenido</title>
+  <link rel="stylesheet" href="styles.css">
 
   <!-- ACÁ SE PUEDE ENCONTRAR LA CONFIGURACIÓN INICIAL DE FIREBASE PARA ACCEDER AL PROYECTO -->
   <script>
@@ -49,10 +55,23 @@
     .image-container {
       display: flex;
       justify-content: center;
+      animation: slide-in 2s ease-in-out;
+    }
+    @keyframes slide-in {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
     }
     .image-container img {
-      max-width: 15%; /* Ajusta el valor según tus preferencias */
-      height: auto; /* Mantiene la proporción de aspecto original */
+      max-width: 15%;
+      height: auto;
+      transition: transform 6s ease-in-out;
+    }
+    .image-container img:hover {
+      transform: rotate(4320deg);
     }
     /* Estilos para el cuadro de datos generales del evento */
     .datos-generales,
@@ -270,31 +289,147 @@
     .disponibilidad-item.gray {
       background-color: rgb(185, 185, 185);
     }
+    /* Estilos para las pestañas */
+    .tab-container {
+      display: flex;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #e62fd6;
+      border: 1px solid #ccc;
+      border-radius: 8px 8px 0 0;
+    }
+    .tab:hover {
+      background-color: #f0f0f0;
+    }
+    /* Estilos para los contenidos de las pestañas */
+    .tab-content {
+      display: none;
+      padding: 10px;
+      border: 3px solid #83026d;
+      background-color: rgb(226, 158, 240);
+      border-radius: 20 20px 20px 20px;
+    }
+    /* Mostrar el contenido de la pestaña activa */
+    .tab-content.active {
+      display: block;
+    }    
   </style>
 </head>
 <body>
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;">Bienvenido a SIEA (Sistema Integrado de Espacios ANEIAP)</h1>
   <div class="image-container">
-    <img src="https://drive.google.com/file/d/1dQv-QzOvOTHm0RzktR7ypQsXdGVJIiD9" alt="Descripción de la imagen">
+    <img src="https://i.ibb.co/p3gtpkX/Logos-SIEA-2023-2-1-removebg-preview.png" alt="Logos-SIEA-2023-2-1" border="0">
   </div>
-  <div class="disponibilidad-group">
-  <label for="texto1"><b>I  N  S  T  R  U  C  C  IO  N  E  S      G  E  N  E  R  A  L  E  S:</b></label>
-  <div class="row">
-  <div class="half">
-  <label for="texto2"><b>- Todo campo con un asterisco (*) es obligatorio diligenciarlo.</b></label>
-  <label for="texto3"><b>- Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
-  </div>
-  <div class="half">
-  <label for="texto4"><b>- Las claves de eventos son personales e intransferibles.</b></label>
-  <label for="texto5"><b>- Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
-  </div>
-  </div>
-  <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
-  <label for="texto7"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
+  <div class="tab-container">
+      <div class="tab" onclick="showTab(1)"><b>CONTÁCTANOS</b></div>
+      <div class="tab" onclick="showTab(2)"><b>INFORMACIÓN</b></div>
+      <div class="tab" onclick="showTab(3)"><b>CRÉDITOS</b></div>
+      <div class="tab" onclick="showTab(4)"><b>✖️</b></div>
+      <!-- Agrega más pestañas según sea necesario -->
+
+      <div id="tab-content-1" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="margin: 0;">GENERA UN TICKET PARA OBTENER AYUDA DEL ADMINISTRADOR 🎟️</h2>
+          <div style="text-align: right;">
+            <button style="width: 150px; height: 20px;" onclick="enviarTicket()">ENVIAR TICKET</button>
+            <br>
+            <button style="width: 150px; height: 20px;" onclick="limpiarTicket()">BORRAR TODO</button>
+          </div>
+        </div>
+            <!-- PRIMERA FILA DE LA SECCIÓN TICKET CON NOMBRE, CORREO Y TIPO DE TICKET -->
+            <div class="row">
+                <div class="third">
+                    <!-- CAMPO PARA NOMBRE QUE ES OBLIGATORIO -->
+                    <label for="nombre">Nombre Completo *</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
+                </div>
+                <div class="third">
+                    <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
+                    <label for="correo">Correo ANEIAP *</label>
+                    <input type="email" id="correo" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
+                </div>
+                <div class="third">
+                    <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
+                    <label for="tipo-ticket">Tipo de Ticket *</label>
+                    <select id="tipo-ticket" name="tipo-ticket" required>
+                      <option value="" disabled selected>Seleccione un tipo</option>
+                      <option value="Consulta General">Consulta General</option>
+                      <option value="Problema Técnico">Problema Técnico</option>
+                      <option value="Solicitud de Características">Solicitud de Características</option>
+                      <option value="Error en la Aplicación">Error en la Aplicación</option>
+                      <option value="Asistencia de Reserva">Asistencia de Cuenta</option>
+                      <option value="Solicitud de Capacitación">Solicitud de Capacitación</option>
+                      <option value="Reporte de Abuso o Violación de Políticas">Reporte de Abuso o Violación de Políticas</option>
+                      <option value="Otros">Otros</option>
+                        <!-- Agrega más opciones según sea necesario -->
+                    </select>
+                </div>
+            </div>
+            <!-- SEGUNDA FILA DE LA SECCIÓN TICKET CON EXPLICACIÓN DEL CASO, CELULAR Y LINK DE DRIVE PARA EVIDENCIAS -->
+            <div class="row">
+                <div class="third">
+                    <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ DE FORMA MUY DETALLADA LO QUE OCURRIÓ EN EL CASO -->
+                    <label for="explicacion">Explicación del Caso *</label>
+                    <textarea id="explicacion" name="explicacion" rows="1" required placeholder="Describe detalladamente tu caso"></textarea>
+                </div>
+                <div class="third">
+                    <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ SU NÚMERO DE CELUAR, DEBE SER UN VALOR QUE EMPIECE EN 3 Y TENGA EN TOTAL 10 DÍGITOS -->
+                    <label for="celular">Número de Celular *</label>
+                    <input type="tel" id="celular" name="celular" required placeholder="Digita tu número de celular" pattern="^3\d{9}$">
+                </div>
+                <div class="third">
+                    <!-- CAMPO DONDE SE ADJUNTARÁ UN LINK DE GOOGLE DRIVE VÁLIDO (OPCIONAL) -->
+                    <label for="link-drive">Drive Evidencias</label>
+                    <textarea id="link-drive" name="link-drive" rows="1" required placeholder="Adjunta link de evidencias en Drive"></textarea>
+                </div>
+            </div>
+        </p>
+      </div>
+    
+      <div id="tab-content-2" class="tab-content">
+          <h2>INSTRUCCIONES GENERALES</h2>
+          <p>
+            <div class="disponibilidad-group">
+              <div class="row">
+              <div class="half">
+              <label for="texto2"><b>1️⃣ Todo campo con un asterisco (*) es obligatorio.</b></label>
+              <label for="texto3"><b>3️⃣ Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
+              </div>
+              <div class="half">
+              <label for="texto4"><b>2️⃣ Las claves de eventos son personales e intransferibles.</b></label>
+              <label for="texto5"><b>4️⃣ Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
+              </div>
+              </div>
+            </div>
+          </p>
+      </div>
+
+      <div id="tab-content-3" class="tab-content">
+        <h2>CRÉDITOS Y PROPIEDAD</h2>
+        <p>
+          <div class="disponibilidad-group">
+          <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
+          <label for="texto7"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
+          </div>
+        </p>
+      </div>
+
+      <div id="tab-content-4" class="tab-content">
+        <h2></h2>
+        <p>
+        </p>
+      </div>
+      <!-- Agrega más contenidos de pestañas según sea necesario -->
   </div>
 
-  <!-- DETALLES DEL ACORDEÓN 0 QUE CORRESPONDE A CONSULTAR LA DISPONIBILIDAD DE RESERVAS-->
+  <script src="script.js"></script>
+  <div class="main-content">
+    <!-- El contenido principal de tu página va aquí -->
+  </div>
+  
   <div class="acordeon0" onclick="toggleConsultaDisponibilidad()">CLICK AQUÍ PARA CONSULTAR DISPONIBILIDAD</div>
   <div id="acordeon0-content" style="display: none;">
     <div class="acordeon0-content-inner">
@@ -686,75 +821,130 @@
     var fechaFirestore = new Date(anio, mes - 1, dia); // Restamos 1 al mes ya que en JavaScript los meses van de 0 a 11
     return fechaFirestore;
   }
+ 
+    // Función para mostrar el contenido de la pestaña seleccionada
+    function showTab(tabNumber) {
+      // Oculta todos los contenidos de las pestañas
+      var tabContents = document.getElementsByClassName("tab-content");
+      for (var i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+      }
+      // Muestra el contenido de la pestaña seleccionada
+      var selectedTabContent = document.getElementById("tab-content-" + tabNumber);
+      selectedTabContent.classList.add("active");
+    }  
 
-    // Esta función hace que cuando des click en la barra "CONSULTAR DISPONIBILIDAD (AC0)" las demás barras se oculten.
+    // Esta función se encarga de mostrar u ocultar el contenido cuando se hace clic en la barra "CONSULTAR DISPONIBILIDAD (AC0)".
     function toggleConsultaDisponibilidad() {
+      // Obtenemos el elemento HTML con el ID "acordeon0-content".
       var content = document.getElementById("acordeon0-content");
+      
+      // Comprobamos si el estilo "display" del elemento está configurado como "none" (oculto).
       if (content.style.display === "none") {
+        // Si está oculto, lo cambiamos a "block" (visible) para mostrarlo.
         content.style.display = "block";
       } else {
+        // Si está visible, lo cambiamos nuevamente a "none" para ocultarlo.
         content.style.display = "none";
       }
+      
+      // A continuación, ocultamos los contenidos de otras barras (acordeones).
+      
+      // Ocultamos el contenido del elemento con ID "acordeon3-content".
       var content = document.getElementById("acordeon3-content");
       content.style.display = "none";
+      
+      // Ocultamos el contenido del elemento con ID "acordeon2-content".
       var content = document.getElementById("acordeon2-content");
       content.style.display = "none";
+      
+      // Ocultamos el contenido del elemento con ID "acordeon1-content".
       var content = document.getElementById("acordeon1-content");
       content.style.display = "none";
-
     }
 
-    // Esta función hace que cuando des click en la barra "REGISTRAR RESERVA (AC1)" las demás barras se oculten.
+    // Esta función se encarga de mostrar u ocultar el contenido cuando se hace clic en la barra "REGISTRAR RESERVA (AC1)".
     function toggleRegistrarEvento() {
+      // Obtenemos el elemento HTML con el ID "acordeon1-content".
       var content = document.getElementById("acordeon1-content");
+      
+      // Comprobamos si el estilo "display" del elemento está configurado como "none" (oculto).
       if (content.style.display === "none") {
+        // Si está oculto, lo cambiamos a "block" (visible) para mostrarlo.
         content.style.display = "block";
       } else {
+        // Si está visible, lo cambiamos nuevamente a "none" para ocultarlo.
         content.style.display = "none";
       }
+      
+      // A continuación, ocultamos los contenidos de otras barras (acordeones).
+      
+      // Ocultamos el contenido del elemento con ID "acordeon3-content".
       var content = document.getElementById("acordeon3-content");
       content.style.display = "none";
+      
+      // Ocultamos el contenido del elemento con ID "acordeon2-content".
       var content = document.getElementById("acordeon2-content");
       content.style.display = "none";
+      
+      // Ocultamos el contenido del elemento con ID "acordeon0-content".
       var content = document.getElementById("acordeon0-content");
       content.style.display = "none";
     }
 
-    // Esta función permite en la sección "REGISTRAR RESERVA (AC1)" que se muestre la ubicación/plataforma o lugar evento.
-    // Si es "virtual" entonces muestra el campo "ubicación/plataforma", si es "presencial" muestra "lugar presencial".
+    // Esta función permite cambiar la visibilidad de los campos "ubicación/plataforma" y "lugar presencial"
+    // en la sección "REGISTRAR RESERVA (AC1)" según la modalidad seleccionada.
     function toggleUbicacionPlataforma() {
+      // Obtenemos los elementos HTML correspondientes a los contenedores de ubicación/plataforma y lugar presencial.
       var ubicacionPlataformaContainer = document.getElementById("ubicacion-plataforma-container");
       var lugarPresencialContainer = document.getElementById("lugar-presencial-container");
+      
+      // Obtenemos el valor seleccionado en el campo "modalidad-evento".
       var modalidadEvento = document.getElementById("modalidad-evento").value;
 
+      // Comparamos el valor seleccionado con las opciones.
       if (modalidadEvento === "virtual") {
+        // Si la modalidad es "virtual", mostramos el campo "ubicación/plataforma" y ocultamos "lugar presencial".
         ubicacionPlataformaContainer.style.display = "block";
         lugarPresencialContainer.style.display = "none";
       } else if (modalidadEvento === "presencial") {
+        // Si la modalidad es "presencial", mostramos "lugar presencial" y ocultamos "ubicación/plataforma".
         ubicacionPlataformaContainer.style.display = "none";
         lugarPresencialContainer.style.display = "block";
       } else {
+        // En caso contrario, ocultamos ambos campos.
         ubicacionPlataformaContainer.style.display = "none";
         lugarPresencialContainer.style.display = "none";
       }
     }
 
-    // Esta función hace que cuando des click en la barra "EDITAR RESERVA (AC2)" las demás barras se oculten.
+    // Esta función se encarga de manejar el comportamiento de la barra "EDITAR RESERVA (AC2)"
+    // Su principal objetivo es mostrar u ocultar el contenido de esta barra y restablecer los valores de los campos de edición de reserva.
     function toggleEditarReserva() {
+      // Obtener la referencia al contenido de la barra "EDITAR RESERVA (AC2)"
       var content = document.getElementById("acordeon2-content");
+
+      // Comprobar si el contenido actualmente está oculto (no visible)
       if (content.style.display === "none") {
+        // Si está oculto, se cambia su estilo para mostrarlo (visible)
         content.style.display = "block";
       } else {
+        // Si está visible, se cambia su estilo para ocultarlo (no visible)
         content.style.display = "none";
       }
+
+      // Ocultar el contenido de las otras barras de acordeón (si estaban visibles).
+      // Esto asegura que solo una barra esté abierta a la vez.
       var content = document.getElementById("acordeon3-content");
       content.style.display = "none";
       var content = document.getElementById("acordeon0-content");
       content.style.display = "none";
       var content = document.getElementById("acordeon1-content");
       content.style.display = "none";
+
+      // Restablecer los valores de los campos de edición de reserva a sus valores iniciales.
+      // Esto borra cualquier información previamente ingresada en estos campos.
       document.getElementById("clave-evento-reserva").value = "";
-      // Resetear los campos
       document.getElementById("nombre-evento-reserva").value = "";
       document.getElementById("fecha-evento-reserva").value = "";
       document.getElementById("hora-evento-reserva").value = "";
@@ -770,46 +960,69 @@
       document.getElementById("nombre-ponente-reserva").value = "";
       document.getElementById("email-ponente-reserva").value = "";
       document.getElementById("telefono-ponente-reserva").value = "";
-      document.getElementById("publicidad-comite-reserva").value = "";       
+      document.getElementById("publicidad-comite-reserva").value = "";
       document.getElementById("foto-ponente-reserva").value = "";
-      // Mostrar el contenido del acordeón datos-reserva-container
+
+      // Mostrar el contenido del acordeón "datos-reserva-container".
+      // Esta parte del código se encarga de mostrar información adicional
+      // relacionada con la reserva una vez que se abre la barra de edición.
       var datosReservaContainer = document.getElementById("datos-reserva-container");
       datosReservaContainer.style.display = "none";
     }
 
-    // Esta función permite en la sección "EDITAR RESERVA (AC2)" que se muestre la ubicación/plataforma o lugar evento.
-    // Si es "virtual" entonces muestra el campo "ubicación/plataforma", si es "presencial" muestra "lugar presencial".
+    // Esta función se utiliza en la sección "EDITAR RESERVA (AC2)" para controlar la visualización
+    // de campos relacionados con la ubicación o plataforma del evento y el lugar presencial del evento.
+    // Dependiendo de la modalidad seleccionada (virtual o presencial), se mostrará uno de estos campos
+    // mientras se oculta el otro para evitar confusiones al editar la reserva.
     function toggleUbicacionPlataformaReserva() {
-      var UbicacionPlataformaReservaContainer = document.getElementById("ubicacion-plataforma-reserva-container");
+      // Obtener las referencias a los contenedores de ubicación/plataforma y lugar presencial
+      var ubicacionPlataformaReservaContainer = document.getElementById("ubicacion-plataforma-reserva-container");
       var lugarPresencialReservaContainer = document.getElementById("lugar-presencial-reserva-container");
-      var ModalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
 
-      if (ModalidadEventoReserva === "virtual") {
-        UbicacionPlataformaReservaContainer.style.display = "block";
+      // Obtener el valor de la modalidad del evento seleccionado
+      var modalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
+
+      // Comprobar la modalidad seleccionada y mostrar/ocultar los campos correspondientes
+      if (modalidadEventoReserva === "virtual") {
+        // Si la modalidad es "virtual", mostrar el campo de ubicación/plataforma y ocultar el lugar presencial
+        ubicacionPlataformaReservaContainer.style.display = "block";
         lugarPresencialReservaContainer.style.display = "none";
-      } else if (ModalidadEventoReserva === "presencial") {
-        UbicacionPlataformaReservaContainer.style.display = "none";
+      } else if (modalidadEventoReserva === "presencial") {
+        // Si la modalidad es "presencial", ocultar el campo de ubicación/plataforma y mostrar el lugar presencial
+        ubicacionPlataformaReservaContainer.style.display = "none";
         lugarPresencialReservaContainer.style.display = "block";
       } else {
-        UbicacionPlataformaReservaContainer.style.display = "none";
+        // Si no se ha seleccionado ninguna modalidad válida, ocultar ambos campos
+        ubicacionPlataformaReservaContainer.style.display = "none";
         lugarPresencialReservaContainer.style.display = "none";
       }
-    }    
+    }
 
-    // Esta función hace que cuando des click en la barra "ELIMINAR RESERVA (AC3)", las demás barras se oculten.
+    // Esta función se utiliza cuando se hace clic en la barra "ELIMINAR RESERVA (AC3)" para ocultar
+    // las demás barras de información en la interfaz. Su propósito es mejorar la experiencia del usuario
+    // al centrarse en la acción de eliminar una reserva sin distracciones innecesarias.
     function toggleEliminarReserva() {
+      // Obtener la referencia al contenido de la barra "ELIMINAR RESERVA (AC3)"
       var content = document.getElementById("acordeon3-content");
+      
+      // Comprobar el estado actual de visualización (oculto o mostrado)
       if (content.style.display === "none") {
+        // Si está oculto, cambiarlo a mostrado (display: block)
         content.style.display = "block";
       } else {
+        // Si está mostrado, cambiarlo a oculto (display: none)
         content.style.display = "none";
       }
-      var content = document.getElementById("acordeon0-content");
-      content.style.display = "none";
-      var content = document.getElementById("acordeon2-content");
-      content.style.display = "none";
-      var content = document.getElementById("acordeon1-content");
-      content.style.display = "none";
+
+      // A continuación, ocultar las otras barras de información (AC0, AC1, AC2) para centrarse en la eliminación
+      var content0 = document.getElementById("acordeon0-content");
+      content0.style.display = "none";
+
+      var content1 = document.getElementById("acordeon1-content");
+      content1.style.display = "none";
+
+      var content2 = document.getElementById("acordeon2-content");
+      content2.style.display = "none";
     }
 
     // Acá está la función para agregar un evento en la colección "reservas" y documento "basededatos",
@@ -948,18 +1161,28 @@
         });
     }
 
-    // Acá está la función para generar una clave de evento aleatoria,
-    // esta clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
+// Esta función genera una clave de evento aleatoria.
+// La clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
     function generarClaveEvento() {
+      // Definimos una cadena de caracteres que contendrá letras mayúsculas y dígitos.
       var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789";
+      
+      // Especificamos la longitud deseada para la clave generada.
       var longitud = 15;
+      
+      // Inicializamos una variable para almacenar la clave generada.
       var claveGenerada = "";
 
+      // Iniciamos un bucle para generar cada carácter de la clave.
       for (var i = 0; i < longitud; i++) {
+        // Generamos un número aleatorio entre 0 (inclusive) y la longitud de la cadena de caracteres.
         var indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+        
+        // Agregamos el carácter correspondiente al índice aleatorio a la clave generada.
         claveGenerada += caracteres.charAt(indiceAleatorio);
       }
 
+      // Devolvemos la clave generada como resultado.
       return claveGenerada;
     }
 
@@ -2408,6 +2631,17 @@
         });
       }
     )}
+
+    function limpiarTicket() {
+      // Lógica para limpiar los campos del ticket, por ejemplo, establecer los valores de los campos en blanco.
+      // Ejemplo:
+      document.getElementById("nombre").value = "";
+      document.getElementById("correo").value = "";
+      document.getElementById("tipo-ticket").value = "Seleccione un tipo";
+      document.getElementById("explicacion").value = "";
+      document.getElementById("celular").value = "";
+      document.getElementById("link-drive").value = "";
+    }
 
   </script>
 </body>
