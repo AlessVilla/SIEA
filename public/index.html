@@ -48,6 +48,14 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
+    @font-face {
+      font-family: 'Century Gothic';
+      src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
+          url('ruta/a/la/fuente/CenturyGothic.woff') format('woff');
+      /* Agrega más formatos de fuentes si es necesario */
+      font-weight: normal;
+      font-style: normal;
+    }
     /* Estilos para el contenedor de la imagen */
     .centered-text {
       text-align: center;
@@ -177,7 +185,7 @@
       border-radius: 5px; /* Ajusta el valor para cambiar la curvatura de las esquinas */
     }
     .acordeon0 {
-      background-color: rgb(17, 0, 255);
+      background-color: #307B98;
       color: white;
       padding: 5px 10px;
       font-weight: bold;
@@ -192,7 +200,7 @@
       margin-bottom: 20px;
     }
     .acordeon1 {
-      background-color: rgb(0, 141, 37);
+      background-color: #00B30F;
       color: white;
       padding: 5px 10px;
       font-weight: bold;
@@ -207,7 +215,7 @@
       margin-bottom: 20px;
     }
     .acordeon2 {
-      background-color: orange;
+      background-color: #F47B28;
       color: white;
       padding: 5px 10px;
       font-weight: bold;
@@ -222,7 +230,7 @@
       margin-bottom: 20px;
     }
     .acordeon3 {
-      background-color: red;
+      background-color: #DC1E1E;
       color: white;
       padding: 5px 10px;
       font-weight: bold;
@@ -235,6 +243,15 @@
       background-color: white;
       padding: 10px;
       margin-bottom: 20px;
+    }
+    .button-consultar-disponibilidad {
+      background-color: rgb(0, 4, 255);
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
     }
     .button-reservar {
       background-color: rgb(0, 141, 37);
@@ -296,8 +313,8 @@
     .tab {
       padding: 10px 20px;
       cursor: pointer;
-      background-color: #e62fd6;
-      border: 1px solid #ccc;
+      border: 1px solid #9900CC;
+      background-color: #f7d1f3;
       border-radius: 8px 8px 0 0;
     }
     .tab:hover {
@@ -307,27 +324,107 @@
     .tab-content {
       display: none;
       padding: 10px;
-      border: 3px solid #83026d;
-      background-color: rgb(226, 158, 240);
+      border: 3px solid #D55DFF;
+      background-color: #f7d1f3;
       border-radius: 20 20px 20px 20px;
+      width: 100%
     }
     /* Mostrar el contenido de la pestaña activa */
     .tab-content.active {
       display: block;
     }    
+    /* Estilos para el botón */
+    #modo-switch {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 60px; /* Aumenta el ancho del botón */
+      height: 40px; /* Aumenta la altura del botón */
+      background-color: #777777; /* Color de fondo del botón en light mode */
+      border-radius: 50%; /* Hace que el botón sea circular */
+      cursor: pointer;
+      border: none;
+      outline: none;
+      padding: 2px;
+      display: flex; /* Para centrar verticalmente el emoji */
+      justify-content: center; /* Para centrar horizontalmente el emoji */
+      align-items: center; /* Para centrar verticalmente el emoji */
+    }
+    /* Estilos para el ícono del sol */
+    .icon::before {
+      content: "\2600"; /* Código Unicode para el sol */
+      font-size: 28px; /* Aumenta el tamaño del emoji */
+      color: #ffcc00; /* Color del sol en light mode */
+      display: inline-block;
+    }
+    /* Estilos para el ícono de la luna */
+    .dark-mode .icon::before {
+      content: "\1F319"; /* Código Unicode para la luna */
+      color: #333; /* Color de la luna en dark mode */
+    }
+    body.light-mode {
+      background-color: white; /* Fondo blanco en el modo claro */
+      transition: background-color 1s ease; /* Efecto de transición suave */
+    }
+    body.dark-mode {
+      background-color: rgb(29, 29, 29); /* Fondo negro en el modo oscuro */
+      transition: background-color 1s ease; /* Efecto de transición suave */
+    }
+    body {
+      transition: background-color 1s ease; /* Efecto de transición suave para todo el cuerpo */
+      font-family: 'Century Gothic', sans-serif;
+    }
+    /* Estilo del texto en modo claro */
+    .light-mode {
+      color: black; /* Color del texto en modo claro */
+    }
+    .logo.dark-mode {
+      display: none; /* Oculta el logo del dark mode por defecto */
+    }
+    /* Estilo del texto en modo oscuro */
+    .dark-mode .light-mode {
+      color: white; /* Color del texto en modo oscuro */
+    }
+    /* Estilos para los títulos de documentos */
+    .document-title a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+    /* Estilos para los enlaces "AQUÍ" */
+    .document-link a {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+    /* Estilos para el icono de Word */
+    .document-link img {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+    }
+
   </style>
 </head>
 <body>
+  
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
-  <h1 style="text-align: center;">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
+  <h1 style="text-align: center;" class="light-mode">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
+    <!-- Botón de modo de visualización-->
+    <button id="modo-switch" class="light-mode">
+      <span class="icon"></span>
+    </button>
   <div class="image-container">
-    <img src="https://i.ibb.co/p3gtpkX/Logos-SIEA-2023-2-1-removebg-preview.png" alt="Logos-SIEA-2023-2-1" border="0">
+    <img src="https://i.ibb.co/WGC5G0Y/Copia-de-Logos-proyectos-2023-2-4.png" alt="Logo Light Mode" class="logo light-mode">
+    <img src="https://i.ibb.co/Wt7rx9Y/Equipo-Nacional-de-Datos-1.png" alt="Logo Dark Mode" class="logo dark-mode">
   </div>
+  <!-- Las pestañas para tener contactos,  -->
   <div class="tab-container">
       <div class="tab" onclick="showTab(1)"><b>CONTÁCTANOS</b></div>
       <div class="tab" onclick="showTab(2)"><b>INFORMACIÓN</b></div>
       <div class="tab" onclick="showTab(3)"><b>CRÉDITOS</b></div>
-      <div class="tab" onclick="showTab(4)"><b>✖️</b></div>
+      <div class="tab" onclick="showTab(4)"><b>DOCUMENTACIÓN</b></div>
+      <div class="tab" onclick="showTab(5)"><b>✖️</b></div>
       <!-- Agrega más pestañas según sea necesario -->
 
       <div id="tab-content-1" class="tab-content">
@@ -416,8 +513,62 @@
           </div>
         </p>
       </div>
-
+      
       <div id="tab-content-4" class="tab-content">
+        <h2>CONSULTA AQUÍ LA DOCUMENTACIÓN DE SIEA 👇🏽</h2>
+        <p>
+          <div class="disponibilidad-group">
+          <div class="row">
+            <!-- Primer documento -->
+            <div class="third">
+              <div class="document">
+                <div class="document-info">
+                  <div class="document-title">
+                    <a href="https://docs.google.com/document/d/1iTie_bVnFOtKuowy-cCEVALB_oqwg13c/edit?usp=drive_link&ouid=117265505210218235288&rtpof=true&sd=true" target="_blank">🤍 MANUAL DE USUARIO</a>
+                  </div>
+                  <div class="document-link">
+                    <img src="https://i.ibb.co/6DmT312/microsoft-word-macos-bigsur-icon.png" alt="Icono de Word">
+                    <a href="https://docs.google.com/document/d/1iTie_bVnFOtKuowy-cCEVALB_oqwg13c/edit?usp=drive_link&ouid=117265505210218235288&rtpof=true&sd=true" target="_blank">AQUÍ</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Segundo documento -->
+            <div class="third">
+              <div class="document">
+                <div class="document-info">
+                  <div class="document-title">
+                    <a href="https://docs.google.com/document/d/1xsZgOV8BIxjP31iFnsVrf9Qbf604Wqx_/edit?usp=drive_link&ouid=117265505210218235288&rtpof=true&sd=true" target="_blank">💙 MANUAL ADMINISTRADOR</a>
+                  </div>
+                  <div class="document-link">
+                    <img src="https://i.ibb.co/6DmT312/microsoft-word-macos-bigsur-icon.png" alt="Icono de Word">
+                    <a href="https://docs.google.com/document/d/1xsZgOV8BIxjP31iFnsVrf9Qbf604Wqx_/edit?usp=drive_link&ouid=117265505210218235288&rtpof=true&sd=true" target="_blank">AQUÍ</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Tercer documento -->
+            <div class="third">
+              <div class="document">
+                <div class="document-info">
+                  <div class="document-title">
+                    <a href="https://docs.google.com/document/d/19dzW0FTPuVoviKiUzshE6tU1HedSrPox/edit?usp=drive_link&ouid=117265505210218235288&rtpof=true&sd=true" target="_blank">🖤 POLÍTICAS DE DATOS</a>
+                  </div>
+                  <div class="document-link">
+                    <img src="https://i.ibb.co/6DmT312/microsoft-word-macos-bigsur-icon.png" alt="Icono de Word">
+                    <a href="https://docs.google.com/document/d/19dzW0FTPuVoviKiUzshE6tU1HedSrPox/edit?usp=drive_link&ouid=117265505210218235288&rtpof=true&sd=true" target="_blank">AQUÍ</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </p>
+      </div>
+       
+      <div id="tab-content-5" class="tab-content">
         <h2></h2>
         <p>
         </p>
@@ -430,13 +581,13 @@
     <!-- El contenido principal de tu página va aquí -->
   </div>
   
-  <div class="acordeon0" onclick="toggleConsultaDisponibilidad()">CLICK AQUÍ PARA CONSULTAR DISPONIBILIDAD</div>
+  <div class="acordeon0" onclick="toggleConsultaDisponibilidad()">CLICK AQUÍ PARA CONSULTAR DISPONIBILIDAD 🔍</div>
   <div id="acordeon0-content" style="display: none;">
     <div class="acordeon0-content-inner">
       <div class="disponibilidad-group">
       <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
       <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
-      <button class="button-reservar" onclick="ConsultarDisponibilidadReservas()">Consultar la disponibilidad de reservas</button>
+      <button class="button-consultar-disponibilidad" onclick="ConsultarDisponibilidadReservas()">Consultar la disponibilidad de reservas</button>
       <div class="disponibilidad-container">
         <!-- Lógica para mostrar la disponibilidad -->
         <div class="disponibilidad-item gray">08:00 - 08:30</div>
@@ -472,7 +623,7 @@
     </div>
   </div>
   <!-- DETALLES DEL ACORDEÓN 1 QUE CORRESPONDE A REGISTRAR LA RESERVA DEL EVENTO-->
-  <div class="acordeon1" onclick="toggleRegistrarEvento()">CLICK AQUÍ PARA REGISTRAR TU EVENTO</div>
+  <div class="acordeon1" onclick="toggleRegistrarEvento()">CLICK AQUÍ PARA REGISTRAR TU EVENTO ✏️</div>
   <div id="acordeon1-content" style="display: none;">
     <div class="acordeon1-content-inner">
       <div class="reservar-group">
@@ -602,12 +753,12 @@
           <input type="text" id="foto-ponente" placeholder="Ingresa el enlace de Google Drive, debe estar compartido para cualquier correo.">
         </div>
       </div>
-      </div>
       <button class="button-reservar" onclick="registrarEvento()">Registrar evento</button>
+      </div>
     </div>
   </div>
   <!-- DETALLES DEL ACORDEÓN 2 QUE CORRESPONDE A CONSULTAR LA RESERVA DE UN EVENTO-->
-  <div class="acordeon2" onclick="toggleEditarReserva()">CLICK AQUÍ PARA EDITAR TU RESERVA</div>
+  <div class="acordeon2" onclick="toggleEditarReserva()">CLICK AQUÍ PARA EDITAR TU RESERVA 📝</div>
   <div id="acordeon2-content" style="display: none;">
     <div class="acordeon2-content-inner">
       <div class="editar-group">
@@ -752,7 +903,7 @@
     </div>
   </div>
   <!-- DETALLES Y CAMPOS DEL ACORDEÓN 3 QUE CORRESPONDE A ELIMINAR (CANCELAR) LA RESERVA DE UN EVENTO-->
-  <div class="acordeon3" onclick="toggleEliminarReserva()">CLICK AQUÍ PARA ELIMINAR TU RESERVA</div>
+  <div class="acordeon3" onclick="toggleEliminarReserva()">CLICK AQUÍ PARA ELIMINAR TU RESERVA ⛔</div>
   <div id="acordeon3-content" style="display: none;">
     <div class="acordeon3-content-inner">
       <div class="eliminar-group">
@@ -797,14 +948,12 @@
       </div>
       <label for="clave-evento-eliminar"><b>Digita la clave del evento en la reserva: *</b></label>
       <input type="text" id="clave-evento-eliminar" placeholder="Ingresa la clave del evento que fue enviada a tu correo de forma automática al momento de reservar el espacio.">
+      <button class="button-eliminar" onclick="eliminarReserva()">Eliminar reserva</button>  
       </div>
-      <button class="button-eliminar" onclick="eliminarReserva()">Eliminar reserva</button>
     </div>
   </div>
 
   <script>
-
-    let numeroTicket = 1; // Inicializamos el contador en 1
 
     // Definición de la función para convertir la fecha del formulario al formato de Firestore
     function convertirFechaFormulario(fechaFormulario) {
@@ -1093,7 +1242,11 @@
           title: '¡ERROR!',
           text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
           icon: 'error',
-          confirmButtonText: 'Aceptar'
+          imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
+          confirmButtonText: 'Aceptar',
+          imageWidth: 342, // Ancho de la imagen en píxeles
+          imageHeight: 200, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
         });
       });
     }    
@@ -1155,9 +1308,13 @@
           if (error !== "Evento no encontrado") {
             Swal.fire({
               title: '¡ERROR!',
-              text: 'Ha ocurrido un error al actualizar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
+              text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
+              confirmButtonText: 'Aceptar',
+              imageWidth: 342, // Ancho de la imagen en píxeles
+              imageHeight: 200, // Alto de la imagen en píxeles
+              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
             });
           }
         });
@@ -1795,7 +1952,10 @@
           title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA!',
           text: mensaje,
           icon: 'warning',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true,
         });
         return false;
       }
@@ -1880,8 +2040,9 @@
             text: mensaje,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
             });
 
             return false;
@@ -1901,7 +2062,10 @@
           title: '¡FECHA NO SELECCIONADA!',
           text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
           icon: 'warning',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true,
         });
         return;
       }
@@ -1912,7 +2076,10 @@
           title: '¡FECHA INCORRECTA!',
           text: 'Por favor, selecciona una fecha mayor a la fecha de HOY para consultar la disponibilidad.',
           icon: 'warning',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true,
         });
         return;
       }
@@ -1959,7 +2126,10 @@
           title: '¡CONSULTA DE DISPONIBILIDAD REALIZADA!',
           text: 'La consulta se realizó con éxito para la fecha seleccionada. Los horarios en rojo representan que ya están reservados, los que están en color verde son los disponibles.',
           icon: 'success',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true
         });
       }).catch(function(error) {
         console.log("Error obteniendo reservas:", error);
@@ -2291,7 +2461,10 @@
           title: 'Error de Consulta',
           text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
           icon: 'error',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true
         });
       });
     }
@@ -2417,7 +2590,10 @@
               title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2427,7 +2603,10 @@
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
               text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2437,7 +2616,10 @@
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERINO! ☀️',
               text: 'El horario vesperino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2447,7 +2629,10 @@
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
               text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2462,7 +2647,10 @@
             title: '¡ERROR DE CONSULTA!',
             text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
             icon: 'error',
-            confirmButtonText: 'Aceptar'
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
           });
           console.log(error);
           resolve(false); // Resolver la promesa con 'false' en caso de error
@@ -2580,7 +2768,10 @@
               title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2590,7 +2781,10 @@
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
               text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2600,7 +2794,10 @@
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERINO! ☀️',
               text: 'El horario vesperino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2610,7 +2807,10 @@
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
               text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
-              confirmButtonText: 'Aceptar'
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
             });
             return; // Detener la ejecución de la función
             }
@@ -2625,7 +2825,10 @@
             title: '¡ERROR DE CONSULTA!',
             text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
             icon: 'error',
-            confirmButtonText: 'Aceptar'
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
           });
           console.log(error);
           resolve(false); // Resolver la promesa con 'false' en caso de error
@@ -2647,6 +2850,7 @@
 
     function enviarTicket() {
       // Obtener los valores de los campos
+      
       var nombre = document.getElementById("nombre").value;
       var correo = document.getElementById("correo").value;
       var tipoTicket = document.getElementById("tipo-ticket").value;
@@ -2684,7 +2888,7 @@
           confirmButtonText: 'Aceptar',
           allowOutsideClick: true,
           backdrop: true,  
-          allowEscapeKey: true,
+          allowEscapeKey: true
         });
       } else {
         // Verificar el número de celular
@@ -2697,7 +2901,7 @@
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
             backdrop: true,  
-            allowEscapeKey: true,
+            allowEscapeKey: true
           });
         } else if (!/^[\w.%+-]+@aneiap\.co$/.test(correo)) {
           // El correo ANEIAP no cumple con el patrón
@@ -2708,7 +2912,7 @@
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
             backdrop: true,  
-            allowEscapeKey: true,
+            allowEscapeKey: true
           });
         } else if (linkDrive && !/^https:\/\/drive\.google\.com\/.*$/.test(linkDrive)) {
           // El link de Drive no cumple con el patrón
@@ -2719,7 +2923,7 @@
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
             backdrop: true,  
-            allowEscapeKey: true,
+            allowEscapeKey: true
           });
         } else {
           // Todos los campos son válidos, aquí puedes agregar la lógica para enviar el ticket al servidor o realizar otras acciones.
@@ -2732,9 +2936,6 @@
 
     function EnviarCorreoTicket(nombre,correo,tipoTicket,explicacion,celular,linkDrive) {
 
-      // Obtén el número de ticket actual y luego incrementa el contador
-      const numeroDeTicket = numeroTicket++;
-
       // Configuración del servicio de correo (en este caso, Elastic Email)
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
@@ -2745,7 +2946,7 @@
       const mensaje = `
         <html>
           <body>
-            <h1 style="color: #007BFF;">GENERACIÓN DE TICKET - TIPO ${tipoTicket}</h1>
+            <h1 style="color: #007BFF;">GENERACIÓN DE TICKET - TIPO "${tipoTicket}"</h1>
             <p>Estimado(a) <strong>Administrador</strong>,</p>
             <p>Se ha generado un nuevo ticket de soporte con la siguiente información:</p>
             <ul>
@@ -2784,10 +2985,13 @@
             console.log("Correo enviado con éxito");
             // Puedes eliminar la alerta ya que no es necesaria
             swal.fire({
-              title: "¡Ticket Enviado!",
-              text: "El ticket ha sido enviado correctamente.",
+              title: "¡TICKET ENVIADO!",
+              text: `El ticket ha sido enviado correctamente a siea@aneiap.co, en máximo DOS (2) días hábiles se te dará respuesta al mismo.`,
               icon: "success",
               confirmButtonText: "OK",
+              allowOutsideClick: true,
+              backdrop: true,
+              allowEscapeKey: true,
             });
           } else {
             console.error("Error al enviar el correo:", message);
@@ -2800,6 +3004,35 @@
         });
 
     }
+
+    const modoSwitch = document.getElementById('modo-switch');
+    const body = document.body;
+    const logos = document.querySelectorAll('.logo');
+
+    modoSwitch.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+
+      // Verifica si el body tiene la clase dark-mode
+      if (body.classList.contains('dark-mode')) {
+        // Si está en modo oscuro, muestra el logo dark y oculta el logo light
+        logos.forEach((logo) => {
+          if (logo.classList.contains('dark-mode')) {
+            logo.style.display = 'block';
+          } else {
+            logo.style.display = 'none';
+          }
+        });
+      } else {
+        // Si está en modo claro, muestra el logo light y oculta el logo dark
+        logos.forEach((logo) => {
+          if (logo.classList.contains('light-mode')) {
+            logo.style.display = 'block';
+          } else {
+            logo.style.display = 'none';
+          }
+        });
+      }
+    });
 
   </script>
 </body>
