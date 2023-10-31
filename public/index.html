@@ -2295,6 +2295,10 @@
         `;
       }
 
+      if (publicidadComiteReserva === "si") {
+        enviarSolicitudPublicidadEdicion();
+      }
+
       // Mensaje de correo con los datos adicionales
       const mensaje = `
         <html>
@@ -2351,6 +2355,104 @@
         });
     }
 
+    // Función para enviar el correo de solicitud de publicidad
+    function enviarSolicitudPublicidadEdicion() {
+      // Obtener el correo del comité de piezas publicitarias
+      const correoDestino = "danna.cabarcas@aneiap.co";
+      // Datos adicionales de la solicitud de publicidad
+      const emailOrganizadorReserva= document.getElementById("email-organizador-reserva").value;
+      const nombreOrganizadorReserva= document.getElementById("nombre-organizador-reserva").value;
+      const nombreEventoReserva= document.getElementById("nombre-evento-reserva").value;
+      const fechaReserva = document.getElementById("fecha-evento-reserva").value;
+      const horaReserva = document.getElementById("hora-evento-reserva").value;
+      const planEvento = document.getElementById("plan-evento-reserva").value;
+      const nombrePonente = document.getElementById("nombre-ponente-reserva").value;
+      const publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
+      const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
+      const fotoPonenteURLReserva = document.getElementById("foto-ponente-reserva").value;
+      const modalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
+      const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
+      const lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
+
+      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
+      const cc = `${emailOrganizadorReserva}, siea@aneiap.co`; // Copia de carbono (CC)
+      const claveReserva = document.getElementById("clave-evento-reserva").value;
+      const asunto = `Solicitud de Publicidad para el Evento - "${nombreEventoReserva}" con clave de reserva terminada en ***********${claveReserva.slice(-4)}`;
+
+      // Convertir minutos a formato militar (HH:MM)
+      const horasMilitar = Math.floor(horaReserva / 60);
+      const minutosMilitar = horaReserva % 60;
+      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
+
+      // Datos adicionales para la publicidad
+      let publicidad = "";
+      publicidad = `
+        <p>El organizador ha solicitado la realización de la publicidad para el evento. A continuación, se adjuntan las observaciones:</p>
+        <p>${observacionesPublicidadReserva}</p>
+        <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
+      `;
+
+      // Mensaje de correo con los datos para la publicidad
+      const mensaje = `
+        <html>
+          <body>
+            <h1 style="color: #007BFF;">Solicitud de Publicidad para el Evento</h1>
+            <p>Estimado Comité de Piezas Publicitarias,</p>
+            <p>Solicitamos la realización de publicidad para el siguiente evento:</p>
+            <ul>
+              <li><strong>Nombre del Evento:</strong> ${nombreEventoReserva}</li>
+              <li><strong>Fecha del Evento:</strong> ${fechaReserva}</li>
+              <li><strong>Hora del Evento:</strong> ${horaMilitar}</li>
+              <li><strong>Plan del Evento:</strong> ${planEvento}</li>
+              <li><strong>Nombre del Ponente:</strong> ${nombrePonente}</li>
+              <li><strong>Modalidad:</strong> ${modalidadEventoReserva}</li>
+              ${
+                modalidadEventoReserva === "presencial"
+                  ? `<li><strong>Ubicación:</strong> ${lugarPresencialReserva}</li>`
+                  : `<li><strong>Plataforma:</strong> ${ubicacionPlataformaReserva}</li>`
+              }
+            </ul>
+            ${publicidad}
+            <p>Por favor, revise esta solicitud y proporcione detalles sobre la publicidad requerida.</p>
+            <p>Si tiene alguna pregunta o necesita información adicional, no dude en ponerse en contacto con nosotros.</p>
+            <p>Recuerde que esta es una solicitud de publicidad proviente de una EDICIÓN DE RESERVA y no contiene datos privados de la reserva.</p>
+            <p>Se recomienda verificar la solicitud inicial de reserva en caso de haberse requerido publicidad para esta y así no solaparse ambas solicitudes.</p>
+            <p>La pieza publicitaria debe ser enviada como respuesta a TODOS los destinatarios de este correo.</p>
+            <p>Atentamente,</p>
+            <p>${nombreOrganizadorReserva}</p>
+            <p style="font-style: italic;">Administrador y creador SIEA</p>
+          </body>
+        </html>
+      `;
+
+      Email.send({
+        Host: emailHost,
+        Username: emailUsername,
+        Password: emailPassword,
+        To: destinatario,
+        Cc: cc,
+        From: emailUsername,
+        Subject: asunto,
+        Body: mensaje,
+        ContentType: "text/html",
+      })
+        .then((message) => {
+          console.log("Mensaje de SMTPJS:", message);
+
+          if (message === "OK") {
+            console.log("Correo enviado con éxito");
+          } else {
+            console.error("Error al enviar el correo:", message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la función de envío de correo:", error);
+        });
+    }
+
     // Función para enviar el correo de edición de reserva
     function enviarCorreoRegistro(claveReservaCreada) {
       // Obtener el correo del organizador para enviarle el correo
@@ -2395,6 +2497,10 @@
           <p>${observacionesPublicidadReserva}</p>
           <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
         `;
+      }
+
+      if (publicidadComiteReserva === "si") {
+        enviarSolicitudPublicidadRegistro(claveReservaCreada);
       }
 
       // Mensaje de correo con los datos adicionales
@@ -2451,6 +2557,103 @@
         .catch((error) => {
           console.error("Error en la función de envío de correo:", error);
           // Puedes manejar el error de otra manera si lo deseas
+        });
+    }
+
+    // Función para enviar el correo de solicitud de publicidad
+    function enviarSolicitudPublicidadRegistro(claveReservaCreada) {
+      // Obtener el correo del comité de piezas publicitarias
+      const correoDestino = "danna.cabarcas@aneiap.co";
+      // Datos adicionales de la solicitud de publicidad
+      const emailOrganizadorReserva= document.getElementById("email-organizador").value;
+      const nombreOrganizadorReserva= document.getElementById("nombre-organizador").value;
+      const nombreEventoReserva= document.getElementById("nombre-evento").value;
+      const fechaReserva = document.getElementById("fecha-evento").value;
+      const horaReserva = document.getElementById("hora-evento").value;
+      const planEvento = document.getElementById("plan-evento").value;
+      const nombrePonente = document.getElementById("nombre-ponente").value;
+      const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
+      const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad").value;
+      const fotoPonenteURLReserva = document.getElementById("foto-ponente").value;
+      const modalidadEventoReserva = document.getElementById("modalidad-evento").value;
+      const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma").value;
+      const lugarPresencialReserva = document.getElementById("lugar-presencial").value;
+
+      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
+      const cc = `${emailOrganizadorReserva}, siea@aneiap.co`; // Copia de carbono (CC)
+      const claveReserva = claveReservaCreada;
+      const asunto = `Solicitud de Publicidad para el Evento - "${nombreEventoReserva}" con clave de reserva terminada en ***********${claveReserva.slice(-4)}`;
+
+      // Convertir minutos a formato militar (HH:MM)
+      const horasMilitar = Math.floor(horaReserva / 60);
+      const minutosMilitar = horaReserva % 60;
+      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
+
+      // Datos adicionales para la publicidad
+      let publicidad = "";
+      publicidad = `
+        <p>El organizador ha solicitado la realización de la publicidad para el evento. A continuación, se adjuntan las observaciones:</p>
+        <p>${observacionesPublicidadReserva}</p>
+        <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
+      `;
+
+      // Mensaje de correo con los datos para la publicidad
+      const mensaje = `
+        <html>
+          <body>
+            <h1 style="color: #007BFF;">Solicitud de Publicidad para el Evento</h1>
+            <p>Estimado Comité de Piezas Publicitarias,</p>
+            <p>Solicitamos la realización de publicidad para el siguiente evento:</p>
+            <ul>
+              <li><strong>Nombre del Evento:</strong> ${nombreEventoReserva}</li>
+              <li><strong>Fecha del Evento:</strong> ${fechaReserva}</li>
+              <li><strong>Hora del Evento:</strong> ${horaMilitar}</li>
+              <li><strong>Plan del Evento:</strong> ${planEvento}</li>
+              <li><strong>Nombre del Ponente:</strong> ${nombrePonente}</li>
+              <li><strong>Modalidad:</strong> ${modalidadEventoReserva}</li>
+              ${
+                modalidadEventoReserva === "presencial"
+                  ? `<li><strong>Ubicación:</strong> ${lugarPresencialReserva}</li>`
+                  : `<li><strong>Plataforma:</strong> ${ubicacionPlataformaReserva}</li>`
+              }
+            </ul>
+            ${publicidad}
+            <p>Por favor, revise esta solicitud y proporcione detalles sobre la publicidad requerida.</p>
+            <p>Si tiene alguna pregunta o necesita información adicional, no dude en ponerse en contacto con nosotros.</p>
+            <p>Recuerde que esta es una solicitud de publicidad proveniente de una RESERVA NUEVA y no contiene datos privados de la reserva.</p>
+            <p>La pieza publicitaria debe ser enviada como respuesta a TODOS los destinatarios de este correo.</p>
+            <p>Atentamente,</p>
+            <p>${nombreOrganizadorReserva}</p>
+            <p style="font-style: italic;">Administrador y creador SIEA</p>
+          </body>
+        </html>
+      `;
+
+      Email.send({
+        Host: emailHost,
+        Username: emailUsername,
+        Password: emailPassword,
+        To: destinatario,
+        Cc: cc,
+        From: emailUsername,
+        Subject: asunto,
+        Body: mensaje,
+        ContentType: "text/html",
+      })
+        .then((message) => {
+          console.log("Mensaje de SMTPJS:", message);
+
+          if (message === "OK") {
+            console.log("Correo enviado con éxito");
+          } else {
+            console.error("Error al enviar el correo:", message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la función de envío de correo:", error);
         });
     }
 
