@@ -1,4 +1,4 @@
-2<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <!-- Descargar SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
@@ -20,6 +20,14 @@
   <script src="https://apis.google.com/js/client.js"></script>
   <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
   <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Importar el google auth provider para autenticar con google -->  
+  <!-- <script import { GoogleAuthProvider } from "firebase/auth"></script> -->  
+  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Agrega la biblioteca Google API Client -->  
+  <script src="https://apis.google.com/js/api.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <meta charset="utf-8">
   <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
@@ -43,6 +51,7 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
     const firestore = firebase.firestore();
   </script>
 
@@ -403,13 +412,35 @@
       height: 16px;
       margin-left: 5px;
     }
+    .swal2-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .swal2-input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px; /* Ajusta según sea necesario */
+    }
+    #inputEmail,
+    #inputPassword {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      margin: 5px 0; /* Ajusta según sea necesario */
+      font-size: 22px; /* Ajusta el tamaño de fuente según sea necesario */
+    }
 
   </style>
 </head>
-<body>
-  
+<body class="dark-mode">
+
+  <!-- Botón de inicio de sesión -->
+  <button id="btnIniciarSesion" class="button-consultar">Iniciar Sesión</button>
+
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;" class="light-mode">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
+
     <!-- Botón de modo de visualización-->
     <button id="modo-switch" class="light-mode">
       <span class="icon"></span>
@@ -3410,5 +3441,58 @@
     });
 
   </script>
+
+<script defer>
+  const btnIniciarSesion = document.getElementById('btnIniciarSesion');
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Verifica si Firebase ya se ha inicializado
+    if (firebase.apps.length === 0) {
+      const firebaseScript = document.createElement('script');
+      firebaseScript.src = "https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js";
+      firebaseScript.onload = function () {
+        firebaseLoaded = true;
+      };
+      document.head.appendChild(firebaseScript);
+    }
+
+    // Verifica si Firebase ya se ha inicializado
+    if (firebase.apps.length === 0) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    btnIniciarSesion.addEventListener('click', async function () {
+      const result = await call_login_google();
+      // Maneja el resultado aquí si es necesario
+    });
+  });
+
+  async function call_login_google() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try {
+      const result = await firebase.auth().signInWithPopup(provider);
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const token = result.credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // ...
+
+      // Si deseas hacer algo después de la autenticación, puedes hacerlo aquí
+
+      return result; // Puedes devolver el resultado si es necesario
+    } catch (error) {
+      // Handle errors here
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.email;
+      // ...
+      console.error('Error de autenticación:', error);
+      throw new Error('No se pudo autenticar con Gmail, contacta al administrador de SIEA.');
+    }
+  }
+</script>
+
+
 </body>
 </html>
