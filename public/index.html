@@ -3478,7 +3478,12 @@
       // Configure the cookie with SameSite=None
       document.cookie = 'cross-site-cookie=bar; SameSite=None; Secure';
       // ...
-
+      // Muestra una alerta estilizada con el correo del usuario
+      Swal.fire({
+        icon: 'success',
+        title: 'Autenticado exitosamente',
+        text: `Correo: ${user.email}`,
+      });
       // Si deseas hacer algo después de la autenticación, puedes hacerlo aquí
 
       return result; // Puedes devolver el resultado si es necesario
