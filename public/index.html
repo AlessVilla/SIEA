@@ -3445,13 +3445,13 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const btnIniciarSesion = document.getElementById('btnIniciarSesion');
-
-      // Agrega el EventListener al botón
-      btnIniciarSesion.addEventListener('click', function (event) {
+  
+      // Agrega el EventListener al botón usando 'mousedown' en lugar de 'click'
+      btnIniciarSesion.addEventListener('mousedown', function (event) {
         event.preventDefault(); // Evita el comportamiento predeterminado del clic
         call_login_google();
       });
-
+  
       function call_login_google() {
         firebase.auth().signInWithPopup(provider)
           .then((result) => {
