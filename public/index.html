@@ -436,7 +436,7 @@
 <body class="dark-mode">
 
   <!-- Botón de inicio de sesión -->
-  <button id="btnIniciarSesion" class="button-consultar" onclick="call_login_google()">Iniciar Sesión</button>
+  <button id="btnIniciarSesion" class="button-consultar">Iniciar Sesión</button>
 
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;" class="light-mode">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
@@ -3443,20 +3443,30 @@
   </script>
 
   <script>
-    function call_login_google() {
-      firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-          // Acciones después de iniciar sesión exitosamente
-          var user = result.user;
-          console.log('Usuario autenticado:', user);
-        })
-        .catch((error) => {
-          // Manejar errores
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.error('Error de autenticación:', errorMessage);
-        });
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+      const btnIniciarSesion = document.getElementById('btnIniciarSesion');
+
+      // Agrega el EventListener al botón
+      btnIniciarSesion.addEventListener('click', function (event) {
+        event.preventDefault(); // Evita el comportamiento predeterminado del clic
+        call_login_google();
+      });
+
+      function call_login_google() {
+        firebase.auth().signInWithPopup(provider)
+          .then((result) => {
+            // Acciones después de iniciar sesión exitosamente
+            var user = result.user;
+            console.log('Usuario autenticado:', user);
+          })
+          .catch((error) => {
+            // Manejar errores
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.error('Error de autenticación:', errorMessage);
+          });
+      }
+    });
   </script>
 
 </body>
