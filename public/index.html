@@ -3449,22 +3449,23 @@
       // Agrega el EventListener al botón usando 'mousedown' en lugar de 'click'
       btnIniciarSesion.addEventListener('mousedown', function (event) {
         event.preventDefault(); // Evita el comportamiento predeterminado del clic
-        call_login_google();
+        setTimeout(() => {
+          call_login_google();
+        }, 0);
       });
   
-      function call_login_google() {
-        firebase.auth().signInWithPopup(provider)
-          .then((result) => {
-            // Acciones después de iniciar sesión exitosamente
-            var user = result.user;
-            console.log('Usuario autenticado:', user);
-          })
-          .catch((error) => {
-            // Manejar errores
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error('Error de autenticación:', errorMessage);
-          });
+      async function call_login_google() {
+        try {
+          const result = await firebase.auth().signInWithPopup(provider);
+          // Acciones después de iniciar sesión exitosamente
+          var user = result.user;
+          console.log('Usuario autenticado:', user);
+        } catch (error) {
+          // Manejar errores
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.error('Error de autenticación:', errorMessage);
+        }
       }
     });
   </script>
