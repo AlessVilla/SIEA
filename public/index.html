@@ -3446,20 +3446,15 @@
     document.addEventListener('DOMContentLoaded', function () {
       const btnIniciarSesion = document.getElementById('btnIniciarSesion');
   
-      // Agrega el EventListener al botón usando 'mousedown' en lugar de 'click'
-      btnIniciarSesion.addEventListener('mousedown', function (event) {
-        event.preventDefault(); // Evita el comportamiento predeterminado del clic
-        setTimeout(() => {
-          call_login_google();
-        }, 0);
+      // Agrega el EventListener al botón
+      btnIniciarSesion.addEventListener('click', function () {
+        call_login_google();
       });
   
       async function call_login_google() {
         try {
-          const result = await firebase.auth().signInWithPopup(provider);
-          // Acciones después de iniciar sesión exitosamente
-          var user = result.user;
-          console.log('Usuario autenticado:', user);
+          await firebase.auth().signInWithRedirect(provider);
+          // No se ejecutará esta parte hasta después del redireccionamiento
         } catch (error) {
           // Manejar errores
           var errorCode = error.code;
