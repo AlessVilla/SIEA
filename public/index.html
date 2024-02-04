@@ -436,7 +436,7 @@
 <body class="dark-mode">
 
   <!-- Botón de inicio de sesión -->
-  <button id="btnIniciarSesion" class="button-consultar">Iniciar Sesión</button>
+  <button id="btnIniciarSesion" class="button-consultar" onclick="call_login_google()">Iniciar Sesión</button>
 
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;" class="light-mode">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
@@ -3442,64 +3442,22 @@
 
   </script>
 
-<script defer>
-  const btnIniciarSesion = document.getElementById('btnIniciarSesion');
-
-  document.addEventListener('DOMContentLoaded', function () {
-    // Verifica si Firebase ya se ha inicializado
-    if (firebase.apps.length === 0) {
-      const firebaseScript = document.createElement('script');
-      firebaseScript.src = "https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js";
-      firebaseScript.onload = function () {
-        firebaseLoaded = true;
-      };
-      document.head.appendChild(firebaseScript);
+  <script>
+    function call_login_google() {
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          // Acciones después de iniciar sesión exitosamente
+          var user = result.user;
+          console.log('Usuario autenticado:', user);
+        })
+        .catch((error) => {
+          // Manejar errores
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.error('Error de autenticación:', errorMessage);
+        });
     }
-
-    // Verifica si Firebase ya se ha inicializado
-    if (firebase.apps.length === 0) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    btnIniciarSesion.addEventListener('click', async function () {
-      const result = await call_login_google();
-      // Maneja el resultado aquí si es necesario
-    });
-  });
-
-  async function call_login_google() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-      const result = await firebase.auth().signInWithPopup(provider);
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const token = result.credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // Configure the cookie with SameSite=None
-      document.cookie = 'cross-site-cookie=bar; SameSite=None; Secure';
-      // ...
-      // Muestra una alerta estilizada con el correo del usuario
-      Swal.fire({
-        icon: 'success',
-        title: 'Autenticado exitosamente',
-        text: `Correo: ${user.email}`,
-      });
-      // Si deseas hacer algo después de la autenticación, puedes hacerlo aquí
-
-      return result; // Puedes devolver el resultado si es necesario
-    } catch (error) {
-      // Handle errors here
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // ...
-      console.error('Error de autenticación:', error);
-      throw new Error('No se pudo autenticar con Gmail, contacta al administrador de SIEA.');
-    }
-  }
-</script>
-
+  </script>
 
 </body>
 </html>
