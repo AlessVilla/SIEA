@@ -3443,24 +3443,27 @@
   </script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const btnIniciarSesion = document.getElementById('btnIniciarSesion');
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        // Intenta iniciar sesión automáticamente redirigiendo al usuario a la pantalla de inicio de sesión de Google
+        await firebase.auth().signInWithPopup(provider);
+      } catch (error) {
+        // Manejar errores
+        console.error('Error de inicio de sesión automático:', error);
+      }
+    });
   
-      // Agrega el EventListener al botón
-      btnIniciarSesion.addEventListener('click', function () {
-        call_login_google();
-      });
-  
-      async function call_login_google() {
-        try {
-          await firebase.auth().signInWithRedirect(provider);
-          // No se ejecutará esta parte hasta después del redireccionamiento
-        } catch (error) {
-          // Manejar errores
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.error('Error de autenticación:', errorMessage);
-        }
+    // Escucha el evento de cambio de estado de autenticación
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // Usuario autenticado
+        console.log('Usuario autenticado:', user);
+        // Puedes realizar acciones adicionales después de la autenticación
+        // Por ejemplo, mostrar contenido adicional, etc.
+      } else {
+        // Usuario no autenticado
+        console.log('Usuario no autenticado');
+        // Puedes agregar lógica adicional aquí, si es necesario
       }
     });
   </script>
