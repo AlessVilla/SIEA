@@ -584,6 +584,7 @@
           <div class="disponibilidad-group">
           <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
           <label for="texto7"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
+          <label for="texto8"><b>- Agradecimientos especiales a Said Yanett UNINORTE (logo).</b></label>
           </div>
         </p>
       </div>
@@ -1130,17 +1131,17 @@
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL ESPACIO 🏢</p></h2>
         <div class="row">
           <div class="half">
-            <label for="nombre-asistente"><b>Nombre del asistente: *</b></label>
+            <label for="nombre-asistente"><b>Nombre completo del asistente: *</b></label>
             <input type="text" id="nombre-asistente" placeholder="Ingresa tu nombre.">
             <label for="telefono-asistente"><b>Teléfono del asistente: *</b></label>
             <input type="tel" id="telefono-asistente" placeholder="Ingresa tu número de teléfono.">
           </div>
           <div class="half">
-            <label for="correo-asistente"><b>Correo del asistente: *</b></label>
+            <label for="correo-asistente"><b>Correo ANEIAP del asistente: *</b></label>
             <input type="text" id="correo-asistente" placeholder="Ingresa tu correo electrónico.">
-            <label for="capitulo-espacio"><b>Capítulo al que corresponde el espacio a evaluar: *</b></label>
+            <label for="capitulo-espacio"><b>Capítulo que organizó y se hizo cargo del espacio: *</b></label>
             <select id="capitulo-espacio">
-              <option value="" disabled selected hidden>Selecciona el capítulo al que fue destinado el espacio.</option>
+              <option value="" disabled selected hidden>Selecciona el capítulo que organizó el espacio.</option>
               <option value="uniguajira">UNIGUAJIRA</option>
               <option value="unimagdalena">UNIMAGDALENA</option>
               <option value="uniatlantico">UNIATLÁNTICO</option>
@@ -1166,7 +1167,7 @@
         </div>
         <label for="nombre-espacio"><b>Nombre del espacio a evaluar: *</b></label>
         <select id="nombre-espacio">
-          <option value="" disabled selected hidden>Selecciona el espacio a evaluar.</option>
+          <option value="" disabled selected hidden>Debes seleccionar primero un capítulo para seleccionar el espacio.</option>
           <!-- Aquí puedes agregar opciones para los espacios disponibles -->
         </select>
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL ESPACIO 📝</p></h2>
@@ -1224,15 +1225,71 @@
           </div>
           <div class="half">
             <label for="pregunta4"><b>4️⃣ </b> Deja acá tus comentarios, sugerencias y retroalimentaciones.</label>
-            <textarea id="pregunta4" rows="1" placeholder="Escribe tus comentarios y sugerencias aquí."></textarea>
+            <textarea id="pregunta4" rows="1" placeholder="Escribe tus comentarios y sugerencias aquí en caso de que tengas alguno (recomendado)."></textarea>
           </div>
-        </div>        
+        </div>
         <button class="button-evaluar" onclick="evaluarEspacio()">Enviar evaluación</button>
       </div>
     </div>
   </div>
 
   <script>
+
+    // Variables para la evaluación del espacio dentro del Acordeón 4:
+    var fechaHoy = new Date().toISOString().slice(0, 10);
+    var capituloEspacioSelect = document.getElementById("capitulo-espacio");
+
+    // Función para que los nombres de los espacios que están disponibles para evaluar se actualicen a
+    // Todos aquellos que tengan una fecha de evento entre HOY y hace 3 SEMANAS, luego de 3 semanas no se podrá evaluar
+    capituloEspacioSelect.addEventListener("change", function() {
+        var capituloSeleccionado = document.getElementById("capitulo-espacio").value;
+        // Calcular la fecha de hace tres semanas
+        var tresSemanasAtras = new Date();
+        tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21); // Restar 21 días para tres semanas
+        
+        // Formatear la fecha de tres semanas atrás en el formato YYYY-MM-DD
+        var dia = String(tresSemanasAtras.getDate()).padStart(2, '0');
+        var mes = String(tresSemanasAtras.getMonth() + 1).padStart(2, '0');
+        var año = tresSemanasAtras.getFullYear();
+        var fechaTresSemanasAtras = año + '-' + mes + '-' + dia;
+        console.log("la fecha de hace 3 semanas es con función " + fechaTresSemanasAtras);
+        // Obtener las reservas para el capítulo y dentro del rango de fechas
+        var reservasRef = firebase.firestore().collection("reservas");
+        var consulta = reservasRef.where("capitulo", "==", capituloSeleccionado)
+                                  .where("fechaEvento", ">=", fechaTresSemanasAtras)
+                                  .where("fechaEvento", "<=", fechaHoy)
+
+        consulta.get().then(function(querySnapshot) {
+          var nombresEventos = [];
+          querySnapshot.forEach(function(doc) {
+              nombresEventos.push(doc.data().nombreEvento);
+          });
+          nombresEventos.sort(); // Orden alfabético
+          // Agregar opciones al select
+          var nombreEspacioSelect = document.getElementById("nombre-espacio");
+          nombreEspacioSelect.innerHTML = ""; // Limpiar opciones anteriores
+          if (nombresEventos.length === 0) {
+              // Si no hay eventos disponibles, mostrar un mensaje indicando que no hay eventos en el rango de fechas
+              var option = document.createElement("option");
+              option.text = "No hay ningún evento cuya fecha sea entre HOY y hace 3 SEMANAS para este capítulo o ya pasó el plazo máximo del evento que buscas evaluar.";
+              option.value = "";
+              option.disabled = true;
+              option.selected = true;
+              nombreEspacioSelect.add(option);
+          } else {
+              // Si hay eventos disponibles, agregar cada nombre como una opción
+              nombresEventos.forEach(function(nombre) {
+                  var option = document.createElement("option");
+                  option.text = nombre;
+                  option.value = nombre;
+                  nombreEspacioSelect.add(option);
+              });
+          }
+        }).catch(function(error) {
+            console.log("Error obteniendo reservas:", error);
+            // Manejar el error aquí
+        });
+    });
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
     var correoUsuario = "";
@@ -3975,6 +4032,163 @@
         default:
           return numero; // Si el número no está entre 0 y 9, devolver el mismo número
       }
+    }
+
+    function evaluarEspacio() {
+      // Obtener los valores de los campos
+      var nombreAsistente = document.getElementById("nombre-asistente").value;
+      var telefonoAsistente = document.getElementById("telefono-asistente").value;
+      var correoAsistente = document.getElementById("correo-asistente").value;
+      var capituloEspacio = document.getElementById("capitulo-espacio").value;
+      var nombreEspacio = document.getElementById("nombre-espacio").value;
+      var pregunta1 = document.getElementById("pregunta1").value;
+      var pregunta2 = document.getElementById("pregunta2").value;
+      var pregunta3 = document.getElementById("pregunta3").value;
+      var comentarios = document.getElementById("pregunta4").value;
+
+      // Crear una lista para almacenar los nombres de los campos faltantes
+      var camposFaltantes = [];
+
+      // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
+      if (nombreAsistente.trim() === "") {
+          camposFaltantes.push(" - Nombre del asistente");
+      }
+      if (telefonoAsistente.trim() === "") {
+          camposFaltantes.push(" - Teléfono del asistente");
+      }
+      if (correoAsistente.trim() === "") {
+          camposFaltantes.push(" - Correo del asistente");
+      }
+      if (capituloEspacio === "") {
+          camposFaltantes.push(" - Capítulo que organizó el espacio");
+      }
+      if (nombreEspacio === "") {
+          camposFaltantes.push(" - Nombre del espacio a evaluar");
+      }
+      if (pregunta1 === "") {
+          camposFaltantes.push(" - Pregunta 1");
+      }
+      if (pregunta2 === "") {
+          camposFaltantes.push(" - Pregunta 2");
+      }
+      if (pregunta3 === "") {
+          camposFaltantes.push(" - Pregunta 3");
+      }
+
+      // Verificar si hay campos faltantes
+      if (camposFaltantes.length > 0) {
+          // Mostrar una alerta con los campos faltantes
+          Swal.fire({
+              icon: 'error',
+              title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+              text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,
+              allowEscapeKey: true,
+              imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+              imageWidth: 120, // Ancho de la imagen en píxeles
+              imageHeight: 235, // Alto de la imagen en píxeles
+              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener el proceso de evaluación
+      }
+
+      // Si todos los campos están diligenciados, continuar con el proceso de evaluación
+      // Actualizar la información del evento en la base de datos
+      var reservasRef = firebase.firestore().collection("reservas");
+      var eventoRef = reservasRef.where("capitulo", "==", capituloEspacio).where("nombreEvento", "==", nombreEspacio);
+
+      eventoRef.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            var data = doc.data();
+
+            // Incrementar los contadores según las respuestas a las preguntas
+            if (pregunta1 === "1" || pregunta1 === "2" || pregunta1 === "3" || pregunta1 === "4" || pregunta1 === "5" || pregunta1 === "6") {
+                // Detractor
+                data.detractores = (data.detractores || 0) + 1;
+            } else if (pregunta1 === "7" || pregunta1 === "8") {
+                // Pasivo
+                data.pasivos = (data.pasivos || 0) + 1;
+            } else {
+                // Promotor
+                data.promotores = (data.promotores || 0) + 1;
+            }
+
+            if (pregunta2 === "1" || pregunta2 === "2" || pregunta2 === "3" || pregunta2 === "4" || pregunta2 === "5" || pregunta2 === "6") {
+                data.detractores = (data.detractores || 0) + 1;
+            } else if (pregunta2 === "7" || pregunta2 === "8") {
+                data.pasivos = (data.pasivos || 0) + 1;
+            } else {
+                data.promotores = (data.promotores || 0) + 1;
+            }
+
+            if (pregunta3 === "1" || pregunta3 === "2" || pregunta3 === "3" || pregunta3 === "4" || pregunta3 === "5" || pregunta3 === "6") {
+                data.detractores = (data.detractores || 0) + 1;
+            } else if (pregunta3 === "7" || pregunta3 === "8") {
+                data.pasivos = (data.pasivos || 0) + 1;
+            } else {
+                data.promotores = (data.promotores || 0) + 1;
+            }
+
+            // Actualizar comentarios y datos personales del asistente
+            if (comentarios.trim() !== "") {
+                data.comentarios = (data.comentarios || "") + "|" + comentarios;
+            }
+            data.asistentes = (data.asistentes || "") + nombreAsistente + "|";
+            data.correosAsistentes = (data.correosAsistentes || "") + "|" + correoAsistente;
+            data.telefonosAsistentes = (data.telefonosAsistentes || "") + "|" +  telefonoAsistente;
+
+            // Recalcular satisfacción
+            var satisfaccion = (data.promotores - data.detractores) / (data.promotores + data.pasivos + data.detractores);
+            data.satisfaccion = isNaN(satisfaccion) ? null : satisfaccion;
+
+            // Actualizar el evento en la base de datos
+            reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
+                // Mostrar mensaje de éxito
+                Swal.fire({
+                  icon: 'success',
+                  title: '¡EVALUACIÓN ENVIADA CON ÉXITO!',
+                  text: 'Gracias por tu evaluación.',
+                  confirmButtonText: 'Aceptar',
+                  allowOutsideClick: true,
+                  backdrop: true,
+                  allowEscapeKey: true,
+                  imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+                  imageWidth: 120, // Ancho de la imagen en píxeles
+                  imageHeight: 235, // Alto de la imagen en píxeles
+                  imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                });
+                // Reiniciar los campos del formulario que no son los 3 datos personales del asistente en caso de que quiera volver a llenar para otro espacio diferente.
+                document.getElementById("capitulo-espacio").value = "";
+                document.getElementById("nombre-espacio").value = "";
+                document.getElementById("pregunta1").value = "";
+                document.getElementById("pregunta2").value = "";
+                document.getElementById("pregunta3").value = "";
+                document.getElementById("pregunta4").value = "";
+                var content = document.getElementById("acordeon4-content");
+                content.style.display = "none";
+                }).catch(function(error) {
+                    console.error("Error actualizando el evento:", error);
+                    // Mostrar mensaje de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
+                        text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                });
+            });
+        }).catch(function(error) {
+            console.error("Error obteniendo el evento:", error);
+            // Mostrar mensaje de error
+            Swal.fire({
+                icon: 'error',
+                title: '¡ERROR AL OBTENER EL EVENTO!',
+                text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
+                confirmButtonText: 'Aceptar'
+            });
+        });
     }
 
   </script>
