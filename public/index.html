@@ -163,6 +163,13 @@
       border: 1px solid #ff0000a4; /* Borde rojo */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
+    .evaluar-group {
+      margin-bottom: 15px;
+      background-color: #D55DFF; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #9900CC; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
     .radio-buttons-container {
           display: flex;
           justify-content: center;
@@ -253,6 +260,21 @@
       padding: 10px;
       margin-bottom: 20px;
     }
+    .acordeon4 {
+      background-color: #600082;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .acordeon4-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
     .button-consultar-disponibilidad {
       background-color: rgb(0, 4, 255);
       color: white;
@@ -279,6 +301,27 @@
       cursor: pointer;
       text-align: center;
       font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 353px; /* Ocupar el ancho del contenedor */
+    }
+    .button-evaluar {
+      background-color: #600082;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 353px; /* Ocupar el ancho del contenedor */
+    }
+    /* Estilo para los campos de correo del forms y contraseña */
+    input[type="email"],
+    input[type="password"] {
+      font-size: 18px; /* Mismo tamaño de fuente que el botón */
+      padding: 5px 10px;
+      margin-bottom: 10px; /* Espaciado inferior */
+      width: 150px; /* Ocupar el ancho del contenedor */
     }
     .button-eliminar {
       background-color: red;
@@ -422,21 +465,19 @@
       box-sizing: border-box;
       margin-bottom: 10px; /* Ajusta según sea necesario */
     }
-    #inputEmail,
-    #inputPassword {
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      margin: 5px 0; /* Ajusta según sea necesario */
-      font-size: 22px; /* Ajusta el tamaño de fuente según sea necesario */
-    }
 
   </style>
 </head>
 <body class="dark-mode">
 
-  <!-- Botón de inicio de sesión -->
-  <button id="btnIniciarSesion" class="button-consultar">Iniciar Sesión</button>
+  <!-- Formulario con campos de correo, contraseña y botón para inicar sesión-->
+  <form>
+    <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
+    <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña">
+  </form>
+  <button type="button" class="button-consultar" onclick="validar_login()">Iniciar Sesión</button>
+  <!-- Elemento para mostrar el saludo -->
+  <div id="saludoUsuario" style="color: orange;">¡Hola, ANEIAPo!</div>
 
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;" class="light-mode">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
@@ -468,6 +509,7 @@
           </div>
         </div>
             <!-- PRIMERA FILA DE LA SECCIÓN TICKET CON NOMBRE, CORREO Y TIPO DE TICKET -->
+            <div class="disponibilidad-group">
             <div class="row">
                 <div class="third">
                     <!-- CAMPO PARA NOMBRE QUE ES OBLIGATORIO -->
@@ -477,7 +519,7 @@
                 <div class="third">
                     <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
                     <label for="correo">Correo ANEIAP *</label>
-                    <input type="email" id="correo" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
+                    <input type="text" id="correo" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
@@ -514,11 +556,12 @@
                     <textarea id="link-drive" name="link-drive" rows="1" required placeholder="Adjunta link de evidencias en Drive"></textarea>
                 </div>
             </div>
+          </div>
         </p>
       </div>
     
       <div id="tab-content-2" class="tab-content">
-          <h2>INSTRUCCIONES GENERALES</h2>
+          <h2>INSTRUCCIONES GENERALES 📖</h2>
           <p>
             <div class="disponibilidad-group">
               <div class="row">
@@ -536,7 +579,7 @@
       </div>
 
       <div id="tab-content-3" class="tab-content">
-        <h2>CRÉDITOS Y PROPIEDAD</h2>
+        <h2>CRÉDITOS Y PROPIEDAD 💾</h2>
         <p>
           <div class="disponibilidad-group">
           <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
@@ -546,7 +589,7 @@
       </div>
       
       <div id="tab-content-4" class="tab-content">
-        <h2>CONSULTA AQUÍ LA DOCUMENTACIÓN DE SIEA 👇🏽</h2>
+        <h2>CONSULTA AQUÍ LA DOCUMENTACIÓN DE SIEA 👇🏽📚</h2>
         <p>
           <div class="disponibilidad-group">
           <div class="row">
@@ -616,8 +659,40 @@
   <div id="acordeon0-content" style="display: none;">
     <div class="acordeon0-content-inner">
       <div class="disponibilidad-group">
-      <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
-      <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
+        <div class="row">
+          <!-- Mitad izquierda con el campo para seleccionar la fecha -->
+          <div class="half">
+            <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
+            <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
+          </div>
+          <!-- Mitad derecha con el campo para seleccionar el capítulo -->
+          <div class="half">
+            <label for="capitulo-consulta"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
+            <select id="capitulo-consulta">
+              <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
+              <option value="uniguajira">UNIGUAJIRA</option>
+              <option value="unimagdalena">UNIMAGDALENA</option>
+              <option value="uniatlantico">UNIATLÁNTICO</option>
+              <option value="uninorte">UNINORTE</option>
+              <option value="cuc">CUC</option>
+              <option value="librequilla">LIBREQUILLA</option>
+              <option value="utb">UTB</option>
+              <option value="ufps">UFPS</option>
+              <option value="unalmed">UNALMED</option>
+              <option value="udea">UDEA</option>
+              <option value="upbmed">UPBMED</option>
+              <option value="utp">UTP</option>
+              <option value="unalma">UNALMA</option>
+              <option value="udistrital">UDISTRITAL</option>
+              <option value="unalbog">UNALBOG</option>
+              <option value="univalle">UNIVALLE</option>
+              <option value="icesi">ICESI</option>
+              <option value="usc">USC</option>
+              <option value="librecali">LIBRECALI</option>
+              <option value="nacional">ANEIAP NACIONAL</option>
+            </select>
+          </div>
+        </div>
       <button class="button-consultar-disponibilidad" onclick="ConsultarDisponibilidadReservas()">Consultar la disponibilidad de reservas</button>
       <div class="disponibilidad-container">
         <!-- Lógica para mostrar la disponibilidad -->
@@ -650,6 +725,10 @@
         <div class="disponibilidad-item gray">21:00 - 21:30</div>
         <div class="disponibilidad-item gray">21:30 - 22:00</div>
       </div>
+      <label for="eventos-programados"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
+      <div class="disponibilidad-group">
+      <div id="eventos-programados"></div>
+      </div>
       </div>
     </div>
   </div>
@@ -658,7 +737,7 @@
   <div id="acordeon1-content" style="display: none;">
     <div class="acordeon1-content-inner">
       <div class="reservar-group">
-      <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL EVENTO</p></h2>
+      <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL EVENTO 🦉</p></h2>
       <div class="row">
       <div class="half">
       <label for="nombre-evento"><b>Nombre del evento: *</b></label>
@@ -751,8 +830,38 @@
           <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL ORGANIZADOR</p></h2>
           <label for="nombre-organizador"><b>Nombre del organizador: *</b></label>
           <input type="text" id="nombre-organizador" placeholder="Ingresa tu nombre.">
-          <label for="email-organizador"><b>Email del organizador: *</b></label>
-          <input type="email" id="email-organizador" placeholder="Ingresa tu email.">
+          <div class="row">
+            <div class="half">
+                <label for="email-organizador"><b>Email del organizador: *</b></label>
+                <input type="text" id="email-organizador" placeholder="Ingresa tu email.">
+            </div>
+            <div class="half">
+                <label for="capitulo-organizador"><b>Capítulo del organizador: *</b></label>
+                <select id="capitulo-organizador">
+                  <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
+                  <option value="uniguajira">UNIGUAJIRA</option>
+                  <option value="unimagdalena">UNIMAGDALENA</option>
+                  <option value="uniatlantico">UNIATLÁNTICO</option>
+                  <option value="uninorte">UNINORTE</option>
+                  <option value="cuc">CUC</option>
+                  <option value="librequilla">LIBREQUILLA</option>
+                  <option value="utb">UTB</option>
+                  <option value="ufps">UFPS</option>
+                  <option value="unalmed">UNALMED</option>
+                  <option value="udea">UDEA</option>
+                  <option value="upbmed">UPBMED</option>
+                  <option value="utp">UTP</option>
+                  <option value="unalma">UNALMA</option>
+                  <option value="udistrital">UDISTRITAL</option>
+                  <option value="unalbog">UNALBOG</option>
+                  <option value="univalle">UNIVALLE</option>
+                  <option value="icesi">ICESI</option>
+                  <option value="usc">USC</option>
+                  <option value="librecali">LIBRECALI</option>
+                  <option value="nacional">ANEIAP NACIONAL</option>
+                </select>
+            </div>
+          </div>
           <label for="telefono-organizador"><b>Teléfono del organizador: *</b></label>
           <input type="tel" id="telefono-organizador" placeholder="Ingresa tu número de teléfono.">
         </div>
@@ -761,7 +870,7 @@
           <label for="nombre-ponente"><b>Nombre del ponente: *</b></label>
           <input type="text" id="nombre-ponente" placeholder="Ingresa el nombre del ponente.">
           <label for="email-ponente"><b>Email del ponente:</b></label>
-          <input type="email" id="email-ponente" placeholder="Ingresa el email del ponente.">
+          <input type="text" id="email-ponente" placeholder="Ingresa el email del ponente.">
           <label for="telefono-ponente"><b>Teléfono del ponente:</b></label>
           <input type="tel" id="telefono-ponente" placeholder="Ingresa el número de teléfono del ponente.">
         </div>
@@ -798,11 +907,11 @@
       
       <button class="button-consultar" onclick="consultarReserva()">Consultar reserva</button>
       </div>
-      
+
       <!-- Campos para la consulta de reserva -->
       <div id="datos-reserva-container" style="display: none;">
-        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DE TU RESERVA</p></h2>
         <div class="editar-group">
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DE TU RESERVA 📚</p></h2>
         <div class="row">
         <div class="half">
         <label for="nombre-evento-reserva"><b>Nombre del evento en la reserva: *</b></label>
@@ -895,8 +1004,38 @@
             <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL ORGANIZADOR</p></h2>
             <label for="nombre-organizador-reserva"><b>Nombre del organizador en la reserva: *</b></label>
             <input type="text" id="nombre-organizador-reserva" placeholder="Acá aparecerá el nombre del organizador de la reserva.">
-            <label for="email-organizador-reserva"><b>Email del organizador en la reserva: *</b></label>
-            <input type="email" id="email-organizador-reserva" placeholder="Acá aparecerá el email del organizador de la reserva.">
+            <div class="row">
+              <div class="half">
+                <label for="email-organizador-reserva"><b>Email del organizador en la reserva: *</b></label>
+                <input type="text" id="email-organizador-reserva" placeholder="Acá aparecerá el email del organizador de la reserva.">
+              </div>
+             <div class="half">
+              <label for="capitulo-organizador-reserva"><b>Capítulo al que aplica la reserva: *</b></label>
+              <select id="capitulo-organizador-reserva">
+                <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
+                <option value="uniguajira">UNIGUAJIRA</option>
+                <option value="unimagdalena">UNIMAGDALENA</option>
+                <option value="uniatlantico">UNIATLÁNTICO</option>
+                <option value="uninorte">UNINORTE</option>
+                <option value="cuc">CUC</option>
+                <option value="librequilla">LIBREQUILLA</option>
+                <option value="utb">UTB</option>
+                <option value="ufps">UFPS</option>
+                <option value="unalmed">UNALMED</option>
+                <option value="udea">UDEA</option>
+                <option value="upbmed">UPBMED</option>
+                <option value="utp">UTP</option>
+                <option value="unalma">UNALMA</option>
+                <option value="udistrital">UDISTRITAL</option>
+                <option value="unalbog">UNALBOG</option>
+                <option value="univalle">UNIVALLE</option>
+                <option value="icesi">ICESI</option>
+                <option value="usc">USC</option>
+                <option value="librecali">LIBRECALI</option>
+                <option value="nacional">ANEIAP NACIONAL</option>
+              </select>
+              </div>
+              </div>
             <label for="telefono-organizador-reserva"><b>Teléfono del organizador en la reserva: *</b></label>
             <input type="tel" id="telefono-organizador-reserva" placeholder="Acá aparecerá el número de teléfono del organizador de la reserva.">
           </div>
@@ -905,7 +1044,7 @@
             <label for="nombre-ponente-reserva"><b>Nombre del ponente en la reserva: *</b></label>
             <input type="text" id="nombre-ponente-reserva" placeholder="Acá aparecerá el nombre del ponente de la reserva.">
             <label for="email-ponente-reserva"><b>Email del ponente en la reserva:</b></label>
-            <input type="email" id="email-ponente-reserva" placeholder="Acá aparecerá el email del ponente de la reserva.">
+            <input type="text" id="email-ponente-reserva" placeholder="Acá aparecerá el email del ponente de la reserva.">
             <label for="telefono-ponente-reserva"><b>Teléfono del ponente en la reserva:</b></label>
             <input type="tel" id="telefono-ponente-reserva" placeholder="Acá aparecerá el número de teléfono del ponente de la reserva.">
           </div>
@@ -983,9 +1122,120 @@
       </div>
     </div>
   </div>
+  <!-- DETALLES DEL ACORDEÓN 4 PARA EVALUACIÓN DE SATISFACCIÓN DEL ESPACIO -->
+  <div class="acordeon4" onclick="toggleEvaluarEspacio()">CLICK AQUÍ PARA EVALUAR EL ESPACIO 🌟</div>
+  <div id="acordeon4-content" style="display: none;">
+    <div class="acordeon4-content-inner">
+      <div class="evaluar-group">
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL ESPACIO 🏢</p></h2>
+        <div class="row">
+          <div class="half">
+            <label for="nombre-asistente"><b>Nombre del asistente: *</b></label>
+            <input type="text" id="nombre-asistente" placeholder="Ingresa tu nombre.">
+            <label for="telefono-asistente"><b>Teléfono del asistente: *</b></label>
+            <input type="tel" id="telefono-asistente" placeholder="Ingresa tu número de teléfono.">
+          </div>
+          <div class="half">
+            <label for="correo-asistente"><b>Correo del asistente: *</b></label>
+            <input type="text" id="correo-asistente" placeholder="Ingresa tu correo electrónico.">
+            <label for="capitulo-espacio"><b>Capítulo al que corresponde el espacio a evaluar: *</b></label>
+            <select id="capitulo-espacio">
+              <option value="" disabled selected hidden>Selecciona el capítulo al que fue destinado el espacio.</option>
+              <option value="uniguajira">UNIGUAJIRA</option>
+              <option value="unimagdalena">UNIMAGDALENA</option>
+              <option value="uniatlantico">UNIATLÁNTICO</option>
+              <option value="uninorte">UNINORTE</option>
+              <option value="cuc">CUC</option>
+              <option value="librequilla">LIBREQUILLA</option>
+              <option value="utb">UTB</option>
+              <option value="ufps">UFPS</option>
+              <option value="unalmed">UNALMED</option>
+              <option value="udea">UDEA</option>
+              <option value="upbmed">UPBMED</option>
+              <option value="utp">UTP</option>
+              <option value="unalma">UNALMA</option>
+              <option value="udistrital">UDISTRITAL</option>
+              <option value="unalbog">UNALBOG</option>
+              <option value="univalle">UNIVALLE</option>
+              <option value="icesi">ICESI</option>
+              <option value="usc">USC</option>
+              <option value="librecali">LIBRECALI</option>
+              <option value="nacional">ANEIAP NACIONAL</option>
+            </select>
+          </div>
+        </div>
+        <label for="nombre-espacio"><b>Nombre del espacio a evaluar: *</b></label>
+        <select id="nombre-espacio">
+          <option value="" disabled selected hidden>Selecciona el espacio a evaluar.</option>
+          <!-- Aquí puedes agregar opciones para los espacios disponibles -->
+        </select>
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL ESPACIO 📝</p></h2>
+        <p>Evalúa del 1 al 10 los siguientes aspectos siendo 1 la menor nota y 10 la máxima nota:</p>
+        <div class="row">
+          <div class="half">
+            <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan satisfecho te sientes con el espacio de formación brindado? *</label>
+            <select id="pregunta1">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="half">
+            <label for="pregunta2"><b>2️⃣ </b> ¿Qué tanto aprendiste por haber asistido al espacio? *</label>
+            <select id="pregunta2">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="half">
+            <label for="pregunta3"><b>3️⃣ </b> Evalúa la calidad del ponente del espacio. *</label>
+            <select id="pregunta3">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="half">
+            <label for="pregunta4"><b>4️⃣ </b> Deja acá tus comentarios, sugerencias y retroalimentaciones.</label>
+            <textarea id="pregunta4" rows="1" placeholder="Escribe tus comentarios y sugerencias aquí."></textarea>
+          </div>
+        </div>        
+        <button class="button-evaluar" onclick="evaluarEspacio()">Enviar evaluación</button>
+      </div>
+    </div>
+  </div>
 
   <script>
 
+    // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
+    var correoUsuario = "";
     // Definición de la función para convertir la fecha del formulario al formato de Firestore
     function convertirFechaFormulario(fechaFormulario) {
     if (typeof fechaFormulario !== "string") {
@@ -1003,7 +1253,7 @@
     var fechaFirestore = new Date(anio, mes - 1, dia); // Restamos 1 al mes ya que en JavaScript los meses van de 0 a 11
     return fechaFirestore;
   }
- 
+
     // Función para mostrar el contenido de la pestaña seleccionada
     function showTab(tabNumber) {
       // Oculta todos los contenidos de las pestañas
@@ -1031,6 +1281,10 @@
       }
       
       // A continuación, ocultamos los contenidos de otras barras (acordeones).
+
+      // Ocultamos el contenido del elemento con ID "acordeon4-content".
+      var content = document.getElementById("acordeon4-content");
+      content.style.display = "none";
       
       // Ocultamos el contenido del elemento con ID "acordeon3-content".
       var content = document.getElementById("acordeon3-content");
@@ -1060,6 +1314,10 @@
       }
       
       // A continuación, ocultamos los contenidos de otras barras (acordeones).
+
+      // Ocultamos el contenido del elemento con ID "acordeon4-content".
+      var content = document.getElementById("acordeon4-content");
+      content.style.display = "none";
       
       // Ocultamos el contenido del elemento con ID "acordeon3-content".
       var content = document.getElementById("acordeon3-content");
@@ -1117,6 +1375,8 @@
 
       // Ocultar el contenido de las otras barras de acordeón (si estaban visibles).
       // Esto asegura que solo una barra esté abierta a la vez.
+      var content = document.getElementById("acordeon4-content");
+      content.style.display = "none";
       var content = document.getElementById("acordeon3-content");
       content.style.display = "none";
       var content = document.getElementById("acordeon0-content");
@@ -1197,6 +1457,41 @@
       }
 
       // A continuación, ocultar las otras barras de información (AC0, AC1, AC2) para centrarse en la eliminación
+
+      var content = document.getElementById("acordeon4-content");
+      content.style.display = "none";
+
+      var content0 = document.getElementById("acordeon0-content");
+      content0.style.display = "none";
+
+      var content1 = document.getElementById("acordeon1-content");
+      content1.style.display = "none";
+
+      var content2 = document.getElementById("acordeon2-content");
+      content2.style.display = "none";
+    }
+
+    // Esta función se utiliza cuando se hace clic en la barra "EVALUAR ESPACIO (AC4)" para ocultar
+    // las demás barras de información en la interfaz. Su propósito es mejorar la experiencia del usuario
+    // al centrarse en la acción de eliminar una reserva sin distracciones innecesarias.
+    function toggleEvaluarEspacio() {
+      // Obtener la referencia al contenido de la barra "ELIMINAR RESERVA (AC3)"
+      var content = document.getElementById("acordeon4-content");
+      
+      // Comprobar el estado actual de visualización (oculto o mostrado)
+      if (content.style.display === "none") {
+        // Si está oculto, cambiarlo a mostrado (display: block)
+        content.style.display = "block";
+      } else {
+        // Si está mostrado, cambiarlo a oculto (display: none)
+        content.style.display = "none";
+      }
+
+      // A continuación, ocultar las otras barras de información (AC0, AC1, AC2) para centrarse en la eliminación
+
+      var content = document.getElementById("acordeon3-content");
+      content.style.display = "none";
+
       var content0 = document.getElementById("acordeon0-content");
       content0.style.display = "none";
 
@@ -1209,7 +1504,7 @@
 
     // Acá está la función para agregar un evento en la colección "reservas" y documento "basededatos",
     // también tiene en cuenta la posibilidad de adjuntar imagen del ponente y reiniciará los campos cuando se registren.
-    function agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL) {
+    function agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL) {
       // Obtener una referencia a la colección "reservas" en Firestore
       const db = firebase.firestore().collection("reservas").doc(claveEvento);
 
@@ -1226,6 +1521,7 @@
         observacionesEvento: observacionesEvento,
         nombreOrganizador: nombreOrganizador,
         emailOrganizador: emailOrganizador,
+        capitulo: capitulo,
         telefonoOrganizador: telefonoOrganizador,
         nombrePonente: nombrePonente,
         emailPonente: emailPonente,
@@ -1282,7 +1578,7 @@
       });
     }    
 
-    function editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva) {
+    function editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva) {
       // Obtener una referencia al documento del evento en Firestore
       const eventoRef = firebase.firestore().collection("reservas").doc(claveEventoReserva);
 
@@ -1302,6 +1598,7 @@
               observacionesEvento: observacionesEventoReserva,
               nombreOrganizador: nombreOrganizadorReserva,
               emailOrganizador: emailOrganizadorReserva,
+              capitulo: capituloReserva,
               telefonoOrganizador: telefonoOrganizadorReserva,
               nombrePonente: nombrePonenteReserva,
               emailPonente: emailPonenteReserva,
@@ -1385,6 +1682,22 @@
         // Verificar si la fecha del evento es válida (mayor a la fecha actual)
         var fechaEvento = new Date(document.getElementById("fecha-evento").value);
         var fechaActual = new Date().toISOString().slice(0, 10);
+
+        // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
+        var capitulo = document.getElementById("capitulo-organizador").value;
+        if (capitulo === "nacional" && correoUsuario ==! "jdn@aneiap.co") {
+          Swal.fire({
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
+            text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
 
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if (fechaEvento < fechaActual) {
@@ -1492,6 +1805,7 @@
             var observacionesEvento = document.getElementById("observaciones-evento").value;
             var nombreOrganizador = document.getElementById("nombre-organizador").value;
             var emailOrganizador = document.getElementById("email-organizador").value;
+            var capitulo = document.getElementById("capitulo-organizador").value;
             var telefonoOrganizador = document.getElementById("telefono-organizador").value;
             var nombrePonente = document.getElementById("nombre-ponente").value;
             var emailPonente = document.getElementById("email-ponente").value;
@@ -1501,7 +1815,7 @@
             var fotoPonenteURL = document.getElementById("foto-ponente").value;
 
             enviarCorreoRegistro(claveEvento,emailOrganizador);
-            agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
+            agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
           }
       }).catch(function(error) {
         // Maneja cualquier error que pueda ocurrir durante la verificación
@@ -1557,6 +1871,7 @@
         document.getElementById("plan-evento-reserva").value = reserva.planEvento;
         document.getElementById("observaciones-evento-reserva").value = reserva.observacionesEvento;
         document.getElementById("nombre-organizador-reserva").value = reserva.nombreOrganizador;
+        document.getElementById("capitulo-organizador-reserva").value = reserva.capitulo;
         document.getElementById("email-organizador-reserva").value = reserva.emailOrganizador;
         document.getElementById("telefono-organizador-reserva").value = reserva.telefonoOrganizador;
         document.getElementById("nombre-ponente-reserva").value = reserva.nombrePonente;
@@ -1604,6 +1919,22 @@
     function editarReserva() {
       // Validar que todos los campos estén llenos y sean válidos
       var camposValidos = validarCamposEdicion();
+
+      // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
+      var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
+      if (capituloReserva === "nacional" && correoUsuario ==! "jdn@aneiap.co") {
+        Swal.fire({
+          title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
+          text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener la edición de la reserva
+      }
 
       // Si todos los campos están llenos y son válidos, proceder con la edición de la reserva
       if (camposValidos) {
@@ -1723,6 +2054,7 @@
                 var observacionesEventoReserva = document.getElementById("observaciones-evento-reserva").value;
                 var nombreOrganizadorReserva = document.getElementById("nombre-organizador-reserva").value;
                 var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+                var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
                 var telefonoOrganizadorReserva = document.getElementById("telefono-organizador-reserva").value;
                 var nombrePonenteReserva = document.getElementById("nombre-ponente-reserva").value;
                 var emailPonenteReserva = document.getElementById("email-ponente-reserva").value;
@@ -1732,7 +2064,7 @@
                 var fotoPonenteURLReserva = document.getElementById("foto-ponente-reserva").value;
 
                 enviarCorreoEdicion();
-                editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
+                editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
                 // Restablecer los campos a su valor por defecto (vacío)
                 // Ocultar el contenido del acordeón datos-reserva-container
                 var datosReservaContainer = document.getElementById("datos-reserva-container");
@@ -2013,6 +2345,7 @@
       var observacionesEvento = document.getElementById("observaciones-evento").value;
       var nombreOrganizador = document.getElementById("nombre-organizador").value;
       var emailOrganizador = document.getElementById("email-organizador").value;
+      var capitulo = document.getElementById("capitulo-organizador").value;
       var telefonoOrganizador = document.getElementById("telefono-organizador").value;
       var nombrePonente = document.getElementById("nombre-ponente").value;
       var emailPonente = document.getElementById("email-ponente").value;
@@ -2050,6 +2383,9 @@
       }
       if (emailOrganizador.trim() === "") {
         camposFaltantes.push("Email del organizador");
+      }
+      if (capitulo.trim() === "") {
+        camposFaltantes.push("Capítulo");
       }
       if (telefonoOrganizador.trim() === "") {
         camposFaltantes.push("Teléfono del organizador");
@@ -2107,6 +2443,7 @@
         var observacionesEventoReserva = document.getElementById("observaciones-evento-reserva").value;
         var nombreOrganizadorReserva = document.getElementById("nombre-organizador-reserva").value;
         var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+        var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
         var telefonoOrganizadorReserva = document.getElementById("telefono-organizador-reserva").value;
         var nombrePonenteReserva = document.getElementById("nombre-ponente-reserva").value;
         var emailPonenteReserva = document.getElementById("email-ponente-reserva").value;
@@ -2141,6 +2478,9 @@
         }
         if (emailOrganizadorReserva.trim() === "") {
             camposFaltantes.push("Email del organizador");
+        }
+        if (capituloReserva.trim() === "") {
+            camposFaltantes.push("Capítulo");
         }
         if (telefonoOrganizadorReserva.trim() === "") {
             camposFaltantes.push("Teléfono del organizador");
@@ -2184,6 +2524,7 @@
 
     function ConsultarDisponibilidadReservas() {
       var fechaConsulta = document.getElementById("fecha-consulta").value;
+      var capituloConsulta = document.getElementById("capitulo-consulta").value;
       var fechaHoy = new Date().toISOString().slice(0, 10);
 
       // Acá se verifica que se haya insertado una fecha, si no insertaste nada, para el proceso y le notifica al usuario.
@@ -2204,7 +2545,24 @@
         });
         return;
       }
-
+      if (capituloConsulta.trim() === "") {
+        // Mostrar mensaje de error si no se ha seleccionado una fecha válida
+        Swal.fire({
+          title: '¡CAPÍTULO NO SELECCIONADO!',
+          text: 'Por favor, selecciona el capítulo del cual deseas consultar la disponibilidad.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,  
+          allowEscapeKey: true,
+          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return;
+      }
+      /* Comentario opcional por si se desea considerar o no la limitación de fecha de hoy al consultar
       if (fechaConsulta < fechaHoy) {
         // Mostrar mensaje de error si la fecha seleccionada es menor o igual a la fecha actual
         Swal.fire({
@@ -2221,14 +2579,22 @@
           imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
         });
         return;
-      }
+      }*/
 
       // Aquí realizarías la lógica para consultar la disponibilidad de reservas con la fecha seleccionada
       var fechaConsulta = document.getElementById("fecha-consulta").value;
       // Resto del código para validar la fecha y mostrar mensajes de error...
       // Obtener todos los eventos reservados para la fecha seleccionada
       var reservasRef = firebase.firestore().collection("reservas");
-      var consulta = reservasRef.where("fechaEvento", "==", fechaConsulta);
+      var consulta;
+
+      if (capituloConsulta === "ANEIAP NACIONAL") {
+        // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
+        consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulo", "==", "nacional");
+      } else {
+        // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
+        consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulo", "in", [capituloConsulta, "nacional"]);
+      }
 
       consulta.get().then(function(querySnapshot) {
         // Arreglo que representará el estado de disponibilidad de cada intervalo
@@ -2274,11 +2640,41 @@
           imageHeight: 235, // Alto de la imagen en píxeles
           imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
         });
+
+        // Construir la sección de eventos programados
+        var eventosProgramadosDiv = document.getElementById("eventos-programados");
+        eventosProgramadosDiv.innerHTML = ""; // Limpiar el contenido anterior
+
+        var eventos = [];
+        var indice = 1;
+        querySnapshot.forEach(function(doc) {
+          var nombreEvento = doc.data().nombreEvento;
+          var nombreOrganizador = doc.data().nombreOrganizador;
+          var horaEvento = doc.data().horaEvento;
+          var correoOrganizador = doc.data().emailOrganizador;
+          var capitulo = doc.data().capitulo;
+
+          var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
+          var minutos = horaEvento % 60; // Obtener los minutos del evento
+          var horaFormateada = (hora < 10 ? "0" + hora : hora) + ":" + (minutos < 10 ? "0" + minutos : minutos); // Formatear la hora
+
+          eventos.push({ indice: numeroAEmoji(indice), nombre: nombreEvento, organizador: nombreOrganizador, capitulo: capitulo, hora: horaFormateada, correo: correoOrganizador });
+          indice++;
+        });
+
+        // Mostrar los eventos en la sección
+        if (eventos.length > 0) {
+          eventos.forEach(function(evento) {
+            eventosProgramadosDiv.innerHTML += "<b>Evento </b>" + evento.indice + ": <b>Nombre espacio: </b>" + evento.nombre + " - <b>Organizador: </b>" + evento.organizador + " - <b>Capítulo: </b>" + evento.capitulo + " - <b>Hora: </b>" + evento.hora + " - <b>Correo: </b>" + evento.correo + "<br>";
+          });
+        } else {
+          eventosProgramadosDiv.innerHTML = "No hay eventos programados para esta fecha y capítulo.";
+        }
       }).catch(function(error) {
         console.log("Error obteniendo reservas:", error);
         // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
       });
-    }    
+    }
 
     // Función para enviar el correo de edición de reserva
     function enviarCorreoEdicion() {
@@ -2300,6 +2696,7 @@
       const duracionReserva = document.getElementById("duracion-evento-reserva").value;
       const planEvento = document.getElementById("plan-evento-reserva").value;
       const modalidadReserva = document.getElementById("modalidad-evento-reserva").value;
+      const capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
       const nombrePonente = document.getElementById("nombre-ponente-reserva").value;
       const publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
       const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
@@ -2342,6 +2739,7 @@
               <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
               <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
               <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
+              <li><strong>Capitulo:</strong> ${capituloReserva}</li>
               <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
               <li><strong>Plan del evento:</strong> ${planEvento}</li>
               <li><strong>Modalidad de la reserva:</strong> ${modalidadReserva}</li>
@@ -2389,7 +2787,7 @@
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadEdicion() {
       // Obtener el correo del comité de piezas publicitarias
-      const correoDestino = "danna.cabarcas@aneiap.co";
+      const correoDestino = "gestor_proyectos@aneiap.co";
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva= document.getElementById("email-organizador-reserva").value;
       const nombreOrganizadorReserva= document.getElementById("nombre-organizador-reserva").value;
@@ -2397,6 +2795,7 @@
       const fechaReserva = document.getElementById("fecha-evento-reserva").value;
       const horaReserva = document.getElementById("hora-evento-reserva").value;
       const planEvento = document.getElementById("plan-evento-reserva").value;
+      
       const nombrePonente = document.getElementById("nombre-ponente-reserva").value;
       const publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
       const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
@@ -2404,7 +2803,7 @@
       const modalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
       const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
       const lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
-
+      const capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
@@ -2437,6 +2836,7 @@
               <li><strong>Nombre del Evento:</strong> ${nombreEventoReserva}</li>
               <li><strong>Fecha del Evento:</strong> ${fechaReserva}</li>
               <li><strong>Hora del Evento:</strong> ${horaMilitar}</li>
+              <li><strong>Capítulo:</strong> ${capituloReserva}</li>
               <li><strong>Plan del Evento:</strong> ${planEvento}</li>
               <li><strong>Nombre del Ponente:</strong> ${nombrePonente}</li>
               <li><strong>Modalidad:</strong> ${modalidadEventoReserva}</li>
@@ -2503,6 +2903,7 @@
       const horaReserva = document.getElementById("hora-evento").value;
       const duracionReserva = document.getElementById("duracion-evento").value;
       const planEvento = document.getElementById("plan-evento").value;
+      const capitulo = document.getElementById("capitulo-organizador").value;
       const modalidadReserva = document.getElementById("modalidad-evento").value;
       const nombrePonente = document.getElementById("nombre-ponente").value;
       const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
@@ -2546,6 +2947,7 @@
               <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
               <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
               <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
+              <li><strong>Capítulo:</strong> ${capitulo}</li>
               <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
               <li><strong>Plan del evento:</strong> ${planEvento}</li>
               <li><strong>Modalidad de la reserva:</strong> ${modalidadReserva}</li>
@@ -2594,14 +2996,15 @@
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadRegistro(claveReservaCreada) {
       // Obtener el correo del comité de piezas publicitarias
-      const correoDestino = "danna.cabarcas@aneiap.co";
+      const correoDestino = "gestor_proyectos@aneiap.co";
       // Datos adicionales de la solicitud de publicidad
-      const emailOrganizadorReserva= document.getElementById("email-organizador").value;
-      const nombreOrganizadorReserva= document.getElementById("nombre-organizador").value;
+      const emailOrganizadorReserva = document.getElementById("email-organizador").value;
+      const nombreOrganizadorReserva = document.getElementById("nombre-organizador").value;
       const nombreEventoReserva= document.getElementById("nombre-evento").value;
       const fechaReserva = document.getElementById("fecha-evento").value;
       const horaReserva = document.getElementById("hora-evento").value;
       const planEvento = document.getElementById("plan-evento").value;
+      const capitulo = document.getElementById("capitulo-organizador").value;
       const nombrePonente = document.getElementById("nombre-ponente").value;
       const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
       const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad").value;
@@ -2642,6 +3045,7 @@
               <li><strong>Nombre del Evento:</strong> ${nombreEventoReserva}</li>
               <li><strong>Fecha del Evento:</strong> ${fechaReserva}</li>
               <li><strong>Hora del Evento:</strong> ${horaMilitar}</li>
+              <li><strong>Capitulo:</strong> ${capitulo}</li>
               <li><strong>Plan del Evento:</strong> ${planEvento}</li>
               <li><strong>Nombre del Ponente:</strong> ${nombrePonente}</li>
               <li><strong>Modalidad:</strong> ${modalidadEventoReserva}</li>
@@ -2837,13 +3241,21 @@
         var nuevaFecha = document.getElementById("fecha-evento-reserva").value;
         var nuevaHora = document.getElementById("hora-evento-reserva").value;
         var nuevaDuracion = document.getElementById("duracion-evento-reserva").value;
+        var nuevoCapitulo = document.getElementById("capitulo-organizador-reserva").value;
 
         // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
         var reservasRef = firebase.firestore().collection("reservas");
 
           console.log("ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
+
         // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
-        var consulta = reservasRef.where("fechaEvento", "==", nuevaFecha);
+        if (nuevoCapitulo === "ANEIAP NACIONAL") {
+          // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
+          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
+        } else {
+          // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
+          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "in", [nuevoCapitulo, "nacional"]);
+        }
 
         console.log("queremos empezar a hacer la consulta");
 
@@ -3037,13 +3449,19 @@
         var nuevaFecha = document.getElementById("fecha-evento").value;
         var nuevaHora = document.getElementById("hora-evento").value;
         var nuevaDuracion = document.getElementById("duracion-evento").value;
+        var nuevoCapitulo = document.getElementById("capitulo-organizador").value;
 
         // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
         var reservasRef = firebase.firestore().collection("reservas");
 
         // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
-        var consulta = reservasRef.where("fechaEvento", "==", nuevaFecha);
-        console.log("queremos empezar a hacer la consulta");
+        if (nuevoCapitulo === "ANEIAP NACIONAL") {
+          // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
+          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
+        } else {
+          // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
+          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "in", [nuevoCapitulo, "nacional"]);
+        }
 
         // Realizar el filtrado para obtener intervalos disponibles y no disponibles
         consulta.get().then(function(querySnapshot) {
@@ -3440,33 +3858,125 @@
       }
     });
 
-  </script>
+    function validar_login() {
+      // Obtener los valores de correo y contraseña desde los campos del formulario
+      var correo = document.getElementById("correo").value;
+      var contrasena = document.getElementById("contrasena").value;
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const btnIniciarSesion = document.getElementById('btnIniciarSesion');
-
-      // Agrega el EventListener al botón
-      btnIniciarSesion.addEventListener('click', function (event) {
-        event.preventDefault(); // Evita el comportamiento predeterminado del clic
-        call_login_google();
-      });
-
-      function call_login_google() {
-        firebase.auth().signInWithPopup(provider)
-          .then((result) => {
-            // Acciones después de iniciar sesión exitosamente
-            var user = result.user;
-            console.log('Usuario autenticado:', user);
-          })
-          .catch((error) => {
-            // Manejar errores
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error('Error de autenticación:', errorMessage);
-          });
+      // Verificar si ambos campos están diligenciados
+      if (!correo || !contrasena) {
+        // Campos no diligenciados, mostrar alerta de advertencia
+        Swal.fire({
+          title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!",
+          text: "Debes diligenciar tanto correo como contraseña para iniciar sesión.",
+          icon: "warning",
+          confirmButtonText: "Aceptar",
+          allowOutsideClick: true,
+          backdrop: true,
+          allowEscapeKey: true,
+          imageUrl: "https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png", // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+        });
+        // Actualizar el contenido del elemento saludoUsuario con el saludo genérico
+        document.getElementById("saludoUsuario").innerText = "¡Hola, ANEIAPo!";
+        return; // Detener la ejecución de la función
       }
-    });
+
+      // Referencia al documento en la colección "cuentas" correspondiente al correo
+      var cuentaRef = firebase.firestore().collection("cuentas").doc(correo);
+
+      // Obtener la información del documento
+      cuentaRef.get().then((doc) => {
+        if (doc.exists) {
+          // El documento existe, comprobar si la contraseña coincide
+          var storedPassword = doc.data().pass;
+          if (contrasena === storedPassword) {
+            // Contraseña correcta, asignar el valor del correo electrónico a la variable global
+            correoUsuario = correo;
+            // Contraseña correcta, mostrar alerta de inicio de sesión exitoso
+            Swal.fire({
+              title: "Has iniciado sesión exitosamente. 🦉💚",
+              text: "Disfruta de SIEA " + correo,
+              icon: "success",
+              confirmButtonText: "Aceptar",
+              imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+              imageWidth: 120,
+              imageHeight: 235,
+            });
+            // Actualizar el contenido del elemento saludoUsuario con el correo del usuario
+            document.getElementById("saludoUsuario").innerText = "¡Hola, " + correoUsuario + "!";
+          } else {
+            // Contraseña incorrecta, mostrar alerta de advertencia
+            Swal.fire({
+              title: "Contraseña incorrecta",
+              text: "No diligenciaste correctamente la contraseña, revísala o consulta al administrador si la olvidaste.",
+              icon: "warning",
+              confirmButtonText: "Aceptar",
+              imageUrl: "https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png",
+              imageWidth: 120,
+              imageHeight: 235,
+            });
+            // Actualizar el contenido del elemento saludoUsuario con el saludo genérico
+            document.getElementById("saludoUsuario").innerText = "¡Hola, ANEIAPo!";
+            // Vaciar los campos de correo y contraseña
+            document.getElementById("correo").value = "";
+            document.getElementById("contrasena").value = "";
+          }
+        } else {
+          // El documento no existe, el correo no está registrado, mostrar alerta de error
+          Swal.fire({
+            title: "Correo no válido.",
+            text: "Recuerda que para utilizar esta función de SIEA debes ser DCA o DNA. 🦉💚",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+            imageUrl: "https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png",
+            imageWidth: 120,
+            imageHeight: 235,
+          });
+          // Actualizar el contenido del elemento saludoUsuario con el saludo genérico
+          document.getElementById("saludoUsuario").innerText = "¡Hola, ANEIAPo!";
+        }
+      }).catch((error) => {
+        // Manejar errores, mostrar alerta de error
+        Swal.fire({
+          title: "Algo inesperado ha ocurrido con tu inicio de sesión, consulta al administrador o creador de SIEA para más información.",
+          text: error.message,
+          icon: "error",
+        });
+        // Actualizar el contenido del elemento saludoUsuario con el saludo genérico
+        document.getElementById("saludoUsuario").innerText = "¡Hola, ANEIAPo!";
+      });
+    }
+
+    // Función para convertir números en emojis
+    function numeroAEmoji(numero) {
+      switch (numero) {
+        case 0:
+          return "0️⃣";
+        case 1:
+          return "1️⃣";
+        case 2:
+          return "2️⃣";
+        case 3:
+          return "3️⃣";
+        case 4:
+          return "4️⃣";
+        case 5:
+          return "5️⃣";
+        case 6:
+          return "6️⃣";
+        case 7:
+          return "7️⃣";
+        case 8:
+          return "8️⃣";
+        case 9:
+          return "9️⃣";
+        default:
+          return numero; // Si el número no está entre 0 y 9, devolver el mismo número
+      }
+    }
+
   </script>
 
 </body>
