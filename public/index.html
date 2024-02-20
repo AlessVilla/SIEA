@@ -6,6 +6,8 @@
 <head>
   <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
   <script src="https://apis.google.com/js/api.js"></script>
+  <!-- incluir el plugin de anotación de Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
   <!-- Agrega el SDK de Firebase -->
   <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
   <!-- Agrega el bloque del SDK de Firebase Realtime Database -->
@@ -1383,15 +1385,20 @@
         <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto;">Mostrar dashboard</button>
         <div id="estadisticas-container" style="display: none;">
           <div class="row">
-            <div class="half">
-              <div id="porcentajes-container" style="display: none;"></div>
-              <canvas id="grafico-metas"></canvas>
-            </div>
-            <div class="half">
-              <canvas id="grafico-satisfaccion"></canvas>
-            </div>
+              <div class="half">
+                      Aquí aparecerá el cumplimiento del plan de formación:
+                  <div id="porcentajes-container" style="display: none;">
+                  </div>
+                  <canvas id="grafico-metas"></canvas>
+              </div>
+              <div class="half">
+                      Acá podrás ver estadísticas sobre el NPS en los espacios:
+                  <div id="satisfaccion-container" style="display: none;">
+                  </div>
+                  <canvas id="grafico-satisfaccion"></canvas>
+              </div>
           </div>
-        </div>
+      </div>
         <!-- Aquí se incluye la tabla resumen -->
         <div id="tabla-resumen-container">
           <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">TABLA RESUMEN DE SATISFACCIÓN DE ESPACIOS 📋</p></h2>
@@ -1464,8 +1471,8 @@
     });
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
-    var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
-    var capituloUsuario = "";
+    var correoUsuario = "academico_librecali@aneiap.co"; //deben estar vacías, solo que tengo flojera de iniciar sesión.
+    var capituloUsuario = "librecali";
 
     // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
     var fechaInicialInput = document.getElementById("fecha-inicial");
@@ -4867,6 +4874,7 @@
         var boton = document.getElementById("toggleDashboard");
         var estado = document.getElementById("dashboardEstado");
         var porcentajesContainer = document.getElementById("porcentajes-container");
+        var satisfaccionContainer = document.getElementById("satisfaccion-container");
         var fechaInicial = document.getElementById("fecha-inicial").value;
         var fechaFinal = document.getElementById("fecha-final").value;
 
@@ -4875,11 +4883,13 @@
             boton.textContent = "Ocultar dashboard";
             estado.style.display = "none";
             porcentajesContainer.style.display = "block"; // Mostrar contenedor de porcentajes
+            satisfaccionContainer.style.display = "block"; // Mostrar contenedor de satisfacciones
         } else {
             dashboard.style.display = "none";
             boton.textContent = "Mostrar dashboard";
             estado.style.display = "block";
             porcentajesContainer.style.display = "none"; // Ocultar contenedor de porcentajes
+            satisfaccionContainer.style.display = "none"; // Ocultar contenedor de satisfacciones
         }
     }
 
@@ -4956,6 +4966,20 @@
             // Llamar función para que el gráfico de satisfacción se actualice
             actualizarGraficoSatisfaccion(...satisfaccionesPromedio);
 
+            var satisfaccionContainer = document.getElementById("satisfaccion-container");
+            satisfaccionContainer.textContent = "Total espacios: " +
+            " 💚: " + (await consultaEventos.where("areaTrabajo", "==", "academico").get()).size +
+            " 🩵: " + (await consultaEventos.where("areaTrabajo", "==", "comunicaciones").get()).size +
+            " 💛: " + (await consultaEventos.where("areaTrabajo", "==", "desarrollo").get()).size +
+            " 💜: " + (await consultaEventos.where("areaTrabajo", "==", "finanzas").get()).size +
+            " ❤️: " + (await consultaEventos.where("areaTrabajo", "==", "mercadeo").get()).size +
+            " 🧠: " + (await consultaEventos.where("areaTrabajo", "==", "habilidades-duras").get()).size +
+            " 🫂: " + (await consultaEventos.where("areaTrabajo", "==", "habilidades-blandas").get()).size +
+            " 💚💙: " + (await consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap").get()).size +
+            " ➕: " + (await consultaEventos.where("tipoEvento", "==", "valor-agregado").get()).size +
+            " 🏋🏻: " + (await consultaEventos.where("tipoEvento", "==", "entrenamiento-interno").get()).size +
+            " n/a: " + (await consultaEventos.where("tipoEvento", "==", "ninguno").get()).size;
+
         } catch (error) {
             console.error("Error al generar gráficos:", error);
         }
@@ -5006,14 +5030,34 @@
           labels: ['AC💚', 'CO🩵', 'DE💛', 'FI💜', 'ME❤️', 'HD🧠', 'HB🫂', 'CA💚💙', 'VA➕', 'EI🏋🏻', 'n/a'],
           datasets: [
               {
-                  label: 'Satisfacción Promedio',
+                  label: 'Satisfacción promedio por área',
                   backgroundColor: 'rgba(54, 162, 235, 0.5)',
                   borderColor: 'rgb(54, 162, 235)',
                   borderWidth: 1,
                   data: [/* Aquí van los datos de las satisfacciones */]
+              },
+              {
+                  label: 'Satisfacción general',
+                  borderColor: 'rgb(255, 99, 132)',
+                  borderWidth: 2,
+                  type: 'line',
+                  fill: false,
+                  data: []
               }
           ]
-        };
+      };
+
+    // Filtrar las satisfacciones que son diferentes de cero
+    var satisfacciones = [satisfaccionPromedioAcademico, satisfaccionPromedioComunicaciones, satisfaccionPromedioDesarrollo,
+                          satisfaccionPromedioFinanzas, satisfaccionPromedioMercadeo, satisfaccionPromedioHabilidadesDuras,
+                          satisfaccionPromedioHabilidadesBlandas, satisfaccionPromedioConocimientoAneiap, satisfaccionPromedioValorAgregado,
+                          satisfaccionPromedioEntrenamientoInterno, satisfaccionPromedioNinguno].filter(satisfaccion => satisfaccion !== 0);
+
+    // Calcular el promedio general solo con las satisfacciones diferentes de cero
+    var promedioGeneral = satisfacciones.reduce((total, satisfaccion) => total + satisfaccion, 0) / satisfacciones.length;
+
+      // Llenar los datos de la línea de meta general
+      datosSatisfaccion.datasets[1].data = Array(datosSatisfaccion.labels.length).fill(promedioGeneral);
 
       // Opciones del gráfico de satisfacción
       var opcionesSatisfaccion = {
@@ -5049,43 +5093,48 @@
 
     // Función para actualizar el gráfico de cumplimiento de metas
     function actualizarGraficoMetas(metaVA, metaEI, totalVA, totalEI, metaGeneral, totalGeneral) {
+      // Datos para el gráfico de metas
+      var datosMetas = {
+          labels: ['VALOR AGREGADO', 'ENTRENAMIENTO INTERNO', 'GENERAL'],
+          datasets: [
+              {
+                  label: 'Metas planeadas',
+                  backgroundColor: ['rgba(255, 206, 86, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(255, 206, 86, 0.5)'],
+                  borderColor: 'rgb(255, 206, 86)',
+                  borderWidth: 1,
+                  data: [metaVA, metaEI, metaGeneral]
+              },
+              {
+                  label: 'Total ejecutado',
+                  backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(75, 192, 192, 0.5)'],
+                  borderColor: 'rgb(75, 192, 192)',
+                  borderWidth: 1,
+                  data: [totalVA, totalEI, totalGeneral]
+              }
+          ]
+      };
 
-    // Datos para el gráfico de metas
-    var datosMetas = {
-        labels: ['Meta Val. Agr.', 'Total Val. Agr.', 'Meta Ent. Int.', 'Total Ent. Int.', 'Meta General', 'Total General'],
-        datasets: [
-            {
-                label: 'Metas',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgb(255, 99, 132)',
-                borderWidth: 1,
-                data: [/* Aquí van los datos de las metas */]
-            }
-        ]
-    };
+      // Opciones del gráfico de metas
+      var opcionesMetas = {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      };
 
-    // Opciones del gráfico de metas
-    var opcionesMetas = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    };
+      // Renderizar gráfico de metas
+      var ctxMetas = document.getElementById('grafico-metas').getContext('2d');
+      var graficoMetas = new Chart(ctxMetas, {
+          type: 'bar',
+          data: datosMetas,
+          options: opcionesMetas
+      });
 
-    // Renderizar gráficos de metas y satisfacción
-    var ctxMetas = document.getElementById('grafico-metas').getContext('2d');
-    var graficoMetas = new Chart(ctxMetas, {
-        type: 'bar',
-        data: datosMetas,
-        options: opcionesMetas
-    });
-
-    // Actualizar datos de los gráficos
-    datosMetas.datasets[0].data = [metaVA, totalVA, metaEI, totalEI, metaGeneral, totalGeneral];
-    graficoMetas.update();
+      // Actualizar datos del gráfico
+      graficoMetas.update();
     }
 
   </script>
