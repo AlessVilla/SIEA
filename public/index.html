@@ -596,8 +596,8 @@
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
-                    <label for="correo">Correo ANEIAP *</label>
-                    <input type="text" id="correo" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
+                    <label for="correo-ticket">Correo ANEIAP *</label>
+                    <input type="text" id="correo-ticket" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
@@ -1357,7 +1357,7 @@
                   <option value="" disabled selected hidden>Selecciona el tipo de espacio.</option>
                   <option value="valor-agregado">Valor Agregado ➕</option>
                   <option value="entrenamiento-interno">Entrenamiento Interno 🏋🏻</option>
-                  <option value="entrenamiento-interno">No es espacio de formación</option>
+                  <option value="ninguno">No es espacio de formación</option>
                 </select>
               </div>
               <div class="half">
@@ -2180,8 +2180,8 @@
         });
     }
 
-// Esta función genera una clave de evento aleatoria.
-// La clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
+    // Esta función genera una clave de evento aleatoria.
+    // La clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
     function generarClaveEvento() {
       // Definimos una cadena de caracteres que contendrá letras mayúsculas y dígitos.
       var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789";
@@ -4188,7 +4188,7 @@
       // Obtener los valores de los campos
       
       var nombre = document.getElementById("nombre").value;
-      var correo = document.getElementById("correo").value;
+      var correo = document.getElementById("correo-ticket").value;
       var tipoTicket = document.getElementById("tipo-ticket").value;
       var explicacion = document.getElementById("explicacion").value;
       var celular = document.getElementById("celular").value;
