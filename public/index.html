@@ -543,6 +543,44 @@
     #tabla-resumen td {
         width: auto; /* Permitir que las columnas se ajusten automáticamente */
     }
+    #tabla-evaluaciones {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto; /* Permitir desplazamiento horizontal */
+    }
+    #tabla-evaluaciones th,
+    #tabla-evaluaciones td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    #tabla-evaluaciones th {
+        background-color: #76c04e;
+    }
+    #tabla-evaluaciones tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    #tabla-evaluaciones tbody tr:hover {
+        background-color: #76c04e;
+        transition: background-color 0.3s ease;
+    }
+    /* Ajuste de anchos de columnas */
+    #tabla-evaluaciones th,
+    #tabla-evaluaciones td {
+        width: auto; /* Permitir que las columnas se ajusten automáticamente */
+    }
+    /* Alineación de columnas */
+    #tabla-evaluaciones td:nth-child(1),
+    #tabla-evaluaciones td:nth-child(2),
+    #tabla-evaluaciones td:nth-child(7) {
+        text-align: left; /* Columnas de nombre del asistente, correo asistente y comentarios alineadas a la izquierda */
+    }
+    #tabla-evaluaciones td {
+        text-align: center; /* Resto de columnas centradas */
+    }
 
   </style>
 </head>
@@ -1380,32 +1418,85 @@
         </div>
         <button class="button-actualizar" onclick="actualizarEspacio()">Actualizar espacio</button>
         <!-- Mini sección de estadísticas -->
-        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p></h2>
-        <p id="dashboardEstado" style="text-align: center; display: block;">El dashboard estadístico está oculto.</p>
-        <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto;">Mostrar dashboard</button>
-        <div id="estadisticas-container" style="display: none;">
-          <div class="row">
-              <div class="half">
-                      Aquí aparecerá el cumplimiento del plan de formación:
-                  <div id="porcentajes-container" style="display: none;">
-                  </div>
-                  <canvas id="grafico-metas"></canvas>
-              </div>
-              <div class="half">
-                      Acá podrás ver estadísticas sobre el NPS en los espacios:
-                  <div id="satisfaccion-container" style="display: none;">
-                  </div>
-                  <canvas id="grafico-satisfaccion"></canvas>
-              </div>
+        <div class="actualizar-group">
+          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p></h2>
+          <p id="dashboardEstado" style="text-align: center; display: block;">El dashboard estadístico está oculto.</p>
+          <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto;">Mostrar dashboard</button>
+          <div id="estadisticas-container" style="display: none;">
+            <div class="row">
+                <div class="half">
+                        Aquí aparecerá el cumplimiento del plan de formación:
+                    <div id="porcentajes-container" style="display: none;">
+                    </div>
+                    <canvas id="grafico-metas"></canvas>
+                </div>
+                <div class="half">
+                        Acá podrás ver estadísticas sobre el NPS en los espacios:
+                    <div id="satisfaccion-container" style="display: none;">
+                    </div>
+                    <canvas id="grafico-satisfaccion"></canvas>
+                </div>
+            </div>
           </div>
-      </div>
+        </div>
         <!-- Aquí se incluye la tabla resumen -->
-        <div id="tabla-resumen-container">
-          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">TABLA RESUMEN DE SATISFACCIÓN DE ESPACIOS 📋</p></h2>
-          <p id="tablaResumenEstado" style="text-align: center; display: block;">La tabla resumen se encuentra oculta.</p>
-          <button id="toggleTablaResumen" onclick="toggleTablaResumen()" style="margin-left: auto;">Mostrar tabla resumen</button>
-          <table id="tabla-resumen" style="display: none;">
-            <!-- Aquí se generará dinámicamente la tabla resumen -->
+        <div class="actualizar-group">
+          <div id="tabla-resumen-container">
+            <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">TABLA RESUMEN DE SATISFACCIÓN DE ESPACIOS 📋</p></h2>
+            <p id="tablaResumenEstado" style="text-align: center; display: block;">La tabla resumen se encuentra oculta.</p>
+            <button id="toggleTablaResumen" onclick="toggleTablaResumen()" style="margin-left: auto;">Mostrar tabla resumen</button>
+            <table id="tabla-resumen" style="display: none;">
+              <!-- Aquí se generará dinámicamente la tabla resumen -->
+            </table>
+          </div>
+        </div>
+        <!-- CUARTA MINISECCIÓN: RESPUESTAS DE EVALUACIONES DE SATISFACCIÓN -->
+        <div class="actualizar-group">
+          <h2 style="font-size: 22px; text-transform: uppercase;">
+            <p style="text-align: center;">RESPUESTAS DE EVALUACIONES DE SATISFACCIÓN 📝</p>
+          </h2>
+          <!-- Desplegable para elegir el evento -->
+          <div class="row">
+            <div class="half">
+              <label for="nombre-espacio-consultar-evaluaciones"><b>Selecciona un evento:</b></label>
+              <select id="nombre-espacio-consultar-evaluaciones" onchange="consultarEvaluaciones()">
+                <option value="" disabled selected hidden>Debes seleccionar una fecha inicial y una fecha final primero</option>
+                <!-- Aquí se cargarán dinámicamente los eventos disponibles para el capítulo del usuario -->
+              </select>
+            </div>
+            <div class="half">
+              <div class="row">
+                <div class="half">
+                  <label for="fecha-inicial-evaluaciones"><b>Fecha inicial:</b></label>
+                  <input type="date" id="fecha-inicial-evaluaciones">
+                </div>
+                <div class="half">
+                  <label for="fecha-final-evaluaciones"><b>Fecha final:</b></label>
+                  <input type="date" id="fecha-final-evaluaciones">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Botón para ocultar o mostrar la tabla de evaluaciones -->
+          <button id="toggleEvaluaciones" onclick="toggleEvaluaciones()">Mostrar tabla de evaluaciones</button>
+          <!-- Mensaje de estado de la tabla -->
+          <p id="estadoTablaEvaluaciones" style="text-align: center; display: block;">La tabla de evaluaciones de satisfacción está oculta</p>
+          <!-- Tabla con las evaluaciones -->
+          <table id="tabla-evaluaciones" class="tabla-evaluaciones" style="display: none;">
+            <thead>
+              <tr>
+                <th style="width: 15%;">Nombre del asistente</th>
+                <th style="width: 15%;">Correo asistente</th>
+                <th style="width: 10%;">Teléfono asistente</th>
+                <th style="width: 10%;">¿Qué tan satisfecho estás del 1 al 10?</th>
+                <th style="width: 10%;">¿Cuánto aprendiste del 1 al 10?</th>
+                <th style="width: 10%;">Evalúa el ponente del 1 al 10</th>
+                <th style="width: auto;">Comentarios</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Aquí se generarán dinámicamente las filas de la tabla -->
+            </tbody>
           </table>
         </div>
       </div>
@@ -1471,8 +1562,8 @@
     });
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
-    var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
-    var capituloUsuario = "";
+    var correoUsuario = "academico_librecali@aneiap.co"; //deben estar vacías, solo que tengo flojera de iniciar sesión.
+    var capituloUsuario = "librecali";
 
     // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
     var fechaInicialInput = document.getElementById("fecha-inicial");
@@ -4652,14 +4743,19 @@
                 data.promotores = (data.promotores || 0) + 1;
             }
 
+            // Almacenar respuestas en los campos correspondientes
+            data.respuestas1 = (data.respuestas1 || "") + pregunta1 + "|" ;
+            data.respuestas2 = (data.respuestas2 || "") + pregunta2 + "|" ;
+            data.respuestas3 = (data.respuestas3 || "") + pregunta3 + "|" ;
+
             // Actualizar comentarios y datos personales del asistente
             if (comentarios.trim() !== "") {
-                data.comentarios = (data.comentarios || "") + "|" + comentarios;
-            } else {data.comentarios = (data.comentarios || "") + "|Ninguno"}
+                data.comentarios = (data.comentarios || "") + comentarios + "|" ;
+            } else {data.comentarios = (data.comentarios || "") + "Ninguno.|"}
 
             data.asistentes = (data.asistentes || "") + nombreAsistente + "|";
-            data.correosAsistentes = (data.correosAsistentes || "") + "|" + correoAsistente;
-            data.telefonosAsistentes = (data.telefonosAsistentes || "") + "|" +  telefonoAsistente;
+            data.correosAsistentes = (data.correosAsistentes || "") + correoAsistente + "|" ;
+            data.telefonosAsistentes = (data.telefonosAsistentes || "") +  telefonoAsistente + "|" ;
 
             // Recalcular satisfacción
             var satisfaccion = (data.promotores - data.detractores) / (data.promotores + data.pasivos + data.detractores);
@@ -4968,17 +5064,17 @@
 
             var satisfaccionContainer = document.getElementById("satisfaccion-container");
             satisfaccionContainer.textContent = "Total espacios: " +
-            " 💚: " + (await consultaEventos.where("areaTrabajo", "==", "academico").get()).size +
-            " 🩵: " + (await consultaEventos.where("areaTrabajo", "==", "comunicaciones").get()).size +
-            " 💛: " + (await consultaEventos.where("areaTrabajo", "==", "desarrollo").get()).size +
-            " 💜: " + (await consultaEventos.where("areaTrabajo", "==", "finanzas").get()).size +
-            " ❤️: " + (await consultaEventos.where("areaTrabajo", "==", "mercadeo").get()).size +
-            " 🧠: " + (await consultaEventos.where("areaTrabajo", "==", "habilidades-duras").get()).size +
-            " 🫂: " + (await consultaEventos.where("areaTrabajo", "==", "habilidades-blandas").get()).size +
-            " 💚💙: " + (await consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap").get()).size +
-            " ➕: " + (await consultaEventos.where("tipoEvento", "==", "valor-agregado").get()).size +
-            " 🏋🏻: " + (await consultaEventos.where("tipoEvento", "==", "entrenamiento-interno").get()).size +
-            " n/a: " + (await consultaEventos.where("tipoEvento", "==", "ninguno").get()).size;
+            " 💚" + (await consultaEventos.where("areaTrabajo", "==", "academico").get()).size +
+            "|🩵" + (await consultaEventos.where("areaTrabajo", "==", "comunicaciones").get()).size +
+            "|💛" + (await consultaEventos.where("areaTrabajo", "==", "desarrollo").get()).size +
+            "|💜" + (await consultaEventos.where("areaTrabajo", "==", "finanzas").get()).size +
+            "|❤️" + (await consultaEventos.where("areaTrabajo", "==", "mercadeo").get()).size +
+            "|🧠" + (await consultaEventos.where("areaTrabajo", "==", "habilidades-duras").get()).size +
+            "|🫂" + (await consultaEventos.where("areaTrabajo", "==", "habilidades-blandas").get()).size +
+            "|💚💙" + (await consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap").get()).size +
+            "|➕" + (await consultaEventos.where("tipoEvento", "==", "valor-agregado").get()).size +
+            "|🏋🏻" + (await consultaEventos.where("tipoEvento", "==", "entrenamiento-interno").get()).size +
+            "|n/a " + (await consultaEventos.where("tipoEvento", "==", "ninguno").get()).size;
 
         } catch (error) {
             console.error("Error al generar gráficos:", error);
@@ -4988,9 +5084,6 @@
     // Función para calcular promedios de satisfacción por área de trabajo
     async function calcularPromediosSatisfaccion(consultaEventos) {
         var consultasSatisfaccion = [
-            consultaEventos.where("tipoEvento", "==", "valor-agregado"),
-            consultaEventos.where("tipoEvento", "==", "entrenamiento-interno"),
-            consultaEventos.where("tipoEvento", "==", "ninguno"),
             consultaEventos.where("areaTrabajo", "==", "academico"),
             consultaEventos.where("areaTrabajo", "==", "comunicaciones"),
             consultaEventos.where("areaTrabajo", "==", "desarrollo"),
@@ -4998,7 +5091,10 @@
             consultaEventos.where("areaTrabajo", "==", "mercadeo"),
             consultaEventos.where("areaTrabajo", "==", "habilidades-duras"),
             consultaEventos.where("areaTrabajo", "==", "habilidades-blandas"),
-            consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap")
+            consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap"),
+            consultaEventos.where("tipoEvento", "==", "valor-agregado"),
+            consultaEventos.where("tipoEvento", "==", "entrenamiento-interno"),
+            consultaEventos.where("tipoEvento", "==", "ninguno")
         ];
 
         var promesasSatisfaccion = consultasSatisfaccion.map(async consulta => {
@@ -5010,8 +5106,10 @@
                 querySnapshot.forEach(doc => {
                     totalSatisfaccion += doc.data().satisfaccion;
                 });
+                console.log(totalSatisfaccion / totalEventos)
                 return totalSatisfaccion / totalEventos;
             } else {
+                console.log("no hay")
                 return 0; // Asignar cero si no hay eventos
             }
         });
@@ -5031,14 +5129,21 @@
           datasets: [
               {
                   label: 'Satisfacción promedio por área',
-                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                  borderColor: 'rgb(54, 162, 235)',
-                  borderWidth: 1,
-                  data: [/* Aquí van los datos de las satisfacciones */]
+                  backgroundColor: '#76c04e', // Verde para áreas
+                  borderColor: 'rgba(50, 150, 50, 1)', // Bordes un poco más oscuros
+                  pointBackgroundColor: 'rgba(30, 100, 30, 1)', // Puntos más oscuros
+                  borderWidth: 2,
+                  pointRadius: 5, // Tamaño de los puntos aumentado
+                  data: [
+                    satisfaccionPromedioAcademico, satisfaccionPromedioComunicaciones, satisfaccionPromedioDesarrollo,
+                    satisfaccionPromedioFinanzas, satisfaccionPromedioMercadeo, satisfaccionPromedioHabilidadesDuras,
+                    satisfaccionPromedioHabilidadesBlandas, satisfaccionPromedioConocimientoAneiap,
+                    satisfaccionPromedioValorAgregado, satisfaccionPromedioEntrenamientoInterno, satisfaccionPromedioNinguno
+                  ]
               },
               {
                   label: 'Satisfacción general',
-                  borderColor: 'rgb(255, 99, 132)',
+                  borderColor: '#0d62ad', // Azul para promedio general
                   borderWidth: 2,
                   type: 'line',
                   fill: false,
@@ -5047,14 +5152,15 @@
           ]
       };
 
-    // Filtrar las satisfacciones que son diferentes de cero
-    var satisfacciones = [satisfaccionPromedioAcademico, satisfaccionPromedioComunicaciones, satisfaccionPromedioDesarrollo,
-                          satisfaccionPromedioFinanzas, satisfaccionPromedioMercadeo, satisfaccionPromedioHabilidadesDuras,
-                          satisfaccionPromedioHabilidadesBlandas, satisfaccionPromedioConocimientoAneiap, satisfaccionPromedioValorAgregado,
-                          satisfaccionPromedioEntrenamientoInterno, satisfaccionPromedioNinguno].filter(satisfaccion => satisfaccion !== 0);
-
-    // Calcular el promedio general solo con las satisfacciones diferentes de cero
-    var promedioGeneral = satisfacciones.reduce((total, satisfaccion) => total + satisfaccion, 0) / satisfacciones.length;
+      // Calcular el promedio general solo con las satisfacciones diferentes de cero
+      var satisfacciones = [
+        satisfaccionPromedioAcademico, satisfaccionPromedioComunicaciones, satisfaccionPromedioDesarrollo,
+        satisfaccionPromedioFinanzas, satisfaccionPromedioMercadeo, satisfaccionPromedioHabilidadesDuras,
+        satisfaccionPromedioHabilidadesBlandas, satisfaccionPromedioConocimientoAneiap,
+        satisfaccionPromedioValorAgregado, satisfaccionPromedioEntrenamientoInterno, satisfaccionPromedioNinguno
+      ];
+      satisfacciones = satisfacciones.filter(satisfaccion => satisfaccion !== 0);
+      var promedioGeneral = satisfacciones.reduce((total, satisfaccion) => total + satisfaccion, 0) / satisfacciones.length;
 
       // Llenar los datos de la línea de meta general
       datosSatisfaccion.datasets[1].data = Array(datosSatisfaccion.labels.length).fill(promedioGeneral);
@@ -5064,28 +5170,26 @@
           scales: {
               yAxes: [{
                   ticks: {
-                      beginAtZero: true
+                      beginAtZero: true,
+                      fontColor: 'rgba(0, 0, 0, 0.8)', // Color del texto en negrita
+                      fontWeight: 'bold' // Texto en negrita
+                  }
+              }],
+              xAxes: [{
+                  ticks: {
+                      fontColor: 'rgba(0, 0, 0, 0.8)', // Color del texto en negrita
+                      fontWeight: 'bold' // Texto en negrita
                   }
               }]
           }
       };
-      
+
       var ctxSatisfaccion = document.getElementById('grafico-satisfaccion').getContext('2d');
       var graficoSatisfaccion = new Chart(ctxSatisfaccion, {
           type: 'line',
           data: datosSatisfaccion,
           options: opcionesSatisfaccion
       });
-
-        // Actualizar datos del gráfico de satisfacción
-        datosSatisfaccion.datasets[0].data = [
-            satisfaccionPromedioAcademico, satisfaccionPromedioComunicaciones, satisfaccionPromedioDesarrollo,
-            satisfaccionPromedioFinanzas, satisfaccionPromedioMercadeo, satisfaccionPromedioHabilidadesDuras,
-            satisfaccionPromedioHabilidadesBlandas, satisfaccionPromedioConocimientoAneiap,
-            satisfaccionPromedioValorAgregado, satisfaccionPromedioEntrenamientoInterno, satisfaccionPromedioNinguno
-        ];
-
-        console.log("Satisfacciones para actualizar el gráfico:", datosSatisfaccion.datasets[0].data); // Agrega este console.log para verificar los valores antes de actualizar el gráfico
 
         // Actualizar el gráfico
         graficoSatisfaccion.update();
@@ -5099,16 +5203,16 @@
           datasets: [
               {
                   label: 'Metas planeadas',
-                  backgroundColor: ['rgba(255, 206, 86, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(255, 206, 86, 0.5)'],
-                  borderColor: 'rgb(255, 206, 86)',
-                  borderWidth: 1,
+                  backgroundColor: ['#76c04e', '#76c04e', '#76c04e'],
+                  borderColor: 'rgba(50, 150, 50, 1)', // Bordes un poco más oscuros
+                  borderWidth: 2, // Grosor del borde aumentado
                   data: [metaVA, metaEI, metaGeneral]
               },
               {
                   label: 'Total ejecutado',
-                  backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(75, 192, 192, 0.5)'],
-                  borderColor: 'rgb(75, 192, 192)',
-                  borderWidth: 1,
+                  backgroundColor: ['#0d62ad', '#0d62ad', '#0d62ad'],
+                  borderColor: 'rgba(0, 50, 100, 1)', // Bordes un poco más oscuros
+                  borderWidth: 2, // Grosor del borde aumentado
                   data: [totalVA, totalEI, totalGeneral]
               }
           ]
@@ -5136,6 +5240,160 @@
       // Actualizar datos del gráfico
       graficoMetas.update();
     }
+
+    // Función para alternar la visibilidad de la tabla de evaluaciones y cambiar el texto del botón
+    function toggleEvaluaciones() {
+      var tabla = document.getElementById("tabla-evaluaciones");
+      var boton = document.getElementById("toggleEvaluaciones");
+      var estadoTabla = document.getElementById("estadoTablaEvaluaciones");
+      if (tabla.style.display === "none") {
+        tabla.style.display = "block";
+        boton.textContent = "Ocultar tabla de evaluaciones";
+        estadoTabla.style.display = "none"; // Oculta el mensaje de estado
+        consultarEvaluaciones();
+      } else {
+        tabla.style.display = "none";
+        boton.textContent = "Mostrar tabla de evaluaciones";
+        estadoTabla.style.display = "block"; // Muestra el mensaje de estado
+      }
+    }
+
+    // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
+    var fechaInicialEvaluacionesInput = document.getElementById("fecha-inicial-evaluaciones");
+    var fechaFinalEvaluacionesInput = document.getElementById("fecha-final-evaluaciones");
+    var nombreEspacioSelect = document.getElementById("nombre-espacio-consultar-evaluaciones");
+    fechaInicialEvaluacionesInput.addEventListener("change", actualizarNombresEspaciosEvaluaciones);
+    fechaFinalEvaluacionesInput.addEventListener("change", actualizarNombresEspaciosEvaluaciones);
+    nombreEspacioSelect.addEventListener("change", consultarEvaluaciones);
+
+    // Función para actualizar los nombres de los espacios según las fechas seleccionadas
+    function actualizarNombresEspaciosEvaluaciones() {
+        // Obtener las fechas seleccionadas
+        var fechaInicial = fechaInicialEvaluacionesInput.value;
+        var fechaFinal = fechaFinalEvaluacionesInput.value;
+        console.log(fechaInicial)
+        console.log(fechaFinal)
+
+        // Verificar que ambas fechas estén seleccionadas
+        if (fechaInicial && fechaFinal) {
+            // Obtener la referencia a la colección de reservas
+            var reservasRef = firebase.firestore().collection("reservas");
+            // Crear la consulta para obtener los nombres de los espacios dentro del rango de fechas
+            var consulta = reservasRef.where("fechaEvento", ">=", fechaInicial)
+                                      .where("fechaEvento", "<=", fechaFinal)
+                                      .where("capitulo", "==", capituloUsuario);
+
+            // Ejecutar la consulta
+            consulta.get()
+                .then(function(querySnapshot) {
+                    // Array para almacenar los nombres de los espacios
+                    var nombresEspacios = [];
+
+                    // Iterar sobre los resultados de la consulta
+                    querySnapshot.forEach(function(doc) {
+                        // Obtener el nombre del espacio y agregarlo al array
+                        nombresEspacios.push(doc.data().nombreEvento);
+                    });
+
+                    // Llamar a la función para actualizar el desplegable con los nombres de los espacios obtenidos
+                    actualizarDesplegableNombresEspaciosEvaluaciones(nombresEspacios);
+                })
+                .catch(function(error) {
+                    // Manejar errores
+                    console.error("Error al obtener nombres de espacios:", error);
+                });
+        }
+    }
+
+    // Función para actualizar el desplegable con los nombres de los espacios
+    function actualizarDesplegableNombresEspaciosEvaluaciones(nombresEspacios) {
+        // Obtener el desplegable de nombres de espacios
+        var nombreEspacioSelect = document.getElementById("nombre-espacio-consultar-evaluaciones");
+
+        // Limpiar opciones anteriores
+        nombreEspacioSelect.innerHTML = "";
+
+        // Ordenar los nombres de los espacios alfabéticamente
+        nombresEspacios.sort();
+
+        // Si hay nombres de espacios disponibles, agregar cada uno como opción en el desplegable
+        if (nombresEspacios.length > 0) {
+            nombresEspacios.forEach(function(nombre) {
+                var option = document.createElement("option");
+                option.text = nombre;
+                option.value = nombre;
+                nombreEspacioSelect.add(option);
+            });
+        } else {
+            // Si no hay nombres de espacios disponibles, mostrar un mensaje indicando que no se encontraron espacios en el rango de fechas seleccionado
+            var option = document.createElement("option");
+            option.text = "No hay espacios disponibles en el rango de fechas seleccionado.";
+            option.value = "";
+            option.disabled = true;
+            option.selected = true;
+            nombreEspacioSelect.add(option);
+        }
+    }
+
+    // Función para consultar las evaluaciones del evento seleccionado
+    function consultarEvaluaciones() {
+    // Obtener el nombre del evento seleccionado
+    var nombreEvento = document.getElementById("nombre-espacio-consultar-evaluaciones").value;
+    // Obtener las fechas seleccionadas
+    var fechaInicial = document.getElementById("fecha-inicial-evaluaciones").value;
+    var fechaFinal = document.getElementById("fecha-final-evaluaciones").value;
+
+    // Realizar la consulta a Firebase para obtener las evaluaciones del evento seleccionado
+    var reservasRef = firebase.firestore().collection("reservas");
+    var consultaEvaluaciones = reservasRef.where("nombreEvento", "==", nombreEvento)
+        .where("fechaEvento", ">=", fechaInicial)
+        .where("fechaEvento", "<=", fechaFinal)
+        .where("capitulo", "==", capituloUsuario);
+
+    consultaEvaluaciones.get().then(function(querySnapshot) {
+        var tablaBody = document.getElementById("tabla-evaluaciones").getElementsByTagName("tbody")[0];
+        tablaBody.innerHTML = ""; // Limpiar el contenido actual de la tabla
+
+        if (querySnapshot.empty) {
+            // Si no hay datos, mostrar mensaje en lugar de la tabla
+            var mensaje = document.createElement("tr");
+            var mensajeCell = document.createElement("td");
+            mensajeCell.setAttribute("colspan", "7"); // Colspan para ocupar todas las columnas
+            mensajeCell.textContent = "No hay respuestas en la evaluación de satisfacción en este momento para el evento.";
+            mensaje.appendChild(mensajeCell);
+            tablaBody.appendChild(mensaje);
+            var estadoTabla = document.getElementById("estadoTablaEvaluaciones");
+            estadoTabla.style.display = "none"; // Oculta el mensaje de estado
+        } else {
+            // Si hay datos, construir la tabla
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+                // Dividir las respuestas que están separadas por "|"
+                var asistentes = data.asistentes.split("|");
+                var correosAsistentes = data.correosAsistentes.split("|");
+                var telefonosAsistentes = data.telefonosAsistentes.split("|");
+                var respuestas1 = data.respuestas1.split("|");
+                var respuestas2 = data.respuestas2.split("|");
+                var respuestas3 = data.respuestas3.split("|");
+                var comentarios = data.comentarios.split("|");
+
+                // Insertar cada respuesta en una fila de la tabla
+                for (var i = 0; i < asistentes.length - 1; i++) {
+                    var fila = tablaBody.insertRow();
+                    fila.insertCell(0).textContent = asistentes[i];
+                    fila.insertCell(1).textContent = correosAsistentes[i];
+                    fila.insertCell(2).textContent = telefonosAsistentes[i];
+                    fila.insertCell(3).textContent = respuestas1[i];
+                    fila.insertCell(4).textContent = respuestas2[i];
+                    fila.insertCell(5).textContent = respuestas3[i];
+                    fila.insertCell(6).textContent = comentarios[i];
+                }
+            });
+        }
+    }).catch(function(error) {
+        console.error("Error al consultar las evaluaciones:", error);
+    });
+}
 
   </script>
 
