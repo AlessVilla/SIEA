@@ -182,11 +182,11 @@
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .radio-buttons-container {
-          display: flex;
-          justify-content: center;
-          gap: 20px; /* Espacio entre los botones SÍ y NO */
-        }
-        .custom-file-input {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* Espacio entre los botones SÍ y NO */
+    }
+    .custom-file-input {
       display: inline-block;
       position: relative;
     }
@@ -211,8 +211,8 @@
       padding: 10px; /* Ajusta el valor según el espacio deseado entre el contenido y el borde */
       border-radius: 5px; /* Ajusta el valor para cambiar la curvatura de las esquinas */
     }
-    .acordeon0 {
-      background-color: #307B98;
+    /* Estilos para los acordeones */
+    .acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
       color: white;
       padding: 5px 10px;
       font-weight: bold;
@@ -220,137 +220,58 @@
       text-align: center;
       font-size: 20px;
       margin-bottom: 10px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .acordeon0-content {
+    .acordeon0 {
+      background-color: #307B98;
+    }
+    .acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
       background-color: white;
       padding: 10px;
       margin-bottom: 20px;
     }
     .acordeon1 {
       background-color: #00B30F;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .acordeon1-content {
-      background-color: white;
-      padding: 10px;
-      margin-bottom: 20px;
     }
     .acordeon2 {
       background-color: #F47B28;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .acordeon2-content {
-      background-color: white;
-      padding: 10px;
-      margin-bottom: 20px;
     }
     .acordeon3 {
       background-color: #DC1E1E;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .acordeon3-content {
-      background-color: white;
-      padding: 10px;
-      margin-bottom: 20px;
     }
     .acordeon4 {
       background-color: #600082;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .acordeon4-content {
-      background-color: white;
-      padding: 10px;
-      margin-bottom: 20px;
     }
     .acordeon5 {
       background-color: #4d4d4d;
+    }
+    .button-consultar-disponibilidad, .button-reservar, .button-consultar, .button-consultar, .button-evaluar, .button-eliminar, .button-actualizar {
       color: white;
       padding: 5px 10px;
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .acordeon5-content {
-      background-color: #cccccc;
-      padding: 10px;
-      margin-bottom: 20px;
+      font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 353px; /* Ocupar el ancho del contenedor */
     }
     .button-consultar-disponibilidad {
       background-color: rgb(0, 4, 255);
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
     }
     .button-reservar {
       background-color: rgb(0, 141, 37);
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
     }
     .button-consultar {
       background-color: orange;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
-      width: 353px; /* Ocupar el ancho del contenedor */
+    }
+    .button-eliminar {
+      background-color: red;
     }
     .button-evaluar {
       background-color: #600082;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
-      width: 353px; /* Ocupar el ancho del contenedor */
     }
     .button-actualizar {
       background-color: #4d4d4d;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
-      width: 353px; /* Ocupar el ancho del contenedor */
     }
     /* Estilo para los campos de correo del forms y contraseña */
     input[type="email"],
@@ -359,15 +280,6 @@
       padding: 5px 10px;
       margin-bottom: 10px; /* Espaciado inferior */
       width: 150px; /* Ocupar el ancho del contenedor */
-    }
-    .button-eliminar {
-      background-color: red;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
     }
     .disponibilidad-container {
       display: flex;
@@ -581,6 +493,51 @@
     #tabla-evaluaciones td {
         text-align: center; /* Resto de columnas centradas */
     }
+    /* Estilos para el contenedor del calendario */
+    #calendario-semanal {
+      margin: 20px auto; /* Margen externo para centrar el calendario */
+      width: 100%; /* Ancho del calendario */
+    }
+    /* Estilos para la tabla del calendario */
+    .calendario-semanal-table {
+      width: 100%; /* Ancho de la tabla */
+      border-collapse: collapse; /* Colapso de bordes de celda */
+    }
+    /* Estilos para las celdas del encabezado */
+    .calendario-semanal-table th {
+      background-color: #618796; /* Color de fondo */
+      padding: 10px; /* Espaciado interno */
+      text-align: left; /* Alineación de texto a la izquierda */
+      border-bottom: 1px solid #ddd; /* Borde inferior */
+      color: #fff; /* Color del texto */
+    }
+    /* Estilos para las celdas del cuerpo */
+    .calendario-semanal-table td {
+      padding: 10px; /* Espaciado interno */
+      border-bottom: 1px solid #ddd; /* Borde inferior */
+    }
+    /* Estilos para las filas impares del cuerpo */
+    .calendario-semanal-table tbody tr:nth-child(odd) {
+      background-color: #f9f9f9; /* Color de fondo para filas impares */
+    }
+    /* Estilos para la primera columna (día de la semana) */
+    .calendario-semanal-table tbody td:first-child {
+      width: 15%; /* Ancho del 10% para la primera columna */
+    }
+    /* Estilos para la segunda columna (eventos reservados) */
+    .calendario-semanal-table tbody td:nth-child(2) {
+      width: 85%; /* Ancho del 90% para la segunda columna */
+      margin: 0; /* Eliminar margen interno del párrafo */
+    }
+    /* Estilos para las filas al pasar el mouse */
+    .calendario-semanal-table tbody tr:hover {
+      background-color: #76c04e; /* Cambio de color al pasar el mouse */
+      cursor: pointer; /* Cambio de cursor al pasar el mouse */
+    }
+    /* Estilos para centrar los encabezados */
+    .calendario-semanal-table th {
+      text-align: center; /* Alineación centrada */
+    }
 
   </style>
 </head>
@@ -771,21 +728,98 @@
   <div class="main-content">
     <!-- El contenido principal de tu página va aquí -->
   </div>
-  
+
+  <!-- DETALLES DEL ACORDEÓN 0 QUE CORRESPONDE A CONSULTAR LA DISPONIBILIDAD DEL CAPÍTULO EN CIERTA(S) FECHA(S)-->
   <div class="acordeon0" onclick="toggleConsultaDisponibilidad()">CLICK AQUÍ PARA CONSULTAR DISPONIBILIDAD 🔍</div>
   <div id="acordeon0-content" style="display: none;">
     <div class="acordeon0-content-inner">
       <div class="disponibilidad-group">
-        <div class="row">
-          <!-- Mitad izquierda con el campo para seleccionar la fecha -->
-          <div class="half">
-            <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
-            <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
+        <button id="alternarConsulta" class="boton-alternar-consulta" onclick="alternarConsulta()">Consultar disponibilidad semanal</button>
+        <div id="consultaDiaria" style="display: block;">
+          <div class="row">
+            <!-- Mitad izquierda con el campo para seleccionar la fecha -->
+            <div class="half">
+              <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
+              <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
+            </div>
+            <!-- Mitad derecha con el campo para seleccionar el capítulo -->
+            <div class="half">
+              <label for="capitulo-consulta"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
+              <select id="capitulo-consulta">
+                <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
+                <option value="uniguajira">UNIGUAJIRA</option>
+                <option value="unimagdalena">UNIMAGDALENA</option>
+                <option value="uniatlantico">UNIATLÁNTICO</option>
+                <option value="uninorte">UNINORTE</option>
+                <option value="cuc">CUC</option>
+                <option value="librequilla">LIBREQUILLA</option>
+                <option value="utb">UTB</option>
+                <option value="ufps">UFPS</option>
+                <option value="unalmed">UNALMED</option>
+                <option value="udea">UDEA</option>
+                <option value="upbmed">UPBMED</option>
+                <option value="utp">UTP</option>
+                <option value="unalma">UNALMA</option>
+                <option value="udistrital">UDISTRITAL</option>
+                <option value="unalbog">UNALBOG</option>
+                <option value="univalle">UNIVALLE</option>
+                <option value="icesi">ICESI</option>
+                <option value="usc">USC</option>
+                <option value="librecali">LIBRECALI</option>
+                <option value="nacional">ANEIAP NACIONAL</option>
+              </select>
+            </div>
           </div>
-          <!-- Mitad derecha con el campo para seleccionar el capítulo -->
+          <button class="button-consultar-disponibilidad" onclick="ConsultarDisponibilidadReservas()">Consultar disponibilidad diaria</button>
+          <div class="disponibilidad-container">
+            <!-- Lógica para mostrar la disponibilidad -->
+            <div class="disponibilidad-item gray">08:00 - 08:30</div>
+            <div class="disponibilidad-item gray">08:30 - 09:00</div>
+            <div class="disponibilidad-item gray">09:00 - 09:30</div>
+            <div class="disponibilidad-item gray">09:30 - 10:00</div>
+            <div class="disponibilidad-item gray">10:00 - 10:30</div>
+            <div class="disponibilidad-item gray">10:30 - 11:00</div>
+            <div class="disponibilidad-item gray">11:00 - 11:30</div>
+            <div class="disponibilidad-item gray">11:30 - 12:00</div>
+            <div class="disponibilidad-item gray">12:00 - 12:30</div>
+            <div class="disponibilidad-item gray">12:30 - 13:00</div>
+            <div class="disponibilidad-item gray">13:00 - 13:30</div>
+            <div class="disponibilidad-item gray">13:30 - 14:00</div>
+            <div class="disponibilidad-item gray">14:00 - 14:30</div>
+            <div class="disponibilidad-item gray">14:30 - 15:00</div>
+            <div class="disponibilidad-item gray">15:00 - 15:30</div>
+            <div class="disponibilidad-item gray">15:30 - 16:00</div>
+            <div class="disponibilidad-item gray">16:00 - 16:30</div>
+            <div class="disponibilidad-item gray">16:30 - 17:00</div>
+            <div class="disponibilidad-item gray">17:00 - 17:30</div>
+            <div class="disponibilidad-item gray">17:30 - 18:00</div>
+            <div class="disponibilidad-item gray">18:00 - 18:30</div>
+            <div class="disponibilidad-item gray">18:30 - 19:00</div>
+            <div class="disponibilidad-item gray">19:00 - 19:30</div>
+            <div class="disponibilidad-item gray">19:30 - 20:00</div>
+            <div class="disponibilidad-item gray">20:00 - 20:30</div>
+            <div class="disponibilidad-item gray">20:30 - 21:00</div>
+            <div class="disponibilidad-item gray">21:00 - 21:30</div>
+            <div class="disponibilidad-item gray">21:30 - 22:00</div>
+          </div>
+          <label for="eventos-programados"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
+          <div class="disponibilidad-group">
+            <div id="eventos-programados"></div>
+          </div>
+        </div>
+    <!-- Nueva sección semanal dentro del acordeón 0 -->
+    <div id="consultaSemanal" style="display: none;">
+        <div class="row">
+          <!-- Parte para seleccionar la fecha -->
           <div class="half">
-            <label for="capitulo-consulta"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
-            <select id="capitulo-consulta">
+            <label for="fecha-consulta-semanal"><b>Selecciona el día en el que deseas consultar la disponibilidad: *</b></label>
+            <input type="date" id="fecha-consulta-semanal" placeholder="Selecciona la fecha para consultar la disponibilidad.">
+            <button class="button-consultar-disponibilidad" onclick="ConsultarDisponibilidadSemanal()">Consultar disponibilidad semanal</button>
+          </div>
+          <!-- Parte para seleccionar el capítulo -->
+          <div class="half">
+            <label for="capitulo-consulta-semanal"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
+            <select id="capitulo-consulta-semanal">
               <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
               <option value="uniguajira">UNIGUAJIRA</option>
               <option value="unimagdalena">UNIMAGDALENA</option>
@@ -810,43 +844,26 @@
             </select>
           </div>
         </div>
-      <button class="button-consultar-disponibilidad" onclick="ConsultarDisponibilidadReservas()">Consultar la disponibilidad de reservas</button>
-      <div class="disponibilidad-container">
-        <!-- Lógica para mostrar la disponibilidad -->
-        <div class="disponibilidad-item gray">08:00 - 08:30</div>
-        <div class="disponibilidad-item gray">08:30 - 09:00</div>
-        <div class="disponibilidad-item gray">09:00 - 09:30</div>
-        <div class="disponibilidad-item gray">09:30 - 10:00</div>
-        <div class="disponibilidad-item gray">10:00 - 10:30</div>
-        <div class="disponibilidad-item gray">10:30 - 11:00</div>
-        <div class="disponibilidad-item gray">11:00 - 11:30</div>
-        <div class="disponibilidad-item gray">11:30 - 12:00</div>
-        <div class="disponibilidad-item gray">12:00 - 12:30</div>
-        <div class="disponibilidad-item gray">12:30 - 13:00</div>
-        <div class="disponibilidad-item gray">13:00 - 13:30</div>
-        <div class="disponibilidad-item gray">13:30 - 14:00</div>
-        <div class="disponibilidad-item gray">14:00 - 14:30</div>
-        <div class="disponibilidad-item gray">14:30 - 15:00</div>
-        <div class="disponibilidad-item gray">15:00 - 15:30</div>
-        <div class="disponibilidad-item gray">15:30 - 16:00</div>
-        <div class="disponibilidad-item gray">16:00 - 16:30</div>
-        <div class="disponibilidad-item gray">16:30 - 17:00</div>
-        <div class="disponibilidad-item gray">17:00 - 17:30</div>
-        <div class="disponibilidad-item gray">17:30 - 18:00</div>
-        <div class="disponibilidad-item gray">18:00 - 18:30</div>
-        <div class="disponibilidad-item gray">18:30 - 19:00</div>
-        <div class="disponibilidad-item gray">19:00 - 19:30</div>
-        <div class="disponibilidad-item gray">19:30 - 20:00</div>
-        <div class="disponibilidad-item gray">20:00 - 20:30</div>
-        <div class="disponibilidad-item gray">20:30 - 21:00</div>
-        <div class="disponibilidad-item gray">21:00 - 21:30</div>
-        <div class="disponibilidad-item gray">21:30 - 22:00</div>
+        <p id="semana-seleccionada"></p>
+        <div id="calendario-semanal">
+          <table class="calendario-semanal-table">
+            <thead>
+              <tr>
+                <th style="width: 15%;">Día de la semana</th>
+                <th style="width: 85%;">Eventos reservados</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-calendario-semanal">
+              <!-- Las filas se generarán dinámicamente con JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <div id="espacios-programados-semanal">
+          <!-- Aquí se mostrará la lista de espacios reservados para la semana -->
+        </div>
       </div>
-      <label for="eventos-programados"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
-      <div class="disponibilidad-group">
-      <div id="eventos-programados"></div>
-      </div>
-      </div>
+    </div>
+    <!-- Fin de la sección semanal -->
     </div>
   </div>
   <!-- DETALLES DEL ACORDEÓN 1 QUE CORRESPONDE A REGISTRAR LA RESERVA DEL EVENTO-->
@@ -1183,9 +1200,9 @@
             <label for="foto-ponente-reserva"><b>Enlace de Google Drive de la foto del ponente para que el comité de publicidad la coloque en la pieza:</b></label>
             <input type="text" id="foto-ponente-reserva" placeholder="Ingresa el enlace de Google Drive, debe estar compartido para cualquier correo.">
           </div>
-        </div>        
         </div>
         <button class="button-consultar" onclick="editarReserva()">Enviar edición de reserva</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1393,8 +1410,8 @@
                 <label for="tipo-espacio"><b>Tipo de espacio: *</b></label>
                 <select id="tipo-espacio">
                   <option value="" disabled selected hidden>Selecciona el tipo de espacio.</option>
-                  <option value="valor-agregado">Valor Agregado ➕</option>
-                  <option value="entrenamiento-interno">Entrenamiento Interno 🏋🏻</option>
+                  <option value="valor-agregado">VALOR AGREGAGO ➕</option>
+                  <option value="entrenamiento-interno">ENTRENAMIENTO INTERNO 🏋🏻</option>
                   <option value="ninguno">No es espacio de formación</option>
                 </select>
               </div>
@@ -1402,14 +1419,14 @@
                 <label for="area-trabajo"><b>Área de trabajo: *</b></label>
                 <select id="area-trabajo">
                   <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
-                  <option value="academico">Académico 💚</option>
-                  <option value="comunicaciones">Comunicaciones 🩵</option>
-                  <option value="desarrollo">Desarrollo 💛</option>
-                  <option value="finanzas">Finanzas 💜</option>
-                  <option value="mercadeo">Mercadeo ❤️</option>
-                  <option value="habilidades-duras">Habilidades Duras 🧠</option>
-                  <option value="habilidades-blandas">Habilidades Blandas 🫂</option>
-                  <option value="conocimiento-aneiap">Conocimiento ANEIAP 💚💙</option>
+                  <option value="academico">ACADÉMICO 💚</option>
+                  <option value="comunicaciones">COMUNICACIONES 🩵</option>
+                  <option value="desarrollo">DESARROLLO 💛</option>
+                  <option value="finanzas">FINANZAS 💜</option>
+                  <option value="mercadeo">MERCADEO ❤️</option>
+                  <option value="habilidades-duras">HABILIDADES DURAS 🧠</option>
+                  <option value="habilidades-blandas">HABILIDADES BLANDAS 🫂</option>
+                  <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
                   <option value="ninguno">No es espacio de formación</option>
                 </select>
               </div>
@@ -1562,8 +1579,8 @@
     });
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
-    var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
-    var capituloUsuario = "";
+    var correoUsuario = "academico_librecali@aneiap.co"; //deben estar vacías, solo que tengo flojera de iniciar sesión.
+    var capituloUsuario = "librecali";
 
     // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
     var fechaInicialInput = document.getElementById("fecha-inicial");
@@ -1751,8 +1768,8 @@
 
                             // Insertar celdas con los datos del evento
                             fila.insertCell().textContent = data.nombreEvento;
-                            fila.insertCell().textContent = data.areaTrabajo;
-                            fila.insertCell().textContent = data.tipoEvento;
+                            fila.insertCell().textContent = data.areaTrabajo.toUpperCase();
+                            fila.insertCell().textContent = data.tipoEvento.toUpperCase();
                             fila.insertCell().textContent = data.fechaEvento;
                             fila.insertCell().textContent = data.nombrePonente;
                             fila.insertCell().textContent = data.emailPonente;
@@ -2304,11 +2321,16 @@
       if (camposValidos) {
         // Verificar si la fecha del evento es válida (mayor a la fecha actual)
         var fechaEvento = new Date(document.getElementById("fecha-evento").value);
+        var horaEvento = new Date(document.getElementById("hora-evento").value);
+        console.log("horaEvento: " + horaEvento);
+        console.log("duracionEvento: " + duracionEvento);
+        var duracionEvento = new Date(document.getElementById("duracion-evento").value);
         var fechaActual = new Date().toISOString().slice(0, 10);
 
         // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
         var capitulo = document.getElementById("capitulo-organizador").value;
-        if (capitulo === "nacional" && correoUsuario ==! "jdn@aneiap.co") {
+        if (capitulo !== "nacional" || correoUsuario !== "jdn@aneiap.co") {
+          console.log("el usuario quiere reservar a nivel nacional.")
           Swal.fire({
             title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
             text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
@@ -2545,7 +2567,7 @@
 
       // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
       var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
-      if (capituloReserva === "nacional" && correoUsuario ==! "jdn@aneiap.co") {
+      if (capituloReserva !== "nacional" || correoUsuario !== "jdn@aneiap.co") {
         Swal.fire({
           title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
           text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
@@ -2566,7 +2588,7 @@
         console.log("la fecha nueva es:" + fechaEventoReserva);
         var fechaActual = new Date().toISOString().slice(0, 10);
 
-        if (fechaEventoReserva <= fechaActual) {
+        if (fechaEventoReserva < fechaActual) {
           Swal.fire({
             title: '¡FECHA INCORRECTA!',
             text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
@@ -3048,7 +3070,7 @@
 
       return true; // Todos los campos están llenos
     }
-   
+
     // Esta función verifica si hacen falta campos obligatorios en la sección "EDITAR RESERVA" y en caso de hacer 
     // falta arrojará una alerta diciendo que hacen falta campos y te dirá también cuáles campos son los que faltan.
     function validarCamposEdicion() {
@@ -3299,6 +3321,248 @@
       });
     }
 
+    var consultaDiaria = true; // Variable para almacenar el estado de la consulta (diaria por defecto)
+
+    function alternarConsulta() {
+        consultaDiaria = !consultaDiaria; // Alternar entre consulta diaria y semanal
+        var botonAlternar = document.getElementById("alternarConsulta");
+        var consultaDiariaDiv = document.getElementById("consultaDiaria");
+        var consultaSemanalDiv = document.getElementById("consultaSemanal");
+        if (consultaDiaria) {
+            botonAlternar.textContent = "Cambiar a calendario semanal";
+            consultaDiariaDiv.style.display = "block"; // Mostrar la consulta diaria
+            consultaSemanalDiv.style.display = "none"; // Ocultar la consulta semanal
+        } else {
+            botonAlternar.textContent = "Cambiar a calendario diario";
+            consultaDiariaDiv.style.display = "none"; // Ocultar la consulta diaria
+            consultaSemanalDiv.style.display = "block"; // Mostrar la consulta semanal
+        }
+    }
+
+    function ConsultarDisponibilidadSemanal() {
+      var fechaConsultaDirecta = document.getElementById("fecha-consulta-semanal").value;
+      var fechaConsulta = new Date(document.getElementById("fecha-consulta-semanal").value);
+      var capituloConsulta = document.getElementById("capitulo-consulta-semanal").value;
+
+      // Verificar que se haya seleccionado una fecha y capítulo
+      if (fechaConsultaDirecta.trim() === "" || capituloConsulta.trim() === "") {
+        // Mostrar mensaje de error si no se ha seleccionado una fecha o capítulo válidos
+        Swal.fire({
+          title: '¡FECHA O CAPÍTULO NO SELECCIONADOS!',
+          text: 'Por favor, selecciona una fecha y un capítulo para consultar la disponibilidad semanal.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,
+          allowEscapeKey: true,
+          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png',
+          imageWidth: 120,
+          imageHeight: 235,
+          imagePosition: 'top-start'
+        });
+        return;
+      }
+
+      // Limpiar el contenido anterior del calendario semanal
+      var calendarioSemanal = document.getElementById("calendario-semanal");
+      calendarioSemanal.innerHTML = "";
+
+      // Crear la tabla del calendario semanal
+      var tablaCalendario = document.createElement("table");
+      tablaCalendario.classList.add("calendario-semanal-table");
+      calendarioSemanal.appendChild(tablaCalendario);
+
+      // Crear el encabezado de la tabla
+      var encabezado = tablaCalendario.createTHead().insertRow(0);
+      var thDiaSemana = document.createElement("th");
+      thDiaSemana.textContent = "Día de la semana";
+      encabezado.appendChild(thDiaSemana);
+      var thEventosReservados = document.createElement("th");
+      thEventosReservados.textContent = "Eventos reservados";
+      encabezado.appendChild(thEventosReservados);
+
+      // Crear el cuerpo de la tabla
+      var cuerpoTabla = tablaCalendario.createTBody();
+
+      // Obtener la fecha del lunes de la semana
+      var lunesSemana = mostrarSemana();
+
+      // Calcular las fechas para cada día de la semana
+      var fechaLunes = new Date(lunesSemana);
+      var fechaMartes = new Date(fechaLunes);
+      fechaMartes.setDate(fechaLunes.getDate() + 1);
+      var fechaMiercoles = new Date(fechaLunes);
+      fechaMiercoles.setDate(fechaLunes.getDate() + 2);
+      var fechaJueves = new Date(fechaLunes);
+      fechaJueves.setDate(fechaLunes.getDate() + 3);
+      var fechaViernes = new Date(fechaLunes);
+      fechaViernes.setDate(fechaLunes.getDate() + 4);
+      var fechaSabado = new Date(fechaLunes);
+      fechaSabado.setDate(fechaLunes.getDate() + 5);
+      var fechaDomingo = new Date(fechaLunes);
+      fechaDomingo.setDate(fechaLunes.getDate() + 6);
+
+      // Formatear las fechas en el formato "YYYY-MM-DD"
+      var fechaLunesString = convertirFechaTipoFirebaseYDate(fechaLunes);
+      var fechaMartesString = convertirFechaTipoFirebaseYDate(fechaMartes);
+      var fechaMiercolesString = convertirFechaTipoFirebaseYDate(fechaMiercoles);
+      var fechaJuevesString = convertirFechaTipoFirebaseYDate(fechaJueves);
+      var fechaViernesString = convertirFechaTipoFirebaseYDate(fechaViernes);
+      var fechaSabadoString = convertirFechaTipoFirebaseYDate(fechaSabado);
+      var fechaDomingoString = convertirFechaTipoFirebaseYDate(fechaDomingo);
+
+      // Crear las consultas para cada día de la semana
+      consultarEventos(fechaLunesString, cuerpoTabla, capituloConsulta);
+      consultarEventos(fechaMartesString, cuerpoTabla, capituloConsulta);
+      consultarEventos(fechaMiercolesString, cuerpoTabla, capituloConsulta);
+      consultarEventos(fechaJuevesString, cuerpoTabla, capituloConsulta);
+      consultarEventos(fechaViernesString, cuerpoTabla, capituloConsulta);
+      consultarEventos(fechaSabadoString, cuerpoTabla, capituloConsulta);
+      consultarEventos(fechaDomingoString, cuerpoTabla, capituloConsulta);
+    }
+
+    // Función para consultar eventos reservados para un día y agregarlos a la tabla
+    function consultarEventos(fechaDiaTipoFirebase, cuerpoTabla, capituloConsulta) {
+      var fila = cuerpoTabla.insertRow();
+      var fechaDiaTipoDate = convertirFechaTipoFirebaseYDate(fechaDiaTipoFirebase)
+      var diaSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+      var textoDia = fechaDiaTipoDate;
+      fila.insertCell().textContent = textoDia; // Agregar el día de la semana a la primera columna de la fila
+
+      // Consultar los eventos reservados para el día de la semana actual
+      var reservasRef = firebase.firestore().collection("reservas");
+      var consulta;
+      if (capituloConsulta === "ANEIAP NACIONAL") {
+        consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulo", "==", "nacional");
+      } else {
+        consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulo", "in", [capituloConsulta, "nacional"]);
+      }
+
+      consulta.get().then((querySnapshot) => {
+        var numEventos = querySnapshot.size;
+        console.log("Número de eventos obtenidos para el día ", fechaDiaTipoFirebase, ":", numEventos);
+        var eventos = [];
+        querySnapshot.forEach(function(doc) {
+          var nombreEvento = doc.data().nombreEvento;
+          var nombreOrganizador = doc.data().nombreOrganizador;
+          var horaEvento = doc.data().horaEvento;
+          var correoOrganizador = doc.data().emailOrganizador;
+          var capitulo = doc.data().capitulo;
+
+          var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
+          var minutos = horaEvento % 60; // Obtener los minutos del evento
+          var horaFormateada = (hora < 10 ? "0" + hora : hora) + ":" + (minutos < 10 ? "0" + minutos : minutos); // Formatear la hora
+
+          eventos.push({ nombre: nombreEvento, organizador: nombreOrganizador, capitulo: capitulo, hora: horaFormateada, correo: correoOrganizador });
+        });
+
+        // Agregar los eventos reservados para el día de la semana actual a la segunda columna de la fila
+        if (eventos.length > 0) {
+          var eventosReservados = "";
+          eventos.forEach(function(evento, indice) {
+            eventosReservados += `${numeroAEmoji(indice + 1)} ${evento.nombre} - Organizador: ${evento.organizador} - Capítulo: ${evento.capitulo} - Hora: ${evento.hora} - Correo: ${evento.correo}<br>`;
+          });
+          fila.insertCell().innerHTML = eventosReservados;
+        } else {
+          fila.insertCell().innerHTML = "✅ DISPONIBLE POR COMPLETO.";
+        }
+      }).catch(function(error) {
+        console.log("Error obteniendo reservas:", error);
+        // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
+      });
+    }
+
+    function convertirFechaTipoFirebaseYDate(fecha) {
+      // Verificar si la fecha es un objeto Date válido
+      if (fecha instanceof Date && !isNaN(fecha)) {
+        // Extraer el día, mes y año
+        var dia = fecha.getDate().toString().padStart(2, '0');
+        var mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        var anio = fecha.getFullYear();
+
+        // Construir la fecha en formato "YYYY-MM-DD"
+        return anio + '-' + mes + '-' + dia;
+      }
+      // Verificar si la fecha es en formato "YYYY-MM-DD"
+      else if (/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+        // Extraer el año, mes y día
+        var anio = fecha.substring(0, 4);
+        var mes = fecha.substring(5, 7);
+        var dia = fecha.substring(8, 10);
+
+        // Construir la fecha en formato "DD/MM/YYYY"
+        return dia + '/' + mes + '/' + anio;
+      }
+      // Verificar si la fecha es en formato "DD/MM/YYYY"
+      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(fecha)) {
+        // Extraer el día, mes y año
+        var dia = fecha.substring(0, 2);
+        var mes = fecha.substring(3, 5);
+        var anio = fecha.substring(6, 10);
+
+        // Construir la fecha en formato "YYYY-MM-DD"
+        return anio + '-' + mes + '-' + dia;
+      }
+      // Si el formato no es reconocido, retornar null
+      else {
+        return null;
+      }
+    }
+
+    var fechaConsultaSemanalInput = document.getElementById("fecha-consulta-semanal");
+    fechaConsultaSemanalInput.addEventListener("change", mostrarSemana);
+    function mostrarSemana() {
+      // Obtener la fecha seleccionada
+      let fechaSeleccionada = new Date(document.getElementById("fecha-consulta-semanal").value);
+      // Obtener el día de la semana (1 = lunes, ..., 6 = sábado, 7 = domingo)
+      let diaSemana = fechaSeleccionada.getDay();
+      console.log("diaSemana: " + diaSemana)
+
+      // Calcular la fecha del lunes de la semana
+      let lunesSemana = new Date(fechaSeleccionada);
+      if (diaSemana === 0) {
+        // Si es lunes, la semana comienza ese mismo día y termina sumándole 6 días
+        lunesSemana.setDate(fechaSeleccionada.getDate() + 1);
+      } else if (diaSemana === 1) {
+        // Si es martes, la semana comienza restando 6 días y termina ese mismo día
+        lunesSemana.setDate(fechaSeleccionada.getDate());
+      } else if (diaSemana === 2) {
+        // Si es martes, la semana comienza restando 1 día y termina sumándole 5 días
+        lunesSemana.setDate(fechaSeleccionada.getDate() - 1);
+      } else if (diaSemana === 3) {
+        // Si es miércoles, la semana comienza restando 2 días y termina sumándole 4 días
+        lunesSemana.setDate(fechaSeleccionada.getDate() - 2);
+      } else if (diaSemana === 4) {
+        // Si es jueves, la semana comienza restando 3 días y termina sumándole 3 días
+        lunesSemana.setDate(fechaSeleccionada.getDate() - 3);
+      } else if (diaSemana === 5) {
+        // Si es viernes, la semana comienza restando 4 días y termina sumándole 2 días
+        lunesSemana.setDate(fechaSeleccionada.getDate() - 4);
+      } else if (diaSemana === 6) {
+        // Si es sábado, la semana comienza restando 5 días y termina sumándole 1 día
+        lunesSemana.setDate(fechaSeleccionada.getDate() - 5);
+      }
+
+      // Calcular la fecha del domingo de la semana
+      let domingoSemana = new Date(lunesSemana + 6);
+      domingoSemana.setDate(lunesSemana.getDate()+6);
+
+      // Formatear las fechas para mostrarlas
+      let formatoFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      let textoLunes = lunesSemana.toLocaleDateString('es-ES', formatoFecha).replace(/\b\w+\b/g, match => `<b>${match}</b>`);
+      let textoDomingo = domingoSemana.toLocaleDateString('es-ES', formatoFecha).replace(/\b\w+\b/g, match => `<b>${match}</b>`);
+      
+      // Convertir los números de día a emojis
+      textoLunes = textoLunes.replace(/\d{1,2}/g, match => `${numeroAEmoji(parseInt(match))}`);
+      textoDomingo = textoDomingo.replace(/\d{1,2}/g, match => `${numeroAEmoji(parseInt(match))}`);
+      
+      // Actualizar el texto con la semana seleccionada
+      document.getElementById("semana-seleccionada").innerHTML = `Semana del ${textoLunes} al ${textoDomingo}`;
+
+      // Retornar la fecha del lunes
+      return new Date(lunesSemana);
+    }
+
     // Función para enviar el correo de edición de reserva
     function enviarCorreoEdicion() {
       // Obtener el correo del organizador para enviarle el correo
@@ -3410,7 +3674,7 @@
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadEdicion() {
       // Obtener el correo del comité de piezas publicitarias
-      const correoDestino = "gestor_proyectos@aneiap.co";
+      const correoDestino = "avillanuevacantillo@gmail.com";
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva= document.getElementById("email-organizador-reserva").value;
       const nombreOrganizadorReserva= document.getElementById("nombre-organizador-reserva").value;
@@ -3619,7 +3883,7 @@
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadRegistro(claveReservaCreada) {
       // Obtener el correo del comité de piezas publicitarias
-      const correoDestino = "gestor_proyectos@aneiap.co";
+      const correoDestino = "avillanuevacantillo@gmail.com";
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva = document.getElementById("email-organizador").value;
       const nombreOrganizadorReserva = document.getElementById("nombre-organizador").value;
@@ -3866,6 +4130,20 @@
         var nuevaDuracion = document.getElementById("duracion-evento-reserva").value;
         var nuevoCapitulo = document.getElementById("capitulo-organizador-reserva").value;
 
+        if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
+          Swal.fire({
+            title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)!',
+            text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener el registro del evento
+        }
+
         // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
         var reservasRef = firebase.firestore().collection("reservas");
 
@@ -4073,6 +4351,21 @@
         var nuevaHora = document.getElementById("hora-evento").value;
         var nuevaDuracion = document.getElementById("duracion-evento").value;
         var nuevoCapitulo = document.getElementById("capitulo-organizador").value;
+
+        // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
+        if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
+          Swal.fire({
+            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)!',
+            text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener el registro del evento
+        }
 
         // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
         var reservasRef = firebase.firestore().collection("reservas");
@@ -4620,31 +4913,43 @@
 
     // Función para convertir números en emojis
     function numeroAEmoji(numero) {
-      switch (numero) {
-        case 0:
-          return "0️⃣";
-        case 1:
-          return "1️⃣";
-        case 2:
-          return "2️⃣";
-        case 3:
-          return "3️⃣";
-        case 4:
-          return "4️⃣";
-        case 5:
-          return "5️⃣";
-        case 6:
-          return "6️⃣";
-        case 7:
-          return "7️⃣";
-        case 8:
-          return "8️⃣";
-        case 9:
-          return "9️⃣";
-        default:
-          return numero; // Si el número no está entre 0 y 9, devolver el mismo número
-      }
+  if (numero < 10) {
+    switch (numero) {
+      case 0:
+        return "0️⃣";
+      case 1:
+        return "1️⃣";
+      case 2:
+        return "2️⃣";
+      case 3:
+        return "3️⃣";
+      case 4:
+        return "4️⃣";
+      case 5:
+        return "5️⃣";
+      case 6:
+        return "6️⃣";
+      case 7:
+        return "7️⃣";
+      case 8:
+        return "8️⃣";
+      case 9:
+        return "9️⃣";
+      default:
+        return numero; // Si el número no está entre 0 y 9, devolver el mismo número
     }
+  } else {
+    // Obtener el primer dígito
+    let primerDigito = Math.floor(numero / 10);
+    // Obtener el segundo dígito
+    let segundoDigito = numero % 10;
+    // Convertir ambos dígitos a emojis
+    let emojiPrimerDigito = numeroAEmoji(primerDigito);
+    let emojiSegundoDigito = numeroAEmoji(segundoDigito);
+    // Devolver ambos emojis concatenados
+    return `${emojiPrimerDigito}${emojiSegundoDigito}`;
+  }
+}
 
     function evaluarEspacio() {
       // Obtener los valores de los campos
