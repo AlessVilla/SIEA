@@ -2329,7 +2329,7 @@
 
         // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
         var capitulo = document.getElementById("capitulo-organizador").value;
-        if (capitulo !== "nacional" || correoUsuario !== "jdn@aneiap.co") {
+        if (capitulo === "nacional" && capituloUsuario !== "nacional") {
           console.log("el usuario quiere reservar a nivel nacional.")
           Swal.fire({
             title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
@@ -2567,7 +2567,7 @@
 
       // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
       var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
-      if (capituloReserva !== "nacional" || correoUsuario !== "jdn@aneiap.co") {
+      if (capituloReserva === "nacional" && capituloUsuario !== "nacional") {
         Swal.fire({
           title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
           text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
@@ -4913,43 +4913,43 @@
 
     // Función para convertir números en emojis
     function numeroAEmoji(numero) {
-  if (numero < 10) {
-    switch (numero) {
-      case 0:
-        return "0️⃣";
-      case 1:
-        return "1️⃣";
-      case 2:
-        return "2️⃣";
-      case 3:
-        return "3️⃣";
-      case 4:
-        return "4️⃣";
-      case 5:
-        return "5️⃣";
-      case 6:
-        return "6️⃣";
-      case 7:
-        return "7️⃣";
-      case 8:
-        return "8️⃣";
-      case 9:
-        return "9️⃣";
-      default:
-        return numero; // Si el número no está entre 0 y 9, devolver el mismo número
+      if (numero < 10) {
+        switch (numero) {
+          case 0:
+            return "0️⃣";
+          case 1:
+            return "1️⃣";
+          case 2:
+            return "2️⃣";
+          case 3:
+            return "3️⃣";
+          case 4:
+            return "4️⃣";
+          case 5:
+            return "5️⃣";
+          case 6:
+            return "6️⃣";
+          case 7:
+            return "7️⃣";
+          case 8:
+            return "8️⃣";
+          case 9:
+            return "9️⃣";
+          default:
+            return numero; // Si el número no está entre 0 y 9, devolver el mismo número
+        }
+      } else {
+        // Obtener el primer dígito
+        let primerDigito = Math.floor(numero / 10);
+        // Obtener el segundo dígito
+        let segundoDigito = numero % 10;
+        // Convertir ambos dígitos a emojis
+        let emojiPrimerDigito = numeroAEmoji(primerDigito);
+        let emojiSegundoDigito = numeroAEmoji(segundoDigito);
+        // Devolver ambos emojis concatenados
+        return `${emojiPrimerDigito}${emojiSegundoDigito}`;
+      }
     }
-  } else {
-    // Obtener el primer dígito
-    let primerDigito = Math.floor(numero / 10);
-    // Obtener el segundo dígito
-    let segundoDigito = numero % 10;
-    // Convertir ambos dígitos a emojis
-    let emojiPrimerDigito = numeroAEmoji(primerDigito);
-    let emojiSegundoDigito = numeroAEmoji(segundoDigito);
-    // Devolver ambos emojis concatenados
-    return `${emojiPrimerDigito}${emojiSegundoDigito}`;
-  }
-}
 
     function evaluarEspacio() {
       // Obtener los valores de los campos
