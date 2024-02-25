@@ -38,20 +38,20 @@
   <link rel="stylesheet" href="styles.css">
   <!-- Incluir Chart.js desde una CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Incluir el archivo JavaScript desde la carpeta config dentro del repositorio -->
+  <script src="../firebase-config.js"></script>
 
-  <!-- ACÁ SE PUEDE ENCONTRAR LA CONFIGURACIÓN INICIAL DE FIREBASE PARA ACCEDER AL PROYECTO -->
   <script>
-    // Your web app's Firebase configuration
+    // firebase-config.js
     var firebaseConfig = {
-      apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
-      authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
-      projectId: "bddreservaaneiapuninorte",
-      storageBucket: "bddreservaaneiapuninorte.appspot.com",
-      messagingSenderId: "227754886829",
-      appId: "1:227754886829:web:00047755b1aaa727242824",
-      measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
-    };
-
+        apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
+        authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
+        projectId: "bddreservaaneiapuninorte",
+        storageBucket: "bddreservaaneiapuninorte.appspot.com",
+        messagingSenderId: "227754886829",
+        appId: "1:227754886829:web:00047755b1aaa727242824",
+        measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
+    }; 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
@@ -2314,6 +2314,7 @@
     }
 
     function registrarEvento() {
+
       // Validar que todos los campos estén llenos
       var camposValidos = validarCamposRegistrarReserva();
 
@@ -2326,6 +2327,37 @@
         console.log("duracionEvento: " + duracionEvento);
         var duracionEvento = new Date(document.getElementById("duracion-evento").value);
         var fechaActual = new Date().toISOString().slice(0, 10);
+
+        var emailOrganizador = document.getElementById("email-organizador").value;
+        // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
+        if (emailOrganizador === "aiesec_nacional@aiesecccc.co") {
+          Swal.fire({
+            title: '¡CORREO PROHIBIDO!',
+            text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
+
+        // Verificar si el correo comienza con "capitulo" o "directivos"
+        if (emailOrganizador.toLowerCase().startsWith("capitulo") || emailOrganizador.toLowerCase().startsWith("directivos")) {
+          Swal.fire({
+            title: '¡CORREO PROHIBIDO!',
+            text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
 
         // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
         var capitulo = document.getElementById("capitulo-organizador").value;
@@ -2562,24 +2594,13 @@
     }
 
     function editarReserva() {
-      // Validar que todos los campos estén llenos y sean válidos
-      var camposValidos = validarCamposEdicion();
 
       // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
       var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
-      if (capituloReserva === "nacional" && capituloUsuario !== "nacional") {
-        Swal.fire({
-          title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
-          text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        return; // Detener la edición de la reserva
-      }
+      var emailOrganizadorReserva = document.getElementById("email-organizador-reserva").value;
+
+      // Validar que todos los campos estén llenos y sean válidos
+      var camposValidos = validarCamposEdicion();
 
       // Si todos los campos están llenos y son válidos, proceder con la edición de la reserva
       if (camposValidos) {
@@ -2587,6 +2608,53 @@
         var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
         console.log("la fecha nueva es:" + fechaEventoReserva);
         var fechaActual = new Date().toISOString().slice(0, 10);
+
+        // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
+        if (emailOrganizadorReserva === "aneiap_nacional@aneiap.co") {
+          console.log("email del organizador: " + emailOrganizadorReserva)
+          Swal.fire({
+            title: '¡CORREO PROHIBIDO!',
+            text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
+
+        // Verificar si el correo comienza con "capitulo" o "directivos"
+        if (emailOrganizadorReserva.toLowerCase().startsWith("capitulo") || emailOrganizadorReserva.toLowerCase().startsWith("directivos")) {
+          Swal.fire({
+            title: '¡CORREO PROHIBIDO!',
+            text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
+
+        // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
+        var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
+        if (capituloReserva === "nacional" && capituloUsuario !== "nacional") {
+          Swal.fire({
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
+            text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
 
         if (fechaEventoReserva < fechaActual) {
           Swal.fire({
@@ -2636,31 +2704,31 @@
           return; // Detener la edición de la reserva
         }
 
-          // Obtener el enlace del usuario
-          var enlaceGoogleDriveReserva = document.getElementById("foto-ponente-reserva").value;
-          // Expresión regular para verificar el formato del enlace de Google Drive
-          var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
-          var publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value
+        // Obtener el enlace del usuario
+        var enlaceGoogleDriveReserva = document.getElementById("foto-ponente-reserva").value;
+        // Expresión regular para verificar el formato del enlace de Google Drive
+        var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
+        var publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value
 
-          // Validar el enlace utilizando la expresión regular
-          if (publicidadComiteReserva === "si") {
-          if (enlaceGoogleDriveReserva !== "") {
-          if (!enlaceGoogleDriveRegex.test(enlaceGoogleDriveReserva)) {
-            Swal.fire({
-              title: "¡ENLACE INVÁLIDO!",
-              text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
-              icon: "warning",
-              confirmButtonText: 'Aceptar',
-              imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-            });
-            return; // Detener el registro del evento
-            }
+        // Validar el enlace utilizando la expresión regular
+        if (publicidadComiteReserva === "si") {
+        if (enlaceGoogleDriveReserva !== "") {
+        if (!enlaceGoogleDriveRegex.test(enlaceGoogleDriveReserva)) {
+          Swal.fire({
+            title: "¡ENLACE INVÁLIDO!",
+            text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
+            icon: "warning",
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener el registro del evento
           }
+        }
 
-          }
+        }
 
         // Aquí realizarías la lógica para verificar la disponibilidad de horarios
         var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
@@ -3095,7 +3163,7 @@
         var telefonoPonenteReserva = document.getElementById("telefono-ponente-reserva").value;
         var publicidadComiteReserva = document.getElementById("publicidad-comite-reserva").value;
         var fotoPonenteReserva = document.getElementById("foto-ponente-reserva").value;
-
+        
         // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
         if (nombreEventoReserva.trim() === "") {
             camposFaltantes.push("Nombre del evento");
@@ -4561,8 +4629,8 @@
       // Lógica para limpiar los campos del ticket, por ejemplo, establecer los valores de los campos en blanco.
       // Ejemplo:
       document.getElementById("nombre").value = "";
-      document.getElementById("correo").value = "";
-      document.getElementById("tipo-ticket").value = "Seleccione un tipo";
+      document.getElementById("correo-ticket").value = "";
+      document.getElementById("tipo-ticket").value = "";
       document.getElementById("explicacion").value = "";
       document.getElementById("celular").value = "";
       document.getElementById("link-drive").value = "";
@@ -4670,12 +4738,12 @@
       }
     }
 
-    function EnviarCorreoTicket(nombre,correo,tipoTicket,explicacion,celular,linkDrive) {
+    function EnviarCorreoTicket(nombre,correo,tipoTicket,explicacion,celular,linkDrive,emailPassword) {
 
       // Configuración del servicio de correo (en este caso, Elastic Email)
-      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
-      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
-      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      var emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+      var emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+      var emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP 
 
       // Mensaje de correo con los datos adicionales
       const asunto = `GENERACIÓN TICKET - TIPO ${tipoTicket}`;
