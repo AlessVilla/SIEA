@@ -39,8 +39,7 @@
   <!-- Incluir Chart.js desde una CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Incluir el archivo JavaScript desde la carpeta config dentro del repositorio -->
-  <script src="../firebase-config.js"></script>
-
+  <!--<script src="../firebase-config.js"></script>-->
   <script>
     // firebase-config.js
     var firebaseConfig = {
@@ -1307,7 +1306,7 @@
         <p>Evalúa del 1 al 10 los siguientes aspectos siendo 1 la menor nota y 10 la máxima nota:</p>
         <div class="row">
           <div class="half">
-            <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan satisfecho te sientes con el espacio de formación brindado? *</label>
+            <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan satisfecho te sientes con el espacio brindado? *</label>
             <select id="pregunta1">
               <option value="" disabled selected hidden>Califica del 1 al 10.</option>
               <option value="1">1</option>
@@ -1341,7 +1340,7 @@
         </div>
         <div class="row">
           <div class="half">
-            <label for="pregunta3"><b>3️⃣ </b> Evalúa la calidad del ponente del espacio. *</label>
+            <label for="pregunta3"><b>3️⃣ </b> Evalúa la calidad del ponente/organizador del espacio. *</label>
             <select id="pregunta3">
               <option value="" disabled selected hidden>Califica del 1 al 10.</option>
               <option value="1">1</option>
@@ -2330,7 +2329,7 @@
 
         var emailOrganizador = document.getElementById("email-organizador").value;
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
-        if (emailOrganizador === "aiesec_nacional@aiesecccc.co") {
+        if (emailOrganizador === "aneiap_nacional@aneiap.co") {
           Swal.fire({
             title: '¡CORREO PROHIBIDO!',
             text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
