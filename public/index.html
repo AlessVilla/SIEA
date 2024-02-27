@@ -4217,7 +4217,7 @@
           console.log("ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
 
         // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
-        if (nuevoCapitulo === "ANEIAP NACIONAL") {
+        if (nuevoCapitulo === "nacional") {
           // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
           consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
         } else {
@@ -4438,7 +4438,7 @@
         var reservasRef = firebase.firestore().collection("reservas");
 
         // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
-        if (nuevoCapitulo === "ANEIAP NACIONAL") {
+        if (nuevoCapitulo === "nacional") {
           // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
           consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
         } else {
@@ -4931,7 +4931,7 @@
               mostrarMensajeInicioSesion();
             } else {
               // Si no se cumple ninguna de las condiciones anteriores, asignar valor "general" a capituloUsuario
-              capituloUsuario = "general";
+              capituloUsuario = "nacional";
               // Mostrar mensaje de inicio de sesión exitoso
               mostrarMensajeInicioSesion();
             }
