@@ -39,18 +39,8 @@
   <!-- Incluir Chart.js desde una CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Incluir el archivo JavaScript desde la carpeta config dentro del repositorio -->
-  <!--<script src="../firebase-config.js"></script>-->
+  <script src="../firebase-config.js"></script>
   <script>
-    // firebase-config.js
-    var firebaseConfig = {
-        apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
-        authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
-        projectId: "bddreservaaneiapuninorte",
-        storageBucket: "bddreservaaneiapuninorte.appspot.com",
-        messagingSenderId: "227754886829",
-        appId: "1:227754886829:web:00047755b1aaa727242824",
-        measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
-    }; 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
