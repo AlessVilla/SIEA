@@ -3740,7 +3740,34 @@
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadEdicion() {
       // Obtener el correo del comité de piezas publicitarias
-      const correoDestino = "avillanuevacantillo@gmail.com";
+      // Banco de correos asociados a cada capítulo
+      const bancoCorreos = {
+        uniguajira: "comunicaciones_uniguajira@aneiap.co",
+        unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
+        uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
+        uninorte: "comunicaciones_uninorte@aneiap.co",
+        cuc: "comunicaciones_cuc@aneiap.co",
+        librequilla: "comunicaciones_librequilla@aneiap.co",
+        utb: "comunicaciones_utb@aneiap.co",
+        ufps: "comunicaciones_ufps@aneiap.co",
+        unalmed: "comunicaciones_unalmed@aneiap.co",
+        udea: "comunicaciones_udea@aneiap.co",
+        upbmed: "comunicaciones_upbmed@aneiap.co",
+        utp: "comunicaciones_utp@aneiap.co",
+        unalma: "comunicaciones_unalma@aneiap.co",
+        udistrital: "comunicaciones_udistrital@aneiap.co",
+        unalbog: "comunicaciones_unalbog@aneiap.co",
+        univalle: "comunicaciones_univalle@aneiap.co",
+        icesi: "comunicaciones_icesi@aneiap.co",
+        usc: "comunicaciones_usc@aneiap.co",
+        librecali: "comunicaciones_libecali@aneiap.co",
+        nacional: "proy_diseno_nacional@aneiap.co"
+      };
+
+      // Obtener el correo del comité de piezas publicitarias según el capítulo
+      const capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
+      const correoDestino = bancoCorreos[capituloReserva];
+
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva= document.getElementById("email-organizador-reserva").value;
       const nombreOrganizadorReserva= document.getElementById("nombre-organizador-reserva").value;
@@ -3756,7 +3783,6 @@
       const modalidadEventoReserva = document.getElementById("modalidad-evento-reserva").value;
       const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
       const lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
-      const capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
@@ -3948,8 +3974,34 @@
 
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadRegistro(claveReservaCreada) {
+    // Función para enviar el correo de solicitud de publicidad
       // Obtener el correo del comité de piezas publicitarias
-      const correoDestino = "avillanuevacantillo@gmail.com";
+      const capitulo = document.getElementById("capitulo-organizador").value;
+      // Banco de correos asociados a cada capítulo
+      const bancoCorreos = {
+        uniguajira: "comunicaciones_uniguajira@aneiap.co",
+        unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
+        uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
+        uninorte: "comunicaciones_uninorte@aneiap.co",
+        cuc: "comunicaciones_cuc@aneiap.co",
+        librequilla: "comunicaciones_librequilla@aneiap.co",
+        utb: "comunicaciones_utb@aneiap.co",
+        ufps: "comunicaciones_ufps@aneiap.co",
+        unalmed: "comunicaciones_unalmed@aneiap.co",
+        udea: "comunicaciones_udea@aneiap.co",
+        upbmed: "comunicaciones_upbmed@aneiap.co",
+        utp: "comunicaciones_utp@aneiap.co",
+        unalma: "comunicaciones_unalma@aneiap.co",
+        udistrital: "comunicaciones_udistrital@aneiap.co",
+        unalbog: "comunicaciones_unalbog@aneiap.co",
+        univalle: "comunicaciones_univalle@aneiap.co",
+        icesi: "comunicaciones_icesi@aneiap.co",
+        usc: "comunicaciones_usc@aneiap.co",
+        librecali: "comunicaciones_libecali@aneiap.co",
+        nacional: "proy_diseno_nacional@aneiap.co"
+      };
+
+      const correoDestino = bancoCorreos[capitulo];
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva = document.getElementById("email-organizador").value;
       const nombreOrganizadorReserva = document.getElementById("nombre-organizador").value;
@@ -3957,7 +4009,6 @@
       const fechaReserva = document.getElementById("fecha-evento").value;
       const horaReserva = document.getElementById("hora-evento").value;
       const planEvento = document.getElementById("plan-evento").value;
-      const capitulo = document.getElementById("capitulo-organizador").value;
       const nombrePonente = document.getElementById("nombre-ponente").value;
       const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
       const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad").value;
