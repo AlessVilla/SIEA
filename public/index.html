@@ -3833,7 +3833,7 @@
             <p>La pieza publicitaria debe ser enviada como respuesta a TODOS los destinatarios de este correo.</p>
             <p>Atentamente,</p>
             <p>${nombreOrganizadorReserva}</p>
-            <p style="font-style: italic;">Administrador y creador SIEA</p>
+            <p style="font-style: italic;">Organizador de la reserva</p>
           </body>
         </html>
       `;
@@ -4066,7 +4066,7 @@
             <p>La pieza publicitaria debe ser enviada como respuesta a TODOS los destinatarios de este correo.</p>
             <p>Atentamente,</p>
             <p>${nombreOrganizadorReserva}</p>
-            <p style="font-style: italic;">Administrador y creador SIEA</p>
+            <p style="font-style: italic;">Organizador de la reserva</p>
           </body>
         </html>
       `;
@@ -4317,7 +4317,7 @@
             }
           }
 
-          // Verificar el paquete horario vesperino (intervalos 11 al 20, es decir, 13:00 a 18:00)
+          // Verificar el paquete horario vespertino (intervalos 11 al 20, es decir, 13:00 a 18:00)
           for (var i = 10; i <= 19; i++) {
             if (!disponibilidadHorarios[i]) {
               for (var j = 10; j <= 19; j++) {
@@ -4397,8 +4397,8 @@
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vesperino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERINO! ☀️',
-              text: 'El horario vesperino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
+              text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
               allowOutsideClick: true,
@@ -4540,7 +4540,7 @@
             }
           }
 
-          // Verificar el paquete horario vesperino (intervalos 11 al 20, es decir, 13:00 a 18:00)
+          // Verificar el paquete horario vespertino (intervalos 11 al 20, es decir, 13:00 a 18:00)
           for (var i = 10; i <= 19; i++) {
             if (!disponibilidadHorarios[i]) {
               for (var j = 10; j <= 19; j++) {
@@ -4616,8 +4616,8 @@
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vesperino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERINO! ☀️',
-              text: 'El horario vesperino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
+              text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
               allowOutsideClick: true,
