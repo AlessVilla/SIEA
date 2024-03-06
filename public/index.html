@@ -5424,8 +5424,7 @@
             var reservasRef = firebase.firestore().collection("reservas");
             var consultaEventos = reservasRef.where("capitulo", "==", capituloUsuario)
                 .where("fechaEvento", ">=", fechaInicial)
-                .where("fechaEvento", "<=", fechaFinal)
-                .where("fechaEvento", "<=", fechaHoy;
+                .where("fechaEvento", "<=", fechaFinal);
 
             // Consulta para obtener las metas del capítulo
             var cuentasRef = firebase.firestore().collection("cuentas");
