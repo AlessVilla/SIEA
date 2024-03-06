@@ -5420,10 +5420,12 @@
             // Consulta para obtener los eventos del capítulo dentro del rango de fechas
             var fechaInicial = document.getElementById("fecha-inicial").value;
             var fechaFinal = document.getElementById("fecha-final").value;
+            var fechaHoy = new Date().toISOString().slice(0, 10);
             var reservasRef = firebase.firestore().collection("reservas");
             var consultaEventos = reservasRef.where("capitulo", "==", capituloUsuario)
                 .where("fechaEvento", ">=", fechaInicial)
-                .where("fechaEvento", "<=", fechaFinal);
+                .where("fechaEvento", "<=", fechaFinal)
+                .where("fechaEvento", "<=", fechaHoy;
 
             // Consulta para obtener las metas del capítulo
             var cuentasRef = firebase.firestore().collection("cuentas");
