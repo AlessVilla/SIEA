@@ -1723,7 +1723,7 @@
             th.textContent = columna;
             // Asignar ancho específico a cada columna
             if (index === 0) {
-                th.style.width = "15%";
+                th.style.width = "20%";
             } else if (index >= 1 && index <= 5) {
                 th.style.width = "10%";
             } else if (index === 6) {
@@ -1766,8 +1766,8 @@
 
                             // Insertar celdas con los datos del evento
                             fila.insertCell().textContent = data.nombreEvento;
-                            fila.insertCell().textContent = data.areaTrabajo.toUpperCase();
-                            fila.insertCell().textContent = data.tipoEvento.toUpperCase();
+                            fila.insertCell().textContent = data.areaTrabajo
+                            fila.insertCell().textContent = data.tipoEvento
                             fila.insertCell().textContent = data.fechaEvento;
                             fila.insertCell().textContent = data.nombrePonente;
                             fila.insertCell().textContent = data.emailPonente;
@@ -2169,6 +2169,10 @@
         fotoPonenteURL: fotoPonenteURL,
         // Agrega aquí los demás campos del evento que deseas guardar
         // ...
+        detractores: 0,
+        pasivos: 0,
+        promotores: 0,
+        satisfaccion: 0,
       })
       .then((docRef) => {
         // Éxito: el evento se ha registrado correctamente en el documento existente
@@ -4023,7 +4027,7 @@
       const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
       const cc = `${emailOrganizadorReserva}, siea@aneiap.co`; // Copia de carbono (CC)
       const claveReserva = claveReservaCreada;
-      const asunto = `Solicitud de Publicidad para el Evento - "${nombreEventoReserva}" con clave de reserva terminada en ***********${claveReserva.slice(-4)}`;
+      const asunto = `Solicitud de Publicidad para el Espacio - "${nombreEventoReserva}" con clave de reserva terminada en ***********${claveReserva.slice(-4)}`;
 
       // Convertir minutos a formato militar (HH:MM)
       const horasMilitar = Math.floor(horaReserva / 60);
@@ -4042,7 +4046,7 @@
       const mensaje = `
         <html>
           <body>
-            <h1 style="color: #007BFF;">Solicitud de Publicidad para el Espacio</h1>
+            <h1 style="color: #007BFF;">Solicitud de Publicidad para el Evento</h1>
             <p>Estimado Comité de Piezas Publicitarias,</p>
             <p>Solicitamos la realización de publicidad para el siguiente evento:</p>
             <ul>
@@ -4305,7 +4309,7 @@
           var disponibilidadVesperino = true;
           var disponibilidadNocturno = true;
 
-          // Colocar los intervalos de un mismo paquete horario (matutino, vesperino o nocturno) ocupados
+          // Colocar los intervalos de un mismo paquete horario (matutino, vespertino o nocturno) ocupados
           // Verificar el paquete horario matutino (intervalos 1 al 10, es decir, 8:00 a 13:00)
           for (var i = 0; i <= 9; i++) {
             if (!disponibilidadHorarios[i]) {
@@ -4394,7 +4398,7 @@
             });
             return; // Detener la ejecución de la función
             }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vesperino.
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
@@ -4613,7 +4617,7 @@
             });
             return; // Detener la ejecución de la función
             }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vesperino.
+            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
               title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
@@ -4970,6 +4974,7 @@
                   capituloUsuario = result.value;
                   // Mostrar mensaje de inicio de sesión exitoso
                   mostrarMensajeInicioSesion();
+                  console.log("El capítulo del usuario es: " + capituloUsuario)
                 }
               });
             } else if (correo.startsWith("academico_")) {
@@ -5181,8 +5186,12 @@
             data.telefonosAsistentes = (data.telefonosAsistentes || "") +  telefonoAsistente + "|" ;
 
             // Recalcular satisfacción
+            console.log("Promotores:", data.promotores);
+            console.log("Pasivos:", data.pasivos);
+            console.log("Detractores:", data.detractores);
             var satisfaccion = (data.promotores - data.detractores) / (data.promotores + data.pasivos + data.detractores);
-            data.satisfaccion = isNaN(satisfaccion) ? null : satisfaccion;
+            console.log("La satisfacción es: " + satisfaccion)
+            data.satisfaccion = satisfaccion;
 
             // Actualizar el evento en la base de datos
             reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
@@ -5230,6 +5239,7 @@
                 confirmButtonText: 'Aceptar'
             });
         });
+
     }
 
     // Función para mostrar mensaje de inicio de sesión exitoso
