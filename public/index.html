@@ -2473,7 +2473,8 @@
         console.log("horaEvento: " + horaEvento);
         console.log("duracionEvento: " + duracionEvento);
         var duracionEvento = new Date(document.getElementById("duracion-evento").value);
-        var fechaActual = new Date().toISOString().slice(0, 10);
+        var fechaActual = new Date()//.toISOString().slice(0, 10);
+        var fechaActualISOS = new Date().toISOString().slice(0, 10);
 
         var emailOrganizador = document.getElementById("email-organizador").value;
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
@@ -2506,6 +2507,21 @@
           return; // Detener la edición de la reserva
         }
 
+        // Verificar si el correo termina con "@aneiap.co"
+        if (!emailOrganizador.toLowerCase().endsWith("@aneiap.co")) {
+            Swal.fire({
+                title: '¡CORREO INCORRECTO!',
+                text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+                imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+                imageWidth: 120, // Ancho de la imagen en píxeles
+                imageHeight: 235, // Alto de la imagen en píxeles
+                imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return; // Detener la edición de la reserva
+        }
+
         // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
         var capitulo = document.getElementById("capitulo-organizador").value;
         if (capitulo === "nacional" && capituloUsuario !== "nacional") {
@@ -2524,7 +2540,7 @@
         }
 
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
-        if (fechaEvento < fechaActual) {
+        if ((fechaEvento < fechaActual) || (fechaEvento < fechaActualISOS)) {
           Swal.fire({
             title: '¡FECHA INCORRECTA!',
             text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
@@ -2754,7 +2770,8 @@
         // Verificar si la fecha del evento es válida (mayor a la fecha actual)
         var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
         console.log("la fecha nueva es:" + fechaEventoReserva);
-        var fechaActual = new Date().toISOString().slice(0, 10);
+        var fechaActual = new Date()//.toISOString().slice(0, 10);
+        var fechaActualISOS = new Date().toISOString().slice(0, 10);
 
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
         if (emailOrganizadorReserva === "aneiap_nacional@aneiap.co") {
@@ -2787,6 +2804,21 @@
           return; // Detener la edición de la reserva
         }
 
+        // Verificar si el correo termina con "@aneiap.co"
+        if (!emailOrganizadorReserva.toLowerCase().endsWith("@aneiap.co")) {
+            Swal.fire({
+                title: '¡CORREO INCORRECTO!',
+                text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+                imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+                imageWidth: 120, // Ancho de la imagen en píxeles
+                imageHeight: 235, // Alto de la imagen en píxeles
+                imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return; // Detener la edición de la reserva
+        }
+
         // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
         var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
         if (capituloReserva === "nacional" && capituloUsuario !== "nacional") {
@@ -2803,7 +2835,7 @@
           return; // Detener la edición de la reserva
         }
 
-        if (fechaEventoReserva < fechaActual) {
+        if ((fechaEventoReserva < fechaActual) || (fechaEventoReserva < fechaActualISOS)) {
           Swal.fire({
             title: '¡FECHA INCORRECTA!',
             text: 'La fecha del evento debe ser mayor a la fecha de HOY.',
