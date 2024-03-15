@@ -2473,8 +2473,8 @@
         console.log("horaEvento: " + horaEvento);
         console.log("duracionEvento: " + duracionEvento);
         var duracionEvento = new Date(document.getElementById("duracion-evento").value);
-        var fechaActual = new Date()//.toISOString().slice(0, 10);
-        var fechaActualISOS = new Date().toISOString().slice(0, 10);
+        var fechaActual = ((new Date())-1)//.toISOString().slice(0, 10);
+        var fechaActualISOS = ((new Date())-1).toISOString().slice(0, 10);
 
         var emailOrganizador = document.getElementById("email-organizador").value;
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
@@ -2770,8 +2770,8 @@
         // Verificar si la fecha del evento es válida (mayor a la fecha actual)
         var fechaEventoReserva = document.getElementById("fecha-evento-reserva").value;
         console.log("la fecha nueva es:" + fechaEventoReserva);
-        var fechaActual = new Date()//.toISOString().slice(0, 10);
-        var fechaActualISOS = new Date().toISOString().slice(0, 10);
+        var fechaActual = ((new Date())-1)//.toISOString().slice(0, 10);
+        var fechaActualISOS = ((new Date())-1).toISOString().slice(0, 10);
 
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
         if (emailOrganizadorReserva === "aneiap_nacional@aneiap.co") {
