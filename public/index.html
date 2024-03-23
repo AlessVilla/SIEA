@@ -582,17 +582,17 @@
             <div class="row">
                 <div class="third">
                     <!-- CAMPO PARA NOMBRE QUE ES OBLIGATORIO -->
-                    <label for="nombre">Nombre Completo *</label>
+                    <label for="nombre">Nombre *</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
-                    <label for="correo-ticket">Correo ANEIAP *</label>
+                    <label for="correo-ticket">Correo *</label>
                     <input type="text" id="correo-ticket" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
-                    <label for="tipo-ticket">Tipo de Ticket *</label>
+                    <label for="tipo-ticket">Tipo *</label>
                     <select id="tipo-ticket" name="tipo-ticket" required>
                       <option value="" disabled selected>Seleccione un tipo</option>
                       <option value="Consulta General">Consulta General</option>
@@ -611,17 +611,17 @@
             <div class="row">
                 <div class="third">
                     <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ DE FORMA MUY DETALLADA LO QUE OCURRIÓ EN EL CASO -->
-                    <label for="explicacion">Explicación del Caso *</label>
+                    <label for="explicacion">Explicación caso *</label>
                     <textarea id="explicacion" name="explicacion" rows="1" required placeholder="Describe detalladamente tu caso"></textarea>
                 </div>
                 <div class="third">
                     <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ SU NÚMERO DE CELUAR, DEBE SER UN VALOR QUE EMPIECE EN 3 Y TENGA EN TOTAL 10 DÍGITOS -->
-                    <label for="celular">Número de Celular *</label>
+                    <label for="celular">Número de tel. *</label>
                     <input type="tel" id="celular" name="celular" required placeholder="Digita tu número de celular" pattern="^3\d{9}$">
                 </div>
                 <div class="third">
                     <!-- CAMPO DONDE SE ADJUNTARÁ UN LINK DE GOOGLE DRIVE VÁLIDO (OPCIONAL) -->
-                    <label for="link-drive">Drive Evidencias</label>
+                    <label for="link-drive">Drive evidencias</label>
                     <textarea id="link-drive" name="link-drive" rows="1" required placeholder="Adjunta link de evidencias en Drive"></textarea>
                 </div>
             </div>
