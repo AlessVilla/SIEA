@@ -62,6 +62,18 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: cover;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
@@ -149,9 +161,9 @@
     }    
     .reservar-group {
       margin-bottom: 15px;
-      background-color: #a8f7a1; /* Color de fondo verde muy claro */
+      background-color: #a8f7a1D9; /* Color de fondo verde muy claro */
       padding: 10px;
-      border: 1px solid #15ff00; /* Borde verde claro */
+      border: 1px solid #15ff00D9; /* Borde verde claro */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .editar-group {
@@ -545,9 +557,9 @@
 <body class="dark-mode">
 
     <!-- Botón de modo de visualización-->
-    <button id="modo-switch" class="light-mode">
+    <!--<button id="modo-switch" class="light-mode">
       <span class="icon"></span>
-    </button>
+    </button>-->
 
   <script src="script.js"></script>
   <div class="main-content">
@@ -555,7 +567,7 @@
   </div>
 
   <!-- DETALLES DEL ACORDEÓN 1 QUE CORRESPONDE A REGISTRAR LA RESERVA DEL EVENTO-->
-  <div class="acordeon1">CLICK AQUÍ PARA REGISTRAR TU ESPACIO/EVENTO ✏️</div>
+  <div class="acordeon1">CLICK AQUÍ PARA REGISTRAR TU EVENTO ✏️</div>
   <div id="acordeon1-content" style="display: block;">
     <div class="acordeon1-content-inner">
       <div class="reservar-group">
@@ -567,7 +579,7 @@
       <div class="half">
       <label for="nombre-evento"><b>Nombre del evento: *</b></label>
       <input type="text" id="nombre-evento" placeholder="Ingresa el nombre de tu evento.">
-      <label for="fecha-evento"><b>Fecha para el evento: *</b></label>
+      <label for="fecha-evento"><b>Fecha del evento: *</b></label>
       <input type="date" id="fecha-evento">
       <label for="hora-evento"><b>Hora del evento: *</b></label>
       <select id="hora-evento">
@@ -602,7 +614,7 @@
       </select>
       </div>
       <div class="half">
-      <label for="duracion-evento"><b>Duración del evento: *</b></label>
+      <label for="duracion-evento"><b>Duración del evento (en horas): *</b></label>
       <select id="duracion-evento">
         <option value="" disabled selected hidden>Selecciona la duración del evento.</option>
         <option value="30">media hora</option>
@@ -642,7 +654,7 @@
       </div>
       <div class="row">
       <div class="half">
-      <label for="plan-evento"><b>Paso a paso del evento: *</b></label>
+      <label for="plan-evento"><b>Plan del evento: *</b></label>
       <textarea id="plan-evento" rows="5" placeholder="Detalla el paso a paso de lo que se realizará en el evento y cuáles son las estrategias para garantizar que este sí se lleve a cabo de forma exitosa."></textarea>
       </div>
       <div class="half">
@@ -661,7 +673,7 @@
                 <input type="text" id="email-organizador" placeholder="Ingresa tu email.">
             </div>
             <div class="half">
-                <label for="capitulo-organizador"><b>Capítulo organizador: *</b></label>
+                <label for="capitulo-organizador"><b>Capítulo del organizador: *</b></label>
                 <select id="capitulo-organizador">
                   <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
                   <option value="uniguajira">UNIGUAJIRA</option>
@@ -710,15 +722,15 @@
           </select>
         </div>
         <div class="third">
-          <label for="observaciones-publicidad"><b>Observaciones para que el comité de piezas tenga en cuenta al hacer tu publicidad:</b></label>
+          <label for="observaciones-publicidad"><b>Observaciones a tener en cuenta para que el comité de piezas tenga en cuenta al hacer tu publicidad:</b></label>
           <textarea id="observaciones-publicidad" rows="1" placeholder="Ingresa observaciones para la publicidad del evento."></textarea>
         </div>
         <div class="third">
-          <label for="foto-ponente"><b>Enlace de Google Drive de la foto del ponente para colocar en la pieza:</b></label>
+          <label for="foto-ponente"><b>Enlace de Google Drive de la foto del ponente para que el comité de publicidad la coloque en la pieza:</b></label>
           <input type="text" id="foto-ponente" placeholder="Ingresa el enlace de Google Drive, debe estar compartido para cualquier correo.">
         </div>
       </div>
-      <button class="button-reservar" onclick="registrarEvento()">Registrar espacio/evento</button>
+      <button class="button-reservar" onclick="registrarEvento()">Registrar evento</button>
       </div>
     </div>
   </div>
@@ -1626,7 +1638,7 @@
         });
       }
     )}
-
+/*
     const modoSwitch = document.getElementById('modo-switch');
     const body = document.body;
     const logos = document.querySelectorAll('.logo');
@@ -1655,7 +1667,7 @@
         });
       }
     });
-
+*/
   </script>
 
 </body>
