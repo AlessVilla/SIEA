@@ -59,6 +59,21 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
+    .black-text {
+      color: black;
+    }
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
@@ -139,11 +154,11 @@
     }
     .disponibilidad-group {
       margin-bottom: 15px;
-      background-color: #c3d6ff; /* Color de fondo azul muy claro */
+      background-color: #c3d6ffD9; /* Color de fondo azul muy claro */
       padding: 10px;
-      border: 1px solid #0004ff; /* Borde azul */
+      border: 1px solid #0004ffD9; /* Borde azul */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }    
+    }
     .reservar-group {
       margin-bottom: 15px;
       background-color: #a8f7a1; /* Color de fondo verde muy claro */
@@ -153,16 +168,16 @@
     }
     .editar-group {
       margin-bottom: 15px;
-      background-color: #ffc67c; /* Color de fondo naranja muy claro */
+      background-color: #ffc67cD9; /* Color de fondo rojo muy claro */
       padding: 10px;
-      border: 1px solid #ff9100; /* Borde naranja claro */
+      border: 1px solid #ff9100D9; /* Borde rojo */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .eliminar-group {
       margin-bottom: 15px;
-      background-color: #fd8c8ca4; /* Color de fondo rojo muy claro */
+      background-color: #fd8c8cD9; /* Color de fondo rojo muy claro */
       padding: 10px;
-      border: 1px solid #ff0000a4; /* Borde rojo */
+      border: 1px solid #ff0000D9; /* Borde rojo */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .acordeon4-content-inner {
@@ -174,9 +189,9 @@
     }
     .actualizar-group {
       margin-bottom: 15px;
-      background-color: #cccccc; /* Color de fondo rojo muy claro */
+      background-color: #ccccccD9; /* Color de fondo rojo muy claro */
       padding: 10px;
-      border: 1px solid #4d4d4d; /* Borde rojo */
+      border: 1px solid #4d4d4dD9; /* Borde rojo */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .radio-buttons-container {
@@ -243,7 +258,7 @@
     .acordeon5 {
       background-color: #4d4d4d;
     }
-    .button-consultar-disponibilidad, .button-reservar, .button-consultar, .button-consultar, .button-evaluar, .button-eliminar, .button-actualizar {
+    .button-consultar-disponibilidad, .button-reservar, .button-consultar, .button-consultar, .button-evaluar, .button-eliminar, .button-actualizar, .button-generar-informe {
       color: white;
       padding: 5px 10px;
       font-weight: bold;
@@ -260,7 +275,7 @@
       background-color: rgb(0, 141, 37);
     }
     .button-consultar {
-      background-color: orange;
+      background-color: #ffa500;
     }
     .button-eliminar {
       background-color: red;
@@ -270,6 +285,9 @@
     }
     .button-actualizar {
       background-color: #4d4d4d;
+    }
+    .button-generar-informe {
+      background-color: #32ce13;
     }
     /* Estilo para los campos de correo del forms y contraseña */
     input[type="email"],
@@ -296,13 +314,14 @@
       font-size: 16px;
     }
     .disponibilidad-item.green {
-      background-color: green;
+      background-color: #00B30F;
     }
     .disponibilidad-item.red {
       background-color: red;
     }
     .disponibilidad-item.gray {
-      background-color: rgb(185, 185, 185);
+      background-color: rgb(230, 230, 230);
+      color: black;
     }
     /* Estilos para las pestañas */
     .tab-container {
@@ -311,8 +330,8 @@
     .tab {
       padding: 10px 20px;
       cursor: pointer;
-      border: 1px solid #9900CC;
-      background-color: #f7d1f3;
+      border: 1px solid #9900CCBF;
+      background-color: #f7d1f3BF;
       border-radius: 8px 8px 0 0;
     }
     .tab:hover {
@@ -322,8 +341,8 @@
     .tab-content {
       display: none;
       padding: 10px;
-      border: 3px solid #D55DFF;
-      background-color: #f7d1f3;
+      border: 3px solid #D55DFFBF;
+      background-color: #f7d1f3BF;
       border-radius: 20 20px 20px 20px;
       width: 100%
     }
@@ -376,7 +395,7 @@
     .light-mode {
       color: black; /* Color del texto en modo claro */
     }
-    .logo.dark-mode {
+    .logo.light-mode {
       display: none; /* Oculta el logo del dark mode por defecto */
     }
     /* Estilo del texto en modo oscuro */
@@ -536,15 +555,28 @@
     .calendario-semanal-table th {
       text-align: center; /* Alineación centrada */
     }
+    .login-container {
+      display: flex;
+      align-items: center; /* Centra verticalmente los elementos */
+    }
+    .login-container form {
+      margin-right: 10px; /* Espacio entre el formulario y el botón */
+    }
 
   </style>
 </head>
 <body class="dark-mode">
 
-  <!-- Formulario con campos de correo, contraseña y botón para inicar sesión-->
+    <!-- Botón de modo de visualización-->
+    <!--<button id="modo-switch" class="light-mode">
+      <span class="icon"></span>
+    </button>-->
+
+  <!-- Formulario con campos de correo, contraseña y botón para iniciar sesión-->
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña">
+    <button type="button" class="button-generar-informe" onclick="generarInformePDF()">Generar Informe PDF</button>
   </form>
   <button type="button" class="button-consultar" onclick="validar_login()">Iniciar Sesión</button>
   <!-- Elemento para mostrar el saludo -->
@@ -553,10 +585,6 @@
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
   <h1 style="text-align: center;" class="light-mode">Bienvenido a SIEA (Sistema Integral de Espacios ANEIAP)</h1>
 
-    <!-- Botón de modo de visualización-->
-    <button id="modo-switch" class="light-mode">
-      <span class="icon"></span>
-    </button>
   <div class="image-container">
     <img src="https://i.ibb.co/WGC5G0Y/Copia-de-Logos-proyectos-2023-2-4.png" alt="Logo Light Mode" class="logo light-mode">
     <img src="https://i.ibb.co/Wt7rx9Y/Equipo-Nacional-de-Datos-1.png" alt="Logo Dark Mode" class="logo dark-mode">
@@ -3521,7 +3549,7 @@
         var disponibilidadItems = disponibilidadContainer.getElementsByClassName("disponibilidad-item");
         for (var i = 0; i < disponibilidad.length; i++) {
           if (disponibilidad[i]) {
-            disponibilidadItems[i].style.backgroundColor = "green"; // Establecer fondo verde para intervalo disponible
+            disponibilidadItems[i].style.backgroundColor = "#00B30F"; // Establecer fondo verde para intervalo disponible
           } else {
             disponibilidadItems[i].style.backgroundColor = "red"; // Establecer fondo rojo para intervalo ocupado
           }
@@ -5051,7 +5079,7 @@
         });
 
     }
-
+    /*
     const modoSwitch = document.getElementById('modo-switch');
     const body = document.body;
     const logos = document.querySelectorAll('.logo');
@@ -5079,7 +5107,7 @@
           }
         });
       }
-    });
+    });*/
 
     function validar_login() {
       // Obtener los valores de correo y contraseña desde los campos del formulario
