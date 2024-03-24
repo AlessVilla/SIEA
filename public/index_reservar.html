@@ -68,7 +68,7 @@
       /* Fija la imagen de fondo para que no se desplace con el contenido */
       background-attachment: fixed;
       /* Escala la imagen para cubrir todo el cuerpo */
-      background-size: cover;
+      background-size: contain;
       /* Centra la imagen */
       background-position: center;
       /* Establece un color de fondo de respaldo */
@@ -581,7 +581,7 @@
       <input type="text" id="nombre-evento" placeholder="Ingresa el nombre de tu evento.">
       <label for="fecha-evento"><b>Fecha del evento: *</b></label>
       <input type="date" id="fecha-evento">
-      <label for="hora-evento"><b>Hora del evento: *</b></label>
+      <label for="hora-evento"><b>Hora para el evento: *</b></label>
       <select id="hora-evento">
         <option value="" disabled selected hidden>Selecciona la hora de la reserva.</option>
         <option value="480">08:00</option>
@@ -630,7 +630,7 @@
         <option value="330">5 horas y media</option>
         <option value="360">6 horas</option>
       </select>
-      <label for="modalidad-evento"><b>Modalidad del evento: *</b></label>
+      <label for="modalidad-evento"><b>Modalidad evento: *</b></label>
       <select id="modalidad-evento" onchange="toggleUbicacionPlataforma()">
         <option value="" disabled selected hidden>Selecciona la modalidad del evento.</option>
         <option value="virtual">Virtual</option>
@@ -647,7 +647,7 @@
         </select>
       </div>
       <div id="lugar-presencial-container" style="display: none;">
-        <label for="lugar-presencial"><b>Especifica el lugar físico del evento en la reserva: *</b></label>
+        <label for="lugar-presencial"><b>Especifica el lugar físico del evento: *</b></label>
         <input type="text" id="lugar-presencial" placeholder="Escribe el lugar donde el evento se realizará.">
       </div>
       </div>
@@ -658,7 +658,7 @@
       <textarea id="plan-evento" rows="5" placeholder="Detalla el paso a paso de lo que se realizará en el evento y cuáles son las estrategias para garantizar que este sí se lleve a cabo de forma exitosa."></textarea>
       </div>
       <div class="half">
-      <label for="observaciones-evento"><b>Observaciones del evento:</b></label>
+      <label for="observaciones-evento"><b>Observaciones:</b></label>
       <textarea id="observaciones-evento" rows="5" placeholder="Especifica cualquier observación adicional que desees que sea tenida en cuenta para el desarrollo del evento."></textarea>
       </div>
       </div>
@@ -673,7 +673,7 @@
                 <input type="text" id="email-organizador" placeholder="Ingresa tu email.">
             </div>
             <div class="half">
-                <label for="capitulo-organizador"><b>Capítulo del organizador: *</b></label>
+                <label for="capitulo-organizador"><b>Capítulo organizador: *</b></label>
                 <select id="capitulo-organizador">
                   <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
                   <option value="uniguajira">UNIGUAJIRA</option>
