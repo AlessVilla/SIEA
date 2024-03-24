@@ -62,6 +62,18 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: cover;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
@@ -170,9 +182,9 @@
     }
     .acordeon4-content-inner {
       margin-bottom: 15px;
-      background-color: #D55DFF; /* Color de fondo rojo muy claro */
+      background-color: #D55DFFD9; /* Color de fondo rojo muy claro */
       padding: 10px;
-      border: 1px solid #9900CC; /* Borde rojo */
+      border: 1px solid #9900CCD9; /* Borde rojo */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .actualizar-group {
@@ -546,9 +558,9 @@
 
   <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
     <!-- Botón de modo de visualización-->
-    <button id="modo-switch" class="light-mode">
+    <!--<button id="modo-switch" class="light-mode">
         <span class="icon"></span>
-      </button>
+      </button>-->
     <script src="script.js"></script>
   <div class="main-content">
     <!-- El contenido principal de tu página va aquí -->
@@ -570,15 +582,15 @@
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL ESPACIO 🏢</p></h2>
         <div class="row">
           <div class="half">
-            <label for="nombre-asistente"><b>Nombre completo del asistente *</b></label>
+            <label for="nombre-asistente"><b>Nombre completo del asistente: *</b></label>
             <input type="text" id="nombre-asistente" placeholder="Ingresa tu nombre.">
-            <label for="telefono-asistente"><b>Teléfono del asistente *</b></label>
+            <label for="telefono-asistente"><b>Teléfono del asistente: *</b></label>
             <input type="tel" id="telefono-asistente" placeholder="Ingresa tu número de teléfono.">
           </div>
           <div class="half">
-            <label for="correo-asistente"><b>Correo del asistente *</b></label>
+            <label for="correo-asistente"><b>Correo del asistente: *</b></label>
             <input type="text" id="correo-asistente" placeholder="Ingresa tu correo electrónico.">
-            <label for="capitulo-espacio"><b>Organizador del espacio (capítulo) *</b></label>
+            <label for="capitulo-espacio"><b>Capítulo que organizó y se hizo cargo del espacio: *</b></label>
             <select id="capitulo-espacio">
               <option value="" disabled selected hidden>Selecciona el capítulo que organizó el espacio.</option>
               <option value="uniguajira">UNIGUAJIRA</option>
@@ -604,18 +616,19 @@
             </select>
           </div>
         </div>
-        <label for="nombre-espacio"><b>Nombre del espacio a evaluar *</b></label>
+        <label for="nombre-espacio"><b>Nombre del espacio a evaluar: *</b></label>
         <select id="nombre-espacio">
           <option value="" disabled selected hidden>Debes seleccionar primero un capítulo para seleccionar el espacio.</option>
           <!-- Aquí puedes agregar opciones para los espacios disponibles -->
         </select>
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL ESPACIO 📝</p></h2>
+        <h3 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">SOLO ES OBLIGATORIO EVALUAR LOS ESPACIOS DE FORMACIÓN DE VALOR AGREGADO, EL RESTO SON OPCIONALES (A CONSIDERACIÓN DE LA JUNTA / DCA)</p></h3>
         <p>Evalúa del 1 al 10 los siguientes aspectos siendo 1 la menor nota y 10 la máxima nota:</p>
         <div class="row">
           <div class="half">
-            <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan satisfecho estás con el espacio brindado? *</label>
+            <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan satisfecho te sientes con el espacio brindado? *</label>
             <select id="pregunta1">
-              <option value="" disabled selected hidden>Califica de 1 a 10.</option>
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -631,7 +644,7 @@
           <div class="half">
             <label for="pregunta2"><b>2️⃣ </b> ¿Qué tanto aprendiste por haber asistido al espacio? *</label>
             <select id="pregunta2">
-              <option value="" disabled selected hidden>Califica de 1 a 10.</option>
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -649,7 +662,7 @@
           <div class="half">
             <label for="pregunta3"><b>3️⃣ </b> Evalúa la calidad del ponente/organizador del espacio. *</label>
             <select id="pregunta3">
-              <option value="" disabled selected hidden>Califica de 1 a 10.</option>
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -1087,7 +1100,7 @@
       // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
       });
     }
-
+/*
     const modoSwitch = document.getElementById('modo-switch');
     const body = document.body;
     const logos = document.querySelectorAll('.logo');
@@ -1116,7 +1129,7 @@
         });
       }
     });
-
+*/
     // Función para convertir números en emojis
     function numeroAEmoji(numero) {
       if (numero < 10) {
@@ -1201,16 +1214,101 @@
     }
 
     function evaluarEspacio() {
-      // Obtener los valores de los campos
+      var nombreEspacio = document.getElementById("nombre-espacio").value;
+      var capituloEspacio = document.getElementById("capitulo-espacio").value;
+
+      var fechaHoy = new Date();
+      // Formatear la fecha de hoy en el formato YYYY-MM-DD
+      var dia = String(fechaHoy.getDate()).padStart(2, '0');
+      var mes = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+      var año = fechaHoy.getFullYear();
+      var fechaHoy = año + '-' + mes + '-' + dia;
+
+      var tresSemanasAtras = new Date();
+      tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21); // Restar 21 días para tres semanas
+      // Formatear la fecha de tres semanas atrás en el formato YYYY-MM-DD
+      var diaa = String(tresSemanasAtras.getDate()).padStart(2, '0');
+      var mess = String(tresSemanasAtras.getMonth() + 1).padStart(2, '0');
+      var añoo = tresSemanasAtras.getFullYear();
+      var fechaTresSemanasAtras = añoo + '-' + mess + '-' + diaa;
+      console.log("fechaTresSemanasAtras")
+      console.log(fechaTresSemanasAtras)
+      console.log("fechaHoy")
+      console.log(fechaHoy)
+
+      // Verificar si hay campos faltantes
+      if (nombreEspacio === "" || capituloEspacio === "") {
+          // Decirle al usuario que no ha seleccionado un espacio a evaluar.
+          Swal.fire({
+              icon: 'error',
+              title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR!',
+              text: 'Debes seleccionar el nombre del espacio que quieres evaluar antes de continuar.',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,
+              allowEscapeKey: true,
+              imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+              imageWidth: 120, // Ancho de la imagen en píxeles
+              imageHeight: 235, // Alto de la imagen en píxeles
+              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener el proceso de evaluación
+      }
+        // Obtener los valores de los campos
       var nombreAsistente = document.getElementById("nombre-asistente").value;
       var telefonoAsistente = document.getElementById("telefono-asistente").value;
       var correoAsistente = document.getElementById("correo-asistente").value;
-      var capituloEspacio = document.getElementById("capitulo-espacio").value;
-      var nombreEspacio = document.getElementById("nombre-espacio").value;
+      correoAsistente = correoAsistente.toLowerCase();
       var pregunta1 = document.getElementById("pregunta1").value;
       var pregunta2 = document.getElementById("pregunta2").value;
       var pregunta3 = document.getElementById("pregunta3").value;
       var comentarios = document.getElementById("pregunta4").value;
+
+      var reservasRef = firebase.firestore().collection("reservas");
+      var eventoRef = reservasRef.where("capitulo", "==", capituloEspacio).where("nombreEvento", "==", nombreEspacio)
+                                 .where("fechaEvento", ">=", fechaTresSemanasAtras).where("fechaEvento", "<=", fechaHoy);
+
+      eventoRef.get().then(function(querySnapshot) {
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+                var correosAsistentes = (data.correosAsistentes || "").toLowerCase(); // Obtener la cadena de correos o usar una cadena vacía si es null o undefined
+                if (correoAsistente !== "" && correosAsistentes.includes(correoAsistente)) {
+                    // El usuario ya evaluó este espacio
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡YA EVALUASTE ESTE ESPACIO!',
+                        text: 'Ya has enviado una evaluación para este espacio recientemente.',
+                        confirmButtonText: 'Aceptar',
+                        allowOutsideClick: true,
+                        backdrop: true,
+                        allowEscapeKey: true,
+                        imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+                        imageWidth: 120, // Ancho de la imagen en píxeles
+                        imageHeight: 235, // Alto de la imagen en píxeles
+                        imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                    });
+                    return; // Detener el proceso de evaluación
+                }
+            });
+        }
+      }).catch(function(error) {
+        console.error("Error al verificar la evaluación del espacio:", error);
+        // Mostrar mensaje de error
+        Swal.fire({
+            icon: 'error',
+            title: '¡ERROR AL VERIFICAR LA EVALUACIÓN!',
+            text: 'Ocurrió un error al verificar si ya has evaluado este espacio. Por favor, intenta nuevamente.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+      });
 
       // Crear una lista para almacenar los nombres de los campos faltantes
       var camposFaltantes = [];
@@ -1240,7 +1338,7 @@
       if (pregunta3 === "") {
           camposFaltantes.push(" - Pregunta 3");
       }
-
+      // Resto del código antiguo...
       // Verificar si hay campos faltantes
       if (camposFaltantes.length > 0) {
           // Mostrar una alerta con los campos faltantes
@@ -1262,28 +1360,6 @@
 
       // Si todos los campos están diligenciados, continuar con el proceso de evaluación
       // Actualizar la información del evento en la base de datos
-      var fechaHoy = new Date();
-      // Formatear la fecha de hoy en el formato YYYY-MM-DD
-      var dia = String(fechaHoy.getDate()).padStart(2, '0');
-      var mes = String(fechaHoy.getMonth() + 1).padStart(2, '0');
-      var año = fechaHoy.getFullYear();
-      var fechaHoy = año + '-' + mes + '-' + dia;
-
-      var tresSemanasAtras = new Date();
-      tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21); // Restar 21 días para tres semanas
-      // Formatear la fecha de tres semanas atrás en el formato YYYY-MM-DD
-      var diaa = String(tresSemanasAtras.getDate()).padStart(2, '0');
-      var mess = String(tresSemanasAtras.getMonth() + 1).padStart(2, '0');
-      var añoo = tresSemanasAtras.getFullYear();
-      var fechaTresSemanasAtras = añoo + '-' + mess + '-' + diaa;
-      console.log("fechaTresSemanasAtras")
-      console.log(fechaTresSemanasAtras)
-      console.log("fechaHoy")
-      console.log(fechaHoy)
-
-      var reservasRef = firebase.firestore().collection("reservas");
-      var eventoRef = reservasRef.where("capitulo", "==", capituloEspacio).where("nombreEvento", "==", nombreEspacio)
-                                 .where("fechaEvento", ">=", fechaTresSemanasAtras).where("fechaEvento", "<=", fechaHoy);
 
       eventoRef.get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
@@ -1344,13 +1420,9 @@
                 // Mostrar mensaje de éxito
                 mostrarMensajeEvaluar();
 
-                // Reiniciar los campos del formulario que no son los 3 datos personales del asistente en caso de que quiera volver a llenar para otro espacio diferente.
-                document.getElementById("capitulo-espacio").value = "";
-                document.getElementById("nombre-espacio").value = "";
-                document.getElementById("pregunta1").value = "";
-                document.getElementById("pregunta2").value = "";
-                document.getElementById("pregunta3").value = "";
-                document.getElementById("pregunta4").value = "";
+                // Reiniciar los campos del formulario en caso de que quiera volver a llenar para otro espacio diferente.
+                limpiarEvaluacion();
+
                 var content = document.getElementById("acordeon4-content");
                 content.style.display = "none";
                 }).catch(function(error) {
@@ -1746,7 +1818,7 @@
       });
 
     }
-    
+
   </script>
 
 </body>
