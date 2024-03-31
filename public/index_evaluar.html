@@ -1270,27 +1270,150 @@
 
       eventoRef.get().then(function(querySnapshot) {
         if (!querySnapshot.empty) {
-            querySnapshot.forEach(function(doc) {
-                var data = doc.data();
-                var correosAsistentes = (data.correosAsistentes || "").toLowerCase(); // Obtener la cadena de correos o usar una cadena vacía si es null o undefined
-                if (correoAsistente !== "" && correosAsistentes.includes(correoAsistente)) {
-                    // El usuario ya evaluó este espacio
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '¡YA EVALUASTE ESTE ESPACIO!',
-                        text: 'Ya has enviado una evaluación para este espacio recientemente.',
-                        confirmButtonText: 'Aceptar',
-                        allowOutsideClick: true,
-                        backdrop: true,
-                        allowEscapeKey: true,
-                        imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-                        imageWidth: 120, // Ancho de la imagen en píxeles
-                        imageHeight: 235, // Alto de la imagen en píxeles
-                        imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-                    });
-                    return; // Detener el proceso de evaluación
-                }
-            });
+          querySnapshot.forEach(function(doc) {
+              var data = doc.data();
+              var correosAsistentes = (data.correosAsistentes || "").toLowerCase(); // Obtener la cadena de correos o usar una cadena vacía si es null o undefined
+              if (correoAsistente !== "" && correosAsistentes.includes(correoAsistente)) {
+                  // El usuario ya evaluó este espacio
+                  Swal.fire({
+                      icon: 'warning',
+                      title: '¡YA EVALUASTE ESTE ESPACIO!',
+                      html: 'Ya has enviado una evaluación para este espacio recientemente con tu correo: <strong>' + correoAsistente + '</strong>.<br>' +
+                            'Recuerda que solo puedes evaluar cada espacio una vez. Si necesitas consultar tu respuesta o crees que se trata de un error, por favor comunícate con tu DCA.',
+                      confirmButtonText: 'Aceptar',
+                      allowOutsideClick: true,
+                      backdrop: true,
+                      allowEscapeKey: true,
+                      imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+                      imageWidth: 120, // Ancho de la imagen en píxeles
+                      imageHeight: 235, // Alto de la imagen en píxeles
+                      imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                  });
+                  return; // Detener el proceso de evaluación
+              }
+            // En caso de que no esté ya registrado el correo, le dejará seguir el proceso de evaluación
+            // Crear una lista para almacenar los nombres de los campos faltantes
+            var camposFaltantes = [];
+
+            // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
+            if (nombreAsistente.trim() === "") {camposFaltantes.push(" - Nombre del asistente");}
+            if (telefonoAsistente.trim() === "") {camposFaltantes.push(" - Teléfono del asistente");}
+            if (correoAsistente.trim() === "") {camposFaltantes.push(" - Correo del asistente");}
+            if (capituloEspacio === "") {camposFaltantes.push(" - Capítulo que organizó el espacio");}
+            if (nombreEspacio === "") {camposFaltantes.push(" - Nombre del espacio a evaluar");}
+            if (pregunta1 === "") {camposFaltantes.push(" - Pregunta 1");}
+            if (pregunta2 === "") {camposFaltantes.push(" - Pregunta 2");}
+            if (pregunta3 === "") {camposFaltantes.push(" - Pregunta 3");}
+            // Verificar si hay campos faltantes
+            if (camposFaltantes.length > 0) {
+                // Mostrar una alerta con los campos faltantes
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+                    text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+                    imageWidth: 120, // Ancho de la imagen en píxeles
+                    imageHeight: 235, // Alto de la imagen en píxeles
+                    imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                });
+                return; // Detener el proceso de evaluación
+            }
+
+
+            // Si todos los campos están diligenciados, continuar con el proceso de evaluación
+            // Actualizar la información del evento en la base de datos
+            eventoRef.get().then(function(querySnapshot) {
+              querySnapshot.forEach(function(doc) {
+                  var data = doc.data();
+
+                  // Incrementar los contadores según las respuestas a las preguntas
+                  if (pregunta1 === "1" || pregunta1 === "2" || pregunta1 === "3" || pregunta1 === "4" || pregunta1 === "5" || pregunta1 === "6") {
+                      // Detractor
+                      data.detractores = (data.detractores || 0) + 1;
+                  } else if (pregunta1 === "7" || pregunta1 === "8") {
+                      // Pasivo
+                      data.pasivos = (data.pasivos || 0) + 1;
+                  } else {
+                      // Promotor
+                      data.promotores = (data.promotores || 0) + 1;
+                  }
+
+                  if (pregunta2 === "1" || pregunta2 === "2" || pregunta2 === "3" || pregunta2 === "4" || pregunta2 === "5" || pregunta2 === "6") {
+                      data.detractores = (data.detractores || 0) + 1;
+                  } else if (pregunta2 === "7" || pregunta2 === "8") {
+                      data.pasivos = (data.pasivos || 0) + 1;
+                  } else {
+                      data.promotores = (data.promotores || 0) + 1;
+                  }
+
+                  if (pregunta3 === "1" || pregunta3 === "2" || pregunta3 === "3" || pregunta3 === "4" || pregunta3 === "5" || pregunta3 === "6") {
+                      data.detractores = (data.detractores || 0) + 1;
+                  } else if (pregunta3 === "7" || pregunta3 === "8") {
+                      data.pasivos = (data.pasivos || 0) + 1;
+                  } else {
+                      data.promotores = (data.promotores || 0) + 1;
+                  }
+
+                  // Almacenar respuestas en los campos correspondientes
+                  data.respuestas1 = (data.respuestas1 || "") + pregunta1 + "|" ;
+                  data.respuestas2 = (data.respuestas2 || "") + pregunta2 + "|" ;
+                  data.respuestas3 = (data.respuestas3 || "") + pregunta3 + "|" ;
+
+                  // Actualizar comentarios y datos personales del asistente
+                  if (comentarios.trim() !== "") {
+                      data.comentarios = (data.comentarios || "") + comentarios + "|" ;
+                  } else {data.comentarios = (data.comentarios || "") + "Ninguno.|"}
+
+                  data.asistentes = (data.asistentes || "") + nombreAsistente + "|";
+                  data.correosAsistentes = (data.correosAsistentes || "") + correoAsistente + "|" ;
+                  data.telefonosAsistentes = (data.telefonosAsistentes || "") +  telefonoAsistente + "|" ;
+
+                  // Recalcular satisfacción
+                  console.log("Promotores:", data.promotores);
+                  console.log("Pasivos:", data.pasivos);
+                  console.log("Detractores:", data.detractores);
+                  var satisfaccion = (data.promotores - data.detractores) / (data.promotores + data.pasivos + data.detractores);
+                  console.log("La satisfacción es: " + satisfaccion)
+                  data.satisfaccion = satisfaccion;
+
+                  // Actualizar el evento en la base de datos
+                  reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
+                      // Mostrar mensaje de éxito
+                      mostrarMensajeEvaluar();
+
+                      // Reiniciar los campos del formulario en caso de que quiera volver a llenar para otro espacio diferente.
+                      limpiarEvaluacion();
+
+                      var content = document.getElementById("acordeon4-content");
+                      content.style.display = "none";
+                      }).catch(function(error) {
+                          console.error("Error actualizando el evento:", error);
+                          // Mostrar mensaje de error
+                          Swal.fire({
+                              icon: 'error',
+                              title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
+                              text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
+                              confirmButtonText: 'Aceptar'
+                          });
+                      });
+                  });
+              }).catch(function(error) {
+                  console.error("Error obteniendo el evento:", error);
+                  // Mostrar mensaje de error
+                  Swal.fire({
+                      icon: 'error',
+                      title: '¡ERROR AL OBTENER EL EVENTO!',
+                      text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
+                      confirmButtonText: 'Aceptar'
+                  });
+              });
+
+            //Se termina el proceso de evaluación
+          });
         }
       }).catch(function(error) {
         console.error("Error al verificar la evaluación del espacio:", error);
@@ -1309,143 +1432,6 @@
             imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
         });
       });
-
-      // Crear una lista para almacenar los nombres de los campos faltantes
-      var camposFaltantes = [];
-
-      // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
-      if (nombreAsistente.trim() === "") {
-          camposFaltantes.push(" - Nombre del asistente");
-      }
-      if (telefonoAsistente.trim() === "") {
-          camposFaltantes.push(" - Teléfono del asistente");
-      }
-      if (correoAsistente.trim() === "") {
-          camposFaltantes.push(" - Correo del asistente");
-      }
-      if (capituloEspacio === "") {
-          camposFaltantes.push(" - Capítulo que organizó el espacio");
-      }
-      if (nombreEspacio === "") {
-          camposFaltantes.push(" - Nombre del espacio a evaluar");
-      }
-      if (pregunta1 === "") {
-          camposFaltantes.push(" - Pregunta 1");
-      }
-      if (pregunta2 === "") {
-          camposFaltantes.push(" - Pregunta 2");
-      }
-      if (pregunta3 === "") {
-          camposFaltantes.push(" - Pregunta 3");
-      }
-      // Resto del código antiguo...
-      // Verificar si hay campos faltantes
-      if (camposFaltantes.length > 0) {
-          // Mostrar una alerta con los campos faltantes
-          Swal.fire({
-              icon: 'error',
-              title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
-              text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
-              confirmButtonText: 'Aceptar',
-              allowOutsideClick: true,
-              backdrop: true,
-              allowEscapeKey: true,
-              imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener el proceso de evaluación
-      }
-
-      // Si todos los campos están diligenciados, continuar con el proceso de evaluación
-      // Actualizar la información del evento en la base de datos
-
-      eventoRef.get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            var data = doc.data();
-
-            // Incrementar los contadores según las respuestas a las preguntas
-            if (pregunta1 === "1" || pregunta1 === "2" || pregunta1 === "3" || pregunta1 === "4" || pregunta1 === "5" || pregunta1 === "6") {
-                // Detractor
-                data.detractores = (data.detractores || 0) + 1;
-            } else if (pregunta1 === "7" || pregunta1 === "8") {
-                // Pasivo
-                data.pasivos = (data.pasivos || 0) + 1;
-            } else {
-                // Promotor
-                data.promotores = (data.promotores || 0) + 1;
-            }
-
-            if (pregunta2 === "1" || pregunta2 === "2" || pregunta2 === "3" || pregunta2 === "4" || pregunta2 === "5" || pregunta2 === "6") {
-                data.detractores = (data.detractores || 0) + 1;
-            } else if (pregunta2 === "7" || pregunta2 === "8") {
-                data.pasivos = (data.pasivos || 0) + 1;
-            } else {
-                data.promotores = (data.promotores || 0) + 1;
-            }
-
-            if (pregunta3 === "1" || pregunta3 === "2" || pregunta3 === "3" || pregunta3 === "4" || pregunta3 === "5" || pregunta3 === "6") {
-                data.detractores = (data.detractores || 0) + 1;
-            } else if (pregunta3 === "7" || pregunta3 === "8") {
-                data.pasivos = (data.pasivos || 0) + 1;
-            } else {
-                data.promotores = (data.promotores || 0) + 1;
-            }
-
-            // Almacenar respuestas en los campos correspondientes
-            data.respuestas1 = (data.respuestas1 || "") + pregunta1 + "|" ;
-            data.respuestas2 = (data.respuestas2 || "") + pregunta2 + "|" ;
-            data.respuestas3 = (data.respuestas3 || "") + pregunta3 + "|" ;
-
-            // Actualizar comentarios y datos personales del asistente
-            if (comentarios.trim() !== "") {
-                data.comentarios = (data.comentarios || "") + comentarios + "|" ;
-            } else {data.comentarios = (data.comentarios || "") + "Ninguno.|"}
-
-            data.asistentes = (data.asistentes || "") + nombreAsistente + "|";
-            data.correosAsistentes = (data.correosAsistentes || "") + correoAsistente + "|" ;
-            data.telefonosAsistentes = (data.telefonosAsistentes || "") +  telefonoAsistente + "|" ;
-
-            // Recalcular satisfacción
-            console.log("Promotores:", data.promotores);
-            console.log("Pasivos:", data.pasivos);
-            console.log("Detractores:", data.detractores);
-            var satisfaccion = (data.promotores - data.detractores) / (data.promotores + data.pasivos + data.detractores);
-            console.log("La satisfacción es: " + satisfaccion)
-            data.satisfaccion = satisfaccion;
-
-            // Actualizar el evento en la base de datos
-            reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
-                // Mostrar mensaje de éxito
-                mostrarMensajeEvaluar();
-
-                // Reiniciar los campos del formulario en caso de que quiera volver a llenar para otro espacio diferente.
-                limpiarEvaluacion();
-
-                var content = document.getElementById("acordeon4-content");
-                content.style.display = "none";
-                }).catch(function(error) {
-                    console.error("Error actualizando el evento:", error);
-                    // Mostrar mensaje de error
-                    Swal.fire({
-                        icon: 'error',
-                        title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
-                        text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
-                        confirmButtonText: 'Aceptar'
-                    });
-                });
-            });
-        }).catch(function(error) {
-            console.error("Error obteniendo el evento:", error);
-            // Mostrar mensaje de error
-            Swal.fire({
-                icon: 'error',
-                title: '¡ERROR AL OBTENER EL EVENTO!',
-                text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
-                confirmButtonText: 'Aceptar'
-            });
-        });
 
     }
 
