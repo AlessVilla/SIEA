@@ -740,6 +740,7 @@
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
     var correoUsuario = "asociado@aneiap.co"; //deben estar vacías, solo que tengo flojera de iniciar sesión.
     var capituloUsuario = "asociado";
+    var escogioPublicidadNacional = "no";
 
     // Esta función permite cambiar la visibilidad de los campos "ubicación/plataforma" y "lugar presencial"
     // en la sección "REGISTRAR RESERVA (AC1)" según la modalidad seleccionada.
@@ -1016,8 +1017,6 @@
           }
 
         // Si todas las verificaciones son exitosas, continuar con el registro del evento
-                // Guardar los datos del registro.
-
         //PRIMERO VERIFICA QUE HAYA DISPONIBILIDAD PARA CUANDO INGRESÓ LA FECHA, HORA Y DURACIÓN
         verificarDisponibilidadRegistro().then(function(result) {
           if (!result) {
@@ -1047,8 +1046,30 @@
             var observacionesPublicidad = document.getElementById("observaciones-publicidad").value;
             var fotoPonenteURL = document.getElementById("foto-ponente").value;
 
-            agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-            enviarCorreoRegistro(claveEvento,emailOrganizador);
+            if (publicidadComite === "si") {
+              // Mostrar swal.fire para que el usuario seleccione la opción de publicidad
+              swal.fire({
+                  title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular?',
+                  showDenyButton: true,
+                  showCloseButton: false, // Oculta el botón de cerrar
+                  allowOutsideClick: false, // Impide cerrar haciendo clic afuera
+                  confirmButtonText: `Nacional`,
+                  denyButtonText: `Capitular`,
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      // Si el usuario elige enviar a nivel nacional
+                      enviarSolicitudPublicidadRegistro(claveEvento, "si");
+                      agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
+                      enviarCorreoRegistro(claveEvento);
+                  } else if (result.isDenied) {
+                      // Si el usuario elige enviar a nivel capitular
+                      enviarSolicitudPublicidadRegistro(claveEvento, "no");
+                      agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
+                      enviarCorreoRegistro(claveEvento);
+                  }
+              });
+            }
+
           }
         }).catch(function(error) {
             // Maneja cualquier error que pueda ocurrir durante la verificación
@@ -1218,10 +1239,6 @@
         `;
       }
 
-      if (publicidadComiteReserva === "si") {
-        enviarSolicitudPublicidadRegistro(claveReservaCreada);
-      }
-
       // Mensaje de correo con los datos adicionales
       const mensaje = `
         <html>
@@ -1278,6 +1295,7 @@
             document.getElementById("observaciones-evento").value = "";
             document.getElementById("nombre-organizador").value = "";
             document.getElementById("email-organizador").value = "";
+            document.getElementById("capitulo-organizador").value = "";
             document.getElementById("telefono-organizador").value = "";
             document.getElementById("nombre-ponente").value = "";
             document.getElementById("email-ponente").value = "";
@@ -1301,7 +1319,7 @@
     }
 
     // Función para enviar el correo de solicitud de publicidad
-    function enviarSolicitudPublicidadRegistro(claveReservaCreada) {
+    function enviarSolicitudPublicidadRegistro(claveReservaCreada, escogioPublicidadNacional) {
     // Función para enviar el correo de solicitud de publicidad
       // Obtener el correo del comité de piezas publicitarias
       const capitulo = document.getElementById("capitulo-organizador").value;
@@ -1310,7 +1328,7 @@
         uniguajira: "comunicaciones_uniguajira@aneiap.co",
         unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
         uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
-        uninorte: "comunicaciones_uninorte@aneiap.co",
+        uninorte: "comunicaciones_uninorte@aneiap.co, jorly.sarmiento@aneiap.co",
         cuc: "comunicaciones_cuc@aneiap.co",
         librequilla: "comunicaciones_librequilla@aneiap.co",
         utb: "comunicaciones_utb@aneiap.co",
@@ -1329,7 +1347,16 @@
         nacional: "proy_diseno_nacional@aneiap.co"
       };
 
-      const correoDestino = bancoCorreos[capitulo];
+      // Obtener el correo de destino dependiendo de la elección del usuario
+      let correoDestino = "";
+      if (escogioPublicidadNacional === "no") {
+          // Obtener el correo del comité de piezas publicitarias del capítulo
+          correoDestino = bancoCorreos[capitulo];
+      } else if (escogioPublicidadNacional === "si") {
+          // Enviar la solicitud al comité de piezas publicitarias nacional
+          correoDestino = "proy_diseno_nacional@aneiap.co";
+      }
+
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva = document.getElementById("email-organizador").value;
       const nombreOrganizadorReserva = document.getElementById("nombre-organizador").value;
