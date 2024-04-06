@@ -1068,6 +1068,9 @@
                       enviarCorreoRegistro(claveEvento);
                   }
               });
+            } else {
+              agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
+              enviarCorreoRegistro(claveEvento);
             }
 
           }
@@ -1295,7 +1298,7 @@
             document.getElementById("observaciones-evento").value = "";
             document.getElementById("nombre-organizador").value = "";
             document.getElementById("email-organizador").value = "";
-            document.getElementById("capitulo-organizador").value = "";
+            document.getElementById("email-organizador").value = "";
             document.getElementById("telefono-organizador").value = "";
             document.getElementById("nombre-ponente").value = "";
             document.getElementById("email-ponente").value = "";

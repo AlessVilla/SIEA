@@ -2992,14 +2992,51 @@
                 var observacionesPublicidadReserva = document.getElementById("observaciones-publicidad-reserva").value;
                 var fotoPonenteURLReserva = document.getElementById("foto-ponente-reserva").value;
 
-                enviarCorreoEdicion();
-                editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
-                // Restablecer los campos a su valor por defecto (vacío)
-                // Ocultar el contenido del acordeón datos-reserva-container
-                var datosReservaContainer = document.getElementById("datos-reserva-container");
-                datosReservaContainer.style.display = "none";
-                var content = document.getElementById("acordeon2-content");
-                content.style.display = "none";
+                if (publicidadComiteReserva === "si") {
+                  // Mostrar swal.fire para que el usuario seleccione la opción de publicidad
+                  swal.fire({
+                      title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular?',
+                      showDenyButton: true,
+                      showCloseButton: false, // Oculta el botón de cerrar
+                      allowOutsideClick: false, // Impide cerrar haciendo clic afuera
+                      confirmButtonText: `Nacional`,
+                      denyButtonText: `Capitular`,
+                  }).then((result) => {
+                      if (result.isConfirmed) {
+                          // Si el usuario elige enviar a nivel nacional
+                          enviarSolicitudPublicidadEdicion("si");
+                          enviarCorreoEdicion();
+                          editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
+                          // Restablecer los campos a su valor por defecto (vacío)
+                          // Ocultar el contenido del acordeón datos-reserva-container
+                          var datosReservaContainer = document.getElementById("datos-reserva-container");
+                          datosReservaContainer.style.display = "none";
+                          var content = document.getElementById("acordeon2-content");
+                          content.style.display = "none";
+                      } else if (result.isDenied) {
+                        // Si el usuario elige enviar a nivel capitular
+                        enviarSolicitudPublicidadEdicion("no");
+                        enviarCorreoEdicion();
+                        editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
+                        // Restablecer los campos a su valor por defecto (vacío)
+                        // Ocultar el contenido del acordeón datos-reserva-container
+                        var datosReservaContainer = document.getElementById("datos-reserva-container");
+                        datosReservaContainer.style.display = "none";
+                        var content = document.getElementById("acordeon2-content");
+                        content.style.display = "none";
+                      }
+                  });
+                } else {
+                  enviarCorreoEdicion();
+                  editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
+                  // Restablecer los campos a su valor por defecto (vacío)
+                  // Ocultar el contenido del acordeón datos-reserva-container
+                  var datosReservaContainer = document.getElementById("datos-reserva-container");
+                  datosReservaContainer.style.display = "none";
+                  var content = document.getElementById("acordeon2-content");
+                  content.style.display = "none";
+                }
+                
               }
             }).catch(function(error) {
               // Maneja cualquier error que pueda ocurrir durante la verificación
@@ -3894,10 +3931,6 @@
         `;
       }
 
-      if (publicidadComiteReserva === "si") {
-        enviarSolicitudPublicidadEdicion();
-      }
-
       // Mensaje de correo con los datos adicionales
       const mensaje = `
         <html>
@@ -3956,14 +3989,14 @@
     }
 
     // Función para enviar el correo de solicitud de publicidad
-    function enviarSolicitudPublicidadEdicion() {
+    function enviarSolicitudPublicidadEdicion(escogioPublicidadNacional) {
       // Obtener el correo del comité de piezas publicitarias
       // Banco de correos asociados a cada capítulo
       const bancoCorreos = {
         uniguajira: "comunicaciones_uniguajira@aneiap.co",
         unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
         uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
-        uninorte: "comunicaciones_uninorte@aneiap.co",
+        uninorte: "comunicaciones_uninorte@aneiap.co, jorly.sarmiento@aneiap.co",
         cuc: "comunicaciones_cuc@aneiap.co",
         librequilla: "comunicaciones_librequilla@aneiap.co",
         utb: "comunicaciones_utb@aneiap.co",
@@ -3984,7 +4017,15 @@
 
       // Obtener el correo del comité de piezas publicitarias según el capítulo
       const capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
-      const correoDestino = bancoCorreos[capituloReserva];
+      // Obtener el correo de destino dependiendo de la elección del usuario
+      let correoDestino = "";
+      if (escogioPublicidadNacional === "no") {
+          // Obtener el correo del comité de piezas publicitarias del capítulo
+          correoDestino = bancoCorreos[capitulo];
+      } else if (escogioPublicidadNacional === "si") {
+          // Enviar la solicitud al comité de piezas publicitarias nacional
+          correoDestino = "proy_diseno_nacional@aneiap.co";
+      }
 
       // Datos adicionales de la solicitud de publicidad
       const emailOrganizadorReserva= document.getElementById("email-organizador-reserva").value;
