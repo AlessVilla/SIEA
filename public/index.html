@@ -3488,6 +3488,24 @@
         return true; // Todos los campos están llenos y son válidos
         }
 
+    function activarConsultaDisponibilidad() {
+      // Obtener referencias a los elementos de fecha y capítulo
+      var fechaInput = document.getElementById("fecha-consulta");
+      var capituloSelect = document.getElementById("capitulo-consulta");
+
+      // Agregar event listener para cambio de fecha
+      fechaInput.addEventListener("change", function() {
+        ConsultarDisponibilidadReservas();
+      });
+
+      // Agregar event listener para cambio de capítulo
+      capituloSelect.addEventListener("change", function() {
+        ConsultarDisponibilidadReservas();
+      });
+    }
+    // Listener combo para que se active la consulta de disponibilidad cada vez que den click a una fecha o capítulo.
+    document.addEventListener("DOMContentLoaded", function() {activarConsultaDisponibilidad();});
+    
     function ConsultarDisponibilidadReservas() {
       var fechaConsulta = document.getElementById("fecha-consulta").value;
       var capituloConsulta = document.getElementById("capitulo-consulta").value;
@@ -3591,7 +3609,7 @@
             disponibilidadItems[i].style.backgroundColor = "red"; // Establecer fondo rojo para intervalo ocupado
           }
         }
-
+        /* oculto el swal.fire para que no moleste.
         // Mostrar mensaje de éxito
         Swal.fire({
           title: '¡CONSULTA DE DISPONIBILIDAD REALIZADA!',
@@ -3606,7 +3624,7 @@
           imageHeight: 235, // Alto de la imagen en píxeles
           imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
         });
-
+        */
         // Construir la sección de eventos programados
         var eventosProgramadosDiv = document.getElementById("eventos-programados");
         eventosProgramadosDiv.innerHTML = ""; // Limpiar el contenido anterior
@@ -3660,6 +3678,24 @@
         }
     }
 
+    function activarConsultaSemanal() {
+      // Obtener referencias a los elementos de fecha y capítulo
+      var fechaInput = document.getElementById("fecha-consulta-semanal");
+      var capituloSelect = document.getElementById("capitulo-consulta-semanal");
+
+      // Agregar event listener para cambio de fecha
+      fechaInput.addEventListener("change", function() {
+        ConsultarDisponibilidadSemanal();
+      });
+
+      // Agregar event listener para cambio de capítulo
+      capituloSelect.addEventListener("change", function() {
+        ConsultarDisponibilidadSemanal();
+      });
+    }
+    // Listener combo para que se active la consulta de disponibilidad cada vez que den click a una fecha o capítulo.
+    document.addEventListener("DOMContentLoaded", function() {activarConsultaSemanal();});
+    
     function ConsultarDisponibilidadSemanal() {
       var fechaConsultaDirecta = document.getElementById("fecha-consulta-semanal").value;
       var fechaConsulta = new Date(document.getElementById("fecha-consulta-semanal").value);
