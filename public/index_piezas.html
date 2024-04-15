@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Descargar SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<head>
+  <title>¡RESERVA TUS ESPACIOS CON SIEA! 💚💙</title>
+  <title>Reserva tu espacio, evento, capacitación, integración, etc., de forma automática en SIEA 💚💙</title>
+  <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <!-- incluir el plugin de anotación de Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+  <!-- Agrega el SDK de Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Cloud Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+  <!-- Agrega la biblioteca para enviar correos en Email.js -->  
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <!-- Agrega la biblioteca para enviar correos por API Gmail -->  
+  <script src="https://apis.google.com/js/client.js"></script>
+  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Importar el google auth provider para autenticar con google -->  
+  <!-- <script import { GoogleAuthProvider } from "firebase/auth"></script> -->  
+  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Agrega la biblioteca Google API Client -->  
+  <script src="https://apis.google.com/js/api.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIEA 💚💙</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Incluir Chart.js desde una CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Incluir el archivo JavaScript desde la carpeta config dentro del repositorio -->
+  <script>
+    /*ENCUESTAS DE SATISFACCIÓN SIEA
+    Evalúa tu espacio o evento de forma automática con el Sistema Integral de Espacios Documental.*/
+    var firebaseConfig = {
+        apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
+        authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
+        projectId: "bddreservaaneiapuninorte",
+        storageBucket: "bddreservaaneiapuninorte.appspot.com",
+        messagingSenderId: "227754886829",
+        appId: "1:227754886829:web:00047755b1aaa727242824",
+        measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const firestore = firebase.firestore();
+  </script>
+
+  <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
+  <style>
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
+    @font-face {
+      font-family: 'Century Gothic';
+      src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
+          url('ruta/a/la/fuente/CenturyGothic.woff') format('woff');
+      /* Agrega más formatos de fuentes si es necesario */
+      font-weight: normal;
+      font-style: normal;
+    }
+    /* Estilos para el contenedor de la imagen */
+    .centered-text {
+      text-align: center;
+    }
+    .image-container {
+      display: flex;
+      justify-content: center;
+      animation: slide-in 2s ease-in-out;
+    }
+    @keyframes slide-in {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    .image-container img {
+      max-width: 15%;
+      height: auto;
+      transition: transform 6s ease-in-out;
+    }
+    .image-container img:hover {
+      transform: rotate(4320deg);
+    }
+    /* Estilos para el cuadro de datos generales del evento */
+    .datos-generales,
+    .datos-organizador,
+    .datos-ponente {
+      background-color: rgb(253, 198, 166);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    /* Estilos para los campos de formulario */
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    select, textarea, input[type="text"], input[type="date"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      margin-top: 5px;
+      font-size: 18px;
+    }
+    h2 {
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+    .reserva {
+      background-color: darkgreen;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .row .half {
+      width: 48%;
+    }
+    .third {
+      flex-basis: 33.33%;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    .disponibilidad-group {
+      margin-bottom: 15px;
+      background-color: #c3d6ff; /* Color de fondo azul muy claro */
+      padding: 10px;
+      border: 1px solid #0004ff; /* Borde azul */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }    
+    .reservar-group {
+      margin-bottom: 15px;
+      background-color: #a8f7a1D9; /* Color de fondo verde muy claro */
+      padding: 10px;
+      border: 1px solid #15ff00D9; /* Borde verde claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .editar-group {
+      margin-bottom: 15px;
+      background-color: #ffc67c; /* Color de fondo naranja muy claro */
+      padding: 10px;
+      border: 1px solid #ff9100; /* Borde naranja claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .eliminar-group {
+      margin-bottom: 15px;
+      background-color: #fd8c8ca4; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #ff0000a4; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .acordeon4-content-inner {
+      margin-bottom: 15px;
+      background-color: #D55DFF; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #9900CC; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .actualizar-group {
+      margin-bottom: 15px;
+      background-color: #cccccc; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #4d4d4d; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .pieza-group {
+      margin-bottom: 15px;
+      background-color: #76c04eD9; /* Color de fondo verde muy claro */
+      padding: 10px;
+      border: 1px solid #42bd00D9; /* Borde verde claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .radio-buttons-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* Espacio entre los botones SÍ y NO */
+    }
+    .custom-file-input {
+      display: inline-block;
+      position: relative;
+    }
+    .custom-file-input input[type="file"] {
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+    .custom-file-input label {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }    
+    .field-container {
+      background-color: #fff;
+      padding: 10px; /* Ajusta el valor según el espacio deseado entre el contenido y el borde */
+      border-radius: 5px; /* Ajusta el valor para cambiar la curvatura de las esquinas */
+    }
+    /* Estilos para los acordeones */
+    .acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5, .acordeon6 {
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .acordeon0 {
+      background-color: #307B98;
+    }
+    .acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .acordeon1 {
+      background-color: #00B30F;
+    }
+    .acordeon2 {
+      background-color: #F47B28;
+    }
+    .acordeon3 {
+      background-color: #DC1E1E;
+    }
+    .acordeon4 {
+      background-color: #600082;
+    }
+    .acordeon5 {
+      background-color: #4d4d4d;
+    }
+    .acordeon6 {
+      background-color: #0084ff;
+    }
+    .button-consultar-disponibilidad, .button-reservar, .button-consultar, .button-consultar, .button-evaluar, .button-eliminar, .button-actualizar, .button-enviar-pieza {
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 353px; /* Ocupar el ancho del contenedor */
+    }
+    .button-consultar-disponibilidad {
+      background-color: rgb(0, 4, 255);
+    }
+    .button-reservar {
+      background-color: rgb(0, 141, 37);
+    }
+    .button-consultar {
+      background-color: orange;
+    }
+    .button-eliminar {
+      background-color: red;
+    }
+    .button-evaluar {
+      background-color: #600082;
+    }
+    .button-actualizar {
+      background-color: #4d4d4d;
+    }
+    .button-enviar-pieza {
+      background-color: #307B98;
+    }
+    /* Estilo para los campos de correo del forms y contraseña */
+    input[type="email"],
+    input[type="password"] {
+      font-size: 18px; /* Mismo tamaño de fuente que el botón */
+      padding: 5px 10px;
+      margin-bottom: 10px; /* Espaciado inferior */
+      width: 150px; /* Ocupar el ancho del contenedor */
+    }
+    .disponibilidad-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .disponibilidad-item {
+      width: 100px;
+      height: 50px;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .disponibilidad-item.green {
+      background-color: green;
+    }
+    .disponibilidad-item.red {
+      background-color: red;
+    }
+    .disponibilidad-item.gray {
+      background-color: rgb(185, 185, 185);
+    }  
+    /* Estilos para el botón */
+    #modo-switch {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 60px; /* Aumenta el ancho del botón */
+      height: 40px; /* Aumenta la altura del botón */
+      background-color: #777777; /* Color de fondo del botón en light mode */
+      border-radius: 50%; /* Hace que el botón sea circular */
+      cursor: pointer;
+      border: none;
+      outline: none;
+      padding: 2px;
+      display: flex; /* Para centrar verticalmente el emoji */
+      justify-content: center; /* Para centrar horizontalmente el emoji */
+      align-items: center; /* Para centrar verticalmente el emoji */
+    }
+    /* Estilos para el ícono del sol */
+    .icon::before {
+      content: "\2600"; /* Código Unicode para el sol */
+      font-size: 28px; /* Aumenta el tamaño del emoji */
+      color: #ffcc00; /* Color del sol en light mode */
+      display: inline-block;
+    }
+    /* Estilos para el ícono de la luna */
+    .dark-mode .icon::before {
+      content: "\1F319"; /* Código Unicode para la luna */
+      color: #333; /* Color de la luna en dark mode */
+    }
+    body.light-mode {
+      background-color: white; /* Fondo blanco en el modo claro */
+      transition: background-color 1s ease; /* Efecto de transición suave */
+    }
+    body.dark-mode {
+      background-color: rgb(29, 29, 29); /* Fondo negro en el modo oscuro */
+      transition: background-color 1s ease; /* Efecto de transición suave */
+    }
+    body {
+      transition: background-color 1s ease; /* Efecto de transición suave para todo el cuerpo */
+      font-family: 'Century Gothic', sans-serif;
+    }
+    /* Estilo del texto en modo claro */
+    .light-mode {
+      color: black; /* Color del texto en modo claro */
+    }
+    .logo.dark-mode {
+      display: none; /* Oculta el logo del dark mode por defecto */
+    }
+    /* Estilo del texto en modo oscuro */
+    .dark-mode .light-mode {
+      color: white; /* Color del texto en modo oscuro */
+    }
+    /* Estilos para los títulos de documentos */
+    .document-title a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+    /* Estilos para los enlaces "AQUÍ" */
+    .document-link a {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+    /* Estilos para el icono de Word */
+    .document-link img {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+    }
+    .swal2-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .swal2-input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px; /* Ajusta según sea necesario */
+    }
+
+  </style>
+</head>
+<body class="dark-mode">
+
+  <script src="script.js"></script>
+  <div class="main-content">
+    <!-- El contenido principal de tu página va aquí -->
+  </div>
+
+<!-- DETALLES DEL ACORDEÓN 6 PARA SOLICITUD DE PIEZAS PUBLICITARIAS -->
+<div class="acordeon6">SOLICITUD DE PIEZAS PUBLICITARIAS 📢</div>
+<div id="acordeon6-content" style="display: block;">
+    <div class="acordeon6-content-inner">
+        <div class="pieza-group">
+            <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DE LA SOLICITUD 📋</p></h2>
+            <div class="row">
+                <div class="half">
+                    <label for="nombre-completo"><b>Nombre completo: *</b></label>
+                    <input type="text" id="nombre-completo" placeholder="Ingresa tu nombre completo.">
+                    <label for="correo-electronico"><b>Correo electrónico: *</b></label>
+                    <input type="text" id="correo-electronico" placeholder="Ingresa tu correo electrónico.">
+                    <label for="telefono"><b>Número de teléfono: *</b></label>
+                    <input type="tel" id="telefono" placeholder="Ingresa tu número de teléfono.">
+                    <label for="capitulo"><b>Capítulo: *</b></label>
+                    <select id="capitulo">
+                        <option value="" disabled selected hidden>Selecciona tu capítulo al que quieres enviar la solicitud de pieza.</option>
+                        <option value="uniguajira">UNIGUAJIRA</option>
+                        <option value="unimagdalena">UNIMAGDALENA</option>
+                        <option value="uniatlantico">UNIATLÁNTICO</option>
+                        <option value="uninorte">UNINORTE</option>
+                        <option value="cuc">CUC</option>
+                        <option value="librequilla">LIBREQUILLA</option>
+                        <option value="utb">UTB</option>
+                        <option value="ufps">UFPS</option>
+                        <option value="unalmed">UNALMED</option>
+                        <option value="udea">UDEA</option>
+                        <option value="upbmed">UPBMED</option>
+                        <option value="utp">UTP</option>
+                        <option value="unalma">UNALMA</option>
+                        <option value="udistrital">UDISTRITAL</option>
+                        <option value="unalbog">UNALBOG</option>
+                        <option value="univalle">UNIVALLE</option>
+                        <option value="icesi">ICESI</option>
+                        <option value="usc">USC</option>
+                        <option value="librecali">LIBRECALI</option>
+                        <option value="nacional">ANEIAP NACIONAL</option>
+                    </select>
+                    <label for="fecha-entrega"><b>Fecha de entrega: *</b></label>
+                    <input type="date" id="fecha-entrega">
+                </div>
+                <div class="half">
+                    <label for="nombre-pieza"><b>Nombre de la pieza: *</b></label>
+                    <input type="text" id="nombre-pieza" placeholder="Proyecto que solicita la pieza / nombre que desea para la pieza.">
+                    <label for="tipo-pieza"><b>Tipo de pieza: *</b></label>
+                    <select id="tipo-pieza">
+                        <option value="" disabled selected hidden>Selecciona el tipo de pieza</option>
+                        <option value="banner">Banner publicitario</option>
+                        <option value="flyer">Flyer</option>
+                        <option value="historia">Historia en Instagram</option>
+                        <option value="infografia">Infografía</option>
+                        <option value="portada">Portada de documento</option>
+                        <option value="post">Post en Instagram</option>
+                        <option value="poster">Póster</option>
+                        <option value="video">Video publicitario</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <label for="contenido-pieza"><b>Contenido de la pieza: *</b></label>
+                    <textarea id="contenido-pieza" rows="7" placeholder="Ingresa el contenido que deseas incluir en la pieza publicitaria, detalles de colores, márgenes, público objetivo, y demás información que consideres relevante para que la persona encargada de diseñarlo lo haga de la mejor manera posible para ti."></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="half">
+                    <label for="enlaces-recursos"><b>Enlaces a fotos o Recursos adicionales:</b></label>
+                    <input type="text" id="enlaces-recursos" placeholder="Ingresa enlaces a fotos o recursos adicionales.">
+                </div>
+                <div class="half">
+                    <label for="observaciones-adicionales"><b>Observaciones adicionales para la pieza:</b></label>
+                    <textarea id="observaciones-adicionales" rows="1" placeholder="Ingresa observaciones adicionales o requisitos específicos."></textarea>
+                </div>
+            </div>
+            <p style="font-size: 14px; text-align: center; margin-top: 20px;"><b>Todas las piezas publicitarias son enviadas con toda la información que diligencies al correo del comité de publicidad, con copia a tu correo, el de tu DCC y el de tu IC, para que todos puedan estar atentos a estas solicitudes, ¡disfruta de SIEA! 💙💚</b></p>
+            <button class="button-enviar-pieza" onclick="registrarSolicitudPieza()">ENVIAR SOLICITUD DE PIEZA</button>
+        </div>
+    </div>
+</div>
+
+  <script>
+
+    // Acá está la función para agregar un evento en la colección "piezas",
+    // también tiene en cuenta la posibilidad de adjuntar imágenes  y reiniciará los campos cuando se registren.
+    function agregarSolicitudPiezaFirestore(clavePieza,nombreCompleto,correoElectronico,telefono,capitulo,fechaEntrega,
+        nombrePieza,tipoPieza,contenidoPieza,enlacesRecursos,observacionesAdicionales
+        ) {
+        // Obtener una referencia a la colección "piezas" en Firestore
+        const db = firebase.firestore().collection("piezas");
+        db.doc(clavePieza).set({
+            clavePieza: clavePieza, // Agregar la clave como un campo adicional
+            nombreCompleto: nombreCompleto,
+            correoElectronico: correoElectronico,
+            telefono: telefono,
+            capitulo: capitulo,
+            fechaEntrega: fechaEntrega,
+            nombrePieza: nombrePieza,
+            tipoPieza: tipoPieza,
+            contenidoPieza: contenidoPieza,
+            enlacesRecursos: enlacesRecursos,
+            observacionesAdicionales: observacionesAdicionales,
+            // Agregar cualquier otro campo adicional que desees guardar para la solicitud de pieza
+            // ...
+        })
+            .then((docRef) => {
+            // Éxito: la solicitud de pieza se ha registrado correctamente en Firestore
+            // Aquí puedes agregar cualquier otra lógica que desees después de agregar la solicitud
+            // Muestra el mensaje de éxito al solicitar la pieza
+            mostrarMensajeSolicitarPieza();
+            })
+            .catch((error) => {
+            // Error: hubo un problema al registrar la solicitud de pieza
+            console.error("ERROR AL REGISTRAR LA SOLICITUD DE PIEZA: ", error);
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'Ha ocurrido un error al registrar la solicitud de pieza. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
+                icon: 'error',
+                imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
+                confirmButtonText: 'Aceptar',
+                imageWidth: 342, // Ancho de la imagen en píxeles
+                imageHeight: 200, // Alto de la imagen en píxeles
+                imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            });
+        }
+
+    // Esta función genera una clave de evento aleatoria.
+    // La clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
+    function generarClaveSolicitudPieza() {
+      // Definimos una cadena de caracteres que contendrá letras mayúsculas y dígitos.
+      var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789";
+      
+      // Especificamos la longitud deseada para la clave generada.
+      var longitud = 15;
+      
+      // Inicializamos una variable para almacenar la clave generada.
+      var claveGenerada = "";
+
+      // Iniciamos un bucle para generar cada carácter de la clave.
+      for (var i = 0; i < longitud; i++) {
+        // Generamos un número aleatorio entre 0 (inclusive) y la longitud de la cadena de caracteres.
+        var indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+        
+        // Agregamos el carácter correspondiente al índice aleatorio a la clave generada.
+        claveGenerada += caracteres.charAt(indiceAleatorio);
+      }
+
+      // Devolvemos la clave generada como resultado.
+      return claveGenerada;
+    }
+
+    function registrarSolicitudPieza() {
+        // Obtener valores de los campos
+        var nombreCompleto = document.getElementById("nombre-completo").value;
+        var correoElectronico = document.getElementById("correo-electronico").value;
+        var telefono = document.getElementById("telefono").value;
+        var capitulo = document.getElementById("capitulo").value;
+        var fechaEntrega = document.getElementById("fecha-entrega").value;
+        var nombrePieza = document.getElementById("nombre-pieza").value;
+        var tipoPieza = document.getElementById("tipo-pieza").value;
+        var contenidoPieza = document.getElementById("contenido-pieza").value;
+        var enlacesRecursos = document.getElementById("enlaces-recursos").value;
+        var observacionesAdicionales = document.getElementById("observaciones-adicionales").value;
+
+        // Obtener la fecha actual
+        var fechaActual = new Date();
+        // Convertir la fecha de entrega a un objeto Date
+        var fechaEntrega = new Date(document.getElementById("fecha-entrega").value);
+        // Verificar si la fecha de entrega es anterior o igual a la fecha actual
+        if (fechaEntrega <= fechaActual) {
+            Swal.fire({
+                title: '¡FECHA INCORRECTA!',
+                text: 'Las solicitudes de piezas publicitarias deben hacerse al menos con DOS(2) días de anticipación.',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+                imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+                imageWidth: 120, // Ancho de la imagen en píxeles
+                imageHeight: 235, // Alto de la imagen en píxeles
+                imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return;
+        }
+
+        // Validar correo electrónico para que no sea un correo de grupo y no genere envío a muchísimas personas sin intención.
+        if (correoElectronico.toLowerCase().startsWith("aneiap") || correoElectronico.toLowerCase().startsWith("capitulo") || correoElectronico.toLowerCase().startsWith("directores")) {
+            Swal.fire({
+            title: '¡CORREO INCORRECTO!',
+            text: 'El correo electrónico no puede empezar con "aneiap", "capitulo" o "directores". Por favor, utiliza un correo válido.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return;
+        }
+
+        // Validar que el correo electrónico termine en "@aneiap.co"
+        if (!correoElectronico.toLowerCase().endsWith("@aneiap.co")) {
+            Swal.fire({
+            title: '¡CORREO INCORRECTO!',
+            text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return;
+        }
+
+        // Validar número de teléfono
+        var telefonoRegex = /^3\d{9}$/;
+        if (!telefonoRegex.test(telefono)) {
+            Swal.fire({
+            title: '¡TELÉFONO INCORRECTO!',
+            text: 'El número de teléfono debe tener 10 dígitos y empezar con "3". Por favor, ingresa un teléfono válido.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return;
+        }
+
+        // Validar que todos los campos estén llenos
+        var camposValidos = validarCamposSolicitarPieza();
+        if (camposValidos) {
+            var clavePieza = generarClaveSolicitudPieza();
+            // Obtener valores de los campos
+            var nombreCompleto = document.getElementById("nombre-completo").value;
+            var correoElectronico = document.getElementById("correo-electronico").value;
+            var telefono = document.getElementById("telefono").value;
+            var capitulo = document.getElementById("capitulo").value;
+            var fechaEntrega = document.getElementById("fecha-entrega").value;
+            var nombrePieza = document.getElementById("nombre-pieza").value;
+            var tipoPieza = document.getElementById("tipo-pieza").value;
+            var contenidoPieza = document.getElementById("contenido-pieza").value;
+            var enlacesRecursos = document.getElementById("enlaces-recursos").value;
+            var observacionesAdicionales = document.getElementById("observaciones-adicionales").value;
+            //Acá debe hacer todas las funciones usuales para registrar la solicitud de pieza efectivamente
+            // Primero añadimos la solicitud de pieza en la base de datos
+            agregarSolicitudPiezaFirestore(clavePieza,nombreCompleto,correoElectronico,telefono,capitulo,fechaEntrega,
+            nombrePieza,tipoPieza,contenidoPieza,enlacesRecursos,observacionesAdicionales)
+            // Luego hacemos envío del correo con la solicitud de pieza
+            var correosDestino = obtenerCorreoPiezas(correoElectronico, capitulo);
+            enviarCorreoSolicitudPieza(clavePieza, nombreCompleto, correosDestino, telefono, capitulo,
+            fechaEntrega, nombrePieza, tipoPieza, contenidoPieza, enlacesRecursos, observacionesAdicionales)
+            // Mostrarle al usuario que ya se hizo efectiva su solicitud de publicidad
+            // Limpiar los campos
+            limpiarCamposSolicitudEdicion()
+            return;
+        }
+        }
+
+    // Esta función permite la acción de mostrar un mensaje de éxito al momento de enviar la solicitud de una pieza.        
+    function mostrarMensajeSolicitarPieza() {
+        Swal.fire({
+            title: '¡SOLICITUD COMPLETADA!',
+            text: 'Tu solicitud de pieza ha sido registrada con ÉXITO, revisa tu correo para confirmar la solicitud y obtener tu clave de pieza.',
+            icon: 'success',
+            showConfirmButton: true, // Muestra el botón de confirmación
+            allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
+            allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
+            imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        }).then((result) => {
+            // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+        });
+    }
+
+    // Esta función verifica si hacen falta campos obligatorios en la sección "SOLICITAR PIEZA" y en caso de hacer 
+    // falta arrojará una alerta diciendo que hacen falta campos y te dirá también cuáles campos son los que faltan.
+    function validarCamposSolicitarPieza() {
+        // Obtener los valores de los campos
+        var nombreCompleto = document.getElementById("nombre-completo").value;
+        var correoElectronico = document.getElementById("correo-electronico").value;
+        var telefono = document.getElementById("telefono").value;
+        var capitulo = document.getElementById("capitulo").value;
+        var fechaEntrega = document.getElementById("fecha-entrega").value;
+        var nombrePieza = document.getElementById("nombre-pieza").value;
+        var tipoPieza = document.getElementById("tipo-pieza").value;
+        var contenidoPieza = document.getElementById("contenido-pieza").value;
+
+        // Lista para almacenar los campos faltantes
+        var camposFaltantes = [];
+
+        // Verificar qué campos están vacíos y agregar sus nombres a la lista
+        if (nombreCompleto.trim() === "") {
+            camposFaltantes.push("Nombre completo");
+        }
+        if (correoElectronico.trim() === "") {
+            camposFaltantes.push("Correo electrónico");
+        }
+        if (telefono.trim() === "") {
+            camposFaltantes.push("Número de teléfono");
+        }
+        if (capitulo.trim() === "") {
+            camposFaltantes.push("Capítulo");
+        }
+        if (fechaEntrega.trim() === "") {
+            camposFaltantes.push("Fecha de entrega");
+        }
+        if (nombrePieza.trim() === "") {
+            camposFaltantes.push("Nombre de la pieza/proyecto");
+        }
+        if (tipoPieza.trim() === "") {
+            camposFaltantes.push("Tipo de pieza");
+        }
+        if (contenidoPieza.trim() === "") {
+            camposFaltantes.push("Contenido de la pieza");
+        }
+
+        // Mostrar la alerta si hay campos faltantes con la concatenación de los campos faltantes.
+        if (camposFaltantes.length > 0) {
+            var mensaje = "Faltan campos por diligenciar:\n";
+            for (var i = 0; i < camposFaltantes.length; i++) {
+            mensaje += "- " + camposFaltantes[i] + "\n";
+            }
+
+            Swal.fire({
+            title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU SOLICITUD DE PIEZA!',
+            text: mensaje,
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+            });
+            return false;
+        }
+
+        return true; // Todos los campos están llenos
+        }
+
+    // Función para enviar el correo de confirmación de solicitud de pieza
+    function enviarCorreoSolicitudPieza(clavePiezaCreada, nombreCompleto, correoElectronico, telefono, capitulo,
+    fechaEntrega, nombrePieza, tipoPieza, contenidoPieza, enlacesRecursos, observacionesAdicionales) {
+        // Obtener el correo del destinatario para enviarle el correo
+        const correoDestino = correoElectronico;
+        const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
+        const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
+        const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+        const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
+        const asunto = `Confirmación de solicitud de pieza - Clave: ${clavePiezaCreada}`;
+
+        // Mensaje de correo con los detalles de la solicitud
+        const mensaje = `
+            <html>
+            <body>
+                <h1 style="color: #007BFF;">Solicitud de pieza registrada correctamente ☑️</h1>
+                <p>Estimado(a) ${nombreCompleto},</p>
+                <p>Su solicitud de pieza ha sido registrada correctamente.</p>
+                <p>Detalles de la solicitud:</p>
+                <ul>
+                <li><strong>Nombre completo:</strong> ${nombreCompleto}</li>
+                <li><strong>Correo electrónico:</strong> ${correoElectronico}</li>
+                <li><strong>Teléfono:</strong> ${telefono}</li>
+                <li><strong>Capítulo:</strong> ${capitulo}</li>
+                <li><strong>Fecha de entrega:</strong> ${fechaEntrega}</li>
+                <li><strong>Nombre del proyecto:</strong> ${nombrePieza}</li>
+                <li><strong>Tipo de pieza:</strong> ${tipoPieza}</li>
+                <li><strong>Contenido de la pieza:</strong> ${contenidoPieza}</li>
+                <li><strong>Enlaces a fotos o recursos adicionales:</strong> ${enlacesRecursos}</li>
+                <li><strong>Observaciones adicionales:</strong> ${observacionesAdicionales}</li>
+                </ul>
+                <p>Recuerde que este correo es automático y no necesita ser respondido.</p>
+                <p>¡Gracias por utilizar SIEA, de ahora en adelante, mantente en comunicación con tu DCC para el seguimiento a tu pieza!</p>
+            </body>
+            </html>
+        `;
+
+        Email.send({
+            Host: emailHost,
+            Username: emailUsername,
+            Password: emailPassword,
+            To: `${destinatario}, siea@aneiap.co`, // Destinatario y copia a siea para registro
+            From: emailUsername, // Debería ser la misma dirección de correo de Username
+            Subject: asunto,
+            Body: mensaje,
+            ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
+        })
+            .then((message) => {
+            console.log("Mensaje de SMTPJS:", message);
+            // Limpia los campos del formulario después de enviar el correo
+            // Agrega aquí la lógica para limpiar los campos del formulario si es necesario
+            if (message === "OK") {
+                console.log("Correo enviado con éxito");
+            } else {
+                console.error("Error al enviar el correo:", message);
+            }
+            })
+            .catch((error) => {
+            console.error("Error en la función de envío de correo:", error);
+            });
+    }
+
+    function limpiarCamposSolicitudEdicion() {
+        document.getElementById("nombre-completo").value = "";
+        document.getElementById("correo-electronico").value = "";
+        document.getElementById("telefono").value = "";
+        document.getElementById("capitulo").value = "";
+        document.getElementById("fecha-entrega").value = "";
+        document.getElementById("nombre-pieza").value = "";
+        document.getElementById("tipo-pieza").value = "";
+        document.getElementById("contenido-pieza").value = "";
+        document.getElementById("enlaces-recursos").value = "";
+        document.getElementById("observaciones-adicionales").value = "";
+    }
+
+    function obtenerCorreoPiezas(correoElectronico, capitulo) {
+        // Banco de correos asociados a cada capítulo
+        const bancoCorreos = {
+            uniguajira: "comunicaciones_uniguajira@aneiap.co, interventoria_uniguajira@aneiap.co",
+            unimagdalena: "comunicaciones_unimagdalena@aneiap.co, interventoria_unimagdalena@aneiap.co",
+            uniatlantico: "comunicaciones_uniatlantico@aneiap.co, interventoria_uniatlantico@aneiap.co",
+            uninorte: "comunicaciones_uninorte@aneiap.co, interventoria_uninorte@aneiap.co, jorly.sarmiento@aneiap.co",
+            cuc: "comunicaciones_cuc@aneiap.co, interventoria_cuc@aneiap.co",
+            librequilla: "comunicaciones_librequilla@aneiap.co, interventoria_librequilla@aneiap.co",
+            utb: "comunicaciones_utb@aneiap.co, interventoria_utb@aneiap.co",
+            ufps: "comunicaciones_ufps@aneiap.co, interventoria_ufps@aneiap.co",
+            unalmed: "comunicaciones_unalmed@aneiap.co, interventoria_unalmed@aneiap.co",
+            udea: "comunicaciones_udea@aneiap.co, interventoria_udea@aneiap.co",
+            upbmed: "comunicaciones_upbmed@aneiap.co, interventoria_upbmed@aneiap.co",
+            utp: "comunicaciones_utp@aneiap.co, interventoria_utp@aneiap.co",
+            unalma: "comunicaciones_unalma@aneiap.co, interventoria_unalma@aneiap.co",
+            udistrital: "comunicaciones_udistrital@aneiap.co, interventoria_udistrital@aneiap.co",
+            unalbog: "comunicaciones_unalbog@aneiap.co, interventoria_unalbog@aneiap.co",
+            univalle: "comunicaciones_univalle@aneiap.co, interventoria_univalle@aneiap.co",
+            icesi: "comunicaciones_icesi@aneiap.co, interventoria_icesi@aneiap.co",
+            usc: "comunicaciones_usc@aneiap.co, interventoria_usc@aneiap.co",
+            librecali: "comunicaciones_librecali@aneiap.co, interventoria_librecali@aneiap.co",
+            nacional: "proy_diseno_nacional@aneiap.co, comunicaciones@aneiap.co, interventoria@aneiap.co"
+        };
+
+        // Correo de usuario y correos asociados al capítulo
+        const correosUsuario = correoElectronico ? correoElectronico + ", " : "";
+        const correosCapitulo = bancoCorreos[capitulo.toLowerCase()] || "";
+
+        // Devolver todos los correos concatenados
+        return correosUsuario + correosCapitulo;
+    }
+
+
+  </script>
+
+</body>
+</html>
