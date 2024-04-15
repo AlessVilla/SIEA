@@ -3919,6 +3919,38 @@
       // Retornar la fecha del lunes
       return new Date(lunesSemana);
     }
+    function obtenerCorreoEditar(correoElectronico, capitulo) {
+        // Banco de correos asociados a cada capítulo
+        const bancoCorreos = {
+            uniguajira: "academico_uniguajira@aneiap.co, interventoria_uniguajira@aneiap.co",
+            unimagdalena: "academico_unimagdalena@aneiap.co",
+            uniatlantico: "academico_uniatlantico@aneiap.co",
+            uninorte: "academico_uninorte@aneiap.co, interventoria_uninorte@aneiap.co",
+            cuc: "academico_cuc@aneiap.co, interventoria_cuc@aneiap.co",
+            librequilla: "academico_librequilla@aneiap.co",
+            utb: "academico_utb@aneiap.co",
+            ufps: "academico_ufps@aneiap.co, interventoria_ufps@aneiap.co",
+            unalmed: "academico_unalmed@aneiap.co",
+            udea: "academico_udea@aneiap.co",
+            upbmed: "academico_upbmed@aneiap.co",
+            utp: "academico_utp@aneiap.co, interventoria_utp@aneiap.co",
+            unalma: "academico_unalma@aneiap.co, interventoria_unalma@aneiap.co",
+            udistrital: "academico_udistrital@aneiap.co",
+            unalbog: "academico_unalbog@aneiap.co",
+            univalle: "academico_univalle@aneiap.co",
+            icesi: "academico_icesi@aneiap.co",
+            usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
+            librecali: "academico_librecali@aneiap.co, interventoria_librecali@aneiap.co",
+            nacional: "proy_diseno_nacional@aneiap.co, academico@aneiap.co, interventoria@aneiap.co"
+        };
+
+        // Correo de usuario y correos asociados al capítulo
+        const correosUsuario = correoElectronico ? correoElectronico + ", " : "";
+        const correosCapitulo = bancoCorreos[capitulo.toLowerCase()] || "";
+
+        // Devolver todos los correos concatenados
+        return correosUsuario + correosCapitulo;
+    }
 
     // Función para enviar el correo de edición de reserva
     function enviarCorreoEdicion() {
@@ -3929,7 +3961,6 @@
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
       const asunto = `Confirmación de edición de reserva - Clave: ${claveReserva}`;
 
       // Datos adicionales de la reserva
@@ -3948,6 +3979,8 @@
       const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
       const lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
 
+      const destinatario = obtenerCorreoEditar(correoDestino, capituloReserva); // Reemplaza con la dirección de correo del destinatario
+      
       // Convertir duración a formato horas + minutos
       const duracionHoras = Math.floor(duracionReserva / 60);
       const duracionMinutos = duracionReserva % 60;
