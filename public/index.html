@@ -26,11 +26,16 @@
   <!-- <script import { GoogleAuthProvider } from "firebase/auth"></script> -->  
   <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
   <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Incluye html2canvas.js usando una CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  <!-- Incluir la biblioteca jsPDF-AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.17/jspdf.plugin.autotable.min.js"></script>
   <!-- Agrega la biblioteca Google API Client -->  
   <script src="https://apis.google.com/js/api.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -567,6 +572,8 @@
 </head>
 <body class="dark-mode">
 
+    <!-- Agrega la referencia al script de jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <!-- Botón de modo de visualización-->
     <!--<button id="modo-switch" class="light-mode">
       <span class="icon"></span>
@@ -576,7 +583,7 @@
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña">
-    <button type="button" class="button-generar-informe" onclick="generarInformePDF()">Generar Informe PDF</button>
+    <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe PDF</button>
   </form>
   <button type="button" class="button-consultar" onclick="validar_login()">Iniciar Sesión</button>
   <!-- Elemento para mostrar el saludo -->
@@ -774,7 +781,7 @@
           <div class="row">
             <!-- Mitad izquierda con el campo para seleccionar la fecha -->
             <div class="half">
-              <label for="fecha-consulta"><b>Selecciona el día en el que deseas consultar: *</b></label>
+              <label for="fecha-consulta"><b>Selecciona el día en el que deseas ver disponibilidad: *</b></label>
               <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
             </div>
             <!-- Mitad derecha con el campo para seleccionar el capítulo -->
@@ -1761,6 +1768,15 @@
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
     var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
     var capituloUsuario = "";
+    var tablaResumen = [];
+    var tablaResumenPDF = [];
+    var clavesInforme = "";
+    var fechaInicialPDF = '2024-02-01';
+    var fechaFinalPDF = '2024-05-31';
+    var valoresPorcentajes = 2;
+    // Cargar la imagen que deseas usar como fondo
+    var img = new Image();
+    img.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_informe_pdf.png';
 
     // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
     var fechaInicialInput = document.getElementById("fecha-inicial");
@@ -1981,23 +1997,22 @@
         }
     }
 
-    // Definición de la función para convertir la fecha del formulario al formato de Firestore
     function convertirFechaFormulario(fechaFormulario) {
-    if (typeof fechaFormulario !== "string") {
-      // Si fechaFormulario no es una cadena, intentamos convertirlo a string
-      fechaFormulario = fechaFormulario.toString();
-    }
-    // La fecha del formulario está en formato "yyyy-mm-dd" (ejemplo: "2023-08-15")
-    // Debemos convertirla a formato de Firestore, que es un objeto Date de JavaScript
-    var partesFecha = fechaFormulario.split("/"); // Separamos año, mes y día
-    var anio = parseInt(partesFecha[0]);
-    var mes = parseInt(partesFecha[1]);
-    var dia = parseInt(partesFecha[2]);
+      if (typeof fechaFormulario !== "string") {
+        // Si fechaFormulario no es una cadena, intentamos convertirlo a string
+        fechaFormulario = fechaFormulario.toString();
+      }
+      // La fecha del formulario está en formato "yyyy-mm-dd" (ejemplo: "2023-08-15")
+      // Debemos convertirla a formato de Firestore, que es un objeto Date de JavaScript
+      var partesFecha = fechaFormulario.split("/"); // Separamos año, mes y día
+      var anio = parseInt(partesFecha[0]);
+      var mes = parseInt(partesFecha[1]);
+      var dia = parseInt(partesFecha[2]);
 
-    // Construimos la fecha en formato de Firestore
-    var fechaFirestore = new Date(anio, mes - 1, dia); // Restamos 1 al mes ya que en JavaScript los meses van de 0 a 11
-    return fechaFirestore;
-  }
+      // Construimos la fecha en formato de Firestore
+      var fechaFirestore = new Date(anio, mes - 1, dia); // Restamos 1 al mes ya que en JavaScript los meses van de 0 a 11
+      return fechaFirestore;
+    }
 
     // Función para mostrar el contenido de la pestaña seleccionada
     function showTab(tabNumber) {
@@ -3505,7 +3520,7 @@
     }
     // Listener combo para que se active la consulta de disponibilidad cada vez que den click a una fecha o capítulo.
     document.addEventListener("DOMContentLoaded", function() {activarConsultaDisponibilidad();});
-    
+
     function ConsultarDisponibilidadReservas() {
       var fechaConsulta = document.getElementById("fecha-consulta").value;
       var capituloConsulta = document.getElementById("capitulo-consulta").value;
@@ -3695,7 +3710,7 @@
     }
     // Listener combo para que se active la consulta de disponibilidad cada vez que den click a una fecha o capítulo.
     document.addEventListener("DOMContentLoaded", function() {activarConsultaSemanal();});
-    
+
     function ConsultarDisponibilidadSemanal() {
       var fechaConsultaDirecta = document.getElementById("fecha-consulta-semanal").value;
       var fechaConsulta = new Date(document.getElementById("fecha-consulta-semanal").value);
@@ -3919,38 +3934,6 @@
       // Retornar la fecha del lunes
       return new Date(lunesSemana);
     }
-    function obtenerCorreoEditar(correoElectronico, capitulo) {
-        // Banco de correos asociados a cada capítulo
-        const bancoCorreos = {
-            uniguajira: "academico_uniguajira@aneiap.co, interventoria_uniguajira@aneiap.co",
-            unimagdalena: "academico_unimagdalena@aneiap.co",
-            uniatlantico: "academico_uniatlantico@aneiap.co",
-            uninorte: "academico_uninorte@aneiap.co, interventoria_uninorte@aneiap.co",
-            cuc: "academico_cuc@aneiap.co, interventoria_cuc@aneiap.co",
-            librequilla: "academico_librequilla@aneiap.co",
-            utb: "academico_utb@aneiap.co",
-            ufps: "academico_ufps@aneiap.co, interventoria_ufps@aneiap.co",
-            unalmed: "academico_unalmed@aneiap.co",
-            udea: "academico_udea@aneiap.co",
-            upbmed: "academico_upbmed@aneiap.co",
-            utp: "academico_utp@aneiap.co, interventoria_utp@aneiap.co",
-            unalma: "academico_unalma@aneiap.co, interventoria_unalma@aneiap.co",
-            udistrital: "academico_udistrital@aneiap.co",
-            unalbog: "academico_unalbog@aneiap.co",
-            univalle: "academico_univalle@aneiap.co",
-            icesi: "academico_icesi@aneiap.co",
-            usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
-            librecali: "academico_librecali@aneiap.co, interventoria_librecali@aneiap.co",
-            nacional: "proy_diseno_nacional@aneiap.co, academico@aneiap.co, interventoria@aneiap.co"
-        };
-
-        // Correo de usuario y correos asociados al capítulo
-        const correosUsuario = correoElectronico ? correoElectronico + ", " : "";
-        const correosCapitulo = bancoCorreos[capitulo.toLowerCase()] || "";
-
-        // Devolver todos los correos concatenados
-        return correosUsuario + correosCapitulo;
-    }
 
     // Función para enviar el correo de edición de reserva
     function enviarCorreoEdicion() {
@@ -3961,6 +3944,7 @@
       const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
       const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
       const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
+      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
       const asunto = `Confirmación de edición de reserva - Clave: ${claveReserva}`;
 
       // Datos adicionales de la reserva
@@ -3979,8 +3963,6 @@
       const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma-reserva").value;
       const lugarPresencialReserva = document.getElementById("lugar-presencial-reserva").value;
 
-      const destinatario = obtenerCorreoEditar(correoDestino, capituloReserva); // Reemplaza con la dirección de correo del destinatario
-      
       // Convertir duración a formato horas + minutos
       const duracionHoras = Math.floor(duracionReserva / 60);
       const duracionMinutos = duracionReserva % 60;
@@ -5315,6 +5297,41 @@
               // Mostrar mensaje de inicio de sesión exitoso
               mostrarMensajeInicioSesion();
             }
+            // Realizar la consulta a la colección "reservas"
+            var reservasRef = firebase.firestore().collection("reservas");
+            var consulta = reservasRef.where("capitulo", "==", capituloUsuario).where("fechaEvento", ">=", fechaInicialPDF)
+                                      .where("fechaEvento", "<=", fechaFinalPDF).orderBy("fechaEvento", "asc");
+            consulta.get().then(function(querySnapshot) {
+              // Filtrar los documentos por tipoEvento
+              var documentosFiltrados = querySnapshot.docs.filter(function(doc) {
+                var tipoEvento = doc.data().tipoEvento;
+                var asistentes = doc.data().asistentes;
+                return tipoEvento !== undefined && tipoEvento !== "" && tipoEvento !== "ninguno" &&
+                asistentes !== undefined && asistentes !== null && asistentes !== ""; // Filtrar por tipoEvento diferente de "undefined" y cadena vacía
+              });
+                // Iterar sobre los resultados de la consulta
+                documentosFiltrados.forEach(function(doc) {
+                    var data = doc.data();
+                    // Construir la cadena de texto vectorial para este evento
+                    var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
+                    // Agregar la cadena al array
+                    tablaResumen.push(eventoString);
+                    var claveEvento = data.claveEvento; // Obtener la clave del evento
+                    clavesInforme += `${claveEvento}|`; // Concatenar la clave del evento a clavesInforme
+                });
+                // Guardar el array en el campo "tablaResumen" de la colección "cuentas"
+                var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+                cuentasRef.update({
+                    tablaResumen: tablaResumen,
+                    clavesInforme: clavesInforme
+                }).then(function() {
+                    tablaResumenPDF = tablaResumen
+                    console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'.");
+                    console.log(tablaResumenPDF)
+                }).catch(function(error) {
+                    console.error("Error al guardar la tabla resumen:", error);
+                });
+            });
           } else {
             // Contraseña incorrecta, mostrar alerta de advertencia
             Swal.fire({
@@ -5810,12 +5827,15 @@
 
             // Actualizar el contenido con los porcentajes formateados
             porcentajesContainer.innerHTML = "Alcanzado VA: " + porcentajeVAFormateado + " | Alcanzado EI: " + porcentajeEIFormateado + " | Avance formación: " + porcentajeGeneralFormateado;
-
+            var valoresPorcentajes = "Alcanzado VA: " + porcentajeVAFormateado + ", Alcanzado EI: " + porcentajeEIFormateado + ", Avance formación: " + porcentajeGeneralFormateado;
+            console.log("El valor de porcentajes es: " + valoresPorcentajes)
             // Llamar función para que el gráfico de metas se actualice
             actualizarGraficoMetas(metaVA, metaEI, totalVA, totalEI, metaGeneral, totalGeneral);
 
             // Calcular promedios de satisfacción por área de trabajo
             var satisfaccionesPromedio = await calcularPromediosSatisfaccion(consultaEventos);
+            console.log("satisfaccionesPromedio: ")
+            console.log(satisfaccionesPromedio)
 
             // Llamar función para que el gráfico de satisfacción se actualice
             actualizarGraficoSatisfaccion(...satisfaccionesPromedio);
@@ -5833,10 +5853,29 @@
             "|➕" + (await consultaEventos.where("tipoEvento", "==", "valor-agregado").get()).size +
             "|🏋🏻" + (await consultaEventos.where("tipoEvento", "==", "entrenamiento-interno").get()).size +
             "|n/a " + (await consultaEventos.where("tipoEvento", "==", "ninguno").get()).size;
+            var valoresSatisfaccion = satisfaccionContainer.textContent
+
+            // Devuelves los valores en un objeto
+            return {
+                porcentajes: valoresPorcentajes,
+                totalSAC: (await consultaEventos.where("areaTrabajo", "==", "academico").get()).size,
+                totalSCO: (await consultaEventos.where("areaTrabajo", "==", "comunicaciones").get()).size,
+                totalSDE: (await consultaEventos.where("areaTrabajo", "==", "desarrollo").get()).size,
+                totalSFI: (await consultaEventos.where("areaTrabajo", "==", "finanzas").get()).size,
+                totalSME: (await consultaEventos.where("areaTrabajo", "==", "mercadeo").get()).size,
+                totalSHD: (await consultaEventos.where("areaTrabajo", "==", "habilidades-duras").get()).size,
+                totalSHB: (await consultaEventos.where("areaTrabajo", "==", "habilidades-blandas").get()).size,
+                totalSCA: (await consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap").get()).size,
+                totalSVA: (await consultaEventos.where("tipoEvento", "==", "valor-agregado").get()).size,
+                totalSEI: (await consultaEventos.where("tipoEvento", "==", "entrenamiento-interno").get()).size,
+                totalSNI: (await consultaEventos.where("tipoEvento", "==", "ninguno").get()).size,
+                satisfaccionesPromedio: satisfaccionesPromedio
+            };
 
         } catch (error) {
             console.error("Error al generar gráficos:", error);
         }
+
     }
 
     // Función para calcular promedios de satisfacción por área de trabajo
@@ -6234,20 +6273,375 @@
       });
     }
 
-    // la función que cambia entre la evaluación de espacio y la evaluación de evento
-    function generarInformePDF() {
-      // Decirle al usuario que está en construcción la parte del CRM del evento
-      Swal.fire({
-            title: '¡𝐂𝐎𝐌𝐈𝐍𝐆 𝐒𝐎𝐎𝐍... 🛠️⚙️🧰!',
-            text: 'Esta funcionalidad de SIEA (Generar informes de seguimiento a la formación capitular) de forma automática (Antes era una macro compleja) estará disponible EL 𝟭𝟴 𝗗𝗘 𝗔𝗕𝗥𝗜𝗟 𝗔 𝗟𝗔𝗦 𝟭𝟮 𝗗𝗘𝗟 𝗠𝗘𝗗𝗜𝗢 𝗗𝗜́𝗔, por ahora disfruta del registro y evaluación de espacios capitulares (capacitaciones, integraciones, etc.)',
-            icon: 'warning',
+    async function generarInformePDF(event) {
+
+      if (capituloUsuario === "" || correoUsuario === "") {
+        Swal.fire({
+            icon: 'error',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
+            text: 'Debe iniciar sesión como DCA para poder generar el informe.',
             confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
             imageWidth: 120, // Ancho de la imagen en píxeles
             imageHeight: 235, // Alto de la imagen en píxeles
             imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener la edición de la reserva
+        });
+        return; // Detener el proceso de evaluación
+      }
+
+      // Mostrar SweetAlert de espera personalizado
+      Swal.fire({
+          title: 'Generando informe',
+          html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos...</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
+          timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          didOpen: () => {
+              Swal.showLoading();
+          }
+      });
+
+      // Crear un nuevo objeto jsPDF
+      var pdf = new jsPDF();
+      var tiempoCarga = 20000;
+      var margenizq = 15; //Margen izquierdo
+      var margender = 180;//Margen derecho
+      var coordenadaY = 35;
+      // Añadir imagen de fondo a la primera página
+      pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      // Preparación inicial de las funciones y la sección de actualización
+        // Obtener datos necesarios para los gráficos desde Firebase
+        document.getElementById("fecha-inicial").value = fechaInicialPDF;
+        document.getElementById("fecha-final").value = fechaFinalPDF;
+        await toggleVisualizarActualizarEspacios();
+        await toggleDashboard();
+
+        var objetoGraficos = await generarGraficos();
+        var valoresPorcentajes = objetoGraficos.porcentajes;
+
+      // Define el valor para las satisfacciones dependiendo de si hay espacios de ese tipo/área o no.
+      var valorSAC = objetoGraficos.totalSAC !== 0 ? (objetoGraficos.satisfaccionesPromedio[0] * 100).toFixed(2) + "%" : "N/A";
+      var valorSCO = objetoGraficos.totalSCO !== 0 ? (objetoGraficos.satisfaccionesPromedio[1] * 100).toFixed(2) + "%" : "N/A";
+      var valorSDE = objetoGraficos.totalSDE !== 0 ? (objetoGraficos.satisfaccionesPromedio[2] * 100).toFixed(2) + "%" : "N/A";
+      var valorSFI = objetoGraficos.totalSFI !== 0 ? (objetoGraficos.satisfaccionesPromedio[3] * 100).toFixed(2) + "%" : "N/A";
+      var valorSME = objetoGraficos.totalSME !== 0 ? (objetoGraficos.satisfaccionesPromedio[4] * 100).toFixed(2) + "%" : "N/A";
+      var valorSHD = objetoGraficos.totalSHD !== 0 ? (objetoGraficos.satisfaccionesPromedio[5] * 100).toFixed(2) + "%" : "N/A";
+      var valorSHB = objetoGraficos.totalSHB !== 0 ? (objetoGraficos.satisfaccionesPromedio[6] * 100).toFixed(2) + "%" : "N/A";
+      var valorSCA = objetoGraficos.totalSCA !== 0 ? (objetoGraficos.satisfaccionesPromedio[7] * 100).toFixed(2) + "%" : "N/A";
+      var valorSVA = objetoGraficos.totalSVA !== 0 ? (objetoGraficos.satisfaccionesPromedio[8] * 100).toFixed(2) + "%" : "N/A";
+      var valorSEI = objetoGraficos.totalSEI !== 0 ? (objetoGraficos.satisfaccionesPromedio[9] * 100).toFixed(2) + "%" : "N/A";
+      var valorSNI = objetoGraficos.totalSNI !== 0 ? (objetoGraficos.satisfaccionesPromedio[10] * 100).toFixed(2) + "%" : "N/A";
+
+      // Texto de los valores de la tabla
+      var valoresText = "Académico: " + valorSAC + "\n" +
+                  "Comunicaciones: " + valorSCO + "\n" +
+                  "Desarrollo: " + valorSDE + "\n" +
+                  "Finanzas: " + valorSFI + "\n" +
+                  "Mercadeo: " + valorSME + "\n" +
+                  "Habilidades duras: " + valorSHD + "\n" +
+                  "Habilidades blandas: " + valorSHB + "\n" +
+                  "Conocimiento ANEIAP: " + valorSCA + "\n" +
+                  "Valor agregado: " + valorSVA + "\n" +
+                  "Entrenamiento interno: " + valorSEI + "\n" +
+                  "Ninguno: " + valorSNI;
+
+      // Título del informe
+      pdf.setFontSize(18);
+      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " 2024-2",
+      margenizq, 20, { align: "justify", maxWidth: margender });
+      // Texto de introducción
+      pdf.setFontSize(12);
+      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-2.",
+      margenizq, 35, { align: "justify", maxWidth: margender });
+
+      // Sección: Dashboard y Metas
+      pdf.setFontSize(12); pdf.setTextColor(0, 0, 0); // Color azul para resaltar la sección
+      pdf.text("En esta sección, encontrarás un análisis detallado del progreso y los logros alcanzados en materia de formación y desarrollo de competencias.\n\nEl Dashboard inicial proporciona una visión general de los objetivos establecidos y el avance realizado hasta la fecha. Aquí, podrás evaluar el cumplimiento de las metas acordadas, tanto en términos de Valor Agregado como de Entrenamiento Interno. Además, se incluye un indicador del NPS (Net Promoter Score), que refleja la satisfacción de los participantes en los espacios de formación.",
+      margenizq, 50, { align: "justify", maxWidth: margender });
+      // Aviso de otra sección relacionada 
+    /*  doc.setFontSize(12); doc.setTextColor(0, 0, 0); // Restaurar color de texto predeterminado
+      doc.text("Por último, encontrarás una sección dedicada a analizar la información de los espacios y las respuestas de satisfacción de los participantes de forma individual, esto orientado a la toma de decisiones.",
+      margenizq, 80, { align: "justify", maxWidth: margender });*/
+
+      pdf.setFontSize(15);
+      pdf.text("1. GRÁFICO DE CUMPLIMIENTO DE METAS DE FORMACIÓN Y SATISFACCIÓN DEL CAPÍTULO",
+      margenizq, 83, { align: "justify", maxWidth: margender });
+
+      // Generar el dashboard de metas y satisfacciones
+      //generarDashboardMetasSatisfacciones(doc); // Llamada a la función que genera el dashboard y lo inserta en el PDF
+
+      // Obtener las imágenes de los gráficos después de un retraso
+      setTimeout(function() {
+        var canvasMetas = document.getElementById("grafico-metas");
+        var canvasSatisfaccion = document.getElementById("grafico-satisfaccion");
+
+        // Obtener el contexto 2D de los canvas
+        var ctxMetas = canvasMetas.getContext('2d');
+        var ctxSatisfaccion = canvasSatisfaccion.getContext('2d');
+
+        // Crear una imagen a partir del canvas
+        var imgMetas = new Image();
+        var imgSatisfaccion = new Image();
+
+        // Establecer el origen de la imagen a los datos del canvas
+        imgMetas.src = canvasMetas.toDataURL("image/png", 1.0);
+        imgSatisfaccion.src = canvasSatisfaccion.toDataURL("image/png", 1.0);
+
+        // Insertar la imagen en el PDF
+        pdf.setFontSize(12); pdf.setTextColor(0, 0, 0); // Restaurar color de texto predeterminado
+        pdf.addImage(imgMetas, 'PNG', margenizq, 90, margender, 80, '', 'FAST'); // Inserta la imagen del gráfico de metas
+        pdf.setFontSize(10); pdf.setTextColor(0, 0, 0); // Restaurar color de texto predeterminado
+        pdf.text("Porcentajes: " + valoresPorcentajes, margenizq, 175, { align: "justify", maxWidth: margender });
+        pdf.setFontSize(12); pdf.setTextColor(0, 0, 0); // Restaurar color de texto predeterminado
+        pdf.addImage(imgSatisfaccion, 'PNG', margenizq, 178, margender, 80, '', 'FAST'); // Inserta la imagen del gráfico de satisfacción
+        //doc.text("Satisfacciones: " + valoresSatisfaccion, margenizq, 250, { align: "justify", maxWidth: margender });
+        // Añadir la cabecera de la tabla al PDF
+        pdf.text("AREA/TIPO DE ESPACIO Y SU SATISFACCIÓN PROMEDIO", margenizq, 263, { align: "justify", maxWidth: margender });
+        // Añadir los valores de la tabla al PDF
+        pdf.text(valoresText, margenizq, 273, { align: "justify", maxWidth: margender });
+
+        // Agregar la segunda página al primer documento
+        pdf.addPage(); // Agrega una nueva página al documento actual
+        // Añadir imagen de fondo a la segunda página
+        pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+        pdf.setFontSize(15);
+        pdf.text("2. TABLA RESUMEN CON CADA UNO DE LOS ESPACIOS QUE HA TENIDO EL CAPÍTULO",
+        margenizq, 22, { align: "justify", maxWidth: margender });
+
+        // Definir porcentajes de ancho para cada campo
+        const anchoPorcentaje = {
+            nombreEvento: 22,
+            areaTrabajo: 14,
+            tipoEvento: 17,
+            fechaEvento: 10,
+            nombrePonente: 13,
+            totalAsistentes: 5,
+            satisfaccion: 8,
+            evidencia: 22
+        };
+
+        // Definir encabezados de la tabla
+        const encabezados = ["Nombre del espacio", "Área de trabajo", "Tipo de espacio", "Fecha", "Ponente(s)", "#A", "% NPS", "Evidencia (drive lector)"];
+
+        // Calcular ancho total del área disponible en el PDF
+        const anchoTotal = margender - margenizq;
+
+        // Calcular coordenadas para cada campo y agregar texto y líneas al PDF
+        var posY = 35; // Posición vertical inicial
+        pdf.setFontSize(7);
+        pdf.setDrawColor(0); // Establecer color de líneas en negro
+        pdf.setLineWidth(0.1); // Establecer ancho de línea
+        // Dibujar fila de encabezados
+        var posXEncabezados = margenizq + 12; // Posición horizontal inicial para los encabezados
+
+        // Dibujar líneas horizontales
+        pdf.line(margenizq, posY - 3, margender + 18, posY - 3);
+        for (var i = 0; i <= tablaResumenPDF.length; i++) {
+            pdf.line(margenizq, posY + 2, margender + 18, posY + 2);
+            posY += 15; // Incrementar la posición vertical
+        }
+        var maxPosY = posY - 13; //Posicion final de las líneas verticales
+        var posY = 35;
+
+        // Iterar sobre cada encabezado y agregar texto al PDF
+        pdf.line(posXEncabezados - 12, posY - 3, posXEncabezados - 12, maxPosY);
+        encabezados.forEach(function(encabezado, index) {
+            var anchoCampoEncabezado = (anchoTotal * anchoPorcentaje[Object.keys(anchoPorcentaje)[index]]) / 100;
+            // Añadir parte del relleno azul
+            // Ajustar alineación vertical del texto a "middle"
+            pdf.text(encabezado, posXEncabezados - 10, posY, { align: "justify", valign: "middle", maxWidth: anchoCampoEncabezado - 4 });
+            // Dibujar línea vertical para separar las columnas de encabezados
+            if (index < encabezados.length) {
+                pdf.line(posXEncabezados + anchoCampoEncabezado - 12, posY - 3, posXEncabezados + anchoCampoEncabezado - 12, maxPosY);
+            }
+            posXEncabezados += anchoCampoEncabezado; // Mover la posición horizontal al final del campo actual para los encabezados
+        });
+
+        // Reiniciar la posición vertical para el contenido de la tabla
+        posY = 41;
+
+        // Dibujar líneas verticales y agregar texto
+        for (var i = 0; i < tablaResumenPDF.length; i++) {
+            var campos = tablaResumenPDF[i].split("|"); // Separar los campos por "|"
+            var posX = margenizq; // Posición horizontal inicial
+
+            // Iterar sobre cada campo y agregar texto al PDF con su respectivo ancho
+            Object.keys(anchoPorcentaje).forEach(function(campo, index) {
+                var anchoCampo = (anchoTotal * anchoPorcentaje[campo]) / 100;
+                pdf.text(campos[index], posX + 2, posY, { align: "justify", valign: "middle", maxWidth: anchoCampo - 4 });
+
+                posX += anchoCampo; // Mover la posición horizontal al final del campo actual
+            });
+
+            posY += 15; // Mover la posición vertical para el siguiente evento
+        }
+
+        // Punto 3: Respuestas de satisfacción por cada uno de los espacios
+        pdf.addPage(); // Agregar una nueva página al PDF
+        // Añadir imagen de fondo a la tercera página
+        pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+        var posYRespuestas;
+
+// Obtener las claves de los eventos del campo "clavesInforme" del documento correspondiente en la colección "cuentas"
+console.log("Obteniendo referencia a la colección de cuentas...");
+var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+
+cuentasRef.get().then(async (docCuentas) => {
+    if (docCuentas.exists) {
+        console.log("Documento de cuentas encontrado.");
+        var clavesInforme = docCuentas.data().clavesInforme.split("|");
+
+        // Calcular valores para cada evento y construir tabla dashboard
+        console.log("Calcular valores para cada evento y construir tabla dashboard...");
+        pdf.setFontSize(15);
+        pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
+            margenizq, 22, { align: "justify", maxWidth: margender });
+
+        // Definir tamaño de celdas de la tabla
+        var anchoEvento = pdf.internal.pageSize.getWidth() * 0.15;
+        var anchoRespuestas = pdf.internal.pageSize.getWidth() * 0.05;
+        var anchoPorcentaje = pdf.internal.pageSize.getWidth() * 0.15;
+        var anchoComentarios = pdf.internal.pageSize.getWidth() * 0.35;
+        var anchoRestante = pdf.internal.pageSize.getWidth() * 0.25;
+
+        var posYTabla = 20; // Posición vertical para la tabla en el PDF
+
+        // Encabezados de la tabla de respuestas
+        console.log("Añadiendo encabezados de tabla...");
+        pdf.setFontSize(7);
+        pdf.text("ESPACIO", margenizq + 7, posYTabla + 10);
+        pdf.text("DET.", margenizq + anchoEvento, posYTabla + 10, { align: "center", maxWidth: anchoEvento - 5 });
+        pdf.text("PAS.", margenizq + anchoEvento + anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+        pdf.text("PRO.", margenizq + anchoEvento + 2 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
+        pdf.text("#RES.", margenizq + anchoEvento + 3 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
+        pdf.text("% RES.", margenizq + anchoEvento + 4 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
+        pdf.text("COMENTARIOS", margenizq + anchoEvento + 6 * anchoRespuestas - 4, posYTabla + 10, { align: "center", maxWidth: anchoRestante});
+
+        // Contenido de la tabla de respuestas
+        console.log("Añadiendo contenido de tabla...");
+        var clavesInforme = docCuentas.data().clavesInforme.split("|");
+
+        (async () => {
+            let totalSatisfaccion = 0;
+            let eventosConSatisfaccion = 0;
+            for (const claveEvento of clavesInforme) {
+                if (claveEvento) {
+                    var reservaRef = firebase.firestore().collection("reservas").doc(claveEvento);
+                    var docReserva = await reservaRef.get();
+                    
+                    var conteoLineaVertical = 1;
+                    // Agregar líneas verticales entre las columnas
+                    var posYTablaLineaVertical = posYTabla + 12;
+                    var posY2TablaLineaVertical = posYTabla;
+
+                    if (docReserva.exists) {
+                      var data = docReserva.data();
+                      var posYEvento = posYTabla + 15;
+
+                      // Calcular la satisfacción promedio
+                      totalSatisfaccion += parseFloat(data.satisfaccion || 0);
+                      eventosConSatisfaccion++;
+
+                      // Variables para almacenar los valores de los campos
+                      var nombreEvento = data.nombreEvento || "";
+                      var detractores = data.detractores || 0;
+                      var pasivos = data.pasivos || 0;
+                      var promotores = data.promotores || 0;
+                      var respuestas = ((detractores + pasivos + promotores) / 3) || 0;
+                      var porcentajeRespuestas = ((respuestas / data.totalAsistentes) * 100).toFixed(2) + "%";
+                      var comentarios = data.comentarios ? data.comentarios.split(/\|/g).filter(comentario => comentario !== "Ninguno.").map(comentario => "«" + comentario.trim() + "»").join("_") : "";
+
+                      // Agregar líneas horizontales entre las filas
+                      pdf.setDrawColor(0); // Establecer color de líneas en negro
+                      pdf.setLineWidth(0.1); // Establecer ancho de línea
+                      pdf.line(margenizq, posYEvento - 3, margender + 18, posYEvento - 3);
+
+                      pdf.text(nombreEvento, margenizq + 1, posYEvento, { align: "left", maxWidth: anchoEvento - 6 });
+                      pdf.text(detractores.toString(), margenizq + anchoEvento, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                      pdf.text(pasivos.toString(), margenizq + anchoEvento + anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                      pdf.text(promotores.toString(), margenizq + anchoEvento + 2 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                      pdf.text(respuestas.toString(), margenizq + anchoEvento + 3 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                      pdf.text(porcentajeRespuestas, margenizq + anchoEvento + 4 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoPorcentaje });
+                      pdf.text(comentarios, margenizq + anchoEvento + 5 * anchoRespuestas - 4, posYEvento, { align: "left", maxWidth: margender - (margenizq + anchoEvento + 3 * anchoRespuestas) });
+
+                      var sumarAposYTabla = 10 + (comentarios.split("|").filter(comentario => comentario !== "«Ninguno.»").length * 14);
+
+                      conteoLineaVertical = conteoLineaVertical + 1;
+                      posYTabla += sumarAposYTabla;
+                      posY2TablaLineaVertical += sumarAposYTabla;
+                  }
+                }
+                // Primera línea vertical
+                pdf.line(margenizq, posYTablaLineaVertical, margenizq, posY2TablaLineaVertical + 12);
+                // Líneas verticales entre los campos
+                pdf.line(margenizq + anchoEvento - 5, posYTablaLineaVertical, margenizq + anchoEvento - 5, posY2TablaLineaVertical + 12);
+                pdf.line(margenizq + anchoEvento + 1 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 1 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                pdf.line(margenizq + anchoEvento + 2 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 2 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                pdf.line(margenizq + anchoEvento + 3 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 3 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                pdf.line(margenizq + anchoEvento + 4 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 4 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                pdf.line(margenizq + anchoEvento + 5 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 5 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                // Última línea vertical
+                pdf.line(margender + 2 * anchoRespuestas - 3, posYTablaLineaVertical, margender + 2 * anchoRespuestas - 3, posY2TablaLineaVertical + 12);
+              }
+
+              // Línea horizontal final
+              pdf.line(margenizq, posY2TablaLineaVertical + 12, margender + 18, posY2TablaLineaVertical + 12);
+
+            // Calcular satisfacción promedio
+            const satisfaccionPromedioCapitular = totalSatisfaccion / eventosConSatisfaccion;
+            console.log("satisfaccionPromedioCapitular");
+            console.log(satisfaccionPromedioCapitular);
+            const satisfaccionPromedioCapitularTexto = (satisfaccionPromedioCapitular * 100).toFixed(2) + "%";
+            console.log("satisfaccionPromedioCapitularTexto");
+            console.log(satisfaccionPromedioCapitularTexto);
+
+            // Añadir satisfacción promedio en la página 2 del PDF
+            pdf.setPage(2); // Cambiar a la página 2
+            pdf.setFontSize(12);
+            pdf.text(`Satisfacción Promedio: ${satisfaccionPromedioCapitularTexto}`, margenizq, posY + 3, { align: "justify", maxWidth: margender });
+
+            // Guardar el PDF con el nombre especificado
+            pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario + '_FEB-MAY_2024-2.pdf');
+            toggleVisualizarActualizarEspacios();
+
+            // Abrir automáticamente el PDF después de descargarlo
+            var pdfURL = pdf.output('bloburl');
+            window.open(pdfURL, '_blank');
+
+            // Avisar que ya se generó el informe y que revise en descargas
+            Swal.fire({
+                title: 'Informe Generado',
+                text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
+                icon: 'success',
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Aceptar',
+                imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png',
+                imageWidth: 120,
+                imageHeight: 235,
+                imageAlt: 'Éxito',
+            });
+        })();
+    } else {
+        // Manejar el caso donde el documento de cuentas no existe
+        console.log("El documento de cuentas no existe.");
+    }
+}).catch((error) => {
+    // Manejar errores de consulta aquí
+    console.error("Error al obtener claves de eventos:", error);
+});
+
+
+      }, tiempoCarga); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
+
     }
 
   </script>
