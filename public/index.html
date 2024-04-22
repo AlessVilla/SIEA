@@ -3592,7 +3592,7 @@
         consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulo", "==", "nacional");
       } else {
         // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
-        consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulo", "in", [capituloConsulta, "nacional"]);
+        consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulosOrganizadores", "array-contains", capituloConsulta);
       }
 
       consulta.get().then(function(querySnapshot) {
@@ -3651,7 +3651,7 @@
           var nombreOrganizador = doc.data().nombreOrganizador;
           var horaEvento = doc.data().horaEvento;
           var correoOrganizador = doc.data().emailOrganizador;
-          var capitulo = doc.data().capitulo;
+          var capitulo = doc.data().capitulosOrganizadores;
 
           var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
           var minutos = horaEvento % 60; // Obtener los minutos del evento
@@ -3807,7 +3807,7 @@
       if (capituloConsulta === "ANEIAP NACIONAL") {
         consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulo", "==", "nacional");
       } else {
-        consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulo", "in", [capituloConsulta, "nacional"]);
+        consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", capituloConsulta);
       }
 
       consulta.get().then((querySnapshot) => {
@@ -3819,7 +3819,7 @@
           var nombreOrganizador = doc.data().nombreOrganizador;
           var horaEvento = doc.data().horaEvento;
           var correoOrganizador = doc.data().emailOrganizador;
-          var capitulo = doc.data().capitulo;
+          var capitulo = doc.data().capitulosOrganizadores;
 
           var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
           var minutos = horaEvento % 60; // Obtener los minutos del evento
