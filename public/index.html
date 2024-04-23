@@ -6357,7 +6357,7 @@
       margenizq, 20, { align: "justify", maxWidth: margender });
       // Texto de introducción
       pdf.setFontSize(12);
-      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-2.",
+      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-1.",
       margenizq, 35, { align: "justify", maxWidth: margender });
 
       // Sección: Dashboard y Metas
@@ -6609,7 +6609,7 @@ cuentasRef.get().then(async (docCuentas) => {
             pdf.text(`Satisfacción Promedio: ${satisfaccionPromedioCapitularTexto}`, margenizq, posY + 3, { align: "justify", maxWidth: margender });
 
             // Guardar el PDF con el nombre especificado
-            pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario + '_FEB-MAY_2024-2.pdf');
+            pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario + '_FEB-MAY_2024-1.pdf');
             toggleVisualizarActualizarEspacios();
 
             // Abrir automáticamente el PDF después de descargarlo
