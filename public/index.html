@@ -1799,7 +1799,7 @@
             // Obtener la referencia a la colección de reservas
             var reservasRef = firebase.firestore().collection("reservas");
             // Crear la consulta para obtener los nombres de los espacios dentro del rango de fechas y del capítulo del usuario
-            var consulta = reservasRef.where("capitulo", "==", capituloUsuario)
+            var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
                                       .where("fechaEvento", ">=", fechaInicial)
                                       .where("fechaEvento", "<=", fechaFinal)
 
@@ -1867,7 +1867,7 @@
 
     // Obtener la referencia del documento correspondiente en Firestore
     var reservasRef = firebase.firestore().collection("reservas");
-    var consulta = reservasRef.where("capitulo", "==", capituloUsuario).where("nombreEvento", "==", nombreEspacioSeleccionado);
+    var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario).where("nombreEvento", "==", nombreEspacioSeleccionado);
 
     consulta.get()
         .then(function(querySnapshot) {
@@ -1946,7 +1946,7 @@
             var reservasRef = firebase.firestore().collection("reservas");
 
             // Crear la consulta para obtener los eventos dentro del rango de fechas y del capítulo del usuario
-            var consulta = reservasRef.where("capitulo", "==", capituloUsuario)
+            var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
                                       .where("fechaEvento", ">=", fechaInicial)
                                       .where("fechaEvento", "<=", fechaFinal)
                                       .orderBy("fechaEvento", "asc"); // Ordenar por fecha de forma ascendente
@@ -3585,7 +3585,7 @@
       // Resto del código para validar la fecha y mostrar mensajes de error...
       // Obtener todos los eventos reservados para la fecha seleccionada
       var reservasRef = firebase.firestore().collection("reservas");
-      var consulta;
+      var consulta = [];
 
       if (capituloConsulta === "ANEIAP NACIONAL") {
         // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
@@ -5299,7 +5299,7 @@
             }
             // Realizar la consulta a la colección "reservas"
             var reservasRef = firebase.firestore().collection("reservas");
-            var consulta = reservasRef.where("capitulo", "==", capituloUsuario).where("fechaEvento", ">=", fechaInicialPDF)
+            var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario).where("fechaEvento", ">=", fechaInicialPDF)
                                       .where("fechaEvento", "<=", fechaFinalPDF).orderBy("fechaEvento", "asc");
             consulta.get().then(function(querySnapshot) {
               // Filtrar los documentos por tipoEvento
@@ -5676,7 +5676,7 @@
 
     // Actualizar la información del evento en la base de datos
     var reservasRef = firebase.firestore().collection("reservas");
-    var consulta = reservasRef.where("capitulo", "==", capituloUsuario).where("nombreEvento", "==", nombreEspacio);
+    var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario).where("nombreEvento", "==", nombreEspacio);
 
     consulta.get()
         .then(function(querySnapshot) {
@@ -5774,7 +5774,7 @@
             var fechaFinal = document.getElementById("fecha-final").value;
             var fechaHoy = new Date().toISOString().slice(0, 10);
             var reservasRef = firebase.firestore().collection("reservas");
-            var consultaEventos = reservasRef.where("capitulo", "==", capituloUsuario)
+            var consultaEventos = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
                 .where("fechaEvento", ">=", fechaInicial)
                 .where("fechaEvento", "<=", fechaFinal);
 
@@ -6078,7 +6078,7 @@
             // Crear la consulta para obtener los nombres de los espacios dentro del rango de fechas
             var consulta = reservasRef.where("fechaEvento", ">=", fechaInicial)
                                       .where("fechaEvento", "<=", fechaFinal)
-                                      .where("capitulo", "==", capituloUsuario);
+                                      .where("capitulosOrganizadores", "array-contains", capituloUsuario);
 
             // Ejecutar la consulta
             consulta.get()
@@ -6145,7 +6145,7 @@
     var consultaEvaluaciones = reservasRef.where("nombreEvento", "==", nombreEvento)
         .where("fechaEvento", ">=", fechaInicial)
         .where("fechaEvento", "<=", fechaFinal)
-        .where("capitulo", "==", capituloUsuario);
+        .where("capitulosOrganizadores", "array-contains", capituloUsuario);
 
     consultaEvaluaciones.get().then(function(querySnapshot) {
         var tablaBody = document.getElementById("tabla-evaluaciones").getElementsByTagName("tbody")[0];
