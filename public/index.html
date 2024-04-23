@@ -6295,7 +6295,7 @@
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
           title: 'Generando informe',
-          html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos...</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
+          html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
           timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
           showConfirmButton: false,
           allowOutsideClick: false,
@@ -6308,7 +6308,7 @@
 
       // Crear un nuevo objeto jsPDF
       var pdf = new jsPDF();
-      var tiempoCarga = 20000;
+      var tiempoCarga = 25000;
       var margenizq = 15; //Margen izquierdo
       var margender = 180;//Margen derecho
       var coordenadaY = 35;
