@@ -1264,6 +1264,22 @@
       var pregunta3 = document.getElementById("pregunta3").value;
       var comentarios = document.getElementById("pregunta4").value;
 
+      var telefonoAsistenteRegex = /^3\d{9}$/; // Esta expresión regular verifica que solo haya 10 dígitos y nada más.
+      // Aquí ajustamos la condición para que verifique correctamente si el teléfono es vacío o no coincide con el patrón
+      if (telefonoAsistente === "" || !telefonoAsistenteRegex.test(telefonoAsistente)) {
+        Swal.fire({
+          title: '¡TELÉFONO INCORRECTO!',
+          text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener la operación actual, como el envío de un formulario o la continuación de un proceso
+      }
+      
       var reservasRef = firebase.firestore().collection("reservas");
       var eventoRef = reservasRef.where("capitulo", "==", capituloEspacio).where("nombreEvento", "==", nombreEspacio)
                                  .where("fechaEvento", ">=", fechaTresSemanasAtras).where("fechaEvento", "<=", fechaHoy);
