@@ -1777,6 +1777,8 @@
     // Cargar la imagen que deseas usar como fondo
     var img = new Image();
     img.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_informe_pdf.png';
+    var imgPortada = new Image();
+    imgPortada.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_portada_informe_pdf.png';
 
     // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
     var fechaInicialInput = document.getElementById("fecha-inicial");
@@ -5289,6 +5291,8 @@
               var fin = "@aneiap.co";
               var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
               capituloUsuario = capitulo;
+              var storedTelefonoCuenta = doc.data().telefonoDCA;
+              telefonoCuenta = storedTelefonoCuenta;
               // Mostrar mensaje de inicio de sesión exitoso
               mostrarMensajeInicioSesion();
             } else {
@@ -6313,6 +6317,10 @@
       var margender = 180;//Margen derecho
       var coordenadaY = 35;
       // Añadir imagen de fondo a la primera página
+      pdf.addImage(imgPortada, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      pdf.addPage(); // Agrega una nueva página al documento actual
+      // Añadir imagen de fondo a la segunda página
       pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
       // Preparación inicial de las funciones y la sección de actualización
@@ -6406,7 +6414,7 @@
         // Añadir los valores de la tabla al PDF
         pdf.text(valoresText, margenizq, 273, { align: "justify", maxWidth: margender });
 
-        // Agregar la segunda página al primer documento
+        // Agregar una nueva página al documento
         pdf.addPage(); // Agrega una nueva página al documento actual
         // Añadir imagen de fondo a la segunda página
         pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
@@ -6559,23 +6567,41 @@ cuentasRef.get().then(async (docCuentas) => {
                       var porcentajeRespuestas = ((respuestas / data.totalAsistentes) * 100).toFixed(2) + "%";
                       var comentarios = data.comentarios ? data.comentarios.split(/\|/g).filter(comentario => comentario !== "Ninguno.").map(comentario => "«" + comentario.trim() + "»").join("_") : "";
 
+                      var anchoLinea = margender - (margenizq + anchoEvento + 3 * anchoRespuestas);
                       // Agregar líneas horizontales entre las filas
                       pdf.setDrawColor(0); // Establecer color de líneas en negro
                       pdf.setLineWidth(0.1); // Establecer ancho de línea
                       pdf.line(margenizq, posYEvento - 3, margender + 18, posYEvento - 3);
 
-                      pdf.text(nombreEvento, margenizq + 1, posYEvento, { align: "left", maxWidth: anchoEvento - 6 });
+                      pdf.text(nombreEvento, margenizq + 1, posYEvento, { align: "left", maxWidth: anchoEvento - 7 });
                       pdf.text(detractores.toString(), margenizq + anchoEvento, posYEvento, { align: "center", maxWidth: anchoRespuestas });
                       pdf.text(pasivos.toString(), margenizq + anchoEvento + anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
                       pdf.text(promotores.toString(), margenizq + anchoEvento + 2 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
                       pdf.text(respuestas.toString(), margenizq + anchoEvento + 3 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
                       pdf.text(porcentajeRespuestas, margenizq + anchoEvento + 4 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoPorcentaje });
-                      pdf.text(comentarios, margenizq + anchoEvento + 5 * anchoRespuestas - 4, posYEvento, { align: "left", maxWidth: margender - (margenizq + anchoEvento + 3 * anchoRespuestas) });
+                      pdf.text(comentarios, margenizq + anchoEvento + 5 * anchoRespuestas - 4, posYTabla + 15, { align: "left", maxWidth: anchoLinea });
 
-                      var sumarAposYTabla = 10 + (comentarios.split("|").filter(comentario => comentario !== "«Ninguno.»").length * 14);
+                      // Verificar el contenido de los comentarios después de procesarlos
+                      console.log("Comentarios procesados: ", comentarios);
 
-                      conteoLineaVertical = conteoLineaVertical + 1;
+                      // Calcular la longitud total de la cadena de registros
+                      var longitudComentarios = 1.5 * pdf.getStringUnitWidth(comentarios) * pdf.getFontSize();
+                      var longitudNombreEvento = 1.8 * pdf.getStringUnitWidth(nombreEvento) * pdf.getFontSize();
+
+                      // Calcular cuántas líneas se necesitarán para mostrar todos los registros
+                      var lineasNecesariasComentarios = Math.ceil(longitudComentarios / (anchoLinea));
+                      console.log("lineasNecesariasComentarios: " + lineasNecesariasComentarios)
+                      var lineasNecesariasNombreEvento = Math.ceil(longitudNombreEvento / (anchoEvento - 7));
+                      console.log("lineasNecesariasNombreEvento: " + lineasNecesariasNombreEvento)
+
+                      // Calcular el espacio adicional basado en el número de líneas necesarias
+                      var sumarAposYTabla = Math.max(7, lineasNecesariasComentarios, lineasNecesariasNombreEvento);
+
+                      console.log("Espacio adicional calculado (sumarAposYTabla): ", sumarAposYTabla);
+
                       posYTabla += sumarAposYTabla;
+                      console.log("Nueva posYTabla después de añadir espacio: ", posYTabla);
+                      conteoLineaVertical = conteoLineaVertical + 1;
                       posY2TablaLineaVertical += sumarAposYTabla;
                   }
                 }
@@ -6604,9 +6630,24 @@ cuentasRef.get().then(async (docCuentas) => {
             console.log(satisfaccionPromedioCapitularTexto);
 
             // Añadir satisfacción promedio en la página 2 del PDF
-            pdf.setPage(2); // Cambiar a la página 2
+            pdf.setPage(3); // Cambiar a la página 2
             pdf.setFontSize(12);
             pdf.text(`Satisfacción Promedio: ${satisfaccionPromedioCapitularTexto}`, margenizq, posY + 3, { align: "justify", maxWidth: margender });
+
+            // Ajustes de la portada
+            pdf.setTextColor("#32620E"); //Verde académico
+            pdf.setFontSize(35);
+            pdf.setPage(1); // Cambiar a la página 1
+            pdf.text(capituloUsuario.toUpperCase(), 105, 200, { align: "center" });
+            // Ajustes del pie de página
+            pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
+            pdf.setFontSize(11);
+            pdf.setPage(2); // Cambiar a la página 2
+            pdf.text(telefonoCuenta, 91, 291.5);
+            pdf.setPage(3); // Cambiar a la página 3
+            pdf.text(telefonoCuenta, 91, 291.5);
+            pdf.setPage(4); // Cambiar a la página 4
+            pdf.text(telefonoCuenta, 91, 291.5);
 
             // Guardar el PDF con el nombre especificado
             pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario + '_FEB-MAY_2024-1.pdf');
