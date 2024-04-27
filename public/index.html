@@ -294,6 +294,28 @@
     .button-generar-informe {
       background-color: #32ce13;
     }
+    .button-login {
+      color: #000000;
+      background-color: #FDF55F;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 120px; /* Ocupar el ancho del contenedor */
+    }
+    .button-cambio-contrasena {
+      color: #000000;
+      background-color: #FDF55F;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 230px; /* Ocupar el ancho del contenedor */
+    }
     /* Estilo para los campos de correo del forms y contraseña */
     input[type="email"],
     input[type="password"] {
@@ -301,6 +323,18 @@
       padding: 5px 10px;
       margin-bottom: 10px; /* Espaciado inferior */
       width: 150px; /* Ocupar el ancho del contenedor */
+    }
+    .input-password-large {
+        width: 300px; /* Ancho específico para ciertos campos de contraseña */
+        font-size: 18px; /* Mismo tamaño de fuente que el botón */
+        padding: 5px 10px;
+        margin-bottom: 10px; /* Espaciado inferior */
+    }
+    input[type="cambio-text"] {
+      font-size: 18px; /* Mismo tamaño de fuente que el botón */
+      padding: 5px 10px;
+      margin-bottom: 10px; /* Espaciado inferior */
+      width: 300px; /* Ocupar el ancho del contenedor */
     }
     .disponibilidad-container {
       display: flex;
@@ -431,9 +465,14 @@
       align-items: center;
     }
     .swal2-input {
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 10px; /* Ajusta según sea necesario */
+        font-size: 16px; /* Aumenta el tamaño de la fuente */
+        padding: 10px; /* Más padding para hacer el input más grande */
+    }
+    .toggle-password {
+        cursor: pointer;
+        position: absolute;
+        margin-left: 0px;
+        margin-top: 25px; /* Ajusta según sea necesario */
     }
     /* Estilos para la tabla resumen */
     #tabla-resumen {
@@ -585,7 +624,8 @@
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña">
     <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe PDF</button>
   </form>
-  <button type="button" class="button-consultar" onclick="validar_login()">Iniciar Sesión</button>
+  <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
+  <button type="button" class="button-cambio-contrasena" onclick="cambiar_contrasena()">Cambiar Contraseña</button>
   <!-- Elemento para mostrar el saludo -->
   <div id="saludoUsuario" style="color: orange;">¡Hola, ANEIAPo!</div>
 
@@ -5379,6 +5419,143 @@
       });
     }
 
+    function cambiar_contrasena() {
+      Swal.fire({
+          title: 'Cambio de Contraseña',
+          html: `
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" class="swal2-input input-email" placeholder="Correo">
+              
+              <label for="oldPassword">Contraseña actual</label>
+              <input type="password" id="oldPassword" class="swal2-input input-password" placeholder="Contraseña Actual">
+              <span class="toggle-password" onclick="togglePasswordVisibility('oldPassword')">&#128065;</span>
+              
+              <label for="newPassword">Nueva contraseña</label>
+              <input type="password" id="newPassword" class="swal2-input input-password" placeholder="Nueva Contraseña">
+              <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')">&#128065;</span>
+              
+              <label for="confirmNewPassword">Confirmación contraseña</label>
+              <input type="password" id="confirmNewPassword" class="swal2-input input-password" placeholder="Confirmar Nueva Contraseña">
+              <span class="toggle-password" onclick="togglePasswordVisibility('confirmNewPassword')">&#128065;</span>
+          `,
+          confirmButtonText: 'Cambiar Contraseña',
+          focusConfirm: false,
+          preConfirm: () => {
+              const email = Swal.getPopup().querySelector('#email').value;
+              const oldPassword = Swal.getPopup().querySelector('#oldPassword').value;
+              const newPassword = Swal.getPopup().querySelector('#newPassword').value;
+              const confirmNewPassword = Swal.getPopup().querySelector('#confirmNewPassword').value;
+              
+              if (!email || !oldPassword || !newPassword || !confirmNewPassword) {
+                  Swal.showValidationMessage(`Todos los campos son obligatorios.`);
+                  return false;
+              }
+
+              if (oldPassword === newPassword) {
+                  Swal.showValidationMessage(`Tu nueva contraseña debe ser diferente a la actual.`);
+                  return false;
+              }
+
+              if (newPassword !== confirmNewPassword) {
+                  Swal.showValidationMessage(`Las contraseñas nuevas no coinciden.`);
+                  return false;
+              }
+
+              // Referencia al documento en la colección "cuentas"
+              var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
+
+              return cuentaRef.get().then((doc) => {
+                  if (!doc.exists) {
+                      Swal.showValidationMessage('No se encontró una cuenta asociada a ese correo.');
+                      return false;
+                  }
+
+                  const storedPassword = doc.data().pass;
+                  if (oldPassword !== storedPassword) {
+                      Swal.showValidationMessage('La contraseña actual no es correcta.');
+                      return false;
+                  }
+
+                  return { email: email, oldPassword: oldPassword, newPassword: newPassword };
+              });
+          },
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar'
+      }).then((result) => {
+          if (result.value) {
+              const { email, newPassword } = result.value;
+
+              // Actualizar la contraseña en Firestore
+              var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
+              cuentaRef.update({
+                  pass: newPassword
+              }).then(() => {
+                  //enviarCorreoCambioContrasena(email, newPassword);
+                  Swal.fire('Actualizado', 'Tu contraseña ha sido actualizada correctamente.', 'success');
+              }).catch((error) => {
+                  Swal.fire('Error', 'No se pudo actualizar la contraseña.', 'error');
+              });
+          }
+      }).catch((error) => {
+          Swal.fire('Error', error.message, 'error');
+      });
+    }
+
+    function togglePasswordVisibility(inputId) {
+        var input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "email";
+        } else {
+            input.type = "password";
+        }
+    }
+
+    function enviarCorreoCambioContraseña(email, newPassword) {
+        // Configuración del servicio de correo (en este caso, Elastic Email)
+        var emailHost = "smtp.elasticemail.com";
+        var emailUsername = "siea@aneiap.co";
+        var emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70";
+
+        // Mensaje de correo con confirmación del cambio de contraseña y la nueva contraseña adjunta
+        const asunto = "Confirmación de Cambio de Contraseña";
+        const mensaje = `
+            <html>
+            <body>
+                <h1>CAMBIO DE CONTRASEÑA CONFIRMADO </h1>
+                <p>Estimado usuario,</p>
+                <p>Este mensaje confirma que tu contraseña ha sido cambiada exitosamente. Tu nueva contraseña es: <strong>${newPassword}</strong></p>
+                <p>Si no has solicitado este cambio, por favor contacta inmediatamente a siea@aneiap.co o genera un ticket en SIEA.</p>
+                <p>¡Gracias por utilizar SIEA!.</p>
+                <p style="font-style: italic;">Este es un correo automático y no debe ser respondido.</p>
+                <p style="font-style: italic;">Cordialmente, Administrador SIEA</p>
+            </body>
+            </html>
+        `;
+
+        Email.send({
+            Host: emailHost,
+            Username: emailUsername,
+            Password: emailPassword,
+            To: email,
+            Cc: "siea@aneiap.co", // Enviar copia a siea@aneiap.co
+            From: emailUsername,
+            Subject: asunto,
+            Body: mensaje,
+            ContentType: "text/html"
+        })
+        .then((message) => {
+            console.log("Mensaje de SMTPJS:", message);
+            if (message === "OK") {
+                console.log("Correo de confirmación de cambio de contraseña enviado con éxito.");
+            } else {
+                console.error("Error al enviar el correo de confirmación de cambio de contraseña:", message);
+            }
+        })
+        .catch((error) => {
+            console.error("Error en la función de envío de correo de confirmación de cambio de contraseña:", error);
+        });
+    }
+
     // Función para convertir números en emojis
     function numeroAEmoji(numero) {
       if (numero < 10) {
@@ -6312,7 +6489,7 @@
 
       // Crear un nuevo objeto jsPDF
       var pdf = new jsPDF();
-      var tiempoCarga = 30000;
+      var tiempoCarga = 25000;
       var margenizq = 15; //Margen izquierdo
       var margender = 180;//Margen derecho
       var coordenadaY = 35;
@@ -6650,7 +6827,7 @@ cuentasRef.get().then(async (docCuentas) => {
             pdf.text(telefonoCuenta, 91, 291.5);
 
             // Guardar el PDF con el nombre especificado
-            pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario + '_FEB-MAY_2024-1.pdf');
+            pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_FEB-MAY_2024-1.pdf');
             toggleVisualizarActualizarEspacios();
 
             // Abrir automáticamente el PDF después de descargarlo
