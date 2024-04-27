@@ -5490,8 +5490,8 @@
               cuentaRef.update({
                   pass: newPassword
               }).then(() => {
-                  //enviarCorreoCambioContrasena(email, newPassword);
                   Swal.fire('Actualizado', 'Tu contraseña ha sido actualizada correctamente.', 'success');
+                  return enviarCorreoCambioContraseña(email, newPassword);
               }).catch((error) => {
                   Swal.fire('Error', 'No se pudo actualizar la contraseña.', 'error');
               });
@@ -5532,12 +5532,12 @@
             </html>
         `;
 
-        Email.send({
+        return Email.send({
             Host: emailHost,
             Username: emailUsername,
             Password: emailPassword,
             To: email,
-            Cc: "siea@aneiap.co", // Enviar copia a siea@aneiap.co
+            Cc: "siea@aneiap.co",
             From: emailUsername,
             Subject: asunto,
             Body: mensaje,
