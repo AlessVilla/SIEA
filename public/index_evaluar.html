@@ -1264,6 +1264,18 @@
       var pregunta3 = document.getElementById("pregunta3").value;
       var comentarios = document.getElementById("pregunta4").value;
 
+      // Validar la longitud de comentarios
+      if (comentarios.length > 100) {
+          // Mostrar el mensaje de error utilizando Swal.fire
+          Swal.fire({
+              title: '¡Comentario demasiado largo!',
+              text: 'El comentario no puede tener más de 100 caracteres.',
+              icon: 'warning',
+              confirmButtonText: 'Aceptar'
+          });
+          return; // Detener el proceso de evaluación
+      }
+      
       var telefonoAsistenteRegex = /^3\d{9}$/; // Esta expresión regular verifica que solo haya 10 dígitos y nada más.
       // Aquí ajustamos la condición para que verifique correctamente si el teléfono es vacío o no coincide con el patrón
       if (telefonoAsistente === "" || !telefonoAsistenteRegex.test(telefonoAsistente)) {
