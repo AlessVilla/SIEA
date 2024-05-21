@@ -731,6 +731,7 @@
         </div>
       </div>
       <button class="button-reservar" onclick="registrarEvento()">Registrar evento</button>
+      <button onclick="iniciarSesionJDN()">JDN</button>
       </div>
     </div>
   </div>
@@ -1218,7 +1219,7 @@
             icesi: "academico_icesi@aneiap.co",
             usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
             librecali: "academico_librecali@aneiap.co, interventoria_librecali@aneiap.co",
-            nacional: "proy_diseno_nacional@aneiap.co, academico@aneiap.co, interventoria@aneiap.co"
+            nacional: "academico@aneiap.co, interventoria@aneiap.co"
         };
 
         // Correo de usuario y correos asociados al capítulo
@@ -1733,6 +1734,55 @@
       }
     });
 */
+    function iniciarSesionJDN() {
+        Swal.fire({
+            title: 'Validación requerida',
+            text: 'Ingresa la contraseña para la cuenta jdn@aneiap.co y poder reservar a nivel nacional.',
+            input: 'password',
+            inputLabel: 'Contraseña de JDN',
+            inputPlaceholder: 'Ingresa la contraseña',
+            inputAttributes: {
+                maxlength: 20,
+                autocapitalize: 'off',
+                autocorrect: 'off'
+            },
+            showCancelButton: false,
+            confirmButtonText: 'Validar',
+            showLoaderOnConfirm: true,
+            preConfirm: (password) => {
+                return firebase.firestore().collection("cuentas").doc("jdn@aneiap.co").get()
+                    .then(doc => {
+                        if (!doc.exists) {
+                            throw new Error('No se encontró la cuenta');
+                        }
+                        if (doc.data().pass !== password) {
+                            Swal.showValidationMessage('La contraseña es incorrecta.');
+                            return false; // Retornar false para que no se cierre el Swal
+                        }
+                        return true; // Retornar true para cerrar el Swal
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(`Error: ${error}`);
+                        return false; // Retornar false para que no se cierre el Swal
+                    });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si la validación es exitosa
+                Swal.fire({
+                    title: 'Inicio de sesión exitoso',
+                    text: '¡Has iniciado sesión correctamente!',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+                // Asignar valores a las variables globales
+                correoUsuario = "jdn@aneiap.co";
+                capituloUsuario = "nacional";
+            }
+        });
+    }
+
   </script>
 
 </body>
