@@ -693,7 +693,7 @@
                 <input type="text" id="crm-nombre-asistente" placeholder="Ingresa tu nombre.">
             </div>
             <div class="fourth">
-                <label for="crm-telefono-asistente"><b>Teléfono del asistente: *</b></label>
+                <label for="crm-telefono-asistente"><b>Teléfono (opcional): *</b></label>
                 <input type="tel" id="crm-telefono-asistente" placeholder="Ingresa tu número de teléfono.">
             </div>
             <div class="fourth">
@@ -1277,8 +1277,8 @@
       }
       
       var telefonoAsistenteRegex = /^3\d{9}$/; // Esta expresión regular verifica que solo haya 10 dígitos y nada más.
-      // Aquí ajustamos la condición para que verifique correctamente si el teléfono es vacío o no coincide con el patrón
-      if (telefonoAsistente === "" || !telefonoAsistenteRegex.test(telefonoAsistente)) {
+      // Aquí ajustamos la condición para que verifique correctamente si el teléfono no coincide con el patrón en caso de haberlo diligenciado pues es opcional
+      if (telefonoAsistente !== "" && !telefonoAsistenteRegex.test(telefonoAsistente)) {
         Swal.fire({
           title: '¡TELÉFONO INCORRECTO!',
           text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras.',
@@ -1325,7 +1325,8 @@
 
             // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
             if (nombreAsistente.trim() === "") {camposFaltantes.push(" - Nombre del asistente");}
-            if (telefonoAsistente.trim() === "") {camposFaltantes.push(" - Teléfono del asistente");}
+            //if (telefonoAsistente.trim() === "") {camposFaltantes.push(" - Teléfono del asistente");}
+            //Se hizo opcional el telefono del asistente
             if (correoAsistente.trim() === "") {camposFaltantes.push(" - Correo del asistente");}
             if (capituloEspacio === "") {camposFaltantes.push(" - Capítulo que organizó el espacio");}
             if (nombreEspacio === "") {camposFaltantes.push(" - Nombre del espacio a evaluar");}
