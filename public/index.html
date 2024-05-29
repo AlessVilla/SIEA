@@ -3846,52 +3846,66 @@
     // Función para consultar eventos reservados para un día y agregarlos a la tabla
     function consultarEventos(fechaDiaTipoFirebase, cuerpoTabla, capituloConsulta) {
       var fila = cuerpoTabla.insertRow();
-      var fechaDiaTipoDate = convertirFechaTipoFirebaseYDate(fechaDiaTipoFirebase)
+      var fechaDiaTipoDate = convertirFechaTipoFirebaseYDate(fechaDiaTipoFirebase);
       var diaSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
       var textoDia = fechaDiaTipoDate;
       fila.insertCell().textContent = textoDia; // Agregar el día de la semana a la primera columna de la fila
 
       // Consultar los eventos reservados para el día de la semana actual
       var reservasRef = firebase.firestore().collection("reservas");
-      var consulta;
-      if (capituloConsulta === "ANEIAP NACIONAL") {
-        consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulo", "==", "nacional");
-      } else {
-        consulta = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", capituloConsulta);
-      }
+      
+      var consultaCapitulo = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", capituloConsulta);
+      var consultaNacional = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", "nacional");
 
-      consulta.get().then((querySnapshot) => {
-        var numEventos = querySnapshot.size;
-        console.log("Número de eventos obtenidos para el día ", fechaDiaTipoFirebase, ":", numEventos);
-        var eventos = [];
-        querySnapshot.forEach(function(doc) {
-          var nombreEvento = doc.data().nombreEvento;
-          var nombreOrganizador = doc.data().nombreOrganizador;
-          var horaEvento = doc.data().horaEvento;
-          var correoOrganizador = doc.data().emailOrganizador;
-          var capitulo = doc.data().capitulosOrganizadores;
+      Promise.all([consultaCapitulo.get(), consultaNacional.get()])
+        .then(function(results) {
+          var querySnapshotCapitulo = results[0];
+          var querySnapshotNacional = results[1];
 
-          var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
-          var minutos = horaEvento % 60; // Obtener los minutos del evento
-          var horaFormateada = (hora < 10 ? "0" + hora : hora) + ":" + (minutos < 10 ? "0" + minutos : minutos); // Formatear la hora
+          // Combinar los resultados de ambas consultas
+          var querySnapshotCombined = querySnapshotCapitulo.docs.concat(querySnapshotNacional.docs);
 
-          eventos.push({ nombre: nombreEvento, organizador: nombreOrganizador, capitulo: capitulo, hora: horaFormateada, correo: correoOrganizador });
-        });
-
-        // Agregar los eventos reservados para el día de la semana actual a la segunda columna de la fila
-        if (eventos.length > 0) {
-          var eventosReservados = "";
-          eventos.forEach(function(evento, indice) {
-            eventosReservados += `${numeroAEmoji(indice + 1)} ${evento.nombre} - Organizador: ${evento.organizador} - Capítulo: ${evento.capitulo} - Hora: ${evento.hora} - Correo: ${evento.correo}<br>`;
+          // Eliminar duplicados si es necesario
+          var uniqueDocs = [];
+          var docIds = new Set();
+          querySnapshotCombined.forEach(function(doc) {
+            if (!docIds.has(doc.id)) {
+              docIds.add(doc.id);
+              uniqueDocs.push(doc);
+            }
           });
-          fila.insertCell().innerHTML = eventosReservados;
-        } else {
-          fila.insertCell().innerHTML = "✅ DISPONIBLE POR COMPLETO.";
-        }
-      }).catch(function(error) {
-        console.log("Error obteniendo reservas:", error);
-        // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
-      });
+
+          var numEventos = uniqueDocs.length;
+          console.log("Número de eventos obtenidos para el día ", fechaDiaTipoFirebase, ":", numEventos);
+          var eventos = [];
+          uniqueDocs.forEach(function(doc) {
+            var nombreEvento = doc.data().nombreEvento;
+            var nombreOrganizador = doc.data().nombreOrganizador;
+            var horaEvento = doc.data().horaEvento;
+            var correoOrganizador = doc.data().emailOrganizador;
+            var capitulo = doc.data().capitulosOrganizadores;
+
+            var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
+            var minutos = horaEvento % 60; // Obtener los minutos del evento
+            var horaFormateada = (hora < 10 ? "0" + hora : hora) + ":" + (minutos < 10 ? "0" + minutos : minutos); // Formatear la hora
+
+            eventos.push({ nombre: nombreEvento, organizador: nombreOrganizador, capitulo: capitulo, hora: horaFormateada, correo: correoOrganizador });
+          });
+
+          // Agregar los eventos reservados para el día de la semana actual a la segunda columna de la fila
+          if (eventos.length > 0) {
+            var eventosReservados = "";
+            eventos.forEach(function(evento, indice) {
+              eventosReservados += `${numeroAEmoji(indice + 1)} ${evento.nombre} - Organizador: ${evento.organizador} - Capítulo: ${evento.capitulo} - Hora: ${evento.hora} - Correo: ${evento.correo}<br>`;
+            });
+            fila.insertCell().innerHTML = eventosReservados;
+          } else {
+            fila.insertCell().innerHTML = "✅ DISPONIBLE POR COMPLETO.";
+          }
+        }).catch(function(error) {
+          console.log("Error obteniendo reservas:", error);
+          // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
+        });
     }
 
     function convertirFechaTipoFirebaseYDate(fecha) {
