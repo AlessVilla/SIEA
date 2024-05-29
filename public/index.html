@@ -5378,7 +5378,7 @@
                   capituloUsuario = result.value;
                   // Mostrar mensaje de inicio de sesión exitoso
                   mostrarMensajeInicioSesion();
-                  console.log("El capítulo del usuario es: " + capituloUsuario)
+                  console.log("El capítulo del usuario es: " + capituloUsuario);
                 }
               });
             } else if (correo.startsWith("academico_")) {
@@ -5391,46 +5391,90 @@
               telefonoCuenta = storedTelefonoCuenta;
               // Mostrar mensaje de inicio de sesión exitoso
               mostrarMensajeInicioSesion();
+              // Vaciar los campos de correo y contraseña
+              document.getElementById("correo").value = "";
+              document.getElementById("contrasena").value = "";
             } else {
               // Si no se cumple ninguna de las condiciones anteriores, asignar valor "general" a capituloUsuario
               capituloUsuario = "nacional";
               // Mostrar mensaje de inicio de sesión exitoso
               mostrarMensajeInicioSesion();
+              // Vaciar los campos de correo y contraseña
+              document.getElementById("correo").value = "";
+              document.getElementById("contrasena").value = "";
             }
+
             // Realizar la consulta a la colección "reservas"
             var reservasRef = firebase.firestore().collection("reservas");
-            var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario).where("fechaEvento", ">=", fechaInicialPDF)
-                                      .where("fechaEvento", "<=", fechaFinalPDF).orderBy("fechaEvento", "asc");
+            var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
+              .where("fechaEvento", ">=", fechaInicialPDF)
+              .where("fechaEvento", "<=", fechaFinalPDF)
+              .orderBy("fechaEvento", "asc");
+
             consulta.get().then(function(querySnapshot) {
               // Filtrar los documentos por tipoEvento
               var documentosFiltrados = querySnapshot.docs.filter(function(doc) {
                 var tipoEvento = doc.data().tipoEvento;
                 var asistentes = doc.data().asistentes;
                 return tipoEvento !== undefined && tipoEvento !== "" && tipoEvento !== "ninguno" &&
-                asistentes !== undefined && asistentes !== null && asistentes !== ""; // Filtrar por tipoEvento diferente de "undefined" y cadena vacía
+                  asistentes !== undefined && asistentes !== null && asistentes !== ""; // Filtrar por tipoEvento diferente de "undefined" y cadena vacía
               });
-                // Iterar sobre los resultados de la consulta
-                documentosFiltrados.forEach(function(doc) {
-                    var data = doc.data();
-                    // Construir la cadena de texto vectorial para este evento
-                    var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
-                    // Agregar la cadena al array
-                    tablaResumen.push(eventoString);
-                    var claveEvento = data.claveEvento; // Obtener la clave del evento
-                    clavesInforme += `${claveEvento}|`; // Concatenar la clave del evento a clavesInforme
-                });
-                // Guardar el array en el campo "tablaResumen" de la colección "cuentas"
-                var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
-                cuentasRef.update({
-                    tablaResumen: tablaResumen,
-                    clavesInforme: clavesInforme
-                }).then(function() {
-                    tablaResumenPDF = tablaResumen
-                    console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'.");
-                    console.log(tablaResumenPDF)
-                }).catch(function(error) {
-                    console.error("Error al guardar la tabla resumen:", error);
-                });
+
+              // Iterar sobre los resultados de la consulta
+              documentosFiltrados.forEach(function(doc) {
+                var data = doc.data();
+                // Construir la cadena de texto vectorial para este evento
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
+                // Agregar la cadena al array
+                tablaResumen.push(eventoString);
+                var claveEvento = data.claveEvento; // Obtener la clave del evento
+                clavesInforme += `${claveEvento}|`; // Concatenar la clave del evento a clavesInforme
+              });
+
+              // Guardar el array en el campo "tablaResumen" de la colección "cuentas"
+              var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+              cuentasRef.update({
+                tablaResumen: tablaResumen,
+                clavesInforme: clavesInforme
+              }).then(function() {
+                tablaResumenPDF = tablaResumen;
+                console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'.");
+                console.log(tablaResumenPDF);
+              }).catch(function(error) {
+                console.error("Error al guardar la tabla resumen:", error);
+              });
+
+              // Realizar la consulta y filtrado adicional para "tablaResumenConEI"
+              var documentosConEI = querySnapshot.docs.filter(function(doc) {
+                var tipoEvento = doc.data().tipoEvento;
+                var asistentes = doc.data().asistentes;
+                return (tipoEvento === "entrenamiento-interno") ||
+                  (tipoEvento === "valor-agregado" && asistentes !== undefined && asistentes !== null && asistentes !== "");
+              });
+
+              var tablaResumenConEI = [];
+              documentosConEI.forEach(function(doc) {
+                var data = doc.data();
+                // Determinar el valor para satisfacción
+                var satisfaccionValue = (data.asistentes && data.asistentes.length > 0) ? `${(data.satisfaccion * 100).toFixed(2)}%` : "N/A";
+                // Construir la cadena de texto vectorial para este evento
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${satisfaccionValue}|${data.evidencia}`;
+                // Agregar la cadena al array
+                tablaResumenConEI.push(eventoString);
+              });
+
+              // Guardar el array en el nuevo campo "tablaResumenConEI" de la colección "cuentas"
+              cuentasRef.update({
+                tablaResumenConEI: tablaResumenConEI
+              }).then(function() {
+                tablaResumenPDF = tablaResumenConEI;
+                console.log("Tabla resumen con EI guardada exitosamente en la colección 'cuentas'.");
+                console.log(tablaResumenConEI);
+              }).catch(function(error) {
+                console.error("Error al guardar la tabla resumen con EI:", error);
+              });
+            }).catch(function(error) {
+              console.error("Error al obtener las reservas:", error);
             });
           } else {
             // Contraseña incorrecta, mostrar alerta de advertencia
@@ -6643,9 +6687,9 @@
         pdf.addImage(imgSatisfaccion, 'PNG', margenizq, 178, margender, 80, '', 'FAST'); // Inserta la imagen del gráfico de satisfacción
         //doc.text("Satisfacciones: " + valoresSatisfaccion, margenizq, 250, { align: "justify", maxWidth: margender });
         // Añadir la cabecera de la tabla al PDF
-        pdf.text("AREA/TIPO DE ESPACIO Y SU SATISFACCIÓN PROMEDIO", margenizq, 263, { align: "justify", maxWidth: margender });
+        pdf.text("AREA/TIPO DE ESPACIO Y SU SATISFACCIÓN PROMEDIO", margenizq, 262, { align: "justify", maxWidth: margender });
         // Añadir los valores de la tabla al PDF
-        pdf.text(valoresText, margenizq, 273, { align: "justify", maxWidth: margender });
+        pdf.text(valoresText, margenizq, 271, { align: "justify", maxWidth: margender });
 
         // Agregar una nueva página al documento
         pdf.addPage(); // Agrega una nueva página al documento actual
@@ -6731,187 +6775,187 @@
 
         var posYRespuestas;
 
-// Obtener las claves de los eventos del campo "clavesInforme" del documento correspondiente en la colección "cuentas"
-console.log("Obteniendo referencia a la colección de cuentas...");
-var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+        // Obtener las claves de los eventos del campo "clavesInforme" del documento correspondiente en la colección "cuentas"
+        console.log("Obteniendo referencia a la colección de cuentas...");
+        var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
 
-cuentasRef.get().then(async (docCuentas) => {
-    if (docCuentas.exists) {
-        console.log("Documento de cuentas encontrado.");
-        var clavesInforme = docCuentas.data().clavesInforme.split("|");
+        cuentasRef.get().then(async (docCuentas) => {
+            if (docCuentas.exists) {
+                console.log("Documento de cuentas encontrado.");
+                var clavesInforme = docCuentas.data().clavesInforme.split("|");
 
-        // Calcular valores para cada evento y construir tabla dashboard
-        console.log("Calcular valores para cada evento y construir tabla dashboard...");
-        pdf.setFontSize(15);
-        pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
-            margenizq, 22, { align: "justify", maxWidth: margender });
+                // Calcular valores para cada evento y construir tabla dashboard
+                console.log("Calcular valores para cada evento y construir tabla dashboard...");
+                pdf.setFontSize(15);
+                pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
+                    margenizq, 22, { align: "justify", maxWidth: margender });
 
-        // Definir tamaño de celdas de la tabla
-        var anchoEvento = pdf.internal.pageSize.getWidth() * 0.15;
-        var anchoRespuestas = pdf.internal.pageSize.getWidth() * 0.05;
-        var anchoPorcentaje = pdf.internal.pageSize.getWidth() * 0.15;
-        var anchoComentarios = pdf.internal.pageSize.getWidth() * 0.35;
-        var anchoRestante = pdf.internal.pageSize.getWidth() * 0.25;
+                // Definir tamaño de celdas de la tabla
+                var anchoEvento = pdf.internal.pageSize.getWidth() * 0.15;
+                var anchoRespuestas = pdf.internal.pageSize.getWidth() * 0.05;
+                var anchoPorcentaje = pdf.internal.pageSize.getWidth() * 0.15;
+                var anchoComentarios = pdf.internal.pageSize.getWidth() * 0.35;
+                var anchoRestante = pdf.internal.pageSize.getWidth() * 0.25;
 
-        var posYTabla = 20; // Posición vertical para la tabla en el PDF
+                var posYTabla = 20; // Posición vertical para la tabla en el PDF
 
-        // Encabezados de la tabla de respuestas
-        console.log("Añadiendo encabezados de tabla...");
-        pdf.setFontSize(7);
-        pdf.text("ESPACIO", margenizq + 7, posYTabla + 10);
-        pdf.text("DET.", margenizq + anchoEvento, posYTabla + 10, { align: "center", maxWidth: anchoEvento - 5 });
-        pdf.text("PAS.", margenizq + anchoEvento + anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
-        pdf.text("PRO.", margenizq + anchoEvento + 2 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
-        pdf.text("#RES.", margenizq + anchoEvento + 3 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
-        pdf.text("% RES.", margenizq + anchoEvento + 4 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
-        pdf.text("COMENTARIOS", margenizq + anchoEvento + 6 * anchoRespuestas - 4, posYTabla + 10, { align: "center", maxWidth: anchoRestante});
+                // Encabezados de la tabla de respuestas
+                console.log("Añadiendo encabezados de tabla...");
+                pdf.setFontSize(7);
+                pdf.text("ESPACIO", margenizq + 7, posYTabla + 10);
+                pdf.text("DET.", margenizq + anchoEvento, posYTabla + 10, { align: "center", maxWidth: anchoEvento - 5 });
+                pdf.text("PAS.", margenizq + anchoEvento + anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+                pdf.text("PRO.", margenizq + anchoEvento + 2 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
+                pdf.text("#RES.", margenizq + anchoEvento + 3 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
+                pdf.text("% RES.", margenizq + anchoEvento + 4 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas});
+                pdf.text("COMENTARIOS", margenizq + anchoEvento + 6 * anchoRespuestas - 4, posYTabla + 10, { align: "center", maxWidth: anchoRestante});
 
-        // Contenido de la tabla de respuestas
-        console.log("Añadiendo contenido de tabla...");
-        var clavesInforme = docCuentas.data().clavesInforme.split("|");
+                // Contenido de la tabla de respuestas
+                console.log("Añadiendo contenido de tabla...");
+                var clavesInforme = docCuentas.data().clavesInforme.split("|");
 
-        (async () => {
-            let totalSatisfaccion = 0;
-            let eventosConSatisfaccion = 0;
-            for (const claveEvento of clavesInforme) {
-                if (claveEvento) {
-                    var reservaRef = firebase.firestore().collection("reservas").doc(claveEvento);
-                    var docReserva = await reservaRef.get();
-                    
-                    var conteoLineaVertical = 1;
-                    // Agregar líneas verticales entre las columnas
-                    var posYTablaLineaVertical = posYTabla + 12;
-                    var posY2TablaLineaVertical = posYTabla;
+                (async () => {
+                    let totalSatisfaccion = 0;
+                    let eventosConSatisfaccion = 0;
+                    for (const claveEvento of clavesInforme) {
+                        if (claveEvento) {
+                            var reservaRef = firebase.firestore().collection("reservas").doc(claveEvento);
+                            var docReserva = await reservaRef.get();
+                            
+                            var conteoLineaVertical = 1;
+                            // Agregar líneas verticales entre las columnas
+                            var posYTablaLineaVertical = posYTabla + 12;
+                            var posY2TablaLineaVertical = posYTabla;
 
-                    if (docReserva.exists) {
-                      var data = docReserva.data();
-                      var posYEvento = posYTabla + 15;
+                            if (docReserva.exists) {
+                              var data = docReserva.data();
+                              var posYEvento = posYTabla + 15;
 
-                      // Calcular la satisfacción promedio
-                      totalSatisfaccion += parseFloat(data.satisfaccion || 0);
-                      eventosConSatisfaccion++;
+                              // Calcular la satisfacción promedio
+                              totalSatisfaccion += parseFloat(data.satisfaccion || 0);
+                              eventosConSatisfaccion++;
 
-                      // Variables para almacenar los valores de los campos
-                      var nombreEvento = data.nombreEvento || "";
-                      var detractores = data.detractores || 0;
-                      var pasivos = data.pasivos || 0;
-                      var promotores = data.promotores || 0;
-                      var respuestas = ((detractores + pasivos + promotores) / 3) || 0;
-                      var porcentajeRespuestas = ((respuestas / data.totalAsistentes) * 100).toFixed(2) + "%";
-                      var comentarios = data.comentarios ? data.comentarios.split(/\|/g).filter(comentario => comentario !== "Ninguno.").map(comentario => "«" + comentario.trim() + "»").join("_") : "";
+                              // Variables para almacenar los valores de los campos
+                              var nombreEvento = data.nombreEvento || "";
+                              var detractores = data.detractores || 0;
+                              var pasivos = data.pasivos || 0;
+                              var promotores = data.promotores || 0;
+                              var respuestas = ((detractores + pasivos + promotores) / 3) || 0;
+                              var porcentajeRespuestas = ((respuestas / data.totalAsistentes) * 100).toFixed(2) + "%";
+                              var comentarios = data.comentarios ? data.comentarios.split(/\|/g).filter(comentario => comentario !== "Ninguno.").map(comentario => "«" + comentario.trim() + "»").join("_") : "";
 
-                      var anchoLinea = margender - (margenizq + anchoEvento + 3 * anchoRespuestas);
-                      // Agregar líneas horizontales entre las filas
-                      pdf.setDrawColor(0); // Establecer color de líneas en negro
-                      pdf.setLineWidth(0.1); // Establecer ancho de línea
-                      pdf.line(margenizq, posYEvento - 3, margender + 18, posYEvento - 3);
+                              var anchoLinea = margender - (margenizq + anchoEvento + 3 * anchoRespuestas);
+                              // Agregar líneas horizontales entre las filas
+                              pdf.setDrawColor(0); // Establecer color de líneas en negro
+                              pdf.setLineWidth(0.1); // Establecer ancho de línea
+                              pdf.line(margenizq, posYEvento - 3, margender + 18, posYEvento - 3);
 
-                      pdf.text(nombreEvento, margenizq + 1, posYEvento, { align: "left", maxWidth: anchoEvento - 7 });
-                      pdf.text(detractores.toString(), margenizq + anchoEvento, posYEvento, { align: "center", maxWidth: anchoRespuestas });
-                      pdf.text(pasivos.toString(), margenizq + anchoEvento + anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
-                      pdf.text(promotores.toString(), margenizq + anchoEvento + 2 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
-                      pdf.text(respuestas.toString(), margenizq + anchoEvento + 3 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
-                      pdf.text(porcentajeRespuestas, margenizq + anchoEvento + 4 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoPorcentaje });
-                      pdf.text(comentarios, margenizq + anchoEvento + 5 * anchoRespuestas - 4, posYTabla + 15, { align: "left", maxWidth: anchoLinea });
+                              pdf.text(nombreEvento, margenizq + 1, posYEvento, { align: "left", maxWidth: anchoEvento - 7 });
+                              pdf.text(detractores.toString(), margenizq + anchoEvento, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                              pdf.text(pasivos.toString(), margenizq + anchoEvento + anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                              pdf.text(promotores.toString(), margenizq + anchoEvento + 2 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                              pdf.text(respuestas.toString(), margenizq + anchoEvento + 3 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoRespuestas });
+                              pdf.text(porcentajeRespuestas, margenizq + anchoEvento + 4 * anchoRespuestas, posYEvento, { align: "center", maxWidth: anchoPorcentaje });
+                              pdf.text(comentarios, margenizq + anchoEvento + 5 * anchoRespuestas - 4, posYTabla + 15, { align: "left", maxWidth: anchoLinea });
 
-                      // Verificar el contenido de los comentarios después de procesarlos
-                      console.log("Comentarios procesados: ", comentarios);
+                              // Verificar el contenido de los comentarios después de procesarlos
+                              console.log("Comentarios procesados: ", comentarios);
 
-                      // Calcular la longitud total de la cadena de registros
-                      var longitudComentarios = 1.5 * pdf.getStringUnitWidth(comentarios) * pdf.getFontSize();
-                      var longitudNombreEvento = 1.8 * pdf.getStringUnitWidth(nombreEvento) * pdf.getFontSize();
+                              // Calcular la longitud total de la cadena de registros
+                              var longitudComentarios = 1.5 * pdf.getStringUnitWidth(comentarios) * pdf.getFontSize();
+                              var longitudNombreEvento = 1.8 * pdf.getStringUnitWidth(nombreEvento) * pdf.getFontSize();
 
-                      // Calcular cuántas líneas se necesitarán para mostrar todos los registros
-                      var lineasNecesariasComentarios = Math.ceil(longitudComentarios / (anchoLinea));
-                      console.log("lineasNecesariasComentarios: " + lineasNecesariasComentarios)
-                      var lineasNecesariasNombreEvento = Math.ceil(longitudNombreEvento / (anchoEvento - 7));
-                      console.log("lineasNecesariasNombreEvento: " + lineasNecesariasNombreEvento)
+                              // Calcular cuántas líneas se necesitarán para mostrar todos los registros
+                              var lineasNecesariasComentarios = Math.ceil(longitudComentarios / (anchoLinea));
+                              console.log("lineasNecesariasComentarios: " + lineasNecesariasComentarios)
+                              var lineasNecesariasNombreEvento = Math.ceil(longitudNombreEvento / (anchoEvento - 7));
+                              console.log("lineasNecesariasNombreEvento: " + lineasNecesariasNombreEvento)
 
-                      // Calcular el espacio adicional basado en el número de líneas necesarias
-                      var sumarAposYTabla = Math.max(7, lineasNecesariasComentarios, lineasNecesariasNombreEvento);
+                              // Calcular el espacio adicional basado en el número de líneas necesarias
+                              var sumarAposYTabla = Math.max(7, lineasNecesariasComentarios, lineasNecesariasNombreEvento);
 
-                      console.log("Espacio adicional calculado (sumarAposYTabla): ", sumarAposYTabla);
+                              console.log("Espacio adicional calculado (sumarAposYTabla): ", sumarAposYTabla);
 
-                      posYTabla += sumarAposYTabla;
-                      console.log("Nueva posYTabla después de añadir espacio: ", posYTabla);
-                      conteoLineaVertical = conteoLineaVertical + 1;
-                      posY2TablaLineaVertical += sumarAposYTabla;
-                  }
-                }
-                // Primera línea vertical
-                pdf.line(margenizq, posYTablaLineaVertical, margenizq, posY2TablaLineaVertical + 12);
-                // Líneas verticales entre los campos
-                pdf.line(margenizq + anchoEvento - 5, posYTablaLineaVertical, margenizq + anchoEvento - 5, posY2TablaLineaVertical + 12);
-                pdf.line(margenizq + anchoEvento + 1 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 1 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
-                pdf.line(margenizq + anchoEvento + 2 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 2 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
-                pdf.line(margenizq + anchoEvento + 3 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 3 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
-                pdf.line(margenizq + anchoEvento + 4 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 4 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
-                pdf.line(margenizq + anchoEvento + 5 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 5 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
-                // Última línea vertical
-                pdf.line(margender + 2 * anchoRespuestas - 3, posYTablaLineaVertical, margender + 2 * anchoRespuestas - 3, posY2TablaLineaVertical + 12);
-              }
+                              posYTabla += sumarAposYTabla;
+                              console.log("Nueva posYTabla después de añadir espacio: ", posYTabla);
+                              conteoLineaVertical = conteoLineaVertical + 1;
+                              posY2TablaLineaVertical += sumarAposYTabla;
+                          }
+                        }
+                        // Primera línea vertical
+                        pdf.line(margenizq, posYTablaLineaVertical, margenizq, posY2TablaLineaVertical + 12);
+                        // Líneas verticales entre los campos
+                        pdf.line(margenizq + anchoEvento - 5, posYTablaLineaVertical, margenizq + anchoEvento - 5, posY2TablaLineaVertical + 12);
+                        pdf.line(margenizq + anchoEvento + 1 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 1 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                        pdf.line(margenizq + anchoEvento + 2 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 2 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                        pdf.line(margenizq + anchoEvento + 3 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 3 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                        pdf.line(margenizq + anchoEvento + 4 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 4 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                        pdf.line(margenizq + anchoEvento + 5 * anchoRespuestas - 5, posYTablaLineaVertical, margenizq + anchoEvento + 5 * anchoRespuestas - 5, posY2TablaLineaVertical + 12);
+                        // Última línea vertical
+                        pdf.line(margender + 2 * anchoRespuestas - 3, posYTablaLineaVertical, margender + 2 * anchoRespuestas - 3, posY2TablaLineaVertical + 12);
+                      }
 
-              // Línea horizontal final
-              pdf.line(margenizq, posY2TablaLineaVertical + 12, margender + 18, posY2TablaLineaVertical + 12);
+                      // Línea horizontal final
+                      pdf.line(margenizq, posY2TablaLineaVertical + 12, margender + 18, posY2TablaLineaVertical + 12);
 
-            // Calcular satisfacción promedio
-            const satisfaccionPromedioCapitular = totalSatisfaccion / eventosConSatisfaccion;
-            console.log("satisfaccionPromedioCapitular");
-            console.log(satisfaccionPromedioCapitular);
-            const satisfaccionPromedioCapitularTexto = (satisfaccionPromedioCapitular * 100).toFixed(2) + "%";
-            console.log("satisfaccionPromedioCapitularTexto");
-            console.log(satisfaccionPromedioCapitularTexto);
+                    // Calcular satisfacción promedio
+                    const satisfaccionPromedioCapitular = totalSatisfaccion / eventosConSatisfaccion;
+                    console.log("satisfaccionPromedioCapitular");
+                    console.log(satisfaccionPromedioCapitular);
+                    const satisfaccionPromedioCapitularTexto = (satisfaccionPromedioCapitular * 100).toFixed(2) + "%";
+                    console.log("satisfaccionPromedioCapitularTexto");
+                    console.log(satisfaccionPromedioCapitularTexto);
 
-            // Añadir satisfacción promedio en la página 2 del PDF
-            pdf.setPage(3); // Cambiar a la página 2
-            pdf.setFontSize(12);
-            pdf.text(`Satisfacción Promedio: ${satisfaccionPromedioCapitularTexto}`, margenizq, posY + 3, { align: "justify", maxWidth: margender });
+                    // Añadir satisfacción promedio en la página 2 del PDF
+                    pdf.setPage(3); // Cambiar a la página 2
+                    pdf.setFontSize(12);
+                    pdf.text(`Satisfacción Promedio (Valor Agregado): ${satisfaccionPromedioCapitularTexto}`, margenizq, posY + 3, { align: "justify", maxWidth: margender });
 
-            // Ajustes de la portada
-            pdf.setTextColor("#32620E"); //Verde académico
-            pdf.setFontSize(35);
-            pdf.setPage(1); // Cambiar a la página 1
-            pdf.text(capituloUsuario.toUpperCase(), 105, 200, { align: "center" });
-            // Ajustes del pie de página
-            pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
-            pdf.setFontSize(11);
-            pdf.setPage(2); // Cambiar a la página 2
-            pdf.text(telefonoCuenta, 91, 291.5);
-            pdf.setPage(3); // Cambiar a la página 3
-            pdf.text(telefonoCuenta, 91, 291.5);
-            pdf.setPage(4); // Cambiar a la página 4
-            pdf.text(telefonoCuenta, 91, 291.5);
+                    // Ajustes de la portada
+                    pdf.setTextColor("#32620E"); //Verde académico
+                    pdf.setFontSize(35);
+                    pdf.setPage(1); // Cambiar a la página 1
+                    pdf.text(capituloUsuario.toUpperCase(), 105, 200, { align: "center" });
+                    // Ajustes del pie de página
+                    pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
+                    pdf.setFontSize(11);
+                    pdf.setPage(2); // Cambiar a la página 2
+                    pdf.text(telefonoCuenta, 91, 291.5);
+                    pdf.setPage(3); // Cambiar a la página 3
+                    pdf.text(telefonoCuenta, 91, 291.5);
+                    pdf.setPage(4); // Cambiar a la página 4
+                    pdf.text(telefonoCuenta, 91, 291.5);
 
-            // Guardar el PDF con el nombre especificado
-            pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_FEB-MAY_2024-1.pdf');
-            toggleVisualizarActualizarEspacios();
+                    // Guardar el PDF con el nombre especificado
+                    pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_FEB-MAY_2024-1.pdf');
+                    toggleVisualizarActualizarEspacios();
 
-            // Abrir automáticamente el PDF después de descargarlo
-            var pdfURL = pdf.output('bloburl');
-            window.open(pdfURL, '_blank');
+                    // Abrir automáticamente el PDF después de descargarlo
+                    var pdfURL = pdf.output('bloburl');
+                    window.open(pdfURL, '_blank');
 
-            // Avisar que ya se generó el informe y que revise en descargas
-            Swal.fire({
-                title: 'Informe Generado',
-                text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar',
-                imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png',
-                imageWidth: 120,
-                imageHeight: 235,
-                imageAlt: 'Éxito',
-            });
-        })();
-    } else {
-        // Manejar el caso donde el documento de cuentas no existe
-        console.log("El documento de cuentas no existe.");
-    }
-}).catch((error) => {
-    // Manejar errores de consulta aquí
-    console.error("Error al obtener claves de eventos:", error);
-});
+                    // Avisar que ya se generó el informe y que revise en descargas
+                    Swal.fire({
+                        title: 'Informe Generado',
+                        text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Aceptar',
+                        imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png',
+                        imageWidth: 120,
+                        imageHeight: 235,
+                        imageAlt: 'Éxito',
+                    });
+                })();
+            } else {
+                // Manejar el caso donde el documento de cuentas no existe
+                console.log("El documento de cuentas no existe.");
+            }
+        }).catch((error) => {
+            // Manejar errores de consulta aquí
+            console.error("Error al obtener claves de eventos:", error);
+        });
 
 
       }, tiempoCarga); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
