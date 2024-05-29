@@ -3564,158 +3564,166 @@
     document.addEventListener("DOMContentLoaded", function() {activarConsultaDisponibilidad();});
 
     function ConsultarDisponibilidadReservas() {
-      var fechaConsulta = document.getElementById("fecha-consulta").value;
-      var capituloConsulta = document.getElementById("capitulo-consulta").value;
-      var fechaHoy = new Date().toISOString().slice(0, 10);
+        var fechaConsulta = document.getElementById("fecha-consulta").value;
+        var capituloConsulta = document.getElementById("capitulo-consulta").value;
+        var fechaHoy = new Date().toISOString().slice(0, 10);
 
-      // Acá se verifica que se haya insertado una fecha, si no insertaste nada, para el proceso y le notifica al usuario.
-      if (fechaConsulta.trim() === "") {
-        // Mostrar mensaje de error si no se ha seleccionado una fecha válida
-        Swal.fire({
-          title: '¡FECHA NO SELECCIONADA!',
-          text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: true,
-          backdrop: true,  
-          allowEscapeKey: true,
-          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        return;
-      }
-      if (capituloConsulta.trim() === "") {
-        // Mostrar mensaje de error si no se ha seleccionado una fecha válida
-        Swal.fire({
-          title: '¡CAPÍTULO NO SELECCIONADO!',
-          text: 'Por favor, selecciona el capítulo del cual deseas consultar la disponibilidad.',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: true,
-          backdrop: true,  
-          allowEscapeKey: true,
-          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        return;
-      }
-      /* Comentario opcional por si se desea considerar o no la limitación de fecha de hoy al consultar
-      if (fechaConsulta < fechaHoy) {
-        // Mostrar mensaje de error si la fecha seleccionada es menor o igual a la fecha actual
-        Swal.fire({
-          title: '¡FECHA INCORRECTA!',
-          text: 'Por favor, selecciona una fecha mayor a la fecha de HOY para consultar la disponibilidad.',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: true,
-          backdrop: true,  
-          allowEscapeKey: true,
-          imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        return;
-      }*/
-
-      // Aquí realizarías la lógica para consultar la disponibilidad de reservas con la fecha seleccionada
-      var fechaConsulta = document.getElementById("fecha-consulta").value;
-      // Resto del código para validar la fecha y mostrar mensajes de error...
-      // Obtener todos los eventos reservados para la fecha seleccionada
-      var reservasRef = firebase.firestore().collection("reservas");
-      var consulta = [];
-
-      if (capituloConsulta === "ANEIAP NACIONAL") {
-        // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
-        consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulo", "==", "nacional");
-      } else {
-        // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
-        consulta = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulosOrganizadores", "array-contains", capituloConsulta);
-      }
-
-      consulta.get().then(function(querySnapshot) {
-        // Arreglo que representará el estado de disponibilidad de cada intervalo
-        var disponibilidad = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles (verde)
-
-        // Ciclo para revisar cada evento reservado para la fecha seleccionada
-        querySnapshot.forEach(function(doc) {
-          var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 480 para 08:00)
-          var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
-
-          // Calcular los índices de inicio y fin del intervalo que ocupará el evento
-          var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
-          var finIntervalo = inicioIntervalo+(duracionEvento/30);
-          
-          // Marcar los intervalos como ocupados (rojo) en el arreglo de disponibilidad
-          for (var i = inicioIntervalo; i < finIntervalo; i++) {
-            disponibilidad[i] = false;
-          }
-        });
-
-        // Actualizar la visualización de disponibilidad en el HTML
-        var disponibilidadContainer = document.querySelector(".disponibilidad-container");
-        var disponibilidadItems = disponibilidadContainer.getElementsByClassName("disponibilidad-item");
-        for (var i = 0; i < disponibilidad.length; i++) {
-          if (disponibilidad[i]) {
-            disponibilidadItems[i].style.backgroundColor = "#00B30F"; // Establecer fondo verde para intervalo disponible
-          } else {
-            disponibilidadItems[i].style.backgroundColor = "red"; // Establecer fondo rojo para intervalo ocupado
-          }
-        }
-        /* oculto el swal.fire para que no moleste.
-        // Mostrar mensaje de éxito
-        Swal.fire({
-          title: '¡CONSULTA DE DISPONIBILIDAD REALIZADA!',
-          text: 'La consulta se realizó con éxito para la fecha seleccionada. Los horarios en rojo representan que ya están reservados, los que están en color verde son los disponibles.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: true,
-          backdrop: true,  
-          allowEscapeKey: true,
-          imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        */
-        // Construir la sección de eventos programados
-        var eventosProgramadosDiv = document.getElementById("eventos-programados");
-        eventosProgramadosDiv.innerHTML = ""; // Limpiar el contenido anterior
-
-        var eventos = [];
-        var indice = 1;
-        querySnapshot.forEach(function(doc) {
-          var nombreEvento = doc.data().nombreEvento;
-          var nombreOrganizador = doc.data().nombreOrganizador;
-          var horaEvento = doc.data().horaEvento;
-          var correoOrganizador = doc.data().emailOrganizador;
-          var capitulo = doc.data().capitulosOrganizadores;
-
-          var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
-          var minutos = horaEvento % 60; // Obtener los minutos del evento
-          var horaFormateada = (hora < 10 ? "0" + hora : hora) + ":" + (minutos < 10 ? "0" + minutos : minutos); // Formatear la hora
-
-          eventos.push({ indice: numeroAEmoji(indice), nombre: nombreEvento, organizador: nombreOrganizador, capitulo: capitulo, hora: horaFormateada, correo: correoOrganizador });
-          indice++;
-        });
-
-        // Mostrar los eventos en la sección
-        if (eventos.length > 0) {
-          eventos.forEach(function(evento) {
-            eventosProgramadosDiv.innerHTML += "<b>Evento </b>" + evento.indice + ": <b>Nombre espacio: </b>" + evento.nombre + " - <b>Organizador: </b>" + evento.organizador + " - <b>Capítulo: </b>" + evento.capitulo + " - <b>Hora: </b>" + evento.hora + " - <b>Correo: </b>" + evento.correo + "<br>";
+        // Acá se verifica que se haya insertado una fecha, si no insertaste nada, para el proceso y le notifica al usuario.
+        if (fechaConsulta.trim() === "") {
+          // Mostrar mensaje de error si no se ha seleccionado una fecha válida
+          Swal.fire({
+            title: '¡FECHA NO SELECCIONADA!',
+            text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
           });
-        } else {
-          eventosProgramadosDiv.innerHTML = "No hay eventos programados para esta fecha y capítulo.";
+          return;
         }
-      }).catch(function(error) {
-        console.log("Error obteniendo reservas:", error);
-        // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
-      });
-    }
+        if (capituloConsulta.trim() === "") {
+          // Mostrar mensaje de error si no se ha seleccionado una fecha válida
+          Swal.fire({
+            title: '¡CAPÍTULO NO SELECCIONADO!',
+            text: 'Por favor, selecciona el capítulo del cual deseas consultar la disponibilidad.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom-end')
+          });
+          return;
+        }
+        /* Comentario opcional por si se desea considerar o no la limitación de fecha de hoy al consultar
+        if (fechaConsulta < fechaHoy) {
+          // Mostrar mensaje de error si la fecha seleccionada es menor o igual a la fecha actual
+          Swal.fire({
+            title: '¡FECHA INCORRECTA!',
+            text: 'Por favor, selecciona una fecha mayor a la fecha de HOY para consultar la disponibilidad.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,  
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return;
+        }*/
+
+        // Aquí realizarías la lógica para consultar la disponibilidad de reservas con la fecha seleccionada
+        var reservasRef = firebase.firestore().collection("reservas");
+        
+        var consultaCapitulo = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulosOrganizadores", "array-contains", capituloConsulta);
+        var consultaNacional = reservasRef.where("fechaEvento", "==", fechaConsulta).where("capitulosOrganizadores", "array-contains", "nacional");
+
+        Promise.all([consultaCapitulo.get(), consultaNacional.get()])
+          .then(function(results) {
+            var querySnapshotCapitulo = results[0];
+            var querySnapshotNacional = results[1];
+
+            // Combinar los resultados de ambas consultas
+            var querySnapshotCombined = querySnapshotCapitulo.docs.concat(querySnapshotNacional.docs);
+
+            // Eliminar duplicados si es necesario
+            var uniqueDocs = [];
+            var docIds = new Set();
+            querySnapshotCombined.forEach(function(doc) {
+              if (!docIds.has(doc.id)) {
+                docIds.add(doc.id);
+                uniqueDocs.push(doc);
+              }
+            });
+
+            // Arreglo que representará el estado de disponibilidad de cada intervalo
+            var disponibilidad = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles (verde)
+
+            // Ciclo para revisar cada evento reservado para la fecha seleccionada
+            uniqueDocs.forEach(function(doc) {
+              var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 480 para 08:00)
+              var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
+
+              // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+              var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+              var finIntervalo = inicioIntervalo + (duracionEvento / 30);
+
+              // Marcar los intervalos como ocupados (rojo) en el arreglo de disponibilidad
+              for (var i = inicioIntervalo; i < finIntervalo; i++) {
+                disponibilidad[i] = false;
+              }
+            });
+
+            // Actualizar la visualización de disponibilidad en el HTML
+            var disponibilidadContainer = document.querySelector(".disponibilidad-container");
+            var disponibilidadItems = disponibilidadContainer.getElementsByClassName("disponibilidad-item");
+            for (var i = 0; i < disponibilidad.length; i++) {
+              if (disponibilidad[i]) {
+                disponibilidadItems[i].style.backgroundColor = "#00B30F"; // Establecer fondo verde para intervalo disponible
+              } else {
+                disponibilidadItems[i].style.backgroundColor = "red"; // Establecer fondo rojo para intervalo ocupado
+              }
+            }
+            /* oculto el swal.fire para que no moleste.
+            // Mostrar mensaje de éxito
+            Swal.fire({
+              title: '¡CONSULTA DE DISPONIBILIDAD REALIZADA!',
+              text: 'La consulta se realizó con éxito para la fecha seleccionada. Los horarios en rojo representan que ya están reservados, los que están en color verde son los disponibles.',
+              icon: 'success',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,  
+              allowEscapeKey: true,
+              imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+              imageWidth: 120, // Ancho de la imagen en píxeles
+              imageHeight: 235, // Alto de la imagen en píxeles
+              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom-end')
+            });
+            */
+            // Construir la sección de eventos programados
+            var eventosProgramadosDiv = document.getElementById("eventos-programados");
+            eventosProgramadosDiv.innerHTML = ""; // Limpiar el contenido anterior
+
+            var eventos = [];
+            var indice = 1;
+            uniqueDocs.forEach(function(doc) {
+              var nombreEvento = doc.data().nombreEvento;
+              var nombreOrganizador = doc.data().nombreOrganizador;
+              var horaEvento = doc.data().horaEvento;
+              var correoOrganizador = doc.data().emailOrganizador;
+              var capitulo = doc.data().capitulosOrganizadores;
+
+              var hora = Math.floor(horaEvento / 60); // Obtener la hora del evento
+              var minutos = horaEvento % 60; // Obtener los minutos del evento
+              var horaFormateada = (hora < 10 ? "0" + hora : hora) + ":" + (minutos < 10 ? "0" + minutos : minutos); // Formatear la hora
+
+              eventos.push({ indice: numeroAEmoji(indice), nombre: nombreEvento, organizador: nombreOrganizador, capitulo: capitulo, hora: horaFormateada, correo: correoOrganizador });
+              indice++;
+            });
+
+            // Mostrar los eventos en la sección
+            if (eventos.length > 0) {
+              eventos.forEach(function(evento) {
+                eventosProgramadosDiv.innerHTML += "<b>Evento </b>" + evento.indice + ": <b>Nombre espacio: </b>" + evento.nombre + " - <b>Organizador: </b>" + evento.organizador + " - <b>Capítulo: </b>" + evento.capitulo + " - <b>Hora: </b>" + evento.hora + " - <b>Correo: </b>" + evento.correo + "<br>";
+              });
+            } else {
+              eventosProgramadosDiv.innerHTML = "No hay eventos programados para esta fecha y capítulo.";
+            }
+          }).catch(function(error) {
+            console.log("Error obteniendo reservas:", error);
+            // Mostrar mensaje de error en caso de fallo en la consulta a Firebase
+          });
+      }
 
     var consultaDiaria = true; // Variable para almacenar el estado de la consulta (diaria por defecto)
 
