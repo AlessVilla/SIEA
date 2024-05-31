@@ -6,7 +6,7 @@
 <head>
   <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
   <script src="https://apis.google.com/js/api.js"></script>
-  <!-- incluir el plugin de anotación de Chart.js -->
+  <!-- incluye el plugin de anotación de Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
   <!-- Agrega el SDK de Firebase -->
   <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
@@ -621,7 +621,7 @@
   <!-- Formulario con campos de correo, contraseña y botón para iniciar sesión-->
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
-    <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña">
+    <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
     <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe PDF</button>
   </form>
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
@@ -5601,6 +5601,26 @@
       });
     }
 
+    function obtenerResponsable(correoUsuario) {
+      // Referencia al documento en la colección "cuentas" correspondiente al correo
+      var cuentaRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+
+      // Obtener la información del documento
+      return cuentaRef.get().then((doc) => {
+        if (doc.exists) {
+          // El documento existe, devolver el valor del campo "responsable"
+          return doc.data().responsable;
+        } else {
+          // El documento no existe, devolver null
+          return 'ANEIAPo';
+        }
+      }).catch((error) => {
+        // Manejar errores
+        console.error("Error al obtener el responsable:", error);
+        return 'ANEIAPo';
+      });
+    }
+
     function togglePasswordVisibility(inputId) {
         var input = document.getElementById(inputId);
         if (input.type === "password") {
@@ -5864,19 +5884,37 @@
 
     }
 
-    // Función para mostrar mensaje de inicio de sesión exitoso
+    // Función para mostrar mensaje de inicio de sesión exitoso con temporizador
     function mostrarMensajeInicioSesion() {
       Swal.fire({
-        title: "Has iniciado sesión exitosamente. 🦉💚",
-        text: "Disfruta de SIEA " + correoUsuario,
-        icon: "success",
-        confirmButtonText: "Aceptar",
-        imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
-        imageWidth: 120,
-        imageHeight: 235,
+        title: "Iniciando sesión...",
+        text: "Espera unos segundos",
+        icon: "info",
+        timer: 3000, // Tiempo en milisegundos (3 segundos)
+        timerProgressBar: true,
+        allowOutsideClick: false, // Evitar clics fuera del modal
+        showConfirmButton: false, // Ocultar botón de confirmación
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        // Después de que pase el temporizador, mostrar el mensaje de inicio de sesión exitoso
+        obtenerResponsable(correoUsuario).then((responsable) => {
+          Swal.fire({
+            title: "Has iniciado sesión exitosamente. 🦉💚",
+            text: "Disfruta de SIEA " + responsable, // Utiliza el valor del responsable obtenido
+            icon: "success",
+            confirmButtonText: "Aceptar",
+            imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+            imageWidth: 120,
+            imageHeight: 235,
+          });
+          // Actualizar el contenido del elemento saludoUsuario con el correo del usuario
+          document.getElementById("saludoUsuario").innerText = "¡Hola, " + responsable + "!";
+        }).catch((error) => {
+          console.error("Error al obtener el responsable:", error);
+        });
       });
-      // Actualizar el contenido del elemento saludoUsuario con el correo del usuario
-      document.getElementById("saludoUsuario").innerText = "¡Hola, " + correoUsuario + "!";
     }
 
     function actualizarEspacio() {
@@ -6589,7 +6627,7 @@
 
       // Crear un nuevo objeto jsPDF
       var pdf = new jsPDF();
-      var tiempoCarga = 25000;
+      var tiempoCarga = 30000;
       var margenizq = 15; //Margen izquierdo
       var margender = 180;//Margen derecho
       var coordenadaY = 35;
@@ -6760,8 +6798,19 @@
             // Iterar sobre cada campo y agregar texto al PDF con su respectivo ancho
             Object.keys(anchoPorcentaje).forEach(function(campo, index) {
                 var anchoCampo = (anchoTotal * anchoPorcentaje[campo]) / 100;
-                pdf.text(campos[index], posX + 2, posY, { align: "justify", valign: "middle", maxWidth: anchoCampo - 4 });
-
+                var restarValor = (campo === 'nombreEvento') ? 7 : 4;
+                if (campo === 'evidencia') {
+                    // Añadir el hipervínculo para la evidencia
+                    pdf.setTextColor(0, 0, 255); // Color azul
+                    pdf.textWithLink('click', posX + 2, posY, { url: campos[index], target: '_blank' });
+                    // Añadir subrayado
+                    pdf.setDrawColor(0, 0, 255);
+                    pdf.line(posX + 2, posY + 1, posX + 2 + pdf.getTextWidth('click'), posY + 1);
+                    // Restablecer color de texto a negro
+                    pdf.setTextColor(0, 0, 0);
+                } else {
+                    pdf.text(campos[index], posX + 2, posY, { align: "justify", valign: "middle", maxWidth: anchoCampo - restarValor });
+                }
                 posX += anchoCampo; // Mover la posición horizontal al final del campo actual
             });
 
@@ -6831,9 +6880,11 @@
                               var data = docReserva.data();
                               var posYEvento = posYTabla + 15;
 
-                              // Calcular la satisfacción promedio
-                              totalSatisfaccion += parseFloat(data.satisfaccion || 0);
-                              eventosConSatisfaccion++;
+                              if (data.tipoEvento === "valor-agregado") {
+                                  // Calcular la satisfacción promedio solo si el tipo de evento es "valor-agregado"
+                                  totalSatisfaccion += parseFloat(data.satisfaccion || 0);
+                                  eventosConSatisfaccion++;
+                              }
 
                               // Variables para almacenar los valores de los campos
                               var nombreEvento = data.nombreEvento || "";
