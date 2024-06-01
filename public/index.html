@@ -5457,8 +5457,10 @@
                 var data = doc.data();
                 // Determinar el valor para satisfacción
                 var satisfaccionValue = (data.asistentes && data.asistentes.length > 0) ? `${(data.satisfaccion * 100).toFixed(2)}%` : "N/A";
+                // Determinar el valor para contactoPonente
+                var contactoPonente = data.emailPonente || data.telefonoPonente || "No se tiene";
                 // Construir la cadena de texto vectorial para este evento
-                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${satisfaccionValue}|${data.evidencia}`;
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${contactoPonente}|${data.totalAsistentes}|${satisfaccionValue}|${data.evidencia}`;
                 // Agregar la cadena al array
                 tablaResumenConEI.push(eventoString);
               });
@@ -6742,16 +6744,17 @@
         const anchoPorcentaje = {
             nombreEvento: 22,
             areaTrabajo: 14,
-            tipoEvento: 17,
+            tipoEvento: 6,
             fechaEvento: 10,
-            nombrePonente: 13,
+            nombrePonente: 17,
+            contactoPonente: 22,
             totalAsistentes: 5,
             satisfaccion: 8,
-            evidencia: 22
+            evidencia: 6
         };
 
         // Definir encabezados de la tabla
-        const encabezados = ["Nombre del espacio", "Área de trabajo", "Tipo de espacio", "Fecha", "Ponente(s)", "#A", "% NPS", "Evidencia (drive lector)"];
+        const encabezados = ["Nombre del espacio", "Área de trabajo", "Tipo", "Fecha", "Ponente(s)", "Contacto", "#A", "% NPS", "Evid."];
 
         // Calcular ancho total del área disponible en el PDF
         const anchoTotal = margender - margenizq;
@@ -6798,7 +6801,10 @@
             // Iterar sobre cada campo y agregar texto al PDF con su respectivo ancho
             Object.keys(anchoPorcentaje).forEach(function(campo, index) {
                 var anchoCampo = (anchoTotal * anchoPorcentaje[campo]) / 100;
-                var restarValor = (campo === 'nombreEvento') ? 7 : 4;
+                if (campo === 'nombreEvento') {restarValor = 6;}
+                else if (campo === 'nombrePonente') {restarValor = 7;}
+                else if (campo === 'contactoPonente') {restarValor = 6;}
+                else {restarValor = 4;}
                 if (campo === 'evidencia') {
                     // Añadir el hipervínculo para la evidencia
                     pdf.setTextColor(0, 0, 255); // Color azul
@@ -6809,7 +6815,16 @@
                     // Restablecer color de texto a negro
                     pdf.setTextColor(0, 0, 0);
                 } else {
-                    pdf.text(campos[index], posX + 2, posY, { align: "justify", valign: "middle", maxWidth: anchoCampo - restarValor });
+                    // Comprobar si el campo es 'tipoEvento' y asignar valores específicos
+                    var textoCampo = campos[index];
+                    if (campo === 'tipoEvento') {
+                        if (campos[index] === 'valor-agregado') {
+                            textoCampo = 'VA';
+                        } else if (campos[index] === 'entrenamiento-interno') {
+                            textoCampo = 'EI';
+                        }
+                    }
+                    pdf.text(textoCampo, posX + 2, posY, { align: "justify", valign: "middle", maxWidth: anchoCampo - restarValor });
                 }
                 posX += anchoCampo; // Mover la posición horizontal al final del campo actual
             });
