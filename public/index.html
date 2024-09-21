@@ -74,7 +74,7 @@
       /* Centra la imagen */
       background-position: center;
       /* Establece un color de fondo de respaldo */
-      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+      background-color: #0b2447; /* Este color será visible si la imagen no se carga */
     }
     .black-text {
       color: black;
@@ -611,6 +611,12 @@
 </head>
 <body class="dark-mode">
 
+  <div id="loading-overlay" class="loading-overlay">
+    <div id="loading-message">
+      <!-- El contenido de tu pantalla de carga aquí -->
+    </div>
+  </div>
+
     <!-- Agrega la referencia al script de jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
     <!-- Botón de modo de visualización-->
@@ -622,7 +628,8 @@
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
-    <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe PDF</button>
+    <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe FI</button>
+    <button type="button" class="button-generar-informe" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white;">Generar Informe IE</button>
   </form>
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
   <button type="button" class="button-cambio-contrasena" onclick="cambiar_contrasena()">Cambiar Contraseña</button>
@@ -833,13 +840,9 @@
                 <option value="unimagdalena">UNIMAGDALENA</option>
                 <option value="uniatlantico">UNIATLÁNTICO</option>
                 <option value="uninorte">UNINORTE</option>
-                <option value="unisimon">UNISIMÓN</option>
                 <option value="cuc">CUC</option>
                 <option value="librequilla">LIBREQUILLA</option>
                 <option value="utb">UTB</option>
-                <option value="upbmonteria">UPBMONTERÍA</option>
-                <option value="unicordoba">UNICÓRDOBA</option>
-                <option value="areandina">AREANDINA</option>
                 <option value="ufps">UFPS</option>
                 <option value="unalmed">UNALMED</option>
                 <option value="udea">UDEA</option>
@@ -911,13 +914,9 @@
               <option value="unimagdalena">UNIMAGDALENA</option>
               <option value="uniatlantico">UNIATLÁNTICO</option>
               <option value="uninorte">UNINORTE</option>
-              <option value="unisimon">UNISIMÓN</option>
               <option value="cuc">CUC</option>
               <option value="librequilla">LIBREQUILLA</option>
               <option value="utb">UTB</option>
-              <option value="upbmonteria">UPBMONTERÍA</option>
-              <option value="unicordoba">UNICÓRDOBA</option>
-              <option value="areandina">AREANDINA</option>
               <option value="ufps">UFPS</option>
               <option value="unalmed">UNALMED</option>
               <option value="udea">UDEA</option>
@@ -1067,13 +1066,9 @@
                   <option value="unimagdalena">UNIMAGDALENA</option>
                   <option value="uniatlantico">UNIATLÁNTICO</option>
                   <option value="uninorte">UNINORTE</option>
-                  <option value="unisimon">UNISIMÓN</option>
                   <option value="cuc">CUC</option>
                   <option value="librequilla">LIBREQUILLA</option>
                   <option value="utb">UTB</option>
-                  <option value="upbmonteria">UPBMONTERÍA</option>
-                  <option value="unicordoba">UNICÓRDOBA</option>
-                  <option value="areandina">AREANDINA</option>
                   <option value="ufps">UFPS</option>
                   <option value="unalmed">UNALMED</option>
                   <option value="udea">UDEA</option>
@@ -1245,13 +1240,9 @@
                 <option value="unimagdalena">UNIMAGDALENA</option>
                 <option value="uniatlantico">UNIATLÁNTICO</option>
                 <option value="uninorte">UNINORTE</option>
-                <option value="unisimon">UNISIMÓN</option>
                 <option value="cuc">CUC</option>
                 <option value="librequilla">LIBREQUILLA</option>
                 <option value="utb">UTB</option>
-                <option value="upbmonteria">UPBMONTERÍA</option>
-                <option value="unicordoba">UNICÓRDOBA</option>
-                <option value="areandina">AREANDINA</option>
                 <option value="ufps">UFPS</option>
                 <option value="unalmed">UNALMED</option>
                 <option value="udea">UDEA</option>
@@ -1381,13 +1372,9 @@
               <option value="unimagdalena">UNIMAGDALENA</option>
               <option value="uniatlantico">UNIATLÁNTICO</option>
               <option value="uninorte">UNINORTE</option>
-              <option value="unisimon">UNISIMÓN</option>
               <option value="cuc">CUC</option>
               <option value="librequilla">LIBREQUILLA</option>
               <option value="utb">UTB</option>
-              <option value="upbmonteria">UPBMONTERÍA</option>
-              <option value="unicordoba">UNICÓRDOBA</option>
-              <option value="areandina">AREANDINA</option>
               <option value="ufps">UFPS</option>
               <option value="unalmed">UNALMED</option>
               <option value="udea">UDEA</option>
@@ -1657,9 +1644,10 @@
                 <label for="tipo-espacio"><b>Tipo de espacio: *</b></label>
                 <select id="tipo-espacio">
                   <option value="" disabled selected hidden>Selecciona el tipo de espacio.</option>
-                  <option value="valor-agregado">VALOR AGREGAGO ➕</option>
+                  <option value="valor-agregado">VALOR AGREGADO ➕</option>
                   <option value="entrenamiento-interno">ENTRENAMIENTO INTERNO 🏋🏻</option>
-                  <option value="ninguno">No es espacio de formación</option>
+                  <option value="integracion-entorno">INTEGRACIÓN CON EL ENTORNO 🏭</option>
+                  <option value="ninguno">No es espacio de FI o IE</option>
                 </select>
               </div>
               <div class="half">
@@ -1674,7 +1662,8 @@
                   <option value="habilidades-duras">HABILIDADES DURAS 🧠</option>
                   <option value="habilidades-blandas">HABILIDADES BLANDAS 🫂</option>
                   <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
-                  <option value="ninguno">No es espacio de formación</option>
+                  <option value="integracion-entorno">INTEGRACIÓN CON EL ENTORNO 🏭</option>
+                  <option value="ninguno">No es espacio de FI o IE</option>
                 </select>
               </div>
             </div>
@@ -1825,21 +1814,97 @@
         });
     });
 
+    // Listener para el caso en que el usuario seleccione Entrenamiento Interno en tipo de espacio
+    document.addEventListener("DOMContentLoaded", function() {
+      var tipoEspacio = document.getElementById("tipo-espacio");
+      var areaTrabajo = document.getElementById("area-trabajo");
+      var nombreEspacioActualizar = document.getElementById("nombre-espacio-actualizar");
+
+      // Guardar las opciones originales del campo areaTrabajo
+      var opcionesOriginalesAreaTrabajo = `
+        <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
+        <option value="academico">ACADÉMICO 💚</option>
+        <option value="comunicaciones">COMUNICACIONES 🩵</option>
+        <option value="desarrollo">DESARROLLO 💛</option>
+        <option value="finanzas">FINANZAS 💜</option>
+        <option value="mercadeo">MERCADEO ❤️</option>
+        <option value="habilidades-duras">HABILIDADES DURAS 🧠</option>
+        <option value="habilidades-blandas">HABILIDADES BLANDAS 🫂</option>
+        <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
+        <option value="ninguno">No es espacio de FI o IE</option>
+      `;
+
+      tipoEspacio.addEventListener("change", function() {
+        if (tipoEspacio.value === "integracion-entorno") {
+          // Vaciar el campo de área de trabajo
+          if (!areaTrabajo.value) {
+          areaTrabajo.innerHTML = '<option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>';
+          }
+          // Obtener el nombre del espacio
+          var nombreEspacio = nombreEspacioActualizar.value || "No has seleccionado aún un espacio";
+
+          // Mostrar alerta para ingresar el área de trabajo
+          Swal.fire({
+            title: 'Ingrese el área de trabajo para el espacio de integración con el entorno',
+            text: `Espacio seleccionado: 🟩${nombreEspacio.toUpperCase()}🟦`,
+            input: 'text',
+            inputPlaceholder: 'Escriba el área de trabajo aquí...',
+            inputAttributes: {
+              maxlength: 80
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: true,
+            inputValidator: (value) => {
+              if (!value) {
+                return 'Debe ingresar un área de trabajo!';
+              }
+              if (value.length > 80) {
+                return 'El área de trabajo no debe tener más de 80 caracteres!';
+              }
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Asignar el valor ingresado al campo de área de trabajo
+              areaTrabajo.innerHTML = `<option value="${result.value}" selected>${result.value}</option>`;
+            } else {
+              // Restaurar el valor original del campo de tipo de espacio si se cancela
+              tipoEspacio.value = "";
+              if (!areaTrabajo.value) {
+              areaTrabajo.innerHTML = opcionesOriginalesAreaTrabajo;
+              }
+            }
+          });
+        } else {
+          // Restaurar las opciones originales del campo areaTrabajo si el valor no es "integracion-entorno"
+          if (!areaTrabajo.value) {
+          areaTrabajo.innerHTML = opcionesOriginalesAreaTrabajo;
+          }
+        }
+      });
+    });
+
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
     var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
     var capituloUsuario = "";
     var tablaResumen = [];
     var tablaResumenPDF = [];
-    var clavesInforme = "";
+    var tablaResumenPDFIE = [];
+    var clavesInforme = ""; //TRIPIANTE
     var fechaInicialPDF = '2024-08-01';
     var fechaFinalPDF = '2024-11-30';
     var valoresPorcentajes = 2;
     var PosYParaSG = '';
-    // Cargar la imagen que deseas usar como fondo
+    // Cargar la imagen que deseas usar como fondo para fi
     var img = new Image();
     img.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_informe_pdf.png';
-    var imgPortada = new Image();
-    imgPortada.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_portada_informe_pdf.png';
+    var imgPortadaFI = new Image();
+    imgPortadaFI.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_portada_informe_fi_pdf.png';
+    var imgPortadaIE = new Image();
+    imgPortadaIE.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_portada_informe_ie_pdf.png';
 
     // Obtener los elementos de fecha inicial y final y agregar eventos change a los campos de fecha
     var fechaInicialInput = document.getElementById("fecha-inicial");
@@ -1925,44 +1990,67 @@
 
     // Función para actualizar el total de asistentes, link de evidencia, tipo de espacio y área de trabajo del espacio
     function ActualizarCamposConNombreEspacio() {
-    // Obtener el valor seleccionado del desplegable "nombre-espacio-actualizar"
-    var nombreEspacioSeleccionado = document.getElementById("nombre-espacio-actualizar").value;
+      // Obtener el valor seleccionado del desplegable "nombre-espacio-actualizar"
+      var nombreEspacioSeleccionado = document.getElementById("nombre-espacio-actualizar").value;
 
-    // Obtener la referencia del documento correspondiente en Firestore
-    var reservasRef = firebase.firestore().collection("reservas");
-    var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario).where("nombreEvento", "==", nombreEspacioSeleccionado);
+      // Obtener la referencia del documento correspondiente en Firestore
+      var reservasRef = firebase.firestore().collection("reservas");
+      var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario).where("nombreEvento", "==", nombreEspacioSeleccionado);
 
-    consulta.get()
-        .then(function(querySnapshot) {
-            // Verificar si se encontró algún documento con el nombre del espacio seleccionado
-            if (!querySnapshot.empty) {
-                // Obtener el primer documento encontrado
-                var doc = querySnapshot.docs[0];
-                var data = doc.data();
+      consulta.get()
+          .then(function(querySnapshot) {
+            var areaTrabajo = document.getElementById("area-trabajo");
+            // Guardar las opciones originales del campo areaTrabajo
+            var opcionesOriginalesAreaTrabajo = `
+              <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
+              <option value="academico">ACADÉMICO 💚</option>
+              <option value="comunicaciones">COMUNICACIONES 🩵</option>
+              <option value="desarrollo">DESARROLLO 💛</option>
+              <option value="finanzas">FINANZAS 💜</option>
+              <option value="mercadeo">MERCADEO ❤️</option>
+              <option value="habilidades-duras">HABILIDADES DURAS 🧠</option>
+              <option value="habilidades-blandas">HABILIDADES BLANDAS 🫂</option>
+              <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
+              <option value="integracion-entorno">INTEGRACIÓN CON EL ENTORNO 🏭</option>
+              <option value="ninguno">No es espacio de FI o IE</option>
+            `;
+            areaTrabajo.innerHTML = opcionesOriginalesAreaTrabajo;
+              // Verificar si se encontró algún documento con el nombre del espacio seleccionado
+              if (!querySnapshot.empty) {
+                  // Obtener el primer documento encontrado
+                  var doc = querySnapshot.docs[0];
+                  var data = doc.data();
 
-                // Actualizar los valores de los campos con los datos del documento
-                document.getElementById("total-asistentes").value = data.totalAsistentes || "";
-                document.getElementById("link-evidencia").value = data.evidencia || "";
-                document.getElementById("tipo-espacio").value = data.tipoEvento || "";
-                document.getElementById("area-trabajo").value = data.areaTrabajo || "";
-                // Llamar a la función para que la tabla resumen se actualice
-                generarTablaResumen();
-            } else {
-                // Si no se encontró ningún documento, limpiar los valores de los campos
-                document.getElementById("total-asistentes").value = "";
-                document.getElementById("link-evidencia").value = "";
-                document.getElementById("tipo-espacio").value = "";
-                document.getElementById("area-trabajo").value = "";
-            }
-        })
-        .catch(function(error) {
-            console.error("Error al obtener datos del espacio:", error);
-            // En caso de error, limpiar los valores de los campos
-            document.getElementById("total-asistentes").value = "";
-            document.getElementById("link-evidencia").value = "";
-            document.getElementById("tipo-espacio").value = "";
-            document.getElementById("area-trabajo").value = "";
-        });
+                  // Actualizar los valores de los campos con los datos del documento
+                  document.getElementById("total-asistentes").value = data.totalAsistentes || "";
+                  document.getElementById("link-evidencia").value = data.evidencia || "";
+                  document.getElementById("tipo-espacio").value = data.tipoEvento || "";
+                  // Validar si el área de trabajo es uno de los valores predefinidos
+                  var valoresPredefinidos = ["academico", "comunicaciones", "desarrollo", "finanzas", "mercadeo", "habilidades-duras", "habilidades-blandas", "conocimiento-aneiap", "ninguno", undefined];
+                  if (valoresPredefinidos.includes(data.areaTrabajo)) {
+                      document.getElementById("area-trabajo").value = data.areaTrabajo || "";
+                  } else {
+                      // Si no es un valor predefinido, establecerlo como la única opción posible
+                      areaTrabajo.innerHTML = `<option value="${data.areaTrabajo}" selected>${data.areaTrabajo}</option>`;
+                  }
+                  // Llamar a la función para que la tabla resumen se actualice
+                  generarTablaResumen();
+              } else {
+                  // Si no se encontró ningún documento, limpiar los valores de los campos
+                  document.getElementById("total-asistentes").value = "";
+                  document.getElementById("link-evidencia").value = "";
+                  document.getElementById("tipo-espacio").value = "";
+                  document.getElementById("area-trabajo").value = "";
+              }
+          })
+          .catch(function(error) {
+              console.error("Error al obtener datos del espacio:", error);
+              // En caso de error, limpiar los valores de los campos
+              document.getElementById("total-asistentes").value = "";
+              document.getElementById("link-evidencia").value = "";
+              document.getElementById("tipo-espacio").value = "";
+              document.getElementById("area-trabajo").value = "";
+          });
     }
 
     // Segunda feature: Generar tabla resumen de satisfacción de espacios
@@ -4027,13 +4115,9 @@
           unimagdalena: "academico_unimagdalena@aneiap.co",
           uniatlantico: "academico_uniatlantico@aneiap.co",
           uninorte: "academico_uninorte@aneiap.co, interventoria_uninorte@aneiap.co",
-          unisimon: "academico_unisimon@aneiap.co, interventoria_unisimon@aneiap.co",
           cuc: "academico_cuc@aneiap.co, interventoria_cuc@aneiap.co",
           librequilla: "academico_librequilla@aneiap.co",
           utb: "academico_utb@aneiap.co",
-          upbmonteria: "academico_upbmonteria@aneiap.co, interventoria_upbmonteria@aneiap.co",
-          unicordoba: "academico_unicordoba@aneiap.co, interventoria_unicordoba@aneiap.co",
-          areandina: "academico_areandina@aneiap.co, interventoria_areandina@aneiap.co",
           ufps: "academico_ufps@aneiap.co, interventoria_ufps@aneiap.co",
           unalmed: "academico_unalmed@aneiap.co",
           udea: "academico_udea@aneiap.co",
@@ -4171,13 +4255,9 @@
         unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
         uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
         uninorte: "comunicaciones_uninorte@aneiap.co, jorly.sarmiento@aneiap.co",
-        unisimon: "comunicaciones_unisimon@aneiap.co",
         cuc: "comunicaciones_cuc@aneiap.co",
         librequilla: "comunicaciones_librequilla@aneiap.co",
         utb: "comunicaciones_utb@aneiap.co",
-        upbmonteria: "comunicaciones_upbmonteria@aneiap.co",
-        unicordoba: "comunicaciones_unicordoba@aneiap.co",
-        areandina: "comunicaciones_areandina@aneiap.co",
         ufps: "comunicaciones_ufps@aneiap.co",
         unalmed: "comunicaciones_unalmed@aneiap.co",
         udea: "comunicaciones_udea@aneiap.co",
@@ -4420,13 +4500,9 @@
         unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
         uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
         uninorte: "comunicaciones_uninorte@aneiap.co",
-        unisimon: "comunicaciones_unisimon@aneiap.co",
         cuc: "comunicaciones_cuc@aneiap.co",
         librequilla: "comunicaciones_librequilla@aneiap.co",
         utb: "comunicaciones_utb@aneiap.co",
-        upbmonteria: "comunicaciones_upbmonteria@aneiap.co",
-        unicordoba: "comunicaciones_unicordoba@aneiap.co",
-        areandina: "comunicaciones_areandina@aneiap.co",
         ufps: "comunicaciones_ufps@aneiap.co",
         unalmed: "comunicaciones_unalmed@aneiap.co",
         udea: "comunicaciones_udea@aneiap.co",
@@ -5382,13 +5458,9 @@
                   'unimagdalena': 'UNIMAGDALENA',
                   'uniatlantico': 'UNIATLÁNTICO',
                   'uninorte': 'UNINORTE',
-                  'unisimon': 'UNISIMÓN',
                   'cuc': 'CUC',
                   'librequilla': 'LIBREQUILLA',
                   'utb': 'UTB',
-                  'upbmonteria': 'UPBMONTERÍA',
-                  'unicordoba': 'UNICÓRDOBA',
-                  'areandina': 'AREANDINA',
                   'ufps': 'UFPS',
                   'unalmed': 'UNALMED',
                   'udea': 'UDEA',
@@ -5453,7 +5525,7 @@
               var documentosFiltrados = querySnapshot.docs.filter(function(doc) {
                 var tipoEvento = doc.data().tipoEvento;
                 var asistentes = doc.data().asistentes;
-                return tipoEvento !== undefined && tipoEvento !== "" && tipoEvento !== "ninguno" &&
+                return (tipoEvento === "valor-agregado" || tipoEvento === "entrenamiento-interno") &&
                   asistentes !== undefined && asistentes !== null && asistentes !== ""; // Filtrar por tipoEvento diferente de "undefined" y cadena vacía
               });
 
@@ -5512,6 +5584,40 @@
               }).catch(function(error) {
                 console.error("Error al guardar la tabla resumen con EI:", error);
               });
+
+              // Filtrar los documentos por tipoEvento "entrenamiento-interno" y asistentes no vacíos
+              var documentosIE = querySnapshot.docs.filter(function(doc) {
+                var tipoEvento = doc.data().tipoEvento;
+                var asistentes = doc.data().asistentes;
+                return tipoEvento === "integracion-entorno" &&
+                  asistentes !== undefined && asistentes !== null && asistentes !== "";
+              });
+
+              var tablaResumenIE = [];
+              var clavesInformeIE = "";
+              documentosIE.forEach(function(doc) {
+                var data = doc.data();
+                // Construir la cadena de texto vectorial para este evento
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.fechaEvento}|${data.nombrePonente}|${data.planEvento}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
+                // Agregar la cadena al array
+                tablaResumenIE.push(eventoString);
+                var claveEvento = data.claveEvento; // Obtener la clave del evento
+                clavesInformeIE += `${claveEvento}|`; // Concatenar la clave del evento a clavesInformeIE
+              });
+
+              // Guardar el array en el campo "tablaResumenIE" y las claves en "clavesInformeIE" de la colección "cuentas"
+              cuentasRef.update({
+                tablaResumenIE: tablaResumenIE,
+                clavesInformeIE: clavesInformeIE
+              }).then(function() {
+                tablaResumenPDFIE = tablaResumenIE;
+                console.log("Tabla resumen IE y claves guardadas exitosamente en la colección 'cuentas'.");
+                console.log(tablaResumenIE);
+                console.log(clavesInformeIE);
+              }).catch(function(error) {
+                console.error("Error al guardar la tabla resumen IE y claves:", error);
+              });
+
             }).catch(function(error) {
               console.error("Error al obtener las reservas:", error);
             });
@@ -6632,7 +6738,7 @@
     }
 
     async function generarInformePDF(event) {
-
+      
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
             icon: 'error',
@@ -6671,7 +6777,7 @@
       var margender = 180;//Margen derecho
       var coordenadaY = 35;
       // Añadir imagen de fondo a la primera página
-      pdf.addImage(imgPortada, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+      pdf.addImage(imgPortadaFI, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
       pdf.addPage(); // Agrega una nueva página al documento actual
       // Añadir imagen de fondo a la segunda página
@@ -6715,11 +6821,11 @@
 
       // Título del informe
       pdf.setFontSize(18);
-      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " 2024-1",
+      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " 2024-2",
       margenizq, 20, { align: "justify", maxWidth: margender });
       // Texto de introducción
       pdf.setFontSize(12);
-      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-1.",
+      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-2.",
       margenizq, 35, { align: "justify", maxWidth: margender });
 
       // Sección: Dashboard y Metas
@@ -7081,7 +7187,7 @@
                 }
 
                 // Guardar el PDF con el nombre especificado
-                pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_FEB-MAY_2024-1.pdf');
+                pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_AGO-NOV_2024-2.pdf');
                 toggleVisualizarActualizarEspacios();
 
                 // Abrir automáticamente el PDF después de descargarlo
@@ -7089,6 +7195,504 @@
                 window.open(pdfURL, '_blank');
             }
         });
+    }
+
+    async function generarInformeIE(event) {
+
+      Swal.fire({
+          title: '¡TE ESPERAMOS EL LUNES 23 DE SEPTIEMBRE!',
+          text: 'Esta función de SIEA se estrenará el 23 de septiembre, prepárate y actualiza la información de Integración con el Entorno (IE) para que puedas disfrutarla lo más antes posible. 💚',
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: true,
+          backdrop: true,
+          allowEscapeKey: true,
+          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+      });
+      return; // Detener el proceso de evaluación
+
+      if (capituloUsuario === "" || correoUsuario === "") {
+        Swal.fire({
+            icon: 'error',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
+            text: 'Debe iniciar sesión como DCA para poder generar el informe.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener el proceso de evaluación
+      }
+
+      // Mostrar SweetAlert de espera personalizado
+      Swal.fire({
+          title: 'Generando informe',
+          html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
+          timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          didOpen: () => {
+              Swal.showLoading();
+          }
+      });
+
+      // Crear un nuevo objeto jsPDF
+      var pdf = new jsPDF();
+      var tiempoCarga = 3000;
+      var margenizq = 15; //Margen izquierdo
+      var margender = 180;//Margen derecho
+      var coordenadaY = 35;
+      // Añadir imagen de fondo a la primera página
+      pdf.addImage(imgPortadaIE, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      pdf.addPage(); // Agrega una nueva página al documento actual
+      // Añadir imagen de fondo a la segunda página
+      pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      // Preparación inicial de las funciones y la sección de actualización
+      // Obtener datos necesarios para los gráficos desde Firebase
+      document.getElementById("fecha-inicial").value = fechaInicialPDF;
+      document.getElementById("fecha-final").value = fechaFinalPDF;
+
+      // Título del informe
+      pdf.setFontSize(18);
+      pdf.text("INFORME DE SEGUIMIENTO INTEGRACIÓN CON EL ENTORNO " + capituloUsuario.toUpperCase() + " 2024-2",
+      margenizq, 20, { align: "justify", maxWidth: margender });
+      // Texto de introducción
+      pdf.setFontSize(12);
+      pdf.text("Este informe contiene un seguimiento detallado de los espacios de integración con el entorno correspondientes al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-2.",
+      margenizq, 35, { align: "justify", maxWidth: margender });
+
+      // Sección: Dashboard y Metas
+      pdf.setFontSize(12); pdf.setTextColor(0, 0, 0); // Color azul para resaltar la sección
+      pdf.text("En esta sección, encontrarás un análisis detallado del progreso y los logros alcanzados en materia de integración con el entorno.\n\nEl Dashboard inicial proporciona una visión general de los objetivos establecidos y el avance realizado hasta la fecha. Aquí, podrás evaluar el cumplimiento de las metas acordadas. Además, se incluye un indicador del NPS (Net Promoter Score), que refleja la satisfacción de los participantes en los espacios de integración con el entorno.",
+      margenizq, 50, { align: "justify", maxWidth: margender });
+
+      pdf.setFontSize(15);
+      pdf.text("1. GRÁFICO DE CUMPLIMIENTO DE METAS DE INTEGRACIÓN CON EL ENTORNO DEL CAPÍTULO",
+      margenizq, 83, { align: "justify", maxWidth: margender });
+
+      // Llama a la función para agregar el gráfico de cumplimiento
+      agregarGraficoCumplimientoIE(pdf, tablaResumenPDFIE, margenizq, margender);
+
+        // Colocar el teléfono del DCA en cada pie de página
+        pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
+        pdf.setFontSize(11);
+        const textoTelefono = telefonoCuenta; // Variable que contiene el texto del teléfono
+        const x = 91; // Coordenada X
+        const y = 291.5; // Coordenada Y
+
+        // Obtener el total de páginas del PDF
+        const totalPages = pdf.internal.getNumberOfPages();
+        // Bucle para recorrer todas las páginas y añadir el texto
+        for (let i = 2; i <= totalPages; i++) {
+            pdf.setPage(i);
+            pdf.text(textoTelefono, x, y);
+        }
+
+      // Obtener las imágenes de los gráficos después de un retraso
+      setTimeout(function() {
+
+        // Llamar a la función para agregar la tabla resumen siendo esta la 3ra página y a veces hasta 4ta página
+        agregarTablaResumenIE(pdf, tablaResumenPDFIE, margenizq, margender);
+
+        // Avisar que ya se generó el informe y que revise en descargas
+        Swal.fire({
+            title: 'Informe Generado',
+            text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
+            icon: 'success',
+            showConfirmButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png',
+            imageWidth: 120,
+            imageHeight: 235,
+            imageAlt: 'Éxito',
+        });
+      }, tiempoCarga); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
+
+    }
+
+    function agregarGraficoCumplimientoIE(pdf, tablaResumenPDFIE, margenizq, margender) {
+        var totalEspacios = tablaResumenPDFIE.length;
+        var meta = 2; // Meta fija en 2
+        var extra = totalEspacios > meta ? totalEspacios - meta : 0;
+
+        // Posiciones para el gráfico en el PDF
+        var posX = margenizq;
+        var posY = 100; // Posición vertical
+        var anchoBarra = margender - margenizq; // El ancho siempre será el mismo
+        var altoBarra = 15; // Altura de la barra
+
+        // La escala debe adaptarse al número de espacios realizados
+        var escalaMax = totalEspacios > meta ? totalEspacios : meta;
+
+        // Dibujar la escala (marcando desde 0 hasta el mayor valor entre meta y total de espacios)
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(10);
+        for (let i = 0; i <= escalaMax; i++) {
+            let xPos = posX + (i / escalaMax) * anchoBarra;
+            pdf.text(i.toString(), xPos, posY + altoBarra + 5);
+        }
+
+        // Dibujar la barra de fondo (gris para la parte no cumplida)
+        var anchoGris = (meta / escalaMax) * anchoBarra; // Parte que corresponde a la meta
+        pdf.setDrawColor(150); // Color del borde
+        pdf.setFillColor(230); // Relleno gris claro
+        pdf.rect(posX, posY, anchoGris, altoBarra, 'F'); // Dibujar el fondo hasta la meta
+
+        // Dibujar la barra de cumplimiento (verde claro hasta la meta)
+        var anchoCumplimiento = Math.min((totalEspacios / escalaMax) * anchoBarra, (meta / escalaMax) * anchoBarra);
+        pdf.setFillColor(0, 200, 0); // Verde claro
+        pdf.rect(posX, posY, anchoCumplimiento, altoBarra, 'F');
+
+        // Si hay espacios extra, dibujar la parte adicional de la barra (verde oscuro)
+        if (extra > 0) {
+            var anchoExtra = ((extra / escalaMax) * anchoBarra);
+            pdf.setFillColor(0, 100, 0); // Verde oscuro para extra
+            pdf.rect(posX + anchoCumplimiento, posY, anchoExtra, altoBarra, 'F');
+        }
+
+        // Añadir etiquetas de cumplimiento
+        pdf.setFontSize(12);
+        pdf.text(`Cumplimiento: ${totalEspacios}/${meta}`, posX, posY + altoBarra + 20);
+
+        // Añadir tabla con datos del análisis
+        var tablaInicioY = posY + altoBarra + 40;
+        pdf.text("Análisis de Cumplimiento:", posX, tablaInicioY);
+        pdf.text(`Espacios realizados: ${totalEspacios}`, posX, tablaInicioY + 10);
+        pdf.text(`Meta: ${meta} espacios`, posX, tablaInicioY + 20);
+        if (extra > 0) {
+            pdf.text(`Extras: ${extra} espacios adicionales`, posX, tablaInicioY + 30);
+        }
+    }
+
+    function agregarTablaResumenIE(pdf, tablaResumenPDF, margenizq, margender) {
+      const anchoPorcentaje = {
+        nombreEvento: 15,
+        areaTrabajo: 15,
+        fechaEvento: 10,
+        nombrePonente: 15,
+        planEvento: 50,
+        evidencia: 6
+      };
+
+      const encabezados = ["Espacio", "Área Trabajo", "Fecha", "Ponente/Empresa", "Descripción del espacio", "Evid."];
+      const anchoTotal = margender - margenizq;
+      let maxRowsPerPage = 6; // Máximo de filas por página
+      let currentPage = 0; // Página actual
+
+      while (currentPage * maxRowsPerPage < tablaResumenPDF.length) {
+        if (currentPage >= 0) {
+          pdf.addPage(); // Agrega una nueva página al documento actual
+          pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        }
+
+        pdf.setFontSize(15);
+        pdf.text("2. TABLA RESUMEN CON CADA UNO DE LOS ESPACIOS I.E. QUE HA TENIDO EL CAPÍTULO", margenizq, 22, { align: "justify", maxWidth: margender });
+        agregarTelefonoPieDePagina(pdf, telefonoCuenta);
+
+        var posY = 35; // Posición vertical inicial
+        pdf.setFontSize(7);
+        pdf.setDrawColor(0); // Establecer color de líneas en negro
+        pdf.setLineWidth(0.1); // Establecer ancho de línea
+        var posXEncabezados = margenizq + 12; // Posición horizontal inicial para los encabezados
+
+        // Dibujar fila de encabezados
+        pdf.line(margenizq, posY - 3, margender + 18, posY - 3);
+        for (var i = 0; i <= maxRowsPerPage + currentPage; i++) {
+          if (currentPage * maxRowsPerPage + i >= tablaResumenPDF.length + 1) break;
+          pdf.line(margenizq, posY + 2, margender + 18, posY + 2);
+          posY += 35; // Incrementar la posición vertical
+        }
+        var maxPosY = posY - 35 + 2; // Posición final de las líneas verticales
+        posY = 35;
+
+        // Iterar sobre cada encabezado y agregar texto al PDF
+        pdf.line(posXEncabezados - 12, posY - 3, posXEncabezados - 12, maxPosY);
+        encabezados.forEach(function(encabezado, index) {
+          var anchoCampoEncabezado = (anchoTotal * anchoPorcentaje[Object.keys(anchoPorcentaje)[index]]) / 100;
+          pdf.text(encabezado, posXEncabezados - 10, posY, { align: "justify", valign: "middle", maxWidth: anchoCampoEncabezado - 4 });
+          if (index < encabezados.length) {
+            pdf.line(posXEncabezados + anchoCampoEncabezado - 12, posY - 3, posXEncabezados + anchoCampoEncabezado - 12, maxPosY);
+          }
+          posXEncabezados += anchoCampoEncabezado; // Mover la posición horizontal al final del campo actual para los encabezados
+        });
+
+        posY = 41; // Reiniciar la posición vertical para el contenido de la tabla
+
+        for (var i = 0; i < maxRowsPerPage; i++) {
+          agregarTelefonoPieDePagina(pdf, telefonoCuenta);
+          var rowIndex = currentPage * maxRowsPerPage + i;
+          if (rowIndex >= tablaResumenPDF.length) break;
+          var campos = tablaResumenPDF[rowIndex].split("|");
+          var posX = margenizq;
+
+          Object.keys(anchoPorcentaje).forEach(function(campo, index) {
+            var anchoCampo = (anchoTotal * anchoPorcentaje[campo]) / 100;
+            var restarValor;
+            if (campo === 'nombreEvento') { restarValor = 6; }
+            else if (campo === 'nombrePonente') { restarValor = 7; }
+            else { restarValor = 4; }
+
+            if (campo === 'evidencia') {
+              pdf.setTextColor(0, 0, 255);
+              pdf.textWithLink('click', posX + 2, posY, { url: campos[index], target: '_blank' });
+              pdf.setDrawColor(0, 0, 255);
+              pdf.line(posX + 2, posY + 1, posX + 2 + pdf.getTextWidth('click'), posY + 1);
+              pdf.setTextColor(0, 0, 0);
+            } else {
+              var textoCampo = campos[index];
+              pdf.text(textoCampo, posX + 2, posY, { align: "justify", valign: "middle", maxWidth: anchoCampo - restarValor });
+            }
+            posX += anchoCampo;
+          });
+
+          posY += 35; // Mover la posición vertical para el siguiente evento
+        }
+
+        currentPage++;
+        PosYParaSG = posY + 3;
+      }
+      // Guardar el PDF con el nombre especificado
+      pdf.save('Informe_Integración_Entorno_' + capituloUsuario.toUpperCase() + '_AGO-NOV_2024-2.pdf');
+      toggleVisualizarActualizarEspacios();
+
+      // Abrir automáticamente el PDF después de descargarlo
+      var pdfURL = pdf.output('bloburl');
+      window.open(pdfURL, '_blank');
+    }
+
+    // Función para agregar la tabla de satisfacciones y comentarios por espacio
+    async function agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario) {
+        var componenteComentarios = 0;
+        var posY = 35; // Posición vertical inicial
+        var maxPosY = 270; // Límite de posición vertical
+
+        // Punto 3: Respuestas de satisfacción por cada uno de los espacios
+        pdf.addPage(); // Agregar una nueva página al PDF
+        // Añadir imagen de fondo a la tercera página
+        pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+        console.log("Página de satisfacciones y comentarios añadida.");
+
+        pdf.setFontSize(15);
+        pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
+            margenizq, 22, { align: "justify", maxWidth: margender });
+
+        console.log("Título de la sección añadido.");
+
+        // Definir tamaño de celdas de la tabla
+        var anchoEvento = pdf.internal.pageSize.getWidth() * 0.15;
+        var anchoRespuestas = pdf.internal.pageSize.getWidth() * 0.05;
+        var anchoPorcentaje = pdf.internal.pageSize.getWidth() * 0.15;
+        var anchoComentarios = pdf.internal.pageSize.getWidth() * 0.35;
+        var anchoRestante = pdf.internal.pageSize.getWidth() * 0.25;
+
+        var posYTabla = 20; // Posición vertical para la tabla en el PDF
+
+        // Encabezados de la tabla de respuestas
+        pdf.setFontSize(7);
+        pdf.line(margenizq, posYTabla + 5, margender + 18, posYTabla + 5); // Línea horizontal
+        pdf.text("ESPACIO", margenizq + 7, posYTabla + 10);
+        pdf.text("DET.", margenizq + anchoEvento, posYTabla + 10, { align: "center", maxWidth: anchoEvento - 5 });
+        pdf.text("PAS.", margenizq + anchoEvento + anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+        pdf.text("PRO.", margenizq + anchoEvento + 2 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+        pdf.text("#RES.", margenizq + anchoEvento + 3 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+        pdf.text("% RES.", margenizq + anchoEvento + 4 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+        pdf.text("COMENTARIOS", margenizq + anchoEvento + 6 * anchoRespuestas - 4, posYTabla + 10, { align: "center", maxWidth: anchoRestante });
+
+        console.log("Encabezados de la tabla añadidos.");
+
+        // Obtener las claves de los eventos del campo "clavesInforme" del documento correspondiente en la colección "cuentas"
+        var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+
+        cuentasRef.get().then(async (docCuentas) => {
+            if (docCuentas.exists) {
+                var clavesInforme = docCuentas.data().clavesInforme.split("|");
+                console.log("Claves del informe obtenidas: ", clavesInforme);
+
+                let totalSatisfaccion = 0;
+                let eventosConSatisfaccion = 0;
+                for (const claveEvento of clavesInforme) {
+                    if (claveEvento) {
+                        var reservaRef = firebase.firestore().collection("reservas").doc(claveEvento);
+                        var docReserva = await reservaRef.get();
+
+                        if (docReserva.exists) {
+                            var data = docReserva.data();
+                            console.log("Datos del evento obtenidos: ", data);
+
+                            var nombreEvento = data.nombreEvento || "";
+                            var detractores = data.detractores || 0;
+                            var pasivos = data.pasivos || 0;
+                            var promotores = data.promotores || 0;
+                            var respuestas = ((detractores + pasivos + promotores) / 3) || 0;
+                            var porcentajeRespuestas = ((respuestas / data.totalAsistentes) * 100).toFixed(2) + "%";
+                            var comentarios = data.comentarios ? data.comentarios.split(/\|/g).filter(comentario => comentario !== "Ninguno.").map(comentario => "«" + comentario.trim() + "»").join("_") : "";
+
+                            if (data.tipoEvento === "valor-agregado") {
+                                totalSatisfaccion += parseFloat(data.satisfaccion || 0);
+                                eventosConSatisfaccion++;
+                            }
+
+                            var anchoComentarios = margender - (margenizq + anchoEvento + 3 * anchoRespuestas);
+                            console.log("anchoComentarios: " + anchoComentarios);
+                            var longitudComentarios = 1.1 * pdf.getStringUnitWidth(comentarios) * pdf.getFontSize();
+                            var longitudNombreEvento = 1.8 * pdf.getStringUnitWidth(nombreEvento) * pdf.getFontSize();
+                            var lineasNecesariasComentarios = Math.ceil(longitudComentarios / (anchoComentarios));
+                            var lineasNecesariasNombreEvento = Math.ceil(longitudNombreEvento / (anchoEvento - 7));
+                            var sumarAposYTabla = Math.max(7, lineasNecesariasComentarios, lineasNecesariasNombreEvento);
+
+                            console.log("Longitud de comentarios: ", longitudComentarios);
+                            console.log("Longitud de nombre del evento: ", longitudNombreEvento);
+                            console.log("Líneas necesarias para comentarios: ", lineasNecesariasComentarios);
+                            console.log("Líneas necesarias para nombre del evento: ", lineasNecesariasNombreEvento);
+                            console.log("Espacio adicional calculado (sumarAposYTabla): ", sumarAposYTabla);
+
+                            // Verificar si necesitamos agregar una nueva página
+                            if (posYTabla + sumarAposYTabla > maxPosY) {
+                                pdf.line(margenizq, posYTabla + sumarAposYTabla - 8, margender + 18, posYTabla + sumarAposYTabla - 8); // Línea horizontal
+                                pdf.addPage(); // Agregar una nueva página al PDF
+                                pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+                                pdf.setFontSize(15);
+                                pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
+                                    margenizq, 22, { align: "justify", maxWidth: margender });
+
+                                posYTabla = 20; // Reiniciar la posición vertical
+
+                                console.log("Nueva página añadida debido a límite de espacio.");
+
+                                // Añadir encabezados a la nueva página
+                                pdf.setFontSize(7);
+                                pdf.line(margenizq, posYTabla + 5, margender + 18, posYTabla + 5); // Línea horizontal
+                                pdf.text("ESPACIO", margenizq + 7, posYTabla + 10);
+                                pdf.text("DET.", margenizq + anchoEvento, posYTabla + 10, { align: "center", maxWidth: anchoEvento - 5 });
+                                pdf.text("PAS.", margenizq + anchoEvento + anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+                                pdf.text("PRO.", margenizq + anchoEvento + 2 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+                                pdf.text("#RES.", margenizq + anchoEvento + 3 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+                                pdf.text("% RES.", margenizq + anchoEvento + 4 * anchoRespuestas, posYTabla + 10, { align: "center", maxWidth: anchoRespuestas });
+                                pdf.text("COMENTARIOS", margenizq + anchoEvento + 6 * anchoRespuestas - 4, posYTabla + 10, { align: "center", maxWidth: anchoRestante });
+
+                                console.log("Encabezados añadidos en la nueva página.");
+                                componenteComentarios = 1;
+                            }
+
+                            // Agregar contenido de la fila
+                            posYTabla += 15;
+                            pdf.text(nombreEvento, margenizq + 1, posYTabla, { align: "left", maxWidth: anchoEvento - 7 });
+                            pdf.text(detractores.toString(), margenizq + anchoEvento, posYTabla, { align: "center", maxWidth: anchoRespuestas });
+                            pdf.text(pasivos.toString(), margenizq + anchoEvento + anchoRespuestas, posYTabla, { align: "center", maxWidth: anchoRespuestas });
+                            pdf.text(promotores.toString(), margenizq + anchoEvento + 2 * anchoRespuestas, posYTabla, { align: "center", maxWidth: anchoRespuestas });
+                            pdf.text(respuestas.toString(), margenizq + anchoEvento + 3 * anchoRespuestas, posYTabla, { align: "center", maxWidth: anchoRespuestas });
+                            pdf.text(porcentajeRespuestas, margenizq + anchoEvento + 4 * anchoRespuestas, posYTabla, { align: "center", maxWidth: anchoPorcentaje });
+                            pdf.text(comentarios, margenizq + anchoEvento + 5 * anchoRespuestas - 4, posYTabla, { align: "left", maxWidth: anchoComentarios });
+
+                            console.log("Contenido de la fila añadido:", {
+                                nombreEvento,
+                                detractores,
+                                pasivos,
+                                promotores,
+                                respuestas,
+                                porcentajeRespuestas,
+                                comentarios
+                            });
+
+                            // Dibujar líneas horizontales y verticales
+                            pdf.setDrawColor(0); // Establecer color de líneas en negro
+                            pdf.setLineWidth(0.1); // Establecer ancho de línea
+                            pdf.line(margenizq, posYTabla - 3, margender + 18, posYTabla - 3); // Línea horizontal
+
+                            pdf.line(margenizq, posYTabla - 10, margenizq, posYTabla + sumarAposYTabla);
+                            pdf.line(margenizq + anchoEvento - 5, posYTabla - 10, margenizq + anchoEvento - 5, posYTabla + sumarAposYTabla);
+                            pdf.line(margenizq + anchoEvento + 1 * anchoRespuestas - 5, posYTabla - 10, margenizq + anchoEvento + 1 * anchoRespuestas - 5, posYTabla + sumarAposYTabla);
+                            pdf.line(margenizq + anchoEvento + 2 * anchoRespuestas - 5, posYTabla - 10, margenizq + anchoEvento + 2 * anchoRespuestas - 5, posYTabla + sumarAposYTabla);
+                            pdf.line(margenizq + anchoEvento + 3 * anchoRespuestas - 5, posYTabla - 10, margenizq + anchoEvento + 3 * anchoRespuestas - 5, posYTabla + sumarAposYTabla);
+                            pdf.line(margenizq + anchoEvento + 4 * anchoRespuestas - 5, posYTabla - 10, margenizq + anchoEvento + 4 * anchoRespuestas - 5, posYTabla + sumarAposYTabla);
+                            pdf.line(margenizq + anchoEvento + 5 * anchoRespuestas - 5, posYTabla - 10, margenizq + anchoEvento + 5 * anchoRespuestas - 5, posYTabla + sumarAposYTabla);
+                            pdf.line(margender + 2 * anchoRespuestas - 3, posYTabla - 10, margender + 2 * anchoRespuestas - 3, posYTabla + sumarAposYTabla);
+
+                            console.log("Líneas horizontales y verticales dibujadas.");
+
+                            posYTabla += sumarAposYTabla - 10;
+                        }
+                    }
+                }
+
+                // Línea horizontal final
+                pdf.line(margenizq, posYTabla + 10, margender + 18, posYTabla + 10);
+
+                console.log("Línea horizontal final añadida.");
+
+                // Calcular satisfacción promedio
+                const satisfaccionPromedioCapitular = totalSatisfaccion / eventosConSatisfaccion;
+                const satisfaccionPromedioCapitularTexto = (satisfaccionPromedioCapitular * 100).toFixed(2) + "%";
+              
+                // Obtener el total de páginas del PDF
+                const totalPages = pdf.internal.getNumberOfPages();
+
+                // Añadir satisfacción promedio en la antepenúltima página
+                pdf.setPage(totalPages - 1 - componenteComentarios); // Cambiar a la antepenúltima página
+                pdf.setFontSize(12);
+                pdf.text(`Satisfacción Promedio (Valor Agregado): ${satisfaccionPromedioCapitularTexto}`, margenizq, PosYParaSG, { align: "justify", maxWidth: margender });
+
+                // Ajustes de la portada
+                pdf.setTextColor("#32620E"); //Verde académico
+                pdf.setFontSize(35);
+                pdf.setPage(1); // Cambiar a la página 1
+                pdf.text(capituloUsuario.toUpperCase(), 105, 200, { align: "center" });
+
+                // Ajustes del pie de página
+                pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
+                pdf.setFontSize(11);
+                const textoTelefono = telefonoCuenta; // Variable que contiene el texto del teléfono
+                const x = 91; // Coordenada X
+                const y = 291.5; // Coordenada Y
+
+                // Bucle para recorrer todas las páginas y añadir el texto
+                for (let i = 2; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.text(textoTelefono, x, y);
+                }
+
+                // Guardar el PDF con el nombre especificado
+                pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_AUG-NOV_2024-2.pdf');
+                toggleVisualizarActualizarEspacios();
+
+                // Abrir automáticamente el PDF después de descargarlo
+                var pdfURL = pdf.output('bloburl');
+                window.open(pdfURL, '_blank');
+            }
+        });
+    }
+
+    function agregarTelefonoPieDePagina(pdf, telefonoCuenta) {
+        // Cambiar el color del texto a un blanco ligeramente gris
+        pdf.setTextColor("#EDEDED"); // Blanco un poquitín agriseado por fines visuales
+        pdf.setFontSize(11);
+
+        const x = 91; // Coordenada X
+        const y = 291.5; // Coordenada Y
+
+        // Obtener la página actual del PDF
+        const currentPage = pdf.internal.getCurrentPage();
+
+        // Establecer la página actual donde quieres añadir el teléfono
+        pdf.setPage(currentPage);
+
+        // Agregar el texto del teléfono en la posición deseada
+        pdf.text(telefonoCuenta, x, y);
+
+        // Devolver el color del texto a negro para evitar afectar el resto del PDF
+        pdf.setTextColor(0, 0, 0); // Color negro
     }
 
   </script>
