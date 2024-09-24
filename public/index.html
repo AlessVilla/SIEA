@@ -7234,7 +7234,7 @@
     }
 
     async function generarInformeIE(event) {
-
+      /*
       Swal.fire({
           title: '¡TE ESPERAMOS EL MARTES 24 DE SEPTIEMBRE!',
           text: 'Esta función de SIEA se estrenará el 24 de septiembre, prepárate y actualiza la información de Integración con el Entorno (IE) para que puedas disfrutarla lo más antes posible. 💚',
@@ -7248,7 +7248,7 @@
           imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
       });
       return; // Detener el proceso de evaluación
-
+      */
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
             icon: 'error',
@@ -7355,6 +7355,8 @@
         });
       }, tiempoCarga); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
 
+      agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario)
+
     }
 
     function agregarGraficoCumplimientoIE(pdf, tablaResumenPDFIE, margenizq, margender) {
@@ -7420,7 +7422,7 @@
         planEvento: 50,
         evidencia: 6
       };
-
+      pdf.setTextColor(0, 0, 0); // Color negro
       const encabezados = ["Espacio", "Área Trabajo", "Fecha", "Ponente/Empresa", "Descripción del espacio", "Evid."];
       const anchoTotal = margender - margenizq;
       let maxRowsPerPage = 6; // Máximo de filas por página
@@ -7512,7 +7514,7 @@
         var componenteComentarios = 0;
         var posY = 35; // Posición vertical inicial
         var maxPosY = 270; // Límite de posición vertical
-
+        pdf.setTextColor(0, 0, 0); // Color negro
         // Punto 3: Respuestas de satisfacción por cada uno de los espacios
         pdf.addPage(); // Agregar una nueva página al PDF
         // Añadir imagen de fondo a la tercera página
@@ -7553,12 +7555,12 @@
 
         cuentasRef.get().then(async (docCuentas) => {
             if (docCuentas.exists) {
-                var clavesInforme = docCuentas.data().clavesInforme.split("|");
-                console.log("Claves del informe obtenidas: ", clavesInforme);
+                var clavesInformeIE = docCuentas.data().clavesInformeIE.split("|");
+                console.log("Claves del informe obtenidas: ", clavesInformeIE);
 
                 let totalSatisfaccion = 0;
                 let eventosConSatisfaccion = 0;
-                for (const claveEvento of clavesInforme) {
+                for (const claveEvento of clavesInformeIE) {
                     if (claveEvento) {
                         var reservaRef = firebase.firestore().collection("reservas").doc(claveEvento);
                         var docReserva = await reservaRef.get();
@@ -7684,7 +7686,7 @@
                 pdf.setTextColor("#32620E"); //Verde académico
                 pdf.setFontSize(35);
                 pdf.setPage(1); // Cambiar a la página 1
-                pdf.text(capituloUsuario.toUpperCase(), 105, 200, { align: "center" });
+                pdf.text(capituloUsuario.toUpperCase(), 105, 220, { align: "center" });
 
                 // Ajustes del pie de página
                 pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
@@ -7719,7 +7721,7 @@
         const y = 291.5; // Coordenada Y
 
         // Obtener la página actual del PDF
-        const currentPage = pdf.internal.getCurrentPage();
+        const currentPage = pdf.internal.pageNumber;
 
         // Establecer la página actual donde quieres añadir el teléfono
         pdf.setPage(currentPage);
