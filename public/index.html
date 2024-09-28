@@ -7342,6 +7342,8 @@
         // Llamar a la función para agregar la tabla resumen siendo esta la 3ra página y a veces hasta 4ta página
         agregarTablaResumenIE(pdf, tablaResumenPDFIE, margenizq, margender);
 
+        agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario)
+
         // Avisar que ya se generó el informe y que revise en descargas
         Swal.fire({
             title: 'Informe Generado',
@@ -7356,8 +7358,6 @@
             imageAlt: 'Éxito',
         });
       }, tiempoCarga); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
-
-      agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario)
 
     }
 
@@ -7421,11 +7421,14 @@
         areaTrabajo: 15,
         fechaEvento: 10,
         nombrePonente: 15,
-        planEvento: 50,
+        planEvento: 37,
+        totalAsistentes: 5,
+        satisfaccion: 8,
         evidencia: 6
       };
       pdf.setTextColor(0, 0, 0); // Color negro
-      const encabezados = ["Espacio", "Área Trabajo", "Fecha", "Ponente/Empresa", "Descripción del espacio", "Evid."];
+
+      const encabezados = ["Espacio", "Área Trabajo", "Fecha", "Ponente/Empresa", "Descripción del espacio", "#A", "% NPS", "Evid."];
       const anchoTotal = margender - margenizq;
       let maxRowsPerPage = 6; // Máximo de filas por página
       let currentPage = 0; // Página actual
@@ -7459,6 +7462,7 @@
         // Iterar sobre cada encabezado y agregar texto al PDF
         pdf.line(posXEncabezados - 12, posY - 3, posXEncabezados - 12, maxPosY);
         encabezados.forEach(function(encabezado, index) {
+          pdf.setFontSize(7)
           var anchoCampoEncabezado = (anchoTotal * anchoPorcentaje[Object.keys(anchoPorcentaje)[index]]) / 100;
           pdf.text(encabezado, posXEncabezados - 10, posY, { align: "justify", valign: "middle", maxWidth: anchoCampoEncabezado - 4 });
           if (index < encabezados.length) {
@@ -7479,6 +7483,7 @@
           Object.keys(anchoPorcentaje).forEach(function(campo, index) {
             var anchoCampo = (anchoTotal * anchoPorcentaje[campo]) / 100;
             var restarValor;
+            pdf.setFontSize(7)
             if (campo === 'nombreEvento') { restarValor = 6; }
             else if (campo === 'nombrePonente') { restarValor = 7; }
             else { restarValor = 4; }
@@ -7502,13 +7507,7 @@
         currentPage++;
         PosYParaSG = posY + 3;
       }
-      // Guardar el PDF con el nombre especificado
-      pdf.save('Informe_Integración_Entorno_' + capituloUsuario.toUpperCase() + '_AGO-NOV_2024-2.pdf');
-      toggleVisualizarActualizarEspacios();
 
-      // Abrir automáticamente el PDF después de descargarlo
-      var pdfURL = pdf.output('bloburl');
-      window.open(pdfURL, '_blank');
     }
 
     // Función para agregar la tabla de satisfacciones y comentarios por espacio
@@ -7579,7 +7578,7 @@
                             var porcentajeRespuestas = ((respuestas / data.totalAsistentes) * 100).toFixed(2) + "%";
                             var comentarios = data.comentarios ? data.comentarios.split(/\|/g).filter(comentario => comentario !== "Ninguno.").map(comentario => "«" + comentario.trim() + "»").join("_") : "";
 
-                            if (data.tipoEvento === "valor-agregado") {
+                            if (data.tipoEvento === "integracion-entorno") {
                                 totalSatisfaccion += parseFloat(data.satisfaccion || 0);
                                 eventosConSatisfaccion++;
                             }
@@ -7682,7 +7681,7 @@
                 // Añadir satisfacción promedio en la antepenúltima página
                 pdf.setPage(totalPages - 1 - componenteComentarios); // Cambiar a la antepenúltima página
                 pdf.setFontSize(12);
-                pdf.text(`Satisfacción Promedio (Valor Agregado): ${satisfaccionPromedioCapitularTexto}`, margenizq, PosYParaSG, { align: "justify", maxWidth: margender });
+                pdf.text(`Satisfacción Promedio (Integración con el Entorno): ${satisfaccionPromedioCapitularTexto}`, margenizq, PosYParaSG, { align: "justify", maxWidth: margender });
 
                 // Ajustes de la portada
                 pdf.setTextColor("#32620E"); //Verde académico
@@ -7704,7 +7703,7 @@
                 }
 
                 // Guardar el PDF con el nombre especificado
-                pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_AUG-NOV_2024-2.pdf');
+                pdf.save('Informe_Seguimiento_Integración_Entorno_' + capituloUsuario.toUpperCase() + '_AUG-NOV_2024-2.pdf');
                 toggleVisualizarActualizarEspacios();
 
                 // Abrir automáticamente el PDF después de descargarlo
