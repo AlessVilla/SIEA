@@ -5528,12 +5528,17 @@
                   console.log("El capítulo del usuario es: " + capituloUsuario);
                 }
               });
-            } else if (correo.startsWith("academico_")) {
-              // Si el correo empieza por "academico_", extraer el nombre del capítulo y asignarlo a capituloUsuario
-              var inicio = "academico_";
-              var fin = "@aneiap.co";
-              var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
-              capituloUsuario = capitulo;
+            } else if (correo.startsWith("academico_") || correo === "informes@aneiap.co") {
+              if (correo.startsWith("academico_")) {
+                // Si el correo empieza por "academico_", extraer el nombre del capítulo y asignarlo a capituloUsuario
+                var inicio = "academico_";
+                var fin = "@aneiap.co";
+                var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
+                capituloUsuario = capitulo;
+              } else {
+                // Si el correo no empieza por "academico_", asignar "nacional"
+                capituloUsuario = "nacional";
+              }
               var storedTelefonoCuenta = doc.data().telefonoDCA;
               telefonoCuenta = storedTelefonoCuenta;
               // Mostrar mensaje de inicio de sesión exitoso
