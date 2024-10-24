@@ -2088,22 +2088,24 @@
 
         // Crear fila de encabezado de la tabla
         var encabezado = tablaResumen.insertRow();
-        var encabezadoColumnas = ["Nombre espacio", "Área", "Tipo", "Fecha", "Ponente", "Correo ponente", "Tel. ponente", "Detractores", "Pasivos", "Promotores", "Asistentes", "% NPS", "Evidencia"];
+        var encabezadoColumnas = ["Clave Evento", "Nombre espacio", "Área", "Tipo", "Fecha", "Ponente", "Correo ponente", "Tel. ponente", "Detractores", "Pasivos", "Promotores", "Asistentes", "% NPS", "Evidencia"];
         encabezadoColumnas.forEach(function(columna, index) {
             var th = document.createElement("th");
             th.textContent = columna;
             // Asignar ancho específico a cada columna
             if (index === 0) {
-                th.style.width = "20%";
-            } else if (index >= 1 && index <= 5) {
+                th.style.width = "10%"; // Ancho para Clave Evento
+            } else if (index === 1) {
+                th.style.width = "20%"; // Nombre espacio
+            } else if (index >= 2 && index <= 6) {
                 th.style.width = "10%";
-            } else if (index === 6) {
+            } else if (index === 7) {
                 th.style.width = "5%";
-            } else if (index >= 7 && index <= 10) {
-                th.style.width = "5%";
-            } else if (index === 11) {
+            } else if (index >= 8 && index <= 11) {
                 th.style.width = "5%";
             } else if (index === 12) {
+                th.style.width = "5%";
+            } else if (index === 13) {
                 th.style.width = "0%"; // Columna de Evidencia con 0% de ancho
             }
             encabezado.appendChild(th);
@@ -2135,10 +2137,11 @@
                             // Crear fila para este evento
                             var fila = tablaResumen.insertRow();
 
-                            // Insertar celdas con los datos del evento
+                            // Insertar celdas con los datos del evento, incluyendo claveEvento
+                            fila.insertCell().textContent = data.claveEvento; // Insertar claveEvento como primer campo
                             fila.insertCell().textContent = data.nombreEvento;
-                            fila.insertCell().textContent = data.areaTrabajo
-                            fila.insertCell().textContent = data.tipoEvento
+                            fila.insertCell().textContent = data.areaTrabajo;
+                            fila.insertCell().textContent = data.tipoEvento;
                             fila.insertCell().textContent = data.fechaEvento;
                             fila.insertCell().textContent = data.nombrePonente;
                             fila.insertCell().textContent = data.emailPonente;
@@ -2148,8 +2151,7 @@
                             fila.insertCell().textContent = data.promotores;
                             fila.insertCell().textContent = data.totalAsistentes;
                             var satisfaccion = data.satisfaccion;
-                            var satisfaccionFormateada = (satisfaccion * 100).toFixed(2);
-                            satisfaccionFormateada += '%';
+                            var satisfaccionFormateada = (satisfaccion * 100).toFixed(2) + '%';
                             fila.insertCell().textContent = satisfaccionFormateada;
                             fila.insertCell().textContent = data.evidencia;
                         });
