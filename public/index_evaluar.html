@@ -1297,7 +1297,7 @@
       }
       
       var reservasRef = firebase.firestore().collection("reservas");
-      var eventoRef = reservasRef.where("capitulo", "==", capituloEspacio).where("nombreEvento", "==", nombreEspacio)
+      var eventoRef = reservasRef.where("capitulosOrganizadores", "array-contains", capituloEspacio).where("nombreEvento", "==", nombreEspacio)
                                  .where("fechaEvento", ">=", fechaTresSemanasAtras).where("fechaEvento", "<=", fechaHoy);
 
       eventoRef.get().then(function(querySnapshot) {
