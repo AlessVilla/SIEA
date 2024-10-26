@@ -1692,6 +1692,9 @@
           </div>
         </div>
         <button class="button-actualizar" onclick="actualizarEspacio()">Actualizar espacio</button>
+        <div>
+          <button class="button-actualizar" onclick="editarInformacionInterna()">Edición interna</button>
+        </div>
         <!-- Mini sección de estadísticas -->
         <div class="actualizar-group">
           <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p></h2>
@@ -3447,6 +3450,37 @@
       imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
       }).then((result) => {
       // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+      });
+    }
+
+    // Esta función permite la acción de mostrar un mensaje de éxito al momento de actualizar un espacio.        
+    function mostrarMensajeActualizarEspacio() {
+      Swal.fire({
+      title: '¡ACTUALIZACIÓN COMPLETADA!',
+      text: 'Su espacio ha sido actualizado con ÉXITO, revisa en la tabla resumen o en consultar disponibilidad para confirmarlo.',
+      icon: 'success',
+      showConfirmButton: true, // Muestra el botón de confirmación
+      allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
+      allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
+      imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+      imageWidth: 120, // Ancho de la imagen en píxeles
+      imageHeight: 235, // Alto de la imagen en píxeles
+      imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+      }).then((result) => {
+      // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+      });
+    }
+
+    // Esta función permite la acción de mostrar un mensaje de error al momento de tener una falla.        
+    function mostrarMensajeFallaTecnica() {
+      Swal.fire({
+      title: 'Error de Consulta',
+      text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar',
+      allowOutsideClick: true,
+      backdrop: true,  
+      allowEscapeKey: true
       });
     }
 
@@ -5969,7 +6003,9 @@
       // Si todos los campos están diligenciados, continuar con el proceso de evaluación
       // Actualizar la información del evento en la base de datos
       var reservasRef = firebase.firestore().collection("reservas");
-      var eventoRef = reservasRef.where("capitulo", "==", capituloEspacio).where("nombreEvento", "==", nombreEspacio);
+      // Crear la consulta para obtener el evento donde el nombre del evento es igual y capituloEspacio está en capitulosOrganizadores (array)
+      var eventoRef = reservasRef.where("capitulosOrganizadores", "array-contains", capituloEspacio)
+                                .where("nombreEvento", "==", nombreEspacio);
 
       eventoRef.get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
@@ -6230,6 +6266,219 @@
             });
         });
     }
+
+    function editarInformacionInterna() {
+        // Obtener el valor seleccionado del espacio
+        console.log("El espacio seleccionado es: " + document.getElementById("nombre-espacio-actualizar").value)
+        const espacioSeleccionado = document.getElementById("nombre-espacio-actualizar").value;
+        if (!espacioSeleccionado) {
+            Swal.fire({
+                title: '¡Espacio no seleccionado!',
+                text: 'Por favor selecciona un espacio antes de continuar.',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        // Obtener información de Firebase
+        const reservasRef = firebase.firestore().collection("reservas");
+        const fechaInicial = fechaInicialInput.value;
+        const fechaFinal = fechaFinalInput.value;
+
+        console.log("La fecha inicial es: " + fechaInicial);
+        console.log("La fecha final es: " + fechaFinal);
+        console.log("El capítulo del usuario es: " + capituloUsuario);
+
+        const consulta = reservasRef
+            .where("capitulosOrganizadores", "array-contains", capituloUsuario)
+            .where("fechaEvento", ">=", fechaInicial)
+            .where("fechaEvento", "<=", fechaFinal)
+            .where("nombreEvento", "==", espacioSeleccionado);
+
+        // Ejecutar consulta
+        consulta.get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const eventoDoc = querySnapshot.docs[0]; // Selecciona el primer documento
+                const eventoData = eventoDoc.data();
+                const capitulosExistentes = eventoData.capitulosOrganizadores || [];
+                const capitulosRestantes = 4 - capitulosExistentes.length;
+
+                Swal.fire({
+                    title: 'Edición de Información',
+                    text: '¿Deseas editar información del ponente o añadir un capítulo organizador?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Añadir capítulo',
+                    cancelButtonText: 'Cancelar',
+                    showDenyButton: true,
+                    denyButtonText: 'Editar información del ponente'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Comprobar si ya se ha alcanzado el máximo de capítulos
+                        if (capitulosRestantes <= 0) {
+                            Swal.fire({
+                                title: 'Máximo de capítulos alcanzado',
+                                text: 'Este espacio ya tiene 4 capítulos organizadores, que es el límite, por lo que no podrás añadirle alguno adicional.',
+                                icon: 'info',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            return;
+                        }
+
+                        // Opciones de capítulos
+                        const opcionesCapitulos = [
+                            "uniguajira", "unimagdalena", "uniatlantico", "uninorte", "unisimon", 
+                            "cuc", "librequilla", "utb", "upbmonteria", "unicordoba", 
+                            "areandina", "ufps", "unalmed", "udea", "upbmed", 
+                            "utp", "unalma", "udistrital", "unalbog", "univalle", 
+                            "icesi", "usc", "librecali"
+                        ];
+                        
+                        // Crear la estructura HTML para los desplegables y textos adicionales
+                        let seleccionCapitulosHTML = '';
+                        for (let i = 0; i < capitulosRestantes; i++) {
+                            const numeroCapitulo = capitulosExistentes.length + i + 1;  // Calcula el número correcto del capítulo
+                            const etiquetaCapitulo = numeroCapitulo === 2 ? "Segundo capítulo" :
+                                                numeroCapitulo === 3 ? "Tercer capítulo" :
+                                                "Cuarto capítulo";
+                            seleccionCapitulosHTML += `
+                                <label for="capituloOpcion${i + 1}"><b>${etiquetaCapitulo}</b></label>
+                                <select id="capituloOpcion${i + 1}">
+                                    <option value="" disabled selected>Selecciona un capítulo</option>
+                                    ${opcionesCapitulos.map(c => `<option value="${c}">${c}</option>`).join('')}
+                                </select><br>
+                            `;
+                        }
+
+                        // Añadir el texto con los capítulos actuales en mayúsculas
+                        const capitulosActualesTexto = capitulosExistentes.map(c => c.toUpperCase()).join(", ");
+                        seleccionCapitulosHTML += `<p>Estos son los capítulos que actualmente aparecen como organizadores del espacio: ${capitulosActualesTexto}</p>`;
+
+                        // Mostrar el Swal con la estructura personalizada
+                        Swal.fire({
+                            title: 'Selecciona capítulos adicionales',
+                            html: seleccionCapitulosHTML,
+                            showCancelButton: true,
+                            confirmButtonText: 'Añadir capítulo',
+                            cancelButtonText: 'Cancelar',
+                            preConfirm: () => {
+                                // Obtener las selecciones de capítulos
+                                const nuevosCapitulos = [];
+                                for (let i = 0; i < capitulosRestantes; i++) {
+                                    const capitulo = document.getElementById(`capituloOpcion${i + 1}`).value;
+                                    if (capitulo && !capitulosExistentes.includes(capitulo)) {
+                                        nuevosCapitulos.push(capitulo);
+                                    } else if (capitulo && capitulosExistentes.includes(capitulo)) {
+                                        Swal.showValidationMessage(`El capítulo ${capitulo} ya es un organizador.`);
+                                        return false;
+                                    }
+                                }
+                                return nuevosCapitulos;
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed && result.value.length > 0) {
+                                // Actualizar el campo "capitulosOrganizadores" en Firebase
+                                const nuevosCapitulos = result.value;
+                                const actualizacion = {
+                                    capitulosOrganizadores: firebase.firestore.FieldValue.arrayUnion(...nuevosCapitulos)
+                                };
+
+                                eventoDoc.ref.update(actualizacion).then(() => {
+                                    mostrarMensajeActualizarEspacio();
+                                }).catch(() => {
+                                    mostrarMensajeFallaTecnica();
+                                });
+                            } else if (result.isConfirmed) {
+                                Swal.fire({
+                                    title: 'No se seleccionó ningún capítulo',
+                                    text: 'No se realizó ninguna actualización porque no seleccionaste ningún capítulo nuevo.',
+                                    icon: 'info',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
+                        });
+                    } else if (result.isDenied) {
+                        // Información actual del ponente
+                        const nombreActual = eventoData.nombrePonente || '';
+                        const emailActual = eventoData.emailPonente || '';
+                        const telefonoActual = eventoData.telefonoPonente || '';
+
+                        // Crear el formulario con los campos del ponente en Swal
+                        Swal.fire({
+                            title: 'Actualizar información del ponente',
+                            html: `
+                                <label for="nombrePonente">Nombre del ponente:</label>
+                                <input type="text" id="nombrePonente" class="swal2-input" placeholder="Nombre del ponente" value="${nombreActual}">
+
+                                <label for="emailPonente">Email del ponente:</label>
+                                <input type="text" id="emailPonente" class="swal2-input" placeholder="Email del ponente" value="${emailActual}">
+
+                                <label for="telefonoPonente">Teléfono del ponente:</label>
+                                <input type="text" id="telefonoPonente" class="swal2-input" placeholder="Teléfono del ponente" value="${telefonoActual}">
+                            `,
+                            showCancelButton: true,
+                            confirmButtonText: 'Actualizar',
+                            cancelButtonText: 'Cancelar',
+                            preConfirm: () => {
+                                // Obtener los valores de los campos
+                                const nombrePonente = document.getElementById("nombrePonente").value.trim();
+                                const emailPonente = document.getElementById("emailPonente").value.trim();
+                                const telefonoPonente = document.getElementById("telefonoPonente").value.trim();
+
+                                // Validaciones
+                                if (!nombrePonente) {
+                                    Swal.showValidationMessage("El nombre del ponente es obligatorio.");
+                                    return false;
+                                }
+                                if (!emailPonente && !telefonoPonente) {
+                                    Swal.showValidationMessage("Debes diligenciar al menos el email o el teléfono del ponente.");
+                                    return false;
+                                }
+                                if (telefonoPonente && (!/^[3]\d{9}$/.test(telefonoPonente))) {
+                                    Swal.showValidationMessage("Debes diligenciar un número de teléfono válido.");
+                                    return false;
+                                }
+
+                                // Si pasa las validaciones, devolver los datos actualizados
+                                return {
+                                    nombrePonente,
+                                    emailPonente,
+                                    telefonoPonente
+                                };
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const { nombrePonente, emailPonente, telefonoPonente } = result.value;
+
+                                // Actualizar los campos en Firebase
+                                eventoDoc.ref.update({
+                                    nombrePonente,
+                                    emailPonente,
+                                    telefonoPonente
+                                }).then(() => {
+                                    mostrarMensajeActualizarEspacio();
+                                }).catch(() => {
+                                    mostrarMensajeFallaTecnica();
+                                });
+                            }
+                        });
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Espacio no encontrado',
+                    text: 'No se encontró información para el espacio seleccionado en el rango de fechas especificado.',
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        }).catch((error) => {
+            console.error("Error al buscar el evento:", error);
+            mostrarMensajeFallaTecnica();
+        });
+    }
+
 
     // Función para alternar la visibilidad de la tabla resumen y cambiar el texto del botón
     function toggleTablaResumen() {
