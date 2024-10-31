@@ -64,18 +64,73 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
-    body {
-      /* Establece la imagen de fondo */
-      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
-      /* Fija la imagen de fondo para que no se desplace con el contenido */
-      background-attachment: fixed;
-      /* Escala la imagen para cubrir todo el cuerpo */
-      background-size: contain;
-      /* Centra la imagen */
-      background-position: center;
-      /* Establece un color de fondo de respaldo */
-      background-color: #0b2447; /* Este color será visible si la imagen no se carga */
-    }
+body {
+    background-color: #1a1a1a; /* Fondo oscuro */
+    color: #ffedc7; /* Color de texto en tono dorado claro */
+    background-image: url('https://i.ibb.co/sVnMLVt/halloween-background.jpg'); /* Imagen de fondo con sutiles sombras */
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
+    color: #ffedc7; /* Texto en dorado claro */
+    background-color: #5b3c11; /* Fondo oscuro para botones */
+    border: 2px solid #ff6f00; /* Borde naranja */
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+a, .tab-container .tab, .document-link a {
+    color: #000000; /* Naranja oscuro */
+    font-weight: bold;
+}
+
+.acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
+    background-color: #5b3c11;
+    color: #ffedc7;
+}
+
+button {
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff6f00; /* Naranja brillante en hover */
+    color: #1a1a1a;
+}
+
+.swal2-popup {
+    background: #332b1b; /* Fondo más oscuro */
+    color: #ffedc7; /* Texto en dorado claro */
+    border: 1px solid #ff6f00; /* Borde naranja */
+}
+
+.swal2-title, .swal2-content {
+    color: #ff6f00; /* Naranja oscuro */
+}
+
+.acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
+    background-color: #332b1b; /* Color más oscuro */
+    color: #ffedc7; /* Texto claro */
+}
+
+.tab-content.active {
+    border: 3px solid #5b3c11;
+}
+
+.image-container img {
+    max-width: 15%;
+    height: auto;
+    transition: transform 6s ease-in-out;
+}
+
+.image-container img:hover {
+    transform: rotate(15deg) scale(1.1);
+}
+
+
+
+
     .black-text {
       color: black;
     }
@@ -127,6 +182,9 @@
       font-weight: bold;
       font-size: 18px;
     }
+    input[type="text"] {
+    color: black; /* Cambia el color del texto que se escribe en el input */
+    }
     select, textarea, input[type="text"], input[type="date"], input[type="email"], input[type="tel"] {
       width: 100%;
       margin-top: 5px;
@@ -159,9 +217,9 @@
     }
     .disponibilidad-group {
       margin-bottom: 15px;
-      background-color: #c3d6ffD9; /* Color de fondo azul muy claro */
+      background-color: #fff08dd9; /* Color de fondo azul muy claro */
       padding: 10px;
-      border: 1px solid #0004ffD9; /* Borde azul */
+      border: 1px solid #ffff49d9; /* Borde azul */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .reservar-group {
@@ -292,27 +350,27 @@
       background-color: #4d4d4d;
     }
     .button-generar-informe {
-      background-color: #32ce13;
+      background-color: #000000;
     }
     .button-login {
       color: #000000;
-      background-color: #FDF55F;
+      background-color: #ff2323;
       padding: 5px 10px;
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 10px; /* Añadido para separar el botón de los campos */
       width: 120px; /* Ocupar el ancho del contenedor */
     }
     .button-cambio-contrasena {
       color: #000000;
-      background-color: #FDF55F;
+      background-color: #ff2323;
       padding: 5px 10px;
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 10px; /* Añadido para separar el botón de los campos */
       width: 230px; /* Ocupar el ancho del contenedor */
     }
@@ -369,19 +427,19 @@
     .tab {
       padding: 10px 20px;
       cursor: pointer;
-      border: 1px solid #9900CCBF;
-      background-color: #f7d1f3BF;
+      border: 1px solid #ffae70bf;
+      background-color: #ffae70BF;
       border-radius: 8px 8px 0 0;
     }
     .tab:hover {
-      background-color: #f0f0f0;
+      background-color: #ff6161;
     }
     /* Estilos para los contenidos de las pestañas */
     .tab-content {
       display: none;
       padding: 10px;
-      border: 3px solid #D55DFFBF;
-      background-color: #f7d1f3BF;
+      border: 3px solid #ff3c00;
+      background-color: #dc9565bf;
       border-radius: 20 20px 20px 20px;
       width: 100%
     }
@@ -473,6 +531,9 @@
         position: absolute;
         margin-left: 0px;
         margin-top: 25px; /* Ajusta según sea necesario */
+    }
+    #tabla-resumen td, #tabla-evaluaciones td {
+    color: black; /* Color negro solo para el contenido */
     }
     /* Estilos para la tabla resumen */
     #tabla-resumen {
@@ -629,7 +690,7 @@
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
     <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe FI</button>
-    <button type="button" class="button-generar-informe" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white;">Generar Informe IE</button>
+    <button type="button" class="button-generar-informe" onclick="generarInformeIE(event)">Generar Informe IE</button>
     <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
   </form>
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
@@ -653,11 +714,11 @@
 
       <div id="tab-content-1" class="tab-content">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2 style="margin: 0;">GENERA UN TICKET PARA OBTENER AYUDA DEL ADMINISTRADOR 🎟️</h2>
+          <h2 class="text-black" style="margin: 0;" class="text-black">GENERA UN TICKET PARA OBTENER AYUDA DEL ADMINISTRADOR 🎟️</h2>
           <div style="text-align: right;">
-            <button style="width: 150px; height: 20px;" onclick="enviarTicket()">ENVIAR TICKET</button>
+            <button style="width: 150px; height: 20px;" onclick="enviarTicket()" style="color: black;"class="text-black">ENVIAR TICKET</button>
             <br>
-            <button style="width: 150px; height: 20px;" onclick="limpiarTicket()">BORRAR TODO</button>
+            <button style="width: 150px; height: 20px;" onclick="limpiarTicket()" style="color: black;"class="text-black">BORRAR TODO</button>
           </div>
         </div>
             <!-- PRIMERA FILA DE LA SECCIÓN TICKET CON NOMBRE, CORREO Y TIPO DE TICKET -->
@@ -665,29 +726,29 @@
             <div class="row">
                 <div class="third">
                     <!-- CAMPO PARA NOMBRE QUE ES OBLIGATORIO -->
-                    <label for="nombre">Nombre *</label>
+                    <label for="nombre" style="color: black;"class="text-black">Nombre *</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
-                    <label for="correo-ticket">Correo *</label>
+                    <label for="correo-ticket" style="color: black;"class="text-black">Correo *</label>
                     <input type="text" id="correo-ticket" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
-                    <label for="tipo-ticket">Tipo *</label>
+                    <label for="tipo-ticket" style="color: black;"class="text-black">Tipo *</label>
                     <select id="tipo-ticket" name="tipo-ticket" required>
-                      <option value="" disabled selected>Seleccione un tipo</option>
-                      <option value="Consulta General">Consulta General</option>
-                      <option value="Solicitud de Ponentes">Solicitud de Ponentes</option>
-                      <option value="Edición de Reserva">Edición de Reserva</option>
-                      <option value="Asistencia de Reserva">Asistencia de Cuenta</option>
-                      <option value="Problema Técnico">Problema Técnico</option>
-                      <option value="Solicitud de Características">Solicitud de Características</option>
-                      <option value="Error en la Aplicación">Error en la Aplicación</option>
-                      <option value="Solicitud de Capacitación">Solicitud de Capacitación</option>
-                      <option value="Reporte de Abuso o Violación de Políticas">Reporte de Abuso o Violación de Políticas</option>
-                      <option value="Otros">Otros</option>
+                      <option value="" disabled selected style="color: black;"class="text-black">Seleccione un tipo</option>
+                      <option value="Consulta General" style="color: black;"class="text-black">Consulta General</option>
+                      <option value="Solicitud de Ponentes" style="color: black;"class="text-black">Solicitud de Ponentes</option>
+                      <option value="Edición de Reserva" style="color: black;"class="text-black">Edición de Reserva</option>
+                      <option value="Asistencia de Reserva" style="color: black;"class="text-black">Asistencia de Cuenta</option>
+                      <option value="Problema Técnico" style="color: black;"class="text-black">Problema Técnico</option>
+                      <option value="Solicitud de Características" style="color: black;"class="text-black">Solicitud de Características</option>
+                      <option value="Error en la Aplicación" style="color: black;"class="text-black">Error en la Aplicación</option>
+                      <option value="Solicitud de Capacitación" style="color: black;"class="text-black">Solicitud de Capacitación</option>
+                      <option value="Reporte de Abuso o Violación de Políticas" style="color: black;"class="text-black">Reporte de Abuso o Violación de Políticas</option>
+                      <option value="Otros" class="text-black">Otros</option>
                         <!-- Agrega más opciones según sea necesario -->
                     </select>
                 </div>
@@ -696,17 +757,17 @@
             <div class="row">
                 <div class="third">
                     <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ DE FORMA MUY DETALLADA LO QUE OCURRIÓ EN EL CASO -->
-                    <label for="explicacion">Explicación caso *</label>
+                    <label for="explicacion" style="color: black;"class="text-black">Explicación caso *</label>
                     <textarea id="explicacion" name="explicacion" rows="1" required placeholder="Describe detalladamente tu caso"></textarea>
                 </div>
                 <div class="third">
                     <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ SU NÚMERO DE CELUAR, DEBE SER UN VALOR QUE EMPIECE EN 3 Y TENGA EN TOTAL 10 DÍGITOS -->
-                    <label for="celular">Número de tel. *</label>
+                    <label for="celular" style="color: black;"class="text-black">Número de tel. *</label>
                     <input type="tel" id="celular" name="celular" required placeholder="Digita tu número de celular" pattern="^3\d{9}$">
                 </div>
                 <div class="third">
                     <!-- CAMPO DONDE SE ADJUNTARÁ UN LINK DE GOOGLE DRIVE VÁLIDO (OPCIONAL) -->
-                    <label for="link-drive">Drive evidencias</label>
+                    <label for="link-drive" style="color: black;"class="text-black">Drive evidencias</label>
                     <textarea id="link-drive" name="link-drive" rows="1" required placeholder="Adjunta link de evidencias en Drive"></textarea>
                 </div>
             </div>
@@ -717,12 +778,12 @@
           <div class="disponibilidad-group">
             <div class="row">
             <div class="half">
-            <label for="texto2"><b>1️⃣ Todo campo con un asterisco (*) es obligatorio.</b></label>
-            <label for="texto3"><b>3️⃣ Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
+            <label for="texto2" style="color: black;"class="text-black"><b>1️⃣ Todo campo con un asterisco (*) es obligatorio.</b></label>
+            <label for="texto3" style="color: black;"class="text-black"><b>3️⃣ Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
             </div>
             <div class="half">
-            <label for="texto4"><b>2️⃣ Las claves de eventos son personales e intransferibles.</b></label>
-            <label for="texto5"><b>4️⃣ Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
+            <label for="texto4" style="color: black;"class="text-black"><b>2️⃣ Las claves de eventos son personales e intransferibles.</b></label>
+            <label for="texto5"style="color: black;" class="text-black"><b>4️⃣ Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
             </div>
             </div>
           </div>
@@ -733,9 +794,9 @@
         <h2>CRÉDITOS, PROPIEDAD Y DOCUMENTACIÓN 💾</h2>
         <p>
           <div class="disponibilidad-group">
-          <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
-          <label for="texto7"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
-          <label for="texto8"><b>- Agradecimientos a Said Yanett UNINORTE (logo).</b></label>
+          <label style="color: black;" for="texto6" class="text-black"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
+          <label style="color: black;" for="texto7" class="text-black"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
+          <label style="color: black;" for="texto8" class="text-black"><b>- Agradecimientos a Said Yanett UNINORTE (logo).</b></label>
           </div>
           <h2>CONSULTA AQUÍ LA DOCUMENTACIÓN DE SIEA 👇🏽📚</h2>
           <div class="disponibilidad-group">
@@ -1635,19 +1696,19 @@
           <div class="half">
             <div class="row">
               <div class="quarter">
-                <label for="fecha-inicial"><b>Fecha inicial: *</b></label>
+                <label for="fecha-inicial"style="color: black;"><b>Fecha inicial: *</b></label>
                 <input type="date" id="fecha-inicial">
               </div>
               <div class="quarter">
-                <label for="fecha-final"><b>Fecha final: *</b></label>
+                <label for="fecha-final"style="color: black;"><b>Fecha final: *</b></label>
                 <input type="date" id="fecha-final">
               </div>
               <div class="quarter">
-                <label for="total-asistentes"><b># de asistentes:</b></label>
+                <label for="total-asistentes"style="color: black;"><b># de asistentes:</b></label>
                 <input type="text" id="total-asistentes">
               </div>
               <div class="quarter">
-                <label for="link-evidencia"><b>Evidencia (drive):</b></label>
+                <label for="link-evidencia"style="color: black;"><b>Evidencia (drive):</b></label>
                 <input type="text" id="link-evidencia">
               </div>
             </div>
@@ -1655,7 +1716,7 @@
         </div>
         <div class="row">
           <div class="half">
-            <label for="nombre-espacio-actualizar"><b>Nombre del espacio a actualizar: *</b></label>
+            <label for="nombre-espacio-actualizar"style="color: black;"><b>Nombre del espacio a actualizar: *</b></label>
             <select id="nombre-espacio-actualizar">
               <option value="" disabled selected hidden>Debes seleccionar primero la fecha inicial y final a consultar.</option>
               <!-- Aquí se cargarán dinámicamente los nombres de los espacios disponibles para el capítulo del usuario -->
@@ -1664,7 +1725,7 @@
           <div class="half">
             <div class="row">
               <div class="half">
-                <label for="tipo-espacio"><b>Tipo de espacio: *</b></label>
+                <label for="tipo-espacio"style="color: black;"><b>Tipo de espacio: *</b></label>
                 <select id="tipo-espacio">
                   <option value="" disabled selected hidden>Selecciona el tipo de espacio.</option>
                   <option value="valor-agregado">VALOR AGREGADO ➕</option>
@@ -1674,7 +1735,7 @@
                 </select>
               </div>
               <div class="half">
-                <label for="area-trabajo"><b>Área de trabajo: *</b></label>
+                <label for="area-trabajo"style="color: black;"><b>Área de trabajo: *</b></label>
                 <select id="area-trabajo">
                   <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
                   <option value="academico">ACADÉMICO 💚</option>
@@ -1698,20 +1759,23 @@
         </div>
         <!-- Mini sección de estadísticas -->
         <div class="actualizar-group">
-          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p></h2>
-          <p id="dashboardEstado" style="text-align: center; display: block;">El dashboard estadístico está oculto.</p>
-          <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto;">Mostrar dashboard</button>
+          <h2 style="font-size: 22px; text-transform: uppercase;">
+            <p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p>
+        </h2>
+        <p id="dashboardEstado" style="text-align: center; display: block; color: black;">El dashboard estadístico está oculto.</p>
+        <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto; color: black;">Mostrar dashboard</button>
+        
           <div id="estadisticas-container" style="display: none;">
             <div class="row">
                 <div class="half">
                         Aquí aparecerá el cumplimiento del plan de formación:
-                    <div id="porcentajes-container" style="display: none;">
+                    <div id="porcentajes-container" style="display: none; color: black;">
                     </div>
                     <canvas id="grafico-metas"></canvas>
                 </div>
                 <div class="half">
                         Acá podrás ver estadísticas sobre el NPS en los espacios:
-                    <div id="satisfaccion-container" style="display: none;">
+                    <div id="satisfaccion-container" style="display: none;color: black;">
                     </div>
                     <canvas id="grafico-satisfaccion"></canvas>
                 </div>
@@ -1737,9 +1801,9 @@
           <!-- Desplegable para elegir el evento -->
           <div class="row">
             <div class="half">
-              <label for="nombre-espacio-consultar-evaluaciones"><b>Selecciona un evento:</b></label>
+              <label for="nombre-espacio-consultar-evaluaciones" style ='color: black;'><b>Selecciona un evento:</b></label>
               <select id="nombre-espacio-consultar-evaluaciones" onchange="consultarEvaluaciones()">
-                <option value="" disabled selected hidden>Debes seleccionar una fecha inicial y una fecha final primero</option>
+                <option value="" disabled selected hidden style ='color: black;'>Debes seleccionar una fecha inicial y una fecha final primero</option>
                 <!-- Aquí se cargarán dinámicamente los eventos disponibles para el capítulo del usuario -->
               </select>
             </div>
@@ -2503,7 +2567,8 @@
 
       // Obtener el elemento del párrafo donde se mostrará el capítulo del usuario
       var capituloUsuarioElement = document.getElementById("capitulo-usuario");
-      var textoCapitulo = "<b>La información que aparecerá y consultará corresponderá al capítulo: </b>" + "<b>" + capituloUsuario.toUpperCase() + "</b>";
+      var textoCapitulo = "<b style='color: black;'>La información que aparecerá y consultará corresponderá al capítulo: </b>" + 
+                    "<b style='color: black;'>" + capituloUsuario.toUpperCase() + "</b>";
       capituloUsuarioElement.innerHTML = textoCapitulo;
 
       // Comprobar el estado actual de visualización (oculto o mostrado)
