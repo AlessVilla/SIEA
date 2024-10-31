@@ -62,18 +62,69 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
-    body {
-      /* Establece la imagen de fondo */
-      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
-      /* Fija la imagen de fondo para que no se desplace con el contenido */
-      background-attachment: fixed;
-      /* Escala la imagen para cubrir todo el cuerpo */
-      background-size: contain;
-      /* Centra la imagen */
-      background-position: center;
-      /* Establece un color de fondo de respaldo */
-      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
-    }
+body {
+    background-color: #1a1a1a; /* Fondo oscuro */
+    color: #ffedc7; /* Color de texto en tono dorado claro */
+    background-image: url('https://i.ibb.co/sVnMLVt/halloween-background.jpg'); /* Imagen de fondo con sutiles sombras */
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
+    color: #ffedc7; /* Texto en dorado claro */
+    background-color: #5b3c11; /* Fondo oscuro para botones */
+    border: 2px solid #ff6f00; /* Borde naranja */
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+a, .tab-container .tab, .document-link a {
+    color: #000000; /* Naranja oscuro */
+    font-weight: bold;
+}
+
+.acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
+    background-color: #5b3c11;
+    color: #ffedc7;
+}
+
+button {
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff6f00; /* Naranja brillante en hover */
+    color: #1a1a1a;
+}
+
+.swal2-popup {
+    background: #332b1b; /* Fondo más oscuro */
+    color: #ffedc7; /* Texto en dorado claro */
+    border: 1px solid #ff6f00; /* Borde naranja */
+}
+
+.swal2-title, .swal2-content {
+    color: #ff6f00; /* Naranja oscuro */
+}
+
+.acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
+    background-color: #332b1b; /* Color más oscuro */
+    color: #ffedc7; /* Texto claro */
+}
+
+.tab-content.active {
+    border: 3px solid #5b3c11;
+}
+
+.image-container img {
+    max-width: 15%;
+    height: auto;
+    transition: transform 6s ease-in-out;
+}
+
+.image-container img:hover {
+    transform: rotate(15deg) scale(1.1);
+}
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
