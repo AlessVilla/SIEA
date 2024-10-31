@@ -590,7 +590,7 @@ button:hover {
             // Error: hubo un problema al registrar la solicitud de pieza
             console.error("ERROR AL REGISTRAR LA SOLICITUD DE PIEZA: ", error);
             Swal.fire({
-                title: '¡ERROR!',
+                title: '¡ERROR!' 🎃,
                 text: 'Ha ocurrido un error al registrar la solicitud de pieza. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
                 icon: 'error',
                 imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -647,7 +647,7 @@ button:hover {
         // Verificar si la fecha de entrega es anterior o igual a la fecha actual
         if (fechaEntrega <= fechaActual) {
             Swal.fire({
-                title: '¡FECHA INCORRECTA!',
+                title: '¡FECHA INCORRECTA! 🎃',
                 text: 'Las solicitudes de piezas publicitarias deben hacerse al menos con DOS(2) días de anticipación.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -662,7 +662,7 @@ button:hover {
         // Validar correo electrónico para que no sea un correo de grupo y no genere envío a muchísimas personas sin intención.
         if (correoElectronico.toLowerCase().startsWith("aneiap") || correoElectronico.toLowerCase().startsWith("capitulo") || correoElectronico.toLowerCase().startsWith("directores")) {
             Swal.fire({
-            title: '¡CORREO INCORRECTO!',
+            title: '¡CORREO INCORRECTO! 🎃',
             text: 'El correo electrónico no puede empezar con "aneiap", "capitulo" o "directores". Por favor, utiliza un correo válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -677,7 +677,7 @@ button:hover {
         // Validar que el correo electrónico termine en "@aneiap.co"
         if (!correoElectronico.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-            title: '¡CORREO INCORRECTO!',
+            title: '¡CORREO INCORRECTO! 🎃',
             text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -693,7 +693,7 @@ button:hover {
         var telefonoRegex = /^3\d{9}$/;
         if (!telefonoRegex.test(telefono)) {
             Swal.fire({
-            title: '¡TELÉFONO INCORRECTO!',
+            title: '¡TELÉFONO INCORRECTO! 🎃',
             text: 'El número de teléfono debe tener 10 dígitos y empezar con "3". Por favor, ingresa un teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -738,7 +738,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de enviar la solicitud de una pieza.        
     function mostrarMensajeSolicitarPieza() {
         Swal.fire({
-            title: '¡SOLICITUD COMPLETADA!',
+            title: '¡SOLICITUD COMPLETADA! 🎃',
             text: 'Tu solicitud de pieza ha sido registrada con ÉXITO, revisa tu correo para confirmar la solicitud y obtener tu clave de pieza.',
             icon: 'success',
             showConfirmButton: true, // Muestra el botón de confirmación
@@ -803,7 +803,7 @@ button:hover {
             }
 
             Swal.fire({
-            title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU SOLICITUD DE PIEZA!',
+            title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU SOLICITUD DE PIEZA! 🎃',
             text: mensaje,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
