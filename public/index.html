@@ -217,9 +217,9 @@ button:hover {
     }
     .disponibilidad-group {
       margin-bottom: 15px;
-      background-color: #fff08dd9; /* Color de fondo azul muy claro */
+      background-color: #8dfff9d9; /* Color de fondo azul muy claro */
       padding: 10px;
-      border: 1px solid #ffff49d9; /* Borde azul */
+      border: 1px solid #0008ffd9; /* Borde azul */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .reservar-group {
@@ -892,12 +892,12 @@ button:hover {
           <div class="row">
             <!-- Mitad izquierda con el campo para seleccionar la fecha -->
             <div class="half">
-              <label for="fecha-consulta"><b>Selecciona el día en el que deseas ver disponibilidad: *</b></label>
+              <label for="fecha-consulta" style="color: black;"><b>Selecciona el día en el que deseas ver disponibilidad: *</b></label>
               <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
             </div>
             <!-- Mitad derecha con el campo para seleccionar el capítulo -->
             <div class="half">
-              <label for="capitulo-consulta"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
+              <label for="capitulo-consulta" style="color:black;"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
               <select id="capitulo-consulta">
                 <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
                 <option value="uniguajira">UNIGUAJIRA</option>
@@ -959,7 +959,7 @@ button:hover {
             <div class="disponibilidad-item gray">21:00 - 21:30</div>
             <div class="disponibilidad-item gray">21:30 - 22:00</div>
           </div>
-          <label for="eventos-programados"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
+          <label for="eventos-programados" style="color: black;"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
           <div class="disponibilidad-group">
             <div id="eventos-programados"></div>
           </div>
@@ -1767,13 +1767,13 @@ button:hover {
         
           <div id="estadisticas-container" style="display: none;">
             <div class="row">
-                <div class="half">
+                <div class="half" style="color: black;">
                         Aquí aparecerá el cumplimiento del plan de formación:
                     <div id="porcentajes-container" style="display: none; color: black;">
                     </div>
                     <canvas id="grafico-metas"></canvas>
                 </div>
-                <div class="half">
+                <div class="half" style="color: black;">
                         Acá podrás ver estadísticas sobre el NPS en los espacios:
                     <div id="satisfaccion-container" style="display: none;color: black;">
                     </div>
@@ -1786,8 +1786,8 @@ button:hover {
         <div class="actualizar-group">
           <div id="tabla-resumen-container">
             <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">TABLA RESUMEN DE SATISFACCIÓN DE ESPACIOS 📋</p></h2>
-            <p id="tablaResumenEstado" style="text-align: center; display: block;">La tabla resumen se encuentra oculta.</p>
-            <button id="toggleTablaResumen" onclick="toggleTablaResumen()" style="margin-left: auto;">Mostrar tabla resumen</button>
+            <p id="tablaResumenEstado" style="text-align: center; display: block; color: black;">La tabla resumen se encuentra oculta.</p>
+            <button id="toggleTablaResumen" onclick="toggleTablaResumen()" style="margin-left: auto;color: black;">Mostrar tabla resumen</button>
             <table id="tabla-resumen" style="display: none;">
               <!-- Aquí se generará dinámicamente la tabla resumen -->
             </table>
@@ -1810,20 +1810,20 @@ button:hover {
             <div class="half">
               <div class="row">
                 <div class="half">
-                  <label for="fecha-inicial-evaluaciones"><b>Fecha inicial:</b></label>
+                  <label for="fecha-inicial-evaluaciones"style="color: black;"><b>Fecha inicial:</b></label>
                   <input type="date" id="fecha-inicial-evaluaciones">
                 </div>
                 <div class="half">
-                  <label for="fecha-final-evaluaciones"><b>Fecha final:</b></label>
+                  <label for="fecha-final-evaluaciones"style="color: black;"><b>Fecha final:</b></label>
                   <input type="date" id="fecha-final-evaluaciones">
                 </div>
               </div>
             </div>
           </div>
           <!-- Botón para ocultar o mostrar la tabla de evaluaciones -->
-          <button id="toggleEvaluaciones" onclick="toggleEvaluaciones()">Mostrar tabla de evaluaciones</button>
+          <button id="toggleEvaluaciones"style='color: black;' onclick="toggleEvaluaciones()">Mostrar tabla de evaluaciones</button>
           <!-- Mensaje de estado de la tabla -->
-          <p id="estadoTablaEvaluaciones" style="text-align: center; display: block;">La tabla de evaluaciones de satisfacción está oculta</p>
+          <p id="estadoTablaEvaluaciones" style="text-align: center; display: block; color: black;">La tabla de evaluaciones de satisfacción está oculta</p>
           <!-- Tabla con las evaluaciones -->
           <table id="tabla-evaluaciones" class="tabla-evaluaciones" style="display: none;">
             <thead>
@@ -7011,15 +7011,21 @@ button:hover {
       var tabla = document.getElementById("tabla-evaluaciones");
       var boton = document.getElementById("toggleEvaluaciones");
       var estadoTabla = document.getElementById("estadoTablaEvaluaciones");
+      boton.style.color = "black"; // Establece el color negro del texto en el botón
+      estadoTabla.style.color = "black"; // Establece el color negro del texto en el mensaje de estado
       if (tabla.style.display === "none") {
         tabla.style.display = "block";
         boton.textContent = "Ocultar tabla de evaluaciones";
         estadoTabla.style.display = "none"; // Oculta el mensaje de estado
+
         consultarEvaluaciones();
       } else {
         tabla.style.display = "none";
         boton.textContent = "Mostrar tabla de evaluaciones";
         estadoTabla.style.display = "block"; // Muestra el mensaje de estado
+        boton.style.color = "black"; // Establece el color negro del texto en el botón
+    estadoTabla.style.color = "black"; // Establece el color negro del texto en el mensaje de estado
+
       }
     }
 
