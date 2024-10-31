@@ -1937,7 +1937,7 @@ button:hover {
 
           // Mostrar alerta para ingresar el área de trabajo
           Swal.fire({
-            title: 'Ingrese el área de trabajo para el espacio de integración con el entorno',
+            title: 'Ingrese el área de trabajo para el espacio de integración con el entorno 🎃',
             text: `Espacio seleccionado: 🟩${nombreEspacio.toUpperCase()}🟦`,
             input: 'text',
             inputPlaceholder: 'Escriba el área de trabajo aquí...',
@@ -2555,7 +2555,7 @@ button:hover {
       if (capituloUsuario === "general" || capituloUsuario === "") {
         // Mostrar una alerta indicando que no tiene permisos
         Swal.fire({
-          title: '¡NO TIENES PERMISOS PARA ACCEDER A ESTA FUNCIÓN!',
+          title: '¡NO TIENES PERMISOS PARA ACCEDER A ESTA FUNCIÓN! 🎃',
           text: 'Esta función es exclusiva para los DCA y DNA. Inicia sesión con tu correo de Académico si aún no lo has hecho, Si no eres director(a) de académico y crees que deberías tener acceso, por favor, contáctate con el administrador.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -2651,7 +2651,7 @@ button:hover {
         // Error: hubo un problema al registrar el evento
         console.error("ERROR AL REGISTRAR EL EVENTO: ", error);
         Swal.fire({
-          title: '¡ERROR!',
+          title: '¡ERROR! 🎃',
           text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
           icon: 'error',
           imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -2697,7 +2697,7 @@ button:hover {
           } else {
             // El documento no existe, mostrar un mensaje indicando que el evento no se encontró
             Swal.fire({
-              title: 'Evento no encontrado',
+              title: 'Evento no encontrado 🎃',
               text: 'No se ha encontrado un evento con la clave proporcionada.',
               icon: 'warning',
               confirmButtonText: 'Aceptar'
@@ -2720,7 +2720,7 @@ button:hover {
           console.error("ERROR AL ACTUALIZAR EL EVENTO: ", error);
           if (error !== "Evento no encontrado") {
             Swal.fire({
-              title: '¡ERROR!',
+              title: '¡ERROR! 🎃',
               text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
               icon: 'error',
               imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -2778,7 +2778,7 @@ button:hover {
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
         if (emailOrganizador === "aneiap_nacional@aneiap.co") {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO!',
+            title: '¡CORREO PROHIBIDO! 🎃',
             text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2793,7 +2793,7 @@ button:hover {
         // Verificar si el correo comienza con "capitulo" o "directivos"
         if (emailOrganizador.toLowerCase().startsWith("capitulo") || emailOrganizador.toLowerCase().startsWith("directivos")) {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO!',
+            title: '¡CORREO PROHIBIDO! 🎃',
             text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2808,7 +2808,7 @@ button:hover {
         // Verificar si el correo termina con "@aneiap.co"
         if (!emailOrganizador.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-                title: '¡CORREO INCORRECTO!',
+                title: '¡CORREO INCORRECTO! 🎃',
                 text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -2825,7 +2825,7 @@ button:hover {
         if (capitulo === "nacional" && capituloUsuario !== "nacional") {
           console.log("el usuario quiere reservar a nivel nacional.")
           Swal.fire({
-            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL! 🎃',
             text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2840,7 +2840,7 @@ button:hover {
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if ((fechaEvento < fechaActual) || (fechaEvento < fechaActualISOS)) {
           Swal.fire({
-            title: '¡FECHA INCORRECTA!',
+            title: '¡FECHA INCORRECTA! 🎃',
             text: 'Debes reservar al menos con 2 días de anticipación, si ya se venció el plazo y deseas hacerlo igualmente, contacta al administrador.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2859,7 +2859,7 @@ button:hover {
         // Validación de datos para que el teléfono del organizador efectivamente sea un celular válido.
         if (!telefonoOrganizadorRegex.test(telefonoOrganizador)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO! 🎃',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2880,7 +2880,7 @@ button:hover {
 
           if (!telefonoPonenteRegex.test(telefonoPonente)) {
             Swal.fire({
-              title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
+              title: '¡TELÉFONO DEL PONENTE INCORRECTO! 🎃',
               text: 'Digita un número de teléfono válido.',
               icon: 'warning',
               confirmButtonText: 'Aceptar',
@@ -2904,7 +2904,7 @@ button:hover {
           if (enlaceGoogleDrive !== "") {
           if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
             Swal.fire({
-              title: "¡ENLACE INVÁLIDO!",
+              title: "¡ENLACE INVÁLIDO! 🎃",
               text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
               icon: "warning",
               confirmButtonText: 'Aceptar',
@@ -2979,7 +2979,7 @@ button:hover {
     if (claveEventoConsultar.trim() === "") {
       // Mostrar alerta si el campo está vacío
       Swal.fire({
-        title: '¡NO HAS DILIGENCIADO NINGUNA CLAVE!',
+        title: '¡NO HAS DILIGENCIADO NINGUNA CLAVE! 🎃',
         text: 'Por favor, ingresa la clave de la reserva de tu evento.',
         icon: 'warning',
         confirmButtonText: 'Aceptar',
@@ -3028,7 +3028,7 @@ button:hover {
       } else {
         // El documento no existe, mostrar un mensaje indicando que la reserva no se encontró
         Swal.fire({
-          title: '¡NO EXISTE LA RESERVA QUE BUSCAS!',
+          title: '¡NO EXISTE LA RESERVA QUE BUSCAS! 🎃',
           text: 'No se ha encontrado una reserva con la clave proporcionada, rectifica que de verdad exista y que estás escribiendo bien la clave,',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -3042,7 +3042,7 @@ button:hover {
       // Error al consultar el documento
       console.error("Error al consultar la reserva: ", error);
       Swal.fire({
-        title: '¡ERROR!',
+        title: '¡ERROR! 🎃',
         text: 'Ha ocurrido un error al consultar la reserva. Inténtalo nuevamente más tarde o consulta con el administrador/creador del sistema.',
         icon: 'error',
         confirmButtonText: 'Aceptar',
@@ -3075,7 +3075,7 @@ button:hover {
         if (emailOrganizadorReserva === "aneiap_nacional@aneiap.co") {
           console.log("email del organizador: " + emailOrganizadorReserva)
           Swal.fire({
-            title: '¡CORREO PROHIBIDO!',
+            title: '¡CORREO PROHIBIDO! 🎃',
             text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3090,7 +3090,7 @@ button:hover {
         // Verificar si el correo comienza con "capitulo" o "directivos"
         if (emailOrganizadorReserva.toLowerCase().startsWith("capitulo") || emailOrganizadorReserva.toLowerCase().startsWith("directivos")) {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO!',
+            title: '¡CORREO PROHIBIDO! 🎃',
             text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3105,7 +3105,7 @@ button:hover {
         // Verificar si el correo termina con "@aneiap.co"
         if (!emailOrganizadorReserva.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-                title: '¡CORREO INCORRECTO!',
+                title: '¡CORREO INCORRECTO! 🎃',
                 text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -3121,7 +3121,7 @@ button:hover {
         var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
         if (capituloReserva === "nacional" && capituloUsuario !== "nacional") {
           Swal.fire({
-            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL! 🎃',
             text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3135,7 +3135,7 @@ button:hover {
 
         if ((fechaEventoReserva < fechaActual) || (fechaEventoReserva < fechaActualISOS)) {
           Swal.fire({
-            title: '¡FECHA INCORRECTA!',
+            title: '¡FECHA INCORRECTA! 🎃',
             text: 'Debes reservar al menos con 2 días de anticipación, si ya se venció el plazo y deseas hacerlo igualmente, contacta al administrador.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3153,7 +3153,7 @@ button:hover {
 
         if (!telefonoOrganizadorReservaRegex.test(telefonoOrganizadorReserva)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO! 🎃',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3169,7 +3169,7 @@ button:hover {
         var telefonoPonenteReserva = document.getElementById("telefono-ponente-reserva").value;
         if (telefonoPonenteReserva !== "" && !telefonoOrganizadorReservaRegex.test(telefonoPonenteReserva)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
+            title: '¡TELÉFONO DEL PONENTE INCORRECTO! 🎃',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3192,7 +3192,7 @@ button:hover {
         if (enlaceGoogleDriveReserva !== "") {
         if (!enlaceGoogleDriveRegex.test(enlaceGoogleDriveReserva)) {
           Swal.fire({
-            title: "¡ENLACE INVÁLIDO!",
+            title: "¡ENLACE INVÁLIDO! 🎃",
             text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
             icon: "warning",
             confirmButtonText: 'Aceptar',
@@ -3256,7 +3256,7 @@ button:hover {
                 if (publicidadComiteReserva === "si") {
                   // Mostrar swal.fire para que el usuario seleccione la opción de publicidad
                   swal.fire({
-                      title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular?',
+                      title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular? 🎃',
                       showDenyButton: true,
                       showCloseButton: false, // Oculta el botón de cerrar
                       allowOutsideClick: false, // Impide cerrar haciendo clic afuera
@@ -3309,7 +3309,7 @@ button:hover {
           } else {
             // El documento no existe, mostrar mensaje de error
             Swal.fire({
-              title: '¡NO EXISTE EL EVENTO QUE BUSCAS!',
+              title: '¡NO EXISTE EL EVENTO QUE BUSCAS! 🎃',
               text: 'Verifica que estés escribiendo una clave de evento que de verdad exista.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -3325,7 +3325,7 @@ button:hover {
           // Mostrar una alerta tipo SweetAlert en caso de error
           console.log("Error al consultar Firebase: " + error);
           Swal.fire({
-            title: 'Error',
+            title: 'Error 🎃',
             text: 'Hubo en error con el código, consulta al administrador/creador del sistema.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
@@ -3364,7 +3364,7 @@ button:hover {
         if (camposFaltantes.length > 0) {
             var mensajeError = "Faltan campos por diligenciar:\n\n" + camposFaltantes.join("\n");
             Swal.fire({
-            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
             text: mensajeError,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3376,7 +3376,7 @@ button:hover {
         } else {
             // Si no hay campos faltantes, proceder con la eliminación de la reserva
             Swal.fire({
-            title: '¿CONFIRMAS QUE DESEAS ELIMINAR LA RESERVA?',
+            title: '¿CONFIRMAS QUE DESEAS ELIMINAR LA RESERVA? 🎃',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'CONFIRMO',
@@ -3415,7 +3415,7 @@ button:hover {
                     // Verificar si la fecha es la apropiada
                     if (fechaReserva !== fechaEventoEliminar) {
                       Swal.fire({
-                        title: '¡FECHA INCORRECTA!',
+                        title: '¡FECHA INCORRECTA! 🎃',
                         text: 'La fecha del evento debe ser exactamente igual a la que tiene la reserva.',
                         icon: 'warning',
                         confirmButtonText: 'Aceptar',
@@ -3428,7 +3428,7 @@ button:hover {
                     }
                     if (horaReserva !== '' + minutosDespuesDeMedianoche) {
                       Swal.fire({
-                        title: '¡HORA INCORRECTA!',
+                        title: '¡HORA INCORRECTA! 🎃',
                         text: 'La hora del evento debe ser exactamente igual a la que tiene la reserva.',
                         icon: 'warning',
                         confirmButtonText: 'Aceptar',
@@ -3461,7 +3461,7 @@ button:hover {
                       // Error al intentar eliminar el documento
                       console.error("NO SE PUDO ELIMINAR LA RESERVA", error);
                       Swal.fire({
-                        title: '¡ERROR!',
+                        title: '¡ERROR! 🎃',
                         text: 'Ha ocurrido un error al eliminar la reserva. Inténtalo nuevamente más tarde o ponte en contacto con el administrador de la plataforma.',
                         icon: 'error',
                         confirmButtonText: 'Aceptar',
@@ -3474,7 +3474,7 @@ button:hover {
                   } else {
                     // El documento no existe, mostrar un mensaje indicando que la reserva no se encontró
                     Swal.fire({
-                      title: 'NO EXISTE ESTA RESERVA',
+                      title: 'NO EXISTE ESTA RESERVA 🎃',
                       text: 'No se ha encontrado una reserva con la clave proporcionada, rectifica que estás diligenciando la clave correcta.',
                       icon: 'warning',
                       confirmButtonText: 'Aceptar',
@@ -3488,7 +3488,7 @@ button:hover {
                   // Error al consultar el documento
                   console.error("ERROR AL CONSULTAR LA RESERVA", error);
                   Swal.fire({
-                    title: '¡ERROR!',
+                    title: '¡ERROR! 🎃',
                     text: 'Ha ocurrido un error al consultar la reserva. Inténtalo nuevamente más tarde o ponte en contacto con el administrador de la plataforma',
                     icon: 'error',
                     confirmButtonText: 'Aceptar',
@@ -3506,7 +3506,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de registrar una reserva.        
     function mostrarMensajeReservar() {
       Swal.fire({
-      title: '¡RESERVA COMPLETADA!',
+      title: '¡RESERVA COMPLETADA! 🎃',
       text: 'Su reserva ha sido registrada y APROBADA con ÉXITO, revisa tu correo para confirmar la reserva y obtener tu CLAVE de evento.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3524,7 +3524,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de actualizar un espacio.        
     function mostrarMensajeActualizarEspacio() {
       Swal.fire({
-      title: '¡ACTUALIZACIÓN COMPLETADA!',
+      title: '¡ACTUALIZACIÓN COMPLETADA! 🎃',
       text: 'Su espacio ha sido actualizado con ÉXITO, revisa en la tabla resumen o en consultar disponibilidad para confirmarlo.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3542,7 +3542,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de error al momento de tener una falla.        
     function mostrarMensajeFallaTecnica() {
       Swal.fire({
-      title: 'Error de Consulta',
+      title: 'Error de Consulta 🎃',
       text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
       icon: 'error',
       confirmButtonText: 'Aceptar',
@@ -3555,7 +3555,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de actualizar una reserva.    
     function mostrarMensajeEditar() {
       Swal.fire({
-      title: '¡ACTUALIZACIÓN DE RESERVA COMPLETADA!',
+      title: '¡ACTUALIZACIÓN DE RESERVA COMPLETADA! 🎃',
       text: 'Su reserva ha sido ACTUALIZADA con ÉXITO, revisa tu correo para confirmar la actualización, recuerda que no cambias de CLAVE de evento.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3573,7 +3573,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de eliminar una reserva.
     function mostrarMensajeEliminar() {
       Swal.fire({
-      title: '¡ELIMININACIÓN DE RESERVA COMPLETADA!',
+      title: '¡ELIMININACIÓN DE RESERVA COMPLETADA! 🎃',
       text: 'Su reserva ha sido ELIMINADA con ÉXITO, revisa tu correo para confirmar que ha sido eliminada',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3666,7 +3666,7 @@ button:hover {
         }
 
         Swal.fire({
-          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA!',
+          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA! 🎃',
           text: mensaje,
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -3761,7 +3761,7 @@ button:hover {
             }
 
             Swal.fire({
-            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
             text: mensaje,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3807,7 +3807,7 @@ button:hover {
         if (fechaConsulta.trim() === "") {
           // Mostrar mensaje de error si no se ha seleccionado una fecha válida
           Swal.fire({
-            title: '¡FECHA NO SELECCIONADA!',
+            title: '¡FECHA NO SELECCIONADA! 🎃',
             text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3824,7 +3824,7 @@ button:hover {
         if (capituloConsulta.trim() === "") {
           // Mostrar mensaje de error si no se ha seleccionado una fecha válida
           Swal.fire({
-            title: '¡CAPÍTULO NO SELECCIONADO!',
+            title: '¡CAPÍTULO NO SELECCIONADO! 🎃',
             text: 'Por favor, selecciona el capítulo del cual deseas consultar la disponibilidad.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -4005,7 +4005,7 @@ button:hover {
       if (fechaConsultaDirecta.trim() === "" || capituloConsulta.trim() === "") {
         // Mostrar mensaje de error si no se ha seleccionado una fecha o capítulo válidos
         Swal.fire({
-          title: '¡FECHA O CAPÍTULO NO SELECCIONADOS!',
+          title: '¡FECHA O CAPÍTULO NO SELECCIONADOS! 🎃',
           text: 'Por favor, selecciona una fecha y un capítulo para consultar la disponibilidad semanal.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -4867,7 +4867,7 @@ button:hover {
         // Realiza el resto de la lógica aquí
       }).catch(function(error) {
         Swal.fire({
-          title: 'Error de Consulta',
+          title: 'Error de Consulta 🎃',
           text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
           icon: 'error',
           confirmButtonText: 'Aceptar',
@@ -4904,7 +4904,7 @@ button:hover {
 
         if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
           Swal.fire({
-            title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)!',
+            title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)! 🎃',
             text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -5018,7 +5018,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
             if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅🎃',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5035,7 +5035,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
             if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️🎃',
               text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5052,7 +5052,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️🎃',
               text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5069,7 +5069,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
             if (!disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕🎃',
               text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5091,7 +5091,7 @@ button:hover {
           }
         }).catch(function(error) {
           Swal.fire({
-            title: '¡ERROR DE CONSULTA!',
+            title: '¡ERROR DE CONSULTA! 🎃',
             text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
@@ -5127,7 +5127,7 @@ button:hover {
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
           Swal.fire({
-            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)!',
+            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)! 🎃',
             text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -5237,7 +5237,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
             if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅🎃',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5375,7 +5375,7 @@ button:hover {
         // Mostrar una alerta con los campos faltantes
         Swal.fire({
           icon: 'error',
-          title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+          title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
           text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
           confirmButtonText: 'Aceptar',
           allowOutsideClick: true,
@@ -5392,7 +5392,7 @@ button:hover {
           // El número de celular no cumple con el patrón
           Swal.fire({
             icon: 'error',
-            title: '¡NÚMERO DE CELULAR INVÁLIDO!',
+            title: '¡NÚMERO DE CELULAR INVÁLIDO! 🎃',
             text: 'Estás escribiendo un número de celular no válido, vuelve a rectificar por favor.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -5407,7 +5407,7 @@ button:hover {
           // El correo ANEIAP no cumple con el patrón
           Swal.fire({
             icon: 'error',
-            title: '¡CORREO ANEIAP INVÁLIDO!',
+            title: '¡CORREO ANEIAP INVÁLIDO! 🎃',
             text: 'Escribe bien tu correo ANEIAP. Vuelve y verifica.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -5422,7 +5422,7 @@ button:hover {
           // El link de Drive no cumple con el patrón
           Swal.fire({
             icon: 'error',
-            title: '¡LINK DE DRIVE DE EVIDENCIAS INVÁLIDO!',
+            title: '¡LINK DE DRIVE DE EVIDENCIAS INVÁLIDO! 🎃',
             text: 'El link de Google Drive no es válido. Vuelve y verifica que lo estés diligenciando correctamente.".',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -5493,7 +5493,7 @@ button:hover {
             console.log("Correo enviado con éxito");
             // Puedes eliminar la alerta ya que no es necesaria
             swal.fire({
-              title: "¡TICKET ENVIADO!",
+              title: "¡TICKET ENVIADO! 🎃",
               text: `El ticket ha sido enviado correctamente a siea@aneiap.co, en máximo DOS (2) días hábiles se te dará respuesta al mismo.`,
               icon: "success",
               confirmButtonText: "OK",
@@ -5553,7 +5553,7 @@ button:hover {
     if (correoUsuario !== "siea@aneiap.co") {
         console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
         Swal.fire({
-            title: "¿LA CURIOSIDAD MATÓ AL GATO?",
+            title: "¿LA CURIOSIDAD MATÓ AL GATO? 🎃🐈‍",
             text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
             icon: "warning",
             confirmButtonText: "Aceptar",
@@ -5588,7 +5588,7 @@ button:hover {
 
         // Mostrar el Swal con los tres campos y las acciones
         Swal.fire({
-            title: "Actualizar Documento",
+            title: "Actualizar Documento 🎃",
             html: `
                 <label for="busquedaClave">Clave de la reserva</label>
                 <input type="text" id="busquedaClave" class="swal2-input" placeholder="Escribe para buscar...">
@@ -5701,7 +5701,7 @@ button:hover {
       if (!correo || !contrasena) {
         // Campos no diligenciados, mostrar alerta de advertencia
         Swal.fire({
-          title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!",
+          title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃",
           text: "Debes diligenciar tanto correo como contraseña para iniciar sesión.",
           icon: "warning",
           confirmButtonText: "Aceptar",
@@ -5733,7 +5733,7 @@ button:hover {
             if (correo === "academico@aneiap.co" || correo === "formacion_integral@aneiap.co") {
               // Mostrar un desplegable con la lista de todos los capítulos
               Swal.fire({
-                title: 'Selecciona el capítulo sobre el cual deseas consultar información en caso de que vayas a hacerlo:',
+                title: 'Selecciona el capítulo sobre el cual deseas consultar información en caso de que vayas a hacerlo: 🎃',
                 input: 'select',
                 inputOptions: {
                   'uniguajira': 'UNIGUAJIRA',
@@ -5915,7 +5915,7 @@ button:hover {
           } else {
             // Contraseña incorrecta, mostrar alerta de advertencia
             Swal.fire({
-              title: "Contraseña incorrecta",
+              title: "Contraseña incorrecta 🎃",
               text: "No diligenciaste correctamente la contraseña, revísala o consulta al administrador si la olvidaste.",
               icon: "warning",
               confirmButtonText: "Aceptar",
@@ -5932,7 +5932,7 @@ button:hover {
         } else {
           // El documento no existe, el correo no está registrado, mostrar alerta de error
           Swal.fire({
-            title: "Correo no válido.",
+            title: "Correo no válido. 🎃",
             text: "Recuerda que para utilizar esta función de SIEA debes ser DCA o DNA. 🦉💚",
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -5946,7 +5946,7 @@ button:hover {
       }).catch((error) => {
         // Manejar errores, mostrar alerta de error
         Swal.fire({
-          title: "Algo inesperado ha ocurrido con tu inicio de sesión, consulta al administrador o creador de SIEA para más información.",
+          title: "Algo inesperado ha ocurrido con tu inicio de sesión, consulta al administrador o creador de SIEA para más información. 🎃",
           text: error.message,
           icon: "error",
         });
@@ -6198,7 +6198,7 @@ button:hover {
           // Mostrar una alerta con los campos faltantes
           Swal.fire({
               icon: 'error',
-              title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+              title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
               text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
               confirmButtonText: 'Aceptar',
               allowOutsideClick: true,
@@ -6277,7 +6277,7 @@ button:hover {
             reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
                 // Mostrar mensaje de éxito
                 Swal.fire({
-                  icon: 'success',
+                  icon: 'success 🎃',
                   title: '¡EVALUACIÓN ENVIADA CON ÉXITO!',
                   text: 'Gracias por tu evaluación.',
                   confirmButtonText: 'Aceptar',
@@ -6303,7 +6303,7 @@ button:hover {
                     // Mostrar mensaje de error
                     Swal.fire({
                         icon: 'error',
-                        title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
+                        title: '¡ERROR AL ENVIAR LA EVALUACIÓN! 🎃',
                         text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
                         confirmButtonText: 'Aceptar'
                     });
@@ -6314,7 +6314,7 @@ button:hover {
             // Mostrar mensaje de error
             Swal.fire({
                 icon: 'error',
-                title: '¡ERROR AL OBTENER EL EVENTO!',
+                title: '¡ERROR AL OBTENER EL EVENTO! 🎃',
                 text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
                 confirmButtonText: 'Aceptar'
             });
@@ -6325,7 +6325,7 @@ button:hover {
     // Función para mostrar mensaje de inicio de sesión exitoso con temporizador
     function mostrarMensajeInicioSesion() {
       Swal.fire({
-        title: "Iniciando sesión...",
+        title: "Iniciando sesión... 🎃",
         text: "Espera unos segundos",
         icon: "info",
         timer: 3000, // Tiempo en milisegundos (3 segundos)
@@ -6339,7 +6339,7 @@ button:hover {
         // Después de que pase el temporizador, mostrar el mensaje de inicio de sesión exitoso
         obtenerResponsable(correoUsuario).then((responsable) => {
           Swal.fire({
-            title: "Has iniciado sesión exitosamente. 🦉💚",
+            title: "Has iniciado sesión exitosamente. 🦉💚🎃",
             text: "Disfruta de SIEA " + responsable, // Utiliza el valor del responsable obtenido
             icon: "success",
             confirmButtonText: "Aceptar",
@@ -6387,7 +6387,7 @@ button:hover {
 
         // Mostrar una alerta con los campos faltantes
         Swal.fire({
-            title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!",
+            title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃",
             text: "Te falta por diligenciar los siguientes campos:\n" + camposFaltantes.join('\n'),
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -6402,7 +6402,7 @@ button:hover {
     // Validación de datos
     if (isNaN(parseInt(totalAsistentes))) {
         Swal.fire({
-            title: "¡Diligiencia bien el total de asistentes!",
+            title: "¡Diligiencia bien el total de asistentes! 🎃",
             text: "El total de asistentes debe ser un número entero sin decimales.",
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -6419,7 +6419,7 @@ button:hover {
     var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
     if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
         Swal.fire({
-            title: "¡Error!",
+            title: "¡Error! 🎃",
             text: "El enlace de evidencia debe ser un enlace válido de Google Drive.",
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -6445,7 +6445,7 @@ button:hover {
                     areaTrabajo: areaTrabajo
                 }).then(function() {
                     Swal.fire({
-                      title: "¡Se ha actualizado la información con éxito!",
+                      title: "¡Se ha actualizado la información con éxito! 🎃",
                       text: "La información del espacio '" + nombreEspacio + "' se ha actualizado correctamente.",
                       icon: "success",
                       confirmButtonText: 'Aceptar',
@@ -6460,7 +6460,7 @@ button:hover {
                 }).catch(function(error) {
                     console.error("Error al actualizar el espacio:", error);
                     Swal.fire({
-                        title: "¡Error!",
+                        title: "¡Error! 🎃",
                         text: "Ha ocurrido un error al actualizar la información del espacio. Por favor, inténtalo de nuevo o comunícate con el administrador.",
                         icon: "error",
                         confirmButtonText: "Aceptar"
@@ -6471,7 +6471,7 @@ button:hover {
         .catch(function(error) {
             console.error("Error al obtener el espacio:", error);
             Swal.fire({
-                title: "¡Error!",
+                title: "¡Error! 🎃",
                 text: "Ha ocurrido un error al obtener la información del espacio. Por favor, inténtalo de nuevo o comunícate con el administrador.",
                 icon: "error",
                 confirmButtonText: "Aceptar"
@@ -6485,7 +6485,7 @@ button:hover {
         const espacioSeleccionado = document.getElementById("nombre-espacio-actualizar").value;
         if (!espacioSeleccionado) {
             Swal.fire({
-                title: '¡Espacio no seleccionado!',
+                title: '¡Espacio no seleccionado! 🎃',
                 text: 'Por favor selecciona un espacio antes de continuar.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar'
@@ -6517,7 +6517,7 @@ button:hover {
                 const capitulosRestantes = 4 - capitulosExistentes.length;
 
                 Swal.fire({
-                    title: 'Edición de Información',
+                    title: 'Edición de Información 🎃',
                     text: '¿Deseas editar información del ponente o añadir un capítulo organizador?',
                     icon: 'question',
                     showCancelButton: true,
@@ -6530,7 +6530,7 @@ button:hover {
                         // Comprobar si ya se ha alcanzado el máximo de capítulos
                         if (capitulosRestantes <= 0) {
                             Swal.fire({
-                                title: 'Máximo de capítulos alcanzado',
+                                title: 'Máximo de capítulos alcanzado 🎃',
                                 text: 'Este espacio ya tiene 4 capítulos organizadores, que es el límite, por lo que no podrás añadirle alguno adicional.',
                                 icon: 'info',
                                 confirmButtonText: 'Aceptar'
@@ -6569,7 +6569,7 @@ button:hover {
 
                         // Mostrar el Swal con la estructura personalizada
                         Swal.fire({
-                            title: 'Selecciona capítulos adicionales',
+                            title: 'Selecciona capítulos adicionales 🎃',
                             html: seleccionCapitulosHTML,
                             showCancelButton: true,
                             confirmButtonText: 'Añadir capítulo',
@@ -6603,7 +6603,7 @@ button:hover {
                                 });
                             } else if (result.isConfirmed) {
                                 Swal.fire({
-                                    title: 'No se seleccionó ningún capítulo',
+                                    title: 'No se seleccionó ningún capítulo 🎃',
                                     text: 'No se realizó ninguna actualización porque no seleccionaste ningún capítulo nuevo.',
                                     icon: 'info',
                                     confirmButtonText: 'Aceptar'
@@ -6618,7 +6618,7 @@ button:hover {
 
                         // Crear el formulario con los campos del ponente en Swal
                         Swal.fire({
-                            title: 'Actualizar información del ponente',
+                            title: 'Actualizar información del ponente 🎃',
                             html: `
                                 <label for="nombrePonente">Nombre del ponente:</label>
                                 <input type="text" id="nombrePonente" class="swal2-input" placeholder="Nombre del ponente" value="${nombreActual}">
@@ -6679,7 +6679,7 @@ button:hover {
                 });
             } else {
                 Swal.fire({
-                    title: 'Espacio no encontrado',
+                    title: 'Espacio no encontrado 🎃',
                     text: 'No se encontró información para el espacio seleccionado en el rango de fechas especificado.',
                     icon: 'warning',
                     confirmButtonText: 'Aceptar'
@@ -7254,7 +7254,7 @@ button:hover {
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
             icon: 'error',
-            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME! 🎃',
             text: 'Debe iniciar sesión como DCA para poder generar el informe.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -7270,7 +7270,7 @@ button:hover {
 
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
-          title: 'Generando informe',
+          title: 'Generando informe 🎃',
           html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
           timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
           showConfirmButton: false,
@@ -7393,7 +7393,7 @@ button:hover {
         // Avisar que ya se generó el informe y que revise en descargas
 
         Swal.fire({
-            title: 'Informe Generado',
+            title: 'Informe Generado 🎃',
             text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
             icon: 'success',
             showConfirmButton: true,
@@ -7728,7 +7728,7 @@ button:hover {
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
             icon: 'error',
-            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME! 🎃',
             text: 'Debe iniciar sesión como DCA para poder generar el informe.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -7744,7 +7744,7 @@ button:hover {
 
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
-          title: 'Generando informe',
+          title: 'Generando informe 🎃',
           html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
           timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
           showConfirmButton: false,
@@ -7820,7 +7820,7 @@ button:hover {
 
         // Avisar que ya se generó el informe y que revise en descargas
         Swal.fire({
-            title: 'Informe Generado',
+            title: 'Informe Generado 🎃',
             text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
             icon: 'success',
             showConfirmButton: true,
