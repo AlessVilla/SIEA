@@ -71,9 +71,9 @@ body {
 }
 
 h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
-    color: #ffedc7; /* Texto en dorado claro */
-    background-color: #5b3c11; /* Fondo oscuro para botones */
-    border: 2px solid #ff6f00; /* Borde naranja */
+    color: #ffffff; /* Texto en dorado claro */
+    background-color: #76108d; /* Fondo oscuro para botones */
+    border: 2px solid #450553; /* Borde naranja */
     font-weight: bold;
     text-transform: uppercase;
 }
@@ -105,6 +105,7 @@ button:hover {
 
 .swal2-title, .swal2-content {
     color: #ff6f00; /* Naranja oscuro */
+    background: #332b1b;
 }
 .swal2-html-container {
     color: #ffffff; /* Cambia el color del texto a blanco */
@@ -1298,7 +1299,7 @@ button:hover {
           // Decirle al usuario que no ha seleccionado un espacio a evaluar.
           Swal.fire({
               icon: 'error',
-              title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR!',
+              title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR! 🎃',
               text: 'Debes seleccionar el nombre del espacio que quieres evaluar antes de continuar.',
               confirmButtonText: 'Aceptar',
               allowOutsideClick: true,
@@ -1338,7 +1339,7 @@ button:hover {
       if (telefonoAsistente !== "" && !telefonoAsistenteRegex.test(telefonoAsistente)) {
         Swal.fire({
           title: '¡TELÉFONO INCORRECTO!',
-          text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras.',
+          text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras. 🎃',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
           imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
@@ -1362,7 +1363,7 @@ button:hover {
                   // El usuario ya evaluó este espacio
                   Swal.fire({
                       icon: 'warning',
-                      title: '¡YA EVALUASTE ESTE ESPACIO!',
+                      title: '¡YA EVALUASTE ESTE ESPACIO! 🎃',
                       html: 'Ya has enviado una evaluación para este espacio recientemente con tu correo: <strong>' + correoAsistente + '</strong>.<br>' +
                             'Recuerda que solo puedes evaluar cada espacio una vez. Si necesitas consultar tu respuesta o crees que se trata de un error, por favor comunícate con tu DCA.',
                       confirmButtonText: 'Aceptar',
@@ -1395,7 +1396,7 @@ button:hover {
                 // Mostrar una alerta con los campos faltantes
                 Swal.fire({
                     icon: 'error',
-                    title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+                    title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
                     text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: true,
@@ -1481,7 +1482,7 @@ button:hover {
                           // Mostrar mensaje de error
                           Swal.fire({
                               icon: 'error',
-                              title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
+                              title: '¡ERROR AL ENVIAR LA EVALUACIÓN! 🎃',
                               text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
                               confirmButtonText: 'Aceptar'
                           });
@@ -1492,7 +1493,7 @@ button:hover {
                   // Mostrar mensaje de error
                   Swal.fire({
                       icon: 'error',
-                      title: '¡ERROR AL OBTENER EL EVENTO!',
+                      title: '¡ERROR AL OBTENER EL EVENTO! 🎃',
                       text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
                       confirmButtonText: 'Aceptar'
                   });
@@ -1506,7 +1507,7 @@ button:hover {
         // Mostrar mensaje de error
         Swal.fire({
             icon: 'error',
-            title: '¡ERROR AL VERIFICAR LA EVALUACIÓN!',
+            title: '¡ERROR AL VERIFICAR LA EVALUACIÓN! 🎃',
             text: 'Ocurrió un error al verificar si ya has evaluado este espacio. Por favor, intenta nuevamente.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
