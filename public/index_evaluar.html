@@ -62,72 +62,18 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
-body {
-    background-color: #1a1a1a; /* Fondo oscuro */
-    color: #000000; /* Color de texto en tono dorado claro */
-    background-image: url('https://i.ibb.co/sVnMLVt/halloween-background.jpg'); /* Imagen de fondo con sutiles sombras */
-    background-attachment: fixed;
-    background-size: cover;
-}
-
-h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
-    color: #ffffff; /* Texto en dorado claro */
-    background-color: #76108d; /* Fondo oscuro para botones */
-    border: 2px solid #450553; /* Borde naranja */
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-a, .tab-container .tab, .document-link a {
-    color: #000000; /* Naranja oscuro */
-    font-weight: bold;
-}
-
-.acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
-    background-color: #5b3c11;
-    color: #ffedc7;
-}
-
-button {
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #ff6f00; /* Naranja brillante en hover */
-    color: #1a1a1a;
-}
-
-.swal2-popup {
-    background: #332b1b; /* Fondo más oscuro */
-    color: #ffedc7; /* Texto en dorado claro */
-    border: 1px solid #ff6f00; /* Borde naranja */
-}
-
-.swal2-title, .swal2-content {
-    color: #ff6f00; /* Naranja oscuro */
-    background: #332b1b;
-}
-.swal2-html-container {
-    color: #ffffff; /* Cambia el color del texto a blanco */
-}
-.acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
-    background-color: #332b1b; /* Color más oscuro */
-    color: #ffedc7; /* Texto claro */
-}
-
-.tab-content.active {
-    border: 3px solid #5b3c11;
-}
-
-.image-container img {
-    max-width: 15%;
-    height: auto;
-    transition: transform 6s ease-in-out;
-}
-
-.image-container img:hover {
-    transform: rotate(15deg) scale(1.1);
-}
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
@@ -1144,7 +1090,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de evaluar una reserva.
     function mostrarMensajeEvaluar() {
       Swal.fire({
-      title: '¡EVALUACIÓN DEL ESPACIO/EVENTO COMPLETADA! 🎃',
+      title: '¡EVALUACIÓN DEL ESPACIO/EVENTO COMPLETADA!',
       text: 'Acabas de evaluar el espacio/evento que escogiste con ÉXITO, gracias por contribuir a la mejora continua.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -1299,7 +1245,7 @@ button:hover {
           // Decirle al usuario que no ha seleccionado un espacio a evaluar.
           Swal.fire({
               icon: 'error',
-              title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR! 🎃',
+              title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR!',
               text: 'Debes seleccionar el nombre del espacio que quieres evaluar antes de continuar.',
               confirmButtonText: 'Aceptar',
               allowOutsideClick: true,
@@ -1326,7 +1272,7 @@ button:hover {
       if (comentarios.length > 100) {
           // Mostrar el mensaje de error utilizando Swal.fire
           Swal.fire({
-              title: '¡Comentario demasiado largo! 🎃',
+              title: '¡Comentario demasiado largo!',
               text: 'El comentario no puede tener más de 100 caracteres.',
               icon: 'warning',
               confirmButtonText: 'Aceptar'
@@ -1339,7 +1285,7 @@ button:hover {
       if (telefonoAsistente !== "" && !telefonoAsistenteRegex.test(telefonoAsistente)) {
         Swal.fire({
           title: '¡TELÉFONO INCORRECTO!',
-          text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras. 🎃',
+          text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
           imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
@@ -1363,7 +1309,7 @@ button:hover {
                   // El usuario ya evaluó este espacio
                   Swal.fire({
                       icon: 'warning',
-                      title: '¡YA EVALUASTE ESTE ESPACIO! 🎃',
+                      title: '¡YA EVALUASTE ESTE ESPACIO!',
                       html: 'Ya has enviado una evaluación para este espacio recientemente con tu correo: <strong>' + correoAsistente + '</strong>.<br>' +
                             'Recuerda que solo puedes evaluar cada espacio una vez. Si necesitas consultar tu respuesta o crees que se trata de un error, por favor comunícate con tu DCA.',
                       confirmButtonText: 'Aceptar',
@@ -1396,7 +1342,7 @@ button:hover {
                 // Mostrar una alerta con los campos faltantes
                 Swal.fire({
                     icon: 'error',
-                    title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
+                    title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
                     text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
                     confirmButtonText: 'Aceptar',
                     allowOutsideClick: true,
@@ -1482,7 +1428,7 @@ button:hover {
                           // Mostrar mensaje de error
                           Swal.fire({
                               icon: 'error',
-                              title: '¡ERROR AL ENVIAR LA EVALUACIÓN! 🎃',
+                              title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
                               text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
                               confirmButtonText: 'Aceptar'
                           });
@@ -1493,7 +1439,7 @@ button:hover {
                   // Mostrar mensaje de error
                   Swal.fire({
                       icon: 'error',
-                      title: '¡ERROR AL OBTENER EL EVENTO! 🎃',
+                      title: '¡ERROR AL OBTENER EL EVENTO!',
                       text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
                       confirmButtonText: 'Aceptar'
                   });
@@ -1507,7 +1453,7 @@ button:hover {
         // Mostrar mensaje de error
         Swal.fire({
             icon: 'error',
-            title: '¡ERROR AL VERIFICAR LA EVALUACIÓN! 🎃',
+            title: '¡ERROR AL VERIFICAR LA EVALUACIÓN!',
             text: 'Ocurrió un error al verificar si ya has evaluado este espacio. Por favor, intenta nuevamente.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,

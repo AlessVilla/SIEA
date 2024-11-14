@@ -8,6 +8,7 @@
   <title>Reserva tu espacio, evento, capacitación, integración, etc., de forma automática en SIEA 💚💙</title>
   <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
   <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <!-- incluir el plugin de anotación de Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
   <!-- Agrega el SDK de Firebase -->
@@ -62,72 +63,18 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
-body {
-    background-color: #1a1a1a; /* Fondo oscuro */
-    color: #000000; /* Color de texto en tono dorado claro */
-    background-image: url('https://i.ibb.co/sVnMLVt/halloween-background.jpg'); /* Imagen de fondo con sutiles sombras */
-    background-attachment: fixed;
-    background-size: cover;
-}
-
-h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
-    color: #ffffff; /* Texto en dorado claro */
-    background-color: #00a619; /* Fondo oscuro para botones */
-    border: 2px solid #00871f; /* Borde naranja */
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-a, .tab-container .tab, .document-link a {
-    color: #000000; /* Naranja oscuro */
-    font-weight: bold;
-}
-
-.acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
-    background-color: #5b3c11;
-    color: #ffedc7;
-}
-
-button {
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #ff6f00; /* Naranja brillante en hover */
-    color: #1a1a1a;
-}
-
-.swal2-popup {
-    background: #332b1b; /* Fondo más oscuro */
-    color: #ffedc7; /* Texto en dorado claro */
-    border: 1px solid #ff6f00; /* Borde naranja */
-}
-
-.swal2-title, .swal2-content {
-  background: #332b1b; /* Fondo más oscuro */
-    color: #ff6f00; /* Naranja oscuro */
-}
-.swal2-html-container {
-    color: #ffffff; /* Cambia el color del texto a blanco */
-}
-.acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
-    background-color: #332b1b; /* Color más oscuro */
-    color: #ffedc7; /* Texto claro */
-}
-
-.tab-content.active {
-    border: 3px solid #5b3c11;
-}
-
-.image-container img {
-    max-width: 15%;
-    height: auto;
-    transition: transform 6s ease-in-out;
-}
-
-.image-container img:hover {
-    transform: rotate(15deg) scale(1.1);
-}
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
@@ -797,8 +744,8 @@ button:hover {
   <script>
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
-    var correoUsuario = "asociado@aneiap.co"; //deben estar vacías, solo que tengo flojera de iniciar sesión.
-    var capituloUsuario = "asociado";
+    var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
+    var capituloUsuario = "";
     var escogioPublicidadNacional = "no";
 
     // Esta función permite cambiar la visibilidad de los campos "ubicación/plataforma" y "lugar presencial"
@@ -873,7 +820,7 @@ button:hover {
         // Error: hubo un problema al registrar el evento
         console.error("ERROR AL REGISTRAR EL EVENTO: ", error);
         Swal.fire({
-          title: '¡ERROR! 🎃',
+          title: '¡ERROR!',
           text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
           icon: 'error',
           imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -936,7 +883,7 @@ button:hover {
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
         if (emailOrganizador === "aneiap_nacional@aneiap.co") {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO! 🎃',
+            title: '¡CORREO PROHIBIDO!',
             text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -951,7 +898,7 @@ button:hover {
         // Verificar si el correo comienza con "capitulo" o "directivos"
         if (emailOrganizador.toLowerCase().startsWith("capitulo") || emailOrganizador.toLowerCase().startsWith("directivos")) {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO! 🎃',
+            title: '¡CORREO PROHIBIDO!',
             text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -966,7 +913,7 @@ button:hover {
         // Verificar si el correo termina con "@aneiap.co"
         if (!emailOrganizador.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-                title: '¡CORREO INCORRECTO! 🎃',
+                title: '¡CORREO INCORRECTO!',
                 text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -983,7 +930,7 @@ button:hover {
         if (capitulo === "nacional" && capituloUsuario !== "nacional") {
           console.log("el usuario quiere reservar a nivel nacional.")
           Swal.fire({
-            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL! 🎃',
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
             text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -998,7 +945,7 @@ button:hover {
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if ((fechaEvento < fechaActual) || (fechaEvento < fechaActualISOS)) {
           Swal.fire({
-            title: '¡FECHA INCORRECTA! 🎃',
+            title: '¡FECHA INCORRECTA!',
             text: 'Debes reservar al menos con UN (1) día de anticipación, debes reiniciar la plataforma y volver a llenar la información, si ya se venció el plazo y deseas hacerlo igualmente, contacta al administrador.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -1017,7 +964,7 @@ button:hover {
         // Validación de datos para que el teléfono del organizador efectivamente sea un celular válido.
         if (!telefonoOrganizadorRegex.test(telefonoOrganizador)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO! 🎃',
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -1037,7 +984,7 @@ button:hover {
 
           if (!telefonoPonenteRegex.test(telefonoPonente)) {
             Swal.fire({
-              title: '¡TELÉFONO DEL PONENTE INCORRECTO! 🎃',
+              title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
               text: 'Digita un número de teléfono válido.',
               icon: 'warning',
               confirmButtonText: 'Aceptar',
@@ -1061,7 +1008,7 @@ button:hover {
           if (enlaceGoogleDrive !== "") {
           if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
             Swal.fire({
-              title: "¡ENLACE INVÁLIDO! 🎃",
+              title: "¡ENLACE INVÁLIDO!",
               text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
               icon: "warning",
               confirmButtonText: 'Aceptar',
@@ -1109,7 +1056,7 @@ button:hover {
             if (publicidadComite === "si") {
               // Mostrar swal.fire para que el usuario seleccione la opción de publicidad
               swal.fire({
-                  title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular? 🎃',
+                  title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular?',
                   showDenyButton: true,
                   showCloseButton: false, // Oculta el botón de cerrar
                   allowOutsideClick: false, // Impide cerrar haciendo clic afuera
@@ -1118,19 +1065,26 @@ button:hover {
               }).then((result) => {
                   if (result.isConfirmed) {
                       // Si el usuario elige enviar a nivel nacional
-                      enviarSolicitudPublicidadRegistro(claveEvento, "si");
+                      console.log("El usuario seleccionó publicidad a nivel nacional.");
+                      enviarSolicitudPublicidadRegistroEmailJS(claveEvento, "si");
                       agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-                      enviarCorreoRegistro(claveEvento);
+                      console.log("Llamando a enviarCorreoRegistroEmailJS para publicidad nacional.");
+                      enviarCorreoRegistroEmailJS(claveEvento);
                   } else if (result.isDenied) {
                       // Si el usuario elige enviar a nivel capitular
-                      enviarSolicitudPublicidadRegistro(claveEvento, "no");
+                      console.log("El usuario seleccionó publicidad a nivel capitular.");
+                      enviarSolicitudPublicidadRegistroEmailJS(claveEvento, "no");
+                      console.log("Terminando de llamar a enviarCorreoRegistroEmailJS para publicidad capitular.");
                       agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-                      enviarCorreoRegistro(claveEvento);
+                      console.log("Llamando a enviarCorreoRegistroEmailJS para publicidad capitular.");
+                      enviarCorreoRegistroEmailJS(claveEvento);
                   }
               });
             } else {
+              console.log("No se solicitó publicidad, se procede a enviar el correo de confirmación directamente.");
               agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-              enviarCorreoRegistro(claveEvento);
+              console.log("Llamando a enviarCorreoRegistroEmailJS sin publicidad.");
+              enviarCorreoRegistroEmailJS(claveEvento);
             }
 
           }
@@ -1144,7 +1098,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de registrar una reserva.        
     function mostrarMensajeReservar() {
       Swal.fire({
-      title: '¡RESERVA COMPLETADA! 🎃',
+      title: '¡RESERVA COMPLETADA!',
       text: 'Su reserva ha sido registrada y APROBADA con ÉXITO, revisa tu correo para confirmar la reserva y obtener tu CLAVE de evento.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -1237,7 +1191,7 @@ button:hover {
         }
 
         Swal.fire({
-          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA! 🎃',
+          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA!',
           text: mensaje,
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -1419,6 +1373,66 @@ button:hover {
         });
     }
 
+    //ALESSANDRO
+    // Función para enviar el correo de confirmación de registro de la reserva usando EmailJS
+    function enviarCorreoRegistroEmailJS(claveReservaCreada) {
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+        console.log("Función enviarCorreoRegistroEmailJS llamada");
+
+        const correoOrganizador = document.getElementById("email-organizador").value;
+        const capitulo = document.getElementById("capitulo-organizador").value;
+        const destinatario = obtenerCorreoRegistrar(correoOrganizador, capitulo) + ", siea@aneiap.co";;
+
+        const subject = `Confirmación de registro de reserva - Clave: ${claveReservaCreada}`;
+        const modalidad = document.getElementById("modalidad-evento").value;
+        const ubicacionOPlataforma = modalidad === "virtual" ? 
+            document.getElementById("ubicacion-plataforma").value || "" : 
+            document.getElementById("lugar-presencial").value || "";
+
+        // Verificar URL de la foto del ponente
+        const fotoPonenteURL = document.getElementById("foto-ponente").value || "";
+        const fotoPonenteTexto = fotoPonenteURL ? "Link de la foto del ponente: " : "";
+
+        // Parámetros para la plantilla de confirmación de reserva
+        const params = {
+            tituloCorreo: "Su registro de reserva ha sido confirmado ☑️",
+            saludoInicial: `Estimado(a) ${document.getElementById("nombre-organizador").value}`,
+            mensajeIntroduccion: `Le confirmamos que su registro de reserva para el evento "${document.getElementById("nombre-evento").value}" ha sido procesado correctamente.`,
+            claveEventoReserva: claveReservaCreada || "",
+            fechaReserva: document.getElementById("fecha-evento").value || "",
+            horaReserva: `${Math.floor(document.getElementById("hora-evento").value / 60)
+                .toString().padStart(2, "00")}:${(document.getElementById("hora-evento").value % 60)
+                .toString().padStart(2, "00")}` || "",
+            duracionEvento: `${Math.floor(document.getElementById("duracion-evento").value / 60)} hora(s) ${document.getElementById("duracion-evento").value % 60} minuto(s)`,
+            planEvento: document.getElementById("plan-evento").value || "",
+            observacionesReserva: document.getElementById("observaciones-evento").value || "No se especificaron observaciones.",
+            capitulo: capitulo || "",
+            modalidadReserva: modalidad || "",
+            ubicacionOPlataforma: ubicacionOPlataforma,
+            nombrePonente: document.getElementById("nombre-ponente").value || "",
+            mensajePublicidad: document.getElementById("publicidad-comite").value === "si" ? "El organizador ha solicitado la realización de la publicidad para el evento." : "",
+            observacionesPublicidad: document.getElementById("observaciones-publicidad").value ? `Observaciones de la publicidad: ${document.getElementById("observaciones-publicidad").value}` : "",
+            fotoPonenteTexto: fotoPonenteTexto,
+            fotoPonenteURL: fotoPonenteURL,
+            mensajeFinal: "Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚",
+            despedida: "Cordialmente, Alessandro Villanueva Cantillo - Administrador y creador SIEA",
+            to_email: destinatario,
+            //to_email: "avillanuevacantillo@gmail.com",
+            subject: subject
+        };
+
+        emailjs.send("siea_6zoabdr", "registro_reservas", params)
+            .then((response) => {
+                console.log("Params enviados a emailjs:", params);
+                console.log("Correo de confirmación de reserva enviado exitosamente", response.status, response.text);
+                alert("Confirmación de reserva enviada exitosamente.");
+            })
+            .catch((error) => {
+                console.error("Error al enviar el correo de confirmación de reserva:", error);
+                alert(`Error al enviar el correo de confirmación de reserva: ${error.text || "Error desconocido"}. Por favor, consulta con el administrador.`);
+            });
+    }
+
     // Función para enviar el correo de solicitud de publicidad
     function enviarSolicitudPublicidadRegistro(claveReservaCreada, escogioPublicidadNacional) {
     // Función para enviar el correo de solicitud de publicidad
@@ -1556,6 +1570,117 @@ button:hover {
         });
     }
 
+    function escogerCorreoDestino(capitulo, escogioPublicidadNacional, correoOrganizador) {
+        // Banco de correos asociados a cada capítulo
+        const bancoCorreos = {
+            uniguajira: "comunicaciones_uniguajira@aneiap.co",
+            unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
+            uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
+            uninorte: "comunicaciones_uninorte@aneiap.co, geraldine.mendoza@aneiap.co",
+            unisimon: "comunicaciones_unisimon@aneiap.co",
+            cuc: "comunicaciones_cuc@aneiap.co",
+            librequilla: "comunicaciones_librequilla@aneiap.co",
+            utb: "comunicaciones_utb@aneiap.co",
+            upbmonteria: "comunicaciones_upbmonteria@aneiap.co",
+            unicordoba: "comunicaciones_unicordoba@aneiap.co",
+            areandina: "comunicaciones_areandina@aneiap.co",
+            ufps: "comunicaciones_ufps@aneiap.co",
+            unalmed: "comunicaciones_unalmed@aneiap.co",
+            udea: "comunicaciones_udea@aneiap.co",
+            upbmed: "comunicaciones_upbmed@aneiap.co",
+            utp: "comunicaciones_utp@aneiap.co",
+            unalma: "comunicaciones_unalma@aneiap.co",
+            udistrital: "comunicaciones_udistrital@aneiap.co",
+            unalbog: "comunicaciones_unalbog@aneiap.co",
+            univalle: "comunicaciones_univalle@aneiap.co",
+            icesi: "comunicaciones_icesi@aneiap.co",
+            usc: "comunicaciones_usc@aneiap.co",
+            librecali: "comunicaciones_librecali@aneiap.co",
+            nacional: "proy_diseno_nacional@aneiap.co"
+        };
+
+        // Obtener el correo de destino dependiendo de la elección del usuario
+        let correoDestino = "";
+        if (escogioPublicidadNacional === "no") {
+            // Obtener el correo del comité de piezas publicitarias del capítulo
+            correoDestino = bancoCorreos[capitulo.toLowerCase()] || "";
+        } else if (escogioPublicidadNacional === "si") {
+            // Enviar la solicitud al comité de piezas publicitarias nacional
+            correoDestino = "proy_diseno_nacional@aneiap.co";
+        }
+
+        // Añadir el correo del organizador como destinatario
+        if (correoDestino) {
+            correoDestino = `${correoOrganizador}, ${correoDestino}`;
+        } else {
+            correoDestino = correoOrganizador; // Solo el organizador si no hay correo del capítulo
+        }
+
+        return correoDestino;
+    }
+
+    //ALESSANDRO
+    // Función para enviar el correo de solicitud de publicidad de la reserva usando EmailJS
+    function enviarSolicitudPublicidadRegistroEmailJS(claveReservaCreada, escogioPublicidadNacional) {
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+
+        const correoOrganizador = document.getElementById("email-organizador").value;
+        const capitulo = document.getElementById("capitulo-organizador").value;
+        const correoDestino = escogerCorreoDestino(capitulo, escogioPublicidadNacional, correoOrganizador);
+        const subject = `Solicitud de Publicidad para el Espacio - "${document.getElementById("nombre-evento").value}" con clave de reserva terminada en ***********${claveReservaCreada.slice(-4)}`;
+        const modalidad = document.getElementById("modalidad-evento").value;
+        const ubicacionOPlataforma = modalidad === "presencial" ? 
+            document.getElementById("lugar-presencial").value || "" : 
+            document.getElementById("ubicacion-plataforma").value || "";
+
+        // Verificar URL de la foto del ponente
+        const fotoPonenteURL = document.getElementById("foto-ponente").value.trim();
+        const fotoPonenteTexto = fotoPonenteURL ? "Link de la foto del ponente: " : "";
+        // Log para verificar el valor de fotoPonenteURL
+        console.log("Foto Ponente URL:", fotoPonenteURL);
+
+        // Parámetros para la plantilla de solicitud de publicidad
+        const params = {
+            tituloCorreo: "Solicitud de Publicidad para el Evento",
+            saludoInicial: "Estimado Comité de Piezas Publicitarias",
+            mensajeIntroduccion: "Solicitamos la realización de publicidad para el siguiente evento:",
+            claveEventoReserva: "***********" + claveReservaCreada.slice(-4),
+            fechaReserva: document.getElementById("fecha-evento").value || "",
+            horaReserva: `${Math.floor(document.getElementById("hora-evento").value / 60)
+                .toString().padStart(2, "00")}:${(document.getElementById("hora-evento").value % 60)
+                .toString().padStart(2, "00")}` || "",
+            duracionEvento: `${Math.floor(document.getElementById("duracion-evento").value / 60)} hora(s) ${document.getElementById("duracion-evento").value % 60} minuto(s)`,
+            planEvento: document.getElementById("plan-evento").value || "",
+            observacionesReserva: document.getElementById("observaciones-evento").value || "No se especificaron observaciones.",
+            capitulo: capitulo || "",
+            modalidadReserva: modalidad || "",
+            ubicacionOPlataforma: ubicacionOPlataforma,
+            nombrePonente: document.getElementById("nombre-ponente").value || "",
+            mensajePublicidad: "El organizador ha solicitado la realización de la publicidad para el evento.",
+            observacionesPublicidad: document.getElementById("observaciones-publicidad").value ? `Observaciones de la publicidad: ${document.getElementById("observaciones-publicidad").value}` : "No se especificaron observaciones.",
+            fotoPonenteTexto: fotoPonenteTexto,
+            fotoPonenteURL: fotoPonenteURL,
+            mensajeFinal: "Por favor, revise esta solicitud y proporcione detalles sobre la publicidad requerida.",
+            despedida: "Atentamente, organizadores del espacio.",
+            to_email: correoDestino,
+            //to_email: "avillanuevacantillo@gmail.com",
+            subject: subject
+        };
+
+        // Log para verificar los parámetros enviados
+        console.log("Params enviados a emailjs PUBLICIDAD:", params);
+
+        emailjs.send("siea_6zoabdr", "registro_reservas", params)
+            .then((response) => {
+                console.log("Correo de solicitud de publicidad enviado exitosamente", response.status, response.text);
+                alert("Solicitud de publicidad enviada exitosamente.");
+            })
+            .catch((error) => {
+                console.error("Error al enviar la solicitud de publicidad:", error);
+                alert(`Error al enviar la solicitud de publicidad: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`);
+            });
+    }
+
     function verificarDisponibilidadRegistro() {
         return new Promise((resolve, reject) => {
         var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
@@ -1569,7 +1694,7 @@ button:hover {
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
           Swal.fire({
-            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)! 🎃',
+            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)!',
             text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -1679,7 +1804,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
             if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅🎃',
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -1696,7 +1821,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
             if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️🎃',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
               text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -1713,7 +1838,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️🎃',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
               text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -1730,7 +1855,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
             if (!disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕🎃',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
               text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -1752,7 +1877,7 @@ button:hover {
           }
         }).catch(function(error) {
           Swal.fire({
-            title: '¡ERROR DE CONSULTA! 🎃',
+            title: '¡ERROR DE CONSULTA!',
             text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
@@ -1770,39 +1895,10 @@ button:hover {
         });
       }
     )}
-/*
-    const modoSwitch = document.getElementById('modo-switch');
-    const body = document.body;
-    const logos = document.querySelectorAll('.logo');
 
-    modoSwitch.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-
-      // Verifica si el body tiene la clase dark-mode
-      if (body.classList.contains('dark-mode')) {
-        // Si está en modo oscuro, muestra el logo dark y oculta el logo light
-        logos.forEach((logo) => {
-          if (logo.classList.contains('dark-mode')) {
-            logo.style.display = 'block';
-          } else {
-            logo.style.display = 'none';
-          }
-        });
-      } else {
-        // Si está en modo claro, muestra el logo light y oculta el logo dark
-        logos.forEach((logo) => {
-          if (logo.classList.contains('light-mode')) {
-            logo.style.display = 'block';
-          } else {
-            logo.style.display = 'none';
-          }
-        });
-      }
-    });
-*/
     function iniciarSesionJDN() {
         Swal.fire({
-            title: 'Validación requerida 🎃',
+            title: 'Validación requerida',
             text: 'Ingresa la contraseña para la cuenta jdn@aneiap.co y poder reservar a nivel nacional.',
             input: 'password',
             inputLabel: 'Contraseña de JDN',
@@ -1837,7 +1933,7 @@ button:hover {
             if (result.isConfirmed) {
                 // Si la validación es exitosa
                 Swal.fire({
-                    title: 'Inicio de sesión exitoso 🎃',
+                    title: 'Inicio de sesión exitoso',
                     text: '¡Has iniciado sesión correctamente!',
                     icon: 'success',
                     confirmButtonText: 'Aceptar'

@@ -62,71 +62,18 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
-body {
-    background-color: #1a1a1a; /* Fondo oscuro */
-    color: #000000; /* Color de texto en tono dorado claro */
-    background-image: url('https://i.ibb.co/sVnMLVt/halloween-background.jpg'); /* Imagen de fondo con sutiles sombras */
-    background-attachment: fixed;
-    background-size: cover;
-}
-
-h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
-    color: #ffedc7; /* Texto en dorado claro */
-    background-color: #5b3c11; /* Fondo oscuro para botones */
-    border: 2px solid #ff6f00; /* Borde naranja */
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-a, .tab-container .tab, .document-link a {
-    color: #000000; /* Naranja oscuro */
-    font-weight: bold;
-}
-
-.acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
-    background-color: #5b3c11;
-    color: #ffedc7;
-}
-
-button {
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #ff6f00; /* Naranja brillante en hover */
-    color: #1a1a1a;
-}
-
-.swal2-popup {
-    background: #332b1b; /* Fondo más oscuro */
-    color: #ffedc7; /* Texto en dorado claro */
-    border: 1px solid #ff6f00; /* Borde naranja */
-}
-
-.swal2-title, .swal2-content {
-    color: #ff6f00; /* Naranja oscuro */
-}
-.swal2-html-container {
-    color: #ffffff; /* Cambia el color del texto a blanco */
-}
-.acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
-    background-color: #332b1b; /* Color más oscuro */
-    color: #ffedc7; /* Texto claro */
-}
-
-.tab-content.active {
-    border: 3px solid #5b3c11;
-}
-
-.image-container img {
-    max-width: 15%;
-    height: auto;
-    transition: transform 6s ease-in-out;
-}
-
-.image-container img:hover {
-    transform: rotate(15deg) scale(1.1);
-}
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
     @font-face {
       font-family: 'Century Gothic';
       src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
@@ -590,7 +537,7 @@ button:hover {
             // Error: hubo un problema al registrar la solicitud de pieza
             console.error("ERROR AL REGISTRAR LA SOLICITUD DE PIEZA: ", error);
             Swal.fire({
-                title: '¡ERROR! 🎃',
+                title: '¡ERROR!',
                 text: 'Ha ocurrido un error al registrar la solicitud de pieza. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
                 icon: 'error',
                 imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -647,7 +594,7 @@ button:hover {
         // Verificar si la fecha de entrega es anterior o igual a la fecha actual
         if (fechaEntrega <= fechaActual) {
             Swal.fire({
-                title: '¡FECHA INCORRECTA! 🎃',
+                title: '¡FECHA INCORRECTA!',
                 text: 'Las solicitudes de piezas publicitarias deben hacerse al menos con DOS(2) días de anticipación.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -662,7 +609,7 @@ button:hover {
         // Validar correo electrónico para que no sea un correo de grupo y no genere envío a muchísimas personas sin intención.
         if (correoElectronico.toLowerCase().startsWith("aneiap") || correoElectronico.toLowerCase().startsWith("capitulo") || correoElectronico.toLowerCase().startsWith("directores")) {
             Swal.fire({
-            title: '¡CORREO INCORRECTO! 🎃',
+            title: '¡CORREO INCORRECTO!',
             text: 'El correo electrónico no puede empezar con "aneiap", "capitulo" o "directores". Por favor, utiliza un correo válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -677,7 +624,7 @@ button:hover {
         // Validar que el correo electrónico termine en "@aneiap.co"
         if (!correoElectronico.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-            title: '¡CORREO INCORRECTO! 🎃',
+            title: '¡CORREO INCORRECTO!',
             text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -693,7 +640,7 @@ button:hover {
         var telefonoRegex = /^3\d{9}$/;
         if (!telefonoRegex.test(telefono)) {
             Swal.fire({
-            title: '¡TELÉFONO INCORRECTO! 🎃',
+            title: '¡TELÉFONO INCORRECTO!',
             text: 'El número de teléfono debe tener 10 dígitos y empezar con "3". Por favor, ingresa un teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -726,7 +673,7 @@ button:hover {
             nombrePieza,tipoPieza,contenidoPieza,enlacesRecursos,observacionesAdicionales)
             // Luego hacemos envío del correo con la solicitud de pieza
             var correosDestino = obtenerCorreoPiezas(correoElectronico, capitulo);
-            enviarCorreoSolicitudPieza(clavePieza, nombreCompleto, correosDestino, telefono, capitulo,
+            enviarCorreoSolicitudPiezaEmailJS(clavePieza, nombreCompleto, correoElectronico, correosDestino, telefono, capitulo,
             fechaEntrega, nombrePieza, tipoPieza, contenidoPieza, enlacesRecursos, observacionesAdicionales)
             // Mostrarle al usuario que ya se hizo efectiva su solicitud de publicidad
             // Limpiar los campos
@@ -738,7 +685,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de enviar la solicitud de una pieza.        
     function mostrarMensajeSolicitarPieza() {
         Swal.fire({
-            title: '¡SOLICITUD COMPLETADA! 🎃',
+            title: '¡SOLICITUD COMPLETADA!',
             text: 'Tu solicitud de pieza ha sido registrada con ÉXITO, revisa tu correo para confirmar la solicitud y obtener tu clave de pieza.',
             icon: 'success',
             showConfirmButton: true, // Muestra el botón de confirmación
@@ -803,7 +750,7 @@ button:hover {
             }
 
             Swal.fire({
-            title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU SOLICITUD DE PIEZA! 🎃',
+            title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU SOLICITUD DE PIEZA!',
             text: mensaje,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -821,65 +768,62 @@ button:hover {
         return true; // Todos los campos están llenos
         }
 
-    // Función para enviar el correo de confirmación de solicitud de pieza
-    function enviarCorreoSolicitudPieza(clavePiezaCreada, nombreCompleto, correoElectronico, telefono, capitulo,
-    fechaEntrega, nombrePieza, tipoPieza, contenidoPieza, enlacesRecursos, observacionesAdicionales) {
-        // Obtener el correo del destinatario para enviarle el correo
-        const correoDestino = correoElectronico;
-        const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
-        const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
-        const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-        const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
+    function enviarCorreoSolicitudPiezaEmailJS(clavePiezaCreada, nombreCompleto, correoElectronico, correosDestino, telefono, capitulo,
+        fechaEntrega, nombrePieza, tipoPieza, contenidoPieza, enlacesRecursos, observacionesAdicionales) {
+
+        // Inicializar EmailJS
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+
+        // Asunto del correo
         const asunto = `Confirmación de solicitud de pieza - Clave: ${clavePiezaCreada}`;
 
-        // Mensaje de correo con los detalles de la solicitud
-        const mensaje = `
-            <html>
-            <body>
-                <h1 style="color: #007BFF;">Solicitud de pieza registrada correctamente ☑️</h1>
-                <p>Estimado(a) ${nombreCompleto},</p>
-                <p>Su solicitud de pieza ha sido registrada correctamente.</p>
-                <p>Detalles de la solicitud:</p>
-                <ul>
-                <li><strong>Nombre completo:</strong> ${nombreCompleto}</li>
-                <li><strong>Correo electrónico:</strong> ${correoElectronico}</li>
-                <li><strong>Teléfono:</strong> ${telefono}</li>
-                <li><strong>Capítulo:</strong> ${capitulo}</li>
-                <li><strong>Fecha de entrega:</strong> ${fechaEntrega}</li>
-                <li><strong>Nombre del proyecto:</strong> ${nombrePieza}</li>
-                <li><strong>Tipo de pieza:</strong> ${tipoPieza}</li>
-                <li><strong>Contenido de la pieza:</strong> ${contenidoPieza}</li>
-                <li><strong>Enlaces a fotos o recursos adicionales:</strong> ${enlacesRecursos}</li>
-                <li><strong>Observaciones adicionales:</strong> ${observacionesAdicionales}</li>
-                </ul>
-                <p>Recuerde que este correo es automático y no necesita ser respondido.</p>
-                <p>¡Gracias por utilizar SIEA, de ahora en adelante, mantente en comunicación con tu DCC para el seguimiento a tu pieza!</p>
-            </body>
-            </html>
-        `;
+        // Parámetros para la plantilla de EmailJS
+        const params = {
+            tituloCorreo: "Solicitud de pieza registrada correctamente ☑️",
+            saludoInicial: `Estimado(a) ${nombreCompleto},`,
+            mensajeIntroduccion: "Su solicitud de pieza ha sido registrada correctamente.",
+            
+            // Información de la solicitud de pieza
+            TextoNombreCompleto: "   🔹 Nombre completo: ",
+            nombreCompleto: nombreCompleto,
+            TextoCorreoElectronico: "   🔹 Correo electrónico: ",
+            correoElectronico: correoElectronico,
+            TextoTelefono: "   🔹 Teléfono: ",
+            telefono: telefono,
+            TextoCapitulo: "   🔹 Capítulo: ",
+            capitulo: capitulo,
+            TextoFechaEntrega: "   🔹 Fecha de entrega: ",
+            fechaEntrega: fechaEntrega,
+            TextoNombrePieza: "   🔹 Nombre del proyecto: ",
+            nombrePieza: nombrePieza,
+            TextoTipoPieza: "   🔹 Tipo de pieza: ",
+            tipoPieza: tipoPieza,
+            TextoContenidoPieza: "   🔹 Contenido de la pieza: ",
+            contenidoPieza: contenidoPieza,
+            TextoEnlacesRecursos: "   🔹 Enlaces a fotos o recursos adicionales: ",
+            enlacesRecursos: enlacesRecursos || "No proporcionado.",
+            TextoObservacionesAdicionales: "   🔹 Observaciones adicionales: ",
+            observacionesAdicionales: observacionesAdicionales || "No especificadas.",
+            
+            // Mensaje adicional y despedida
+            mensajeFinal: "¡Gracias por utilizar SIEA, de ahora en adelante, mantente en comunicación con tu DCC para el seguimiento a tu pieza!",
+            despedida: "Cordialmente, el equipo de diseño",
 
-        Email.send({
-            Host: emailHost,
-            Username: emailUsername,
-            Password: emailPassword,
-            To: `${destinatario}, siea@aneiap.co`, // Destinatario y copia a siea para registro
-            From: emailUsername, // Debería ser la misma dirección de correo de Username
-            Subject: asunto,
-            Body: mensaje,
-            ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
-        })
-            .then((message) => {
-            console.log("Mensaje de SMTPJS:", message);
-            // Limpia los campos del formulario después de enviar el correo
-            // Agrega aquí la lógica para limpiar los campos del formulario si es necesario
-            if (message === "OK") {
-                console.log("Correo enviado con éxito");
-            } else {
-                console.error("Error al enviar el correo:", message);
-            }
+            // Asunto y destinatario
+            subject: asunto,
+            //to_email: `${correosDestino}, siea@aneiap.co` // Enviar copia al solicitante y a siea@aneiap.co
+            to_email: "avillanuevacantillo@gmail.com" // Correo personal mío para evitar enviar pruebas a los usuarios.
+        };
+
+        // Enviar el correo usando EmailJS
+        emailjs.send("siea_6zoabdr", "otros_correos", params)
+            .then((response) => {
+                console.log("Correo de solicitud de pieza enviado exitosamente", response.status, response.text);
+                alert("Solicitud de pieza enviada exitosamente."); // Agregar alerta de éxito
             })
             .catch((error) => {
-            console.error("Error en la función de envío de correo:", error);
+                console.error("Error al enviar el correo de solicitud de pieza:", error);
+                alert(`Error al enviar la solicitud de pieza: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`); // Agregar alerta de error
             });
     }
 

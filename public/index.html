@@ -64,75 +64,18 @@
 
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
-body {
-    background-color: #1a1a1a; /* Fondo oscuro */
-    color: #000000; /* Color de texto en tono dorado claro */
-    background-image: url('https://i.ibb.co/sVnMLVt/halloween-background.jpg'); /* Imagen de fondo con sutiles sombras */
-    background-attachment: fixed;
-    background-size: cover;
-}
-
-h2, .reserva, .button-generar-informe, .button-login, .button-cambio-contrasena {
-    color: #ffedc7; /* Texto en dorado claro */
-    background-color: #5b3c11; /* Fondo oscuro para botones */
-    border: 2px solid #ff6f00; /* Borde naranja */
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-a, .tab-container .tab, .document-link a {
-    color: #000000; /* Naranja oscuro */
-    font-weight: bold;
-}
-
-.acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
-    background-color: #5b3c11;
-    color: #ffedc7;
-}
-
-button {
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #ff6f00; /* Naranja brillante en hover */
-    color: #1a1a1a;
-}
-
-.swal2-popup {
-    background: #332b1b; /* Fondo más oscuro */
-    color: #ffedc7; /* Texto en dorado claro */
-    border: 1px solid #ff6f00; /* Borde naranja */
-}
-
-.swal2-title, .swal2-content {
-    color: #ff6f00; /* Naranja oscuro */
-}
-.swal2-html-container {
-    color: #ffffff; /* Cambia el color del texto a blanco */
-}
-.acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
-    background-color: #332b1b; /* Color más oscuro */
-    color: #ffedc7; /* Texto claro */
-}
-
-.tab-content.active {
-    border: 3px solid #5b3c11;
-}
-
-.image-container img {
-    max-width: 15%;
-    height: auto;
-    transition: transform 6s ease-in-out;
-}
-
-.image-container img:hover {
-    transform: rotate(15deg) scale(1.1);
-}
-
-
-
-
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #0b2447; /* Este color será visible si la imagen no se carga */
+    }
     .black-text {
       color: black;
     }
@@ -184,9 +127,6 @@ button:hover {
       font-weight: bold;
       font-size: 18px;
     }
-    input[type="text"] {
-    color: black; /* Cambia el color del texto que se escribe en el input */
-    }
     select, textarea, input[type="text"], input[type="date"], input[type="email"], input[type="tel"] {
       width: 100%;
       margin-top: 5px;
@@ -219,9 +159,9 @@ button:hover {
     }
     .disponibilidad-group {
       margin-bottom: 15px;
-      background-color: #8dfff9d9; /* Color de fondo azul muy claro */
+      background-color: #c3d6ffD9; /* Color de fondo azul muy claro */
       padding: 10px;
-      border: 1px solid #0008ffd9; /* Borde azul */
+      border: 1px solid #0004ffD9; /* Borde azul */
       border-radius: 8px; /* Bordes redondeados para el contenedor */
     }
     .reservar-group {
@@ -352,27 +292,27 @@ button:hover {
       background-color: #4d4d4d;
     }
     .button-generar-informe {
-      background-color: #000000;
+      background-color: #32ce13;
     }
     .button-login {
       color: #000000;
-      background-color: #ff2323;
+      background-color: #FDF55F;
       padding: 5px 10px;
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
       margin-bottom: 10px; /* Añadido para separar el botón de los campos */
       width: 120px; /* Ocupar el ancho del contenedor */
     }
     .button-cambio-contrasena {
       color: #000000;
-      background-color: #ff2323;
+      background-color: #FDF55F;
       padding: 5px 10px;
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
       margin-bottom: 10px; /* Añadido para separar el botón de los campos */
       width: 230px; /* Ocupar el ancho del contenedor */
     }
@@ -429,19 +369,19 @@ button:hover {
     .tab {
       padding: 10px 20px;
       cursor: pointer;
-      border: 1px solid #ffae70bf;
-      background-color: #ffae70BF;
+      border: 1px solid #9900CCBF;
+      background-color: #f7d1f3BF;
       border-radius: 8px 8px 0 0;
     }
     .tab:hover {
-      background-color: #ff6161;
+      background-color: #f0f0f0;
     }
     /* Estilos para los contenidos de las pestañas */
     .tab-content {
       display: none;
       padding: 10px;
-      border: 3px solid #ff3c00;
-      background-color: #dc9565bf;
+      border: 3px solid #D55DFFBF;
+      background-color: #f7d1f3BF;
       border-radius: 20 20px 20px 20px;
       width: 100%
     }
@@ -533,9 +473,6 @@ button:hover {
         position: absolute;
         margin-left: 0px;
         margin-top: 25px; /* Ajusta según sea necesario */
-    }
-    #tabla-resumen td, #tabla-evaluaciones td {
-    color: black; /* Color negro solo para el contenido */
     }
     /* Estilos para la tabla resumen */
     #tabla-resumen {
@@ -692,7 +629,7 @@ button:hover {
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
     <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe FI</button>
-    <button type="button" class="button-generar-informe" onclick="generarInformeIE(event)">Generar Informe IE</button>
+    <button type="button" class="button-generar-informe" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white;">Generar Informe IE</button>
     <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
   </form>
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
@@ -716,11 +653,11 @@ button:hover {
 
       <div id="tab-content-1" class="tab-content">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2 class="text-black" style="margin: 0;" class="text-black">GENERA UN TICKET PARA OBTENER AYUDA DEL ADMINISTRADOR 🎟️</h2>
+          <h2 style="margin: 0;">GENERA UN TICKET PARA OBTENER AYUDA DEL ADMINISTRADOR 🎟️</h2>
           <div style="text-align: right;">
-            <button style="width: 150px; height: 20px;" onclick="enviarTicket()" style="color: black;"class="text-black">ENVIAR TICKET</button>
+            <button style="width: 150px; height: 20px;" onclick="enviarTicket()">ENVIAR TICKET</button>
             <br>
-            <button style="width: 150px; height: 20px;" onclick="limpiarTicket()" style="color: black;"class="text-black">BORRAR TODO</button>
+            <button style="width: 150px; height: 20px;" onclick="limpiarTicket()">BORRAR TODO</button>
           </div>
         </div>
             <!-- PRIMERA FILA DE LA SECCIÓN TICKET CON NOMBRE, CORREO Y TIPO DE TICKET -->
@@ -728,29 +665,29 @@ button:hover {
             <div class="row">
                 <div class="third">
                     <!-- CAMPO PARA NOMBRE QUE ES OBLIGATORIO -->
-                    <label for="nombre" style="color: black;"class="text-black">Nombre *</label>
+                    <label for="nombre">Nombre *</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
-                    <label for="correo-ticket" style="color: black;"class="text-black">Correo *</label>
+                    <label for="correo-ticket">Correo *</label>
                     <input type="text" id="correo-ticket" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
-                    <label for="tipo-ticket" style="color: black;"class="text-black">Tipo *</label>
+                    <label for="tipo-ticket">Tipo *</label>
                     <select id="tipo-ticket" name="tipo-ticket" required>
-                      <option value="" disabled selected style="color: black;"class="text-black">Seleccione un tipo</option>
-                      <option value="Consulta General" style="color: black;"class="text-black">Consulta General</option>
-                      <option value="Solicitud de Ponentes" style="color: black;"class="text-black">Solicitud de Ponentes</option>
-                      <option value="Edición de Reserva" style="color: black;"class="text-black">Edición de Reserva</option>
-                      <option value="Asistencia de Reserva" style="color: black;"class="text-black">Asistencia de Cuenta</option>
-                      <option value="Problema Técnico" style="color: black;"class="text-black">Problema Técnico</option>
-                      <option value="Solicitud de Características" style="color: black;"class="text-black">Solicitud de Características</option>
-                      <option value="Error en la Aplicación" style="color: black;"class="text-black">Error en la Aplicación</option>
-                      <option value="Solicitud de Capacitación" style="color: black;"class="text-black">Solicitud de Capacitación</option>
-                      <option value="Reporte de Abuso o Violación de Políticas" style="color: black;"class="text-black">Reporte de Abuso o Violación de Políticas</option>
-                      <option value="Otros" class="text-black">Otros</option>
+                      <option value="" disabled selected>Seleccione un tipo</option>
+                      <option value="Consulta General">Consulta General</option>
+                      <option value="Solicitud de Ponentes">Solicitud de Ponentes</option>
+                      <option value="Edición de Reserva">Edición de Reserva</option>
+                      <option value="Asistencia de Reserva">Asistencia de Cuenta</option>
+                      <option value="Problema Técnico">Problema Técnico</option>
+                      <option value="Solicitud de Características">Solicitud de Características</option>
+                      <option value="Error en la Aplicación">Error en la Aplicación</option>
+                      <option value="Solicitud de Capacitación">Solicitud de Capacitación</option>
+                      <option value="Reporte de Abuso o Violación de Políticas">Reporte de Abuso o Violación de Políticas</option>
+                      <option value="Otros">Otros</option>
                         <!-- Agrega más opciones según sea necesario -->
                     </select>
                 </div>
@@ -759,17 +696,17 @@ button:hover {
             <div class="row">
                 <div class="third">
                     <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ DE FORMA MUY DETALLADA LO QUE OCURRIÓ EN EL CASO -->
-                    <label for="explicacion" style="color: black;"class="text-black">Explicación caso *</label>
+                    <label for="explicacion">Explicación caso *</label>
                     <textarea id="explicacion" name="explicacion" rows="1" required placeholder="Describe detalladamente tu caso"></textarea>
                 </div>
                 <div class="third">
                     <!-- CAMPO DONDE EL USUARIO ESCRIBIRÁ SU NÚMERO DE CELUAR, DEBE SER UN VALOR QUE EMPIECE EN 3 Y TENGA EN TOTAL 10 DÍGITOS -->
-                    <label for="celular" style="color: black;"class="text-black">Número de tel. *</label>
+                    <label for="celular">Número de tel. *</label>
                     <input type="tel" id="celular" name="celular" required placeholder="Digita tu número de celular" pattern="^3\d{9}$">
                 </div>
                 <div class="third">
                     <!-- CAMPO DONDE SE ADJUNTARÁ UN LINK DE GOOGLE DRIVE VÁLIDO (OPCIONAL) -->
-                    <label for="link-drive" style="color: black;"class="text-black">Drive evidencias</label>
+                    <label for="link-drive">Drive evidencias</label>
                     <textarea id="link-drive" name="link-drive" rows="1" required placeholder="Adjunta link de evidencias en Drive"></textarea>
                 </div>
             </div>
@@ -780,12 +717,12 @@ button:hover {
           <div class="disponibilidad-group">
             <div class="row">
             <div class="half">
-            <label for="texto2" style="color: black;"class="text-black"><b>1️⃣ Todo campo con un asterisco (*) es obligatorio.</b></label>
-            <label for="texto3" style="color: black;"class="text-black"><b>3️⃣ Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
+            <label for="texto2"><b>1️⃣ Todo campo con un asterisco (*) es obligatorio.</b></label>
+            <label for="texto3"><b>3️⃣ Las reservas se aprobarán o rechazarán automáticamente dependiendo de la disponibilidad.</b></label>
             </div>
             <div class="half">
-            <label for="texto4" style="color: black;"class="text-black"><b>2️⃣ Las claves de eventos son personales e intransferibles.</b></label>
-            <label for="texto5"style="color: black;" class="text-black"><b>4️⃣ Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
+            <label for="texto4"><b>2️⃣ Las claves de eventos son personales e intransferibles.</b></label>
+            <label for="texto5"><b>4️⃣ Si eliminas una reserva, la perderás para siempre. Todas las reservas mantienen su prioridad incluso si las editas.</b></label>
             </div>
             </div>
           </div>
@@ -796,9 +733,9 @@ button:hover {
         <h2>CRÉDITOS, PROPIEDAD Y DOCUMENTACIÓN 💾</h2>
         <p>
           <div class="disponibilidad-group">
-          <label style="color: black;" for="texto6" class="text-black"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
-          <label style="color: black;" for="texto7" class="text-black"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
-          <label style="color: black;" for="texto8" class="text-black"><b>- Agradecimientos a Said Yanett UNINORTE (logo).</b></label>
+          <label for="texto6"><b>- Herramienta creada por Alessandro Villanueva Cantillo, miembro profesional capítulo UNINORTE, puedes dar tus sugerencias, preguntas, reclamos e inquietudes sobre la herramienta al dar click "<a href="http://wa.me/3002252099" target="_blank">AQUÍ</a>"</b></label>
+          <label for="texto7"><b>- 🧡 Sé consciente de lo que tenemos y no abuses de la herramienta creando reservas de forma innecesaria o editándola muchas veces, la herramienta tiene limitaciones de almacenamiento y por cada transacción se va agotando 🧡.</b></label>
+          <label for="texto8"><b>- Agradecimientos a Said Yanett UNINORTE (logo).</b></label>
           </div>
           <h2>CONSULTA AQUÍ LA DOCUMENTACIÓN DE SIEA 👇🏽📚</h2>
           <div class="disponibilidad-group">
@@ -894,12 +831,12 @@ button:hover {
           <div class="row">
             <!-- Mitad izquierda con el campo para seleccionar la fecha -->
             <div class="half">
-              <label for="fecha-consulta" style="color: black;"><b>Selecciona el día en el que deseas ver disponibilidad: *</b></label>
+              <label for="fecha-consulta"><b>Selecciona el día en el que deseas ver disponibilidad: *</b></label>
               <input type="date" id="fecha-consulta" placeholder="Selecciona la fecha para consultar la disponibilidad.">
             </div>
             <!-- Mitad derecha con el campo para seleccionar el capítulo -->
             <div class="half">
-              <label for="capitulo-consulta" style="color:black;"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
+              <label for="capitulo-consulta"><b>Capítulo del que deseas consultar disponibilidad: *</b></label>
               <select id="capitulo-consulta">
                 <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
                 <option value="uniguajira">UNIGUAJIRA</option>
@@ -961,7 +898,7 @@ button:hover {
             <div class="disponibilidad-item gray">21:00 - 21:30</div>
             <div class="disponibilidad-item gray">21:30 - 22:00</div>
           </div>
-          <label for="eventos-programados" style="color: black;"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
+          <label for="eventos-programados"><b>Acá aparecerán la lista de eventos programados para el capítulo en esa fecha:</b></label>
           <div class="disponibilidad-group">
             <div id="eventos-programados"></div>
           </div>
@@ -1698,19 +1635,19 @@ button:hover {
           <div class="half">
             <div class="row">
               <div class="quarter">
-                <label for="fecha-inicial"style="color: black;"><b>Fecha inicial: *</b></label>
+                <label for="fecha-inicial"><b>Fecha inicial: *</b></label>
                 <input type="date" id="fecha-inicial">
               </div>
               <div class="quarter">
-                <label for="fecha-final"style="color: black;"><b>Fecha final: *</b></label>
+                <label for="fecha-final"><b>Fecha final: *</b></label>
                 <input type="date" id="fecha-final">
               </div>
               <div class="quarter">
-                <label for="total-asistentes"style="color: black;"><b># de asistentes:</b></label>
+                <label for="total-asistentes"><b># de asistentes:</b></label>
                 <input type="text" id="total-asistentes">
               </div>
               <div class="quarter">
-                <label for="link-evidencia"style="color: black;"><b>Evidencia (drive):</b></label>
+                <label for="link-evidencia"><b>Evidencia (drive):</b></label>
                 <input type="text" id="link-evidencia">
               </div>
             </div>
@@ -1718,7 +1655,7 @@ button:hover {
         </div>
         <div class="row">
           <div class="half">
-            <label for="nombre-espacio-actualizar"style="color: black;"><b>Nombre del espacio a actualizar: *</b></label>
+            <label for="nombre-espacio-actualizar"><b>Nombre del espacio a actualizar: *</b></label>
             <select id="nombre-espacio-actualizar">
               <option value="" disabled selected hidden>Debes seleccionar primero la fecha inicial y final a consultar.</option>
               <!-- Aquí se cargarán dinámicamente los nombres de los espacios disponibles para el capítulo del usuario -->
@@ -1727,7 +1664,7 @@ button:hover {
           <div class="half">
             <div class="row">
               <div class="half">
-                <label for="tipo-espacio"style="color: black;"><b>Tipo de espacio: *</b></label>
+                <label for="tipo-espacio"><b>Tipo de espacio: *</b></label>
                 <select id="tipo-espacio">
                   <option value="" disabled selected hidden>Selecciona el tipo de espacio.</option>
                   <option value="valor-agregado">VALOR AGREGADO ➕</option>
@@ -1737,7 +1674,7 @@ button:hover {
                 </select>
               </div>
               <div class="half">
-                <label for="area-trabajo"style="color: black;"><b>Área de trabajo: *</b></label>
+                <label for="area-trabajo"><b>Área de trabajo: *</b></label>
                 <select id="area-trabajo">
                   <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
                   <option value="academico">ACADÉMICO 💚</option>
@@ -1761,23 +1698,20 @@ button:hover {
         </div>
         <!-- Mini sección de estadísticas -->
         <div class="actualizar-group">
-          <h2 style="font-size: 22px; text-transform: uppercase;">
-            <p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p>
-        </h2>
-        <p id="dashboardEstado" style="text-align: center; display: block; color: black;">El dashboard estadístico está oculto.</p>
-        <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto; color: black;">Mostrar dashboard</button>
-        
+          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DASHBOARD ESTADÍSTICO DE ESPACIOS DE FORMACIÓN 📊</p></h2>
+          <p id="dashboardEstado" style="text-align: center; display: block;">El dashboard estadístico está oculto.</p>
+          <button id="toggleDashboard" onclick="toggleDashboard()" style="margin-left: auto;">Mostrar dashboard</button>
           <div id="estadisticas-container" style="display: none;">
             <div class="row">
-                <div class="half" style="color: black;">
+                <div class="half">
                         Aquí aparecerá el cumplimiento del plan de formación:
-                    <div id="porcentajes-container" style="display: none; color: black;">
+                    <div id="porcentajes-container" style="display: none;">
                     </div>
                     <canvas id="grafico-metas"></canvas>
                 </div>
-                <div class="half" style="color: black;">
+                <div class="half">
                         Acá podrás ver estadísticas sobre el NPS en los espacios:
-                    <div id="satisfaccion-container" style="display: none;color: black;">
+                    <div id="satisfaccion-container" style="display: none;">
                     </div>
                     <canvas id="grafico-satisfaccion"></canvas>
                 </div>
@@ -1788,8 +1722,8 @@ button:hover {
         <div class="actualizar-group">
           <div id="tabla-resumen-container">
             <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">TABLA RESUMEN DE SATISFACCIÓN DE ESPACIOS 📋</p></h2>
-            <p id="tablaResumenEstado" style="text-align: center; display: block; color: black;">La tabla resumen se encuentra oculta.</p>
-            <button id="toggleTablaResumen" onclick="toggleTablaResumen()" style="margin-left: auto;color: black;">Mostrar tabla resumen</button>
+            <p id="tablaResumenEstado" style="text-align: center; display: block;">La tabla resumen se encuentra oculta.</p>
+            <button id="toggleTablaResumen" onclick="toggleTablaResumen()" style="margin-left: auto;">Mostrar tabla resumen</button>
             <table id="tabla-resumen" style="display: none;">
               <!-- Aquí se generará dinámicamente la tabla resumen -->
             </table>
@@ -1803,29 +1737,29 @@ button:hover {
           <!-- Desplegable para elegir el evento -->
           <div class="row">
             <div class="half">
-              <label for="nombre-espacio-consultar-evaluaciones" style ='color: black;'><b>Selecciona un evento:</b></label>
+              <label for="nombre-espacio-consultar-evaluaciones"><b>Selecciona un evento:</b></label>
               <select id="nombre-espacio-consultar-evaluaciones" onchange="consultarEvaluaciones()">
-                <option value="" disabled selected hidden style ='color: black;'>Debes seleccionar una fecha inicial y una fecha final primero</option>
+                <option value="" disabled selected hidden>Debes seleccionar una fecha inicial y una fecha final primero</option>
                 <!-- Aquí se cargarán dinámicamente los eventos disponibles para el capítulo del usuario -->
               </select>
             </div>
             <div class="half">
               <div class="row">
                 <div class="half">
-                  <label for="fecha-inicial-evaluaciones"style="color: black;"><b>Fecha inicial:</b></label>
+                  <label for="fecha-inicial-evaluaciones"><b>Fecha inicial:</b></label>
                   <input type="date" id="fecha-inicial-evaluaciones">
                 </div>
                 <div class="half">
-                  <label for="fecha-final-evaluaciones"style="color: black;"><b>Fecha final:</b></label>
+                  <label for="fecha-final-evaluaciones"><b>Fecha final:</b></label>
                   <input type="date" id="fecha-final-evaluaciones">
                 </div>
               </div>
             </div>
           </div>
           <!-- Botón para ocultar o mostrar la tabla de evaluaciones -->
-          <button id="toggleEvaluaciones"style='color: black;' onclick="toggleEvaluaciones()">Mostrar tabla de evaluaciones</button>
+          <button id="toggleEvaluaciones" onclick="toggleEvaluaciones()">Mostrar tabla de evaluaciones</button>
           <!-- Mensaje de estado de la tabla -->
-          <p id="estadoTablaEvaluaciones" style="text-align: center; display: block; color: black;">La tabla de evaluaciones de satisfacción está oculta</p>
+          <p id="estadoTablaEvaluaciones" style="text-align: center; display: block;">La tabla de evaluaciones de satisfacción está oculta</p>
           <!-- Tabla con las evaluaciones -->
           <table id="tabla-evaluaciones" class="tabla-evaluaciones" style="display: none;">
             <thead>
@@ -1937,7 +1871,7 @@ button:hover {
 
           // Mostrar alerta para ingresar el área de trabajo
           Swal.fire({
-            title: 'Ingrese el área de trabajo para el espacio de integración con el entorno 🎃',
+            title: 'Ingrese el área de trabajo para el espacio de integración con el entorno',
             text: `Espacio seleccionado: 🟩${nombreEspacio.toUpperCase()}🟦`,
             input: 'text',
             inputPlaceholder: 'Escriba el área de trabajo aquí...',
@@ -2555,7 +2489,7 @@ button:hover {
       if (capituloUsuario === "general" || capituloUsuario === "") {
         // Mostrar una alerta indicando que no tiene permisos
         Swal.fire({
-          title: '¡NO TIENES PERMISOS PARA ACCEDER A ESTA FUNCIÓN! 🎃',
+          title: '¡NO TIENES PERMISOS PARA ACCEDER A ESTA FUNCIÓN!',
           text: 'Esta función es exclusiva para los DCA y DNA. Inicia sesión con tu correo de Académico si aún no lo has hecho, Si no eres director(a) de académico y crees que deberías tener acceso, por favor, contáctate con el administrador.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -2569,8 +2503,7 @@ button:hover {
 
       // Obtener el elemento del párrafo donde se mostrará el capítulo del usuario
       var capituloUsuarioElement = document.getElementById("capitulo-usuario");
-      var textoCapitulo = "<b style='color: black;'>La información que aparecerá y consultará corresponderá al capítulo: </b>" + 
-                    "<b style='color: black;'>" + capituloUsuario.toUpperCase() + "</b>";
+      var textoCapitulo = "<b>La información que aparecerá y consultará corresponderá al capítulo: </b>" + "<b>" + capituloUsuario.toUpperCase() + "</b>";
       capituloUsuarioElement.innerHTML = textoCapitulo;
 
       // Comprobar el estado actual de visualización (oculto o mostrado)
@@ -2651,7 +2584,7 @@ button:hover {
         // Error: hubo un problema al registrar el evento
         console.error("ERROR AL REGISTRAR EL EVENTO: ", error);
         Swal.fire({
-          title: '¡ERROR! 🎃',
+          title: '¡ERROR!',
           text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
           icon: 'error',
           imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -2697,7 +2630,7 @@ button:hover {
           } else {
             // El documento no existe, mostrar un mensaje indicando que el evento no se encontró
             Swal.fire({
-              title: 'Evento no encontrado 🎃',
+              title: 'Evento no encontrado',
               text: 'No se ha encontrado un evento con la clave proporcionada.',
               icon: 'warning',
               confirmButtonText: 'Aceptar'
@@ -2720,7 +2653,7 @@ button:hover {
           console.error("ERROR AL ACTUALIZAR EL EVENTO: ", error);
           if (error !== "Evento no encontrado") {
             Swal.fire({
-              title: '¡ERROR! 🎃',
+              title: '¡ERROR!',
               text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
               icon: 'error',
               imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
@@ -2778,7 +2711,7 @@ button:hover {
         // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
         if (emailOrganizador === "aneiap_nacional@aneiap.co") {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO! 🎃',
+            title: '¡CORREO PROHIBIDO!',
             text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2793,7 +2726,7 @@ button:hover {
         // Verificar si el correo comienza con "capitulo" o "directivos"
         if (emailOrganizador.toLowerCase().startsWith("capitulo") || emailOrganizador.toLowerCase().startsWith("directivos")) {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO! 🎃',
+            title: '¡CORREO PROHIBIDO!',
             text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2808,7 +2741,7 @@ button:hover {
         // Verificar si el correo termina con "@aneiap.co"
         if (!emailOrganizador.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-                title: '¡CORREO INCORRECTO! 🎃',
+                title: '¡CORREO INCORRECTO!',
                 text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -2825,7 +2758,7 @@ button:hover {
         if (capitulo === "nacional" && capituloUsuario !== "nacional") {
           console.log("el usuario quiere reservar a nivel nacional.")
           Swal.fire({
-            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL! 🎃',
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
             text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2840,7 +2773,7 @@ button:hover {
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if ((fechaEvento < fechaActual) || (fechaEvento < fechaActualISOS)) {
           Swal.fire({
-            title: '¡FECHA INCORRECTA! 🎃',
+            title: '¡FECHA INCORRECTA!',
             text: 'Debes reservar al menos con 2 días de anticipación, si ya se venció el plazo y deseas hacerlo igualmente, contacta al administrador.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2859,7 +2792,7 @@ button:hover {
         // Validación de datos para que el teléfono del organizador efectivamente sea un celular válido.
         if (!telefonoOrganizadorRegex.test(telefonoOrganizador)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO! 🎃',
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -2880,7 +2813,7 @@ button:hover {
 
           if (!telefonoPonenteRegex.test(telefonoPonente)) {
             Swal.fire({
-              title: '¡TELÉFONO DEL PONENTE INCORRECTO! 🎃',
+              title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
               text: 'Digita un número de teléfono válido.',
               icon: 'warning',
               confirmButtonText: 'Aceptar',
@@ -2904,7 +2837,7 @@ button:hover {
           if (enlaceGoogleDrive !== "") {
           if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
             Swal.fire({
-              title: "¡ENLACE INVÁLIDO! 🎃",
+              title: "¡ENLACE INVÁLIDO!",
               text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
               icon: "warning",
               confirmButtonText: 'Aceptar',
@@ -2979,7 +2912,7 @@ button:hover {
     if (claveEventoConsultar.trim() === "") {
       // Mostrar alerta si el campo está vacío
       Swal.fire({
-        title: '¡NO HAS DILIGENCIADO NINGUNA CLAVE! 🎃',
+        title: '¡NO HAS DILIGENCIADO NINGUNA CLAVE!',
         text: 'Por favor, ingresa la clave de la reserva de tu evento.',
         icon: 'warning',
         confirmButtonText: 'Aceptar',
@@ -3028,7 +2961,7 @@ button:hover {
       } else {
         // El documento no existe, mostrar un mensaje indicando que la reserva no se encontró
         Swal.fire({
-          title: '¡NO EXISTE LA RESERVA QUE BUSCAS! 🎃',
+          title: '¡NO EXISTE LA RESERVA QUE BUSCAS!',
           text: 'No se ha encontrado una reserva con la clave proporcionada, rectifica que de verdad exista y que estás escribiendo bien la clave,',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -3042,7 +2975,7 @@ button:hover {
       // Error al consultar el documento
       console.error("Error al consultar la reserva: ", error);
       Swal.fire({
-        title: '¡ERROR! 🎃',
+        title: '¡ERROR!',
         text: 'Ha ocurrido un error al consultar la reserva. Inténtalo nuevamente más tarde o consulta con el administrador/creador del sistema.',
         icon: 'error',
         confirmButtonText: 'Aceptar',
@@ -3075,7 +3008,7 @@ button:hover {
         if (emailOrganizadorReserva === "aneiap_nacional@aneiap.co") {
           console.log("email del organizador: " + emailOrganizadorReserva)
           Swal.fire({
-            title: '¡CORREO PROHIBIDO! 🎃',
+            title: '¡CORREO PROHIBIDO!',
             text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3090,7 +3023,7 @@ button:hover {
         // Verificar si el correo comienza con "capitulo" o "directivos"
         if (emailOrganizadorReserva.toLowerCase().startsWith("capitulo") || emailOrganizadorReserva.toLowerCase().startsWith("directivos")) {
           Swal.fire({
-            title: '¡CORREO PROHIBIDO! 🎃',
+            title: '¡CORREO PROHIBIDO!',
             text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3105,7 +3038,7 @@ button:hover {
         // Verificar si el correo termina con "@aneiap.co"
         if (!emailOrganizadorReserva.toLowerCase().endsWith("@aneiap.co")) {
             Swal.fire({
-                title: '¡CORREO INCORRECTO! 🎃',
+                title: '¡CORREO INCORRECTO!',
                 text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar',
@@ -3121,7 +3054,7 @@ button:hover {
         var capituloReserva = document.getElementById("capitulo-organizador-reserva").value;
         if (capituloReserva === "nacional" && capituloUsuario !== "nacional") {
           Swal.fire({
-            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL! 🎃',
+            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
             text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3135,7 +3068,7 @@ button:hover {
 
         if ((fechaEventoReserva < fechaActual) || (fechaEventoReserva < fechaActualISOS)) {
           Swal.fire({
-            title: '¡FECHA INCORRECTA! 🎃',
+            title: '¡FECHA INCORRECTA!',
             text: 'Debes reservar al menos con 2 días de anticipación, si ya se venció el plazo y deseas hacerlo igualmente, contacta al administrador.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3153,7 +3086,7 @@ button:hover {
 
         if (!telefonoOrganizadorReservaRegex.test(telefonoOrganizadorReserva)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO! 🎃',
+            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3169,7 +3102,7 @@ button:hover {
         var telefonoPonenteReserva = document.getElementById("telefono-ponente-reserva").value;
         if (telefonoPonenteReserva !== "" && !telefonoOrganizadorReservaRegex.test(telefonoPonenteReserva)) {
           Swal.fire({
-            title: '¡TELÉFONO DEL PONENTE INCORRECTO! 🎃',
+            title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
             text: 'Digita un número de teléfono válido.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3192,7 +3125,7 @@ button:hover {
         if (enlaceGoogleDriveReserva !== "") {
         if (!enlaceGoogleDriveRegex.test(enlaceGoogleDriveReserva)) {
           Swal.fire({
-            title: "¡ENLACE INVÁLIDO! 🎃",
+            title: "¡ENLACE INVÁLIDO!",
             text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
             icon: "warning",
             confirmButtonText: 'Aceptar',
@@ -3256,7 +3189,7 @@ button:hover {
                 if (publicidadComiteReserva === "si") {
                   // Mostrar swal.fire para que el usuario seleccione la opción de publicidad
                   swal.fire({
-                      title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular? 🎃',
+                      title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular?',
                       showDenyButton: true,
                       showCloseButton: false, // Oculta el botón de cerrar
                       allowOutsideClick: false, // Impide cerrar haciendo clic afuera
@@ -3265,8 +3198,8 @@ button:hover {
                   }).then((result) => {
                       if (result.isConfirmed) {
                           // Si el usuario elige enviar a nivel nacional
-                          enviarSolicitudPublicidadEdicion("si");
-                          enviarCorreoEdicion();
+                          enviarSolicitudPublicidadEdicionEmailJS("si");
+                          enviarCorreoEdicionEmailJS();
                           editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
                           // Restablecer los campos a su valor por defecto (vacío)
                           // Ocultar el contenido del acordeón datos-reserva-container
@@ -3276,8 +3209,8 @@ button:hover {
                           content.style.display = "none";
                       } else if (result.isDenied) {
                         // Si el usuario elige enviar a nivel capitular
-                        enviarSolicitudPublicidadEdicion("no");
-                        enviarCorreoEdicion();
+                        enviarSolicitudPublicidadEdicionEmailJS("no");
+                        enviarCorreoEdicionEmailJS();
                         editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
                         // Restablecer los campos a su valor por defecto (vacío)
                         // Ocultar el contenido del acordeón datos-reserva-container
@@ -3288,7 +3221,7 @@ button:hover {
                       }
                   });
                 } else {
-                  enviarCorreoEdicion();
+                  enviarCorreoEdicionEmailJS();
                   editarEventoFirestore(nombreEventoReserva, claveEventoReserva, fechaEventoReserva, horaEventoReserva, duracionEventoReserva, modalidadEventoReserva, ubicacionPlataformaReserva, lugarPresencialReserva, planEventoReserva, observacionesEventoReserva, nombreOrganizadorReserva, emailOrganizadorReserva, capituloReserva, telefonoOrganizadorReserva, nombrePonenteReserva, emailPonenteReserva, telefonoPonenteReserva, publicidadComiteReserva, observacionesPublicidadReserva, fotoPonenteURLReserva);
                   // Restablecer los campos a su valor por defecto (vacío)
                   // Ocultar el contenido del acordeón datos-reserva-container
@@ -3309,7 +3242,7 @@ button:hover {
           } else {
             // El documento no existe, mostrar mensaje de error
             Swal.fire({
-              title: '¡NO EXISTE EL EVENTO QUE BUSCAS! 🎃',
+              title: '¡NO EXISTE EL EVENTO QUE BUSCAS!',
               text: 'Verifica que estés escribiendo una clave de evento que de verdad exista.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -3325,7 +3258,7 @@ button:hover {
           // Mostrar una alerta tipo SweetAlert en caso de error
           console.log("Error al consultar Firebase: " + error);
           Swal.fire({
-            title: 'Error 🎃',
+            title: 'Error',
             text: 'Hubo en error con el código, consulta al administrador/creador del sistema.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
@@ -3364,7 +3297,7 @@ button:hover {
         if (camposFaltantes.length > 0) {
             var mensajeError = "Faltan campos por diligenciar:\n\n" + camposFaltantes.join("\n");
             Swal.fire({
-            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
+            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
             text: mensajeError,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3376,7 +3309,7 @@ button:hover {
         } else {
             // Si no hay campos faltantes, proceder con la eliminación de la reserva
             Swal.fire({
-            title: '¿CONFIRMAS QUE DESEAS ELIMINAR LA RESERVA? 🎃',
+            title: '¿CONFIRMAS QUE DESEAS ELIMINAR LA RESERVA?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'CONFIRMO',
@@ -3406,6 +3339,12 @@ button:hover {
                     var nombreEventoReserva= doc.data().nombreEvento;
                     var nombreOrganizadorReserva = doc.data().nombreOrganizador;
                     var correoReserva = doc.data().emailOrganizador;
+                    var planEvento = doc.data().planEvento;
+                    var capituloEliminar = doc.data().capitulo;
+                    var observacionesReserva = doc.data().observacionesEvento;
+                    var modalidadReserva = doc.data().modalidadEvento;
+                    var ubicacionOPlataforma = doc.data().ubicacionPlataforma;
+                    var nombrePonente = doc.data().nombrePonente;
                     // Dividir la hora y los minutos en variables
                     var partesHora = horaEventoEliminar.split(":");
                     var hora = parseInt(partesHora[0], 10); // Convertir la hora en número entero
@@ -3415,7 +3354,7 @@ button:hover {
                     // Verificar si la fecha es la apropiada
                     if (fechaReserva !== fechaEventoEliminar) {
                       Swal.fire({
-                        title: '¡FECHA INCORRECTA! 🎃',
+                        title: '¡FECHA INCORRECTA!',
                         text: 'La fecha del evento debe ser exactamente igual a la que tiene la reserva.',
                         icon: 'warning',
                         confirmButtonText: 'Aceptar',
@@ -3428,7 +3367,7 @@ button:hover {
                     }
                     if (horaReserva !== '' + minutosDespuesDeMedianoche) {
                       Swal.fire({
-                        title: '¡HORA INCORRECTA! 🎃',
+                        title: '¡HORA INCORRECTA!',
                         text: 'La hora del evento debe ser exactamente igual a la que tiene la reserva.',
                         icon: 'warning',
                         confirmButtonText: 'Aceptar',
@@ -3443,7 +3382,7 @@ button:hover {
                       // Eliminación exitosa
                       console.log("Reserva eliminada con éxito.");
                       // Resetear los campos del acordeón 3 a sus valores por defect luego de enviar correo.
-                      enviarCorreoEliminar(claveEventoEliminar,nombreOrganizadorReserva,correoReserva,nombreEventoReserva,fechaReserva,horaReserva,duracionReserva);
+                      enviarCorreoEliminarEmailJS(claveEventoEliminar,nombreOrganizadorReserva,correoReserva,nombreEventoReserva,fechaReserva,horaReserva,duracionReserva,capituloEliminar,planEvento, observacionesReserva, modalidadReserva, ubicacionOPlataforma, nombrePonente);
                       document.getElementById("fecha-evento-eliminar").value = "";
                       document.getElementById("hora-evento-eliminar").value = "";
                       document.getElementById("clave-evento-eliminar").value = "";
@@ -3461,7 +3400,7 @@ button:hover {
                       // Error al intentar eliminar el documento
                       console.error("NO SE PUDO ELIMINAR LA RESERVA", error);
                       Swal.fire({
-                        title: '¡ERROR! 🎃',
+                        title: '¡ERROR!',
                         text: 'Ha ocurrido un error al eliminar la reserva. Inténtalo nuevamente más tarde o ponte en contacto con el administrador de la plataforma.',
                         icon: 'error',
                         confirmButtonText: 'Aceptar',
@@ -3474,7 +3413,7 @@ button:hover {
                   } else {
                     // El documento no existe, mostrar un mensaje indicando que la reserva no se encontró
                     Swal.fire({
-                      title: 'NO EXISTE ESTA RESERVA 🎃',
+                      title: 'NO EXISTE ESTA RESERVA',
                       text: 'No se ha encontrado una reserva con la clave proporcionada, rectifica que estás diligenciando la clave correcta.',
                       icon: 'warning',
                       confirmButtonText: 'Aceptar',
@@ -3488,7 +3427,7 @@ button:hover {
                   // Error al consultar el documento
                   console.error("ERROR AL CONSULTAR LA RESERVA", error);
                   Swal.fire({
-                    title: '¡ERROR! 🎃',
+                    title: '¡ERROR!',
                     text: 'Ha ocurrido un error al consultar la reserva. Inténtalo nuevamente más tarde o ponte en contacto con el administrador de la plataforma',
                     icon: 'error',
                     confirmButtonText: 'Aceptar',
@@ -3506,7 +3445,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de registrar una reserva.        
     function mostrarMensajeReservar() {
       Swal.fire({
-      title: '¡RESERVA COMPLETADA! 🎃',
+      title: '¡RESERVA COMPLETADA!',
       text: 'Su reserva ha sido registrada y APROBADA con ÉXITO, revisa tu correo para confirmar la reserva y obtener tu CLAVE de evento.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3524,7 +3463,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de actualizar un espacio.        
     function mostrarMensajeActualizarEspacio() {
       Swal.fire({
-      title: '¡ACTUALIZACIÓN COMPLETADA! 🎃',
+      title: '¡ACTUALIZACIÓN COMPLETADA!',
       text: 'Su espacio ha sido actualizado con ÉXITO, revisa en la tabla resumen o en consultar disponibilidad para confirmarlo.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3542,7 +3481,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de error al momento de tener una falla.        
     function mostrarMensajeFallaTecnica() {
       Swal.fire({
-      title: 'Error de Consulta 🎃',
+      title: 'Error de Consulta',
       text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
       icon: 'error',
       confirmButtonText: 'Aceptar',
@@ -3555,7 +3494,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de actualizar una reserva.    
     function mostrarMensajeEditar() {
       Swal.fire({
-      title: '¡ACTUALIZACIÓN DE RESERVA COMPLETADA! 🎃',
+      title: '¡ACTUALIZACIÓN DE RESERVA COMPLETADA!',
       text: 'Su reserva ha sido ACTUALIZADA con ÉXITO, revisa tu correo para confirmar la actualización, recuerda que no cambias de CLAVE de evento.',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3573,7 +3512,7 @@ button:hover {
     // Esta función permite la acción de mostrar un mensaje de éxito al momento de eliminar una reserva.
     function mostrarMensajeEliminar() {
       Swal.fire({
-      title: '¡ELIMININACIÓN DE RESERVA COMPLETADA! 🎃',
+      title: '¡ELIMININACIÓN DE RESERVA COMPLETADA!',
       text: 'Su reserva ha sido ELIMINADA con ÉXITO, revisa tu correo para confirmar que ha sido eliminada',
       icon: 'success',
       showConfirmButton: true, // Muestra el botón de confirmación
@@ -3666,7 +3605,7 @@ button:hover {
         }
 
         Swal.fire({
-          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA! 🎃',
+          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA!',
           text: mensaje,
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -3761,7 +3700,7 @@ button:hover {
             }
 
             Swal.fire({
-            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
+            title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
             text: mensaje,
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3807,7 +3746,7 @@ button:hover {
         if (fechaConsulta.trim() === "") {
           // Mostrar mensaje de error si no se ha seleccionado una fecha válida
           Swal.fire({
-            title: '¡FECHA NO SELECCIONADA! 🎃',
+            title: '¡FECHA NO SELECCIONADA!',
             text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -3824,7 +3763,7 @@ button:hover {
         if (capituloConsulta.trim() === "") {
           // Mostrar mensaje de error si no se ha seleccionado una fecha válida
           Swal.fire({
-            title: '¡CAPÍTULO NO SELECCIONADO! 🎃',
+            title: '¡CAPÍTULO NO SELECCIONADO!',
             text: 'Por favor, selecciona el capítulo del cual deseas consultar la disponibilidad.',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -4005,7 +3944,7 @@ button:hover {
       if (fechaConsultaDirecta.trim() === "" || capituloConsulta.trim() === "") {
         // Mostrar mensaje de error si no se ha seleccionado una fecha o capítulo válidos
         Swal.fire({
-          title: '¡FECHA O CAPÍTULO NO SELECCIONADOS! 🎃',
+          title: '¡FECHA O CAPÍTULO NO SELECCIONADOS!',
           text: 'Por favor, selecciona una fecha y un capítulo para consultar la disponibilidad semanal.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
@@ -4374,6 +4313,73 @@ button:hover {
           console.error("Error en la función de envío de correo:", error);
           // Puedes manejar el error de otra manera si lo deseas
         });
+    }
+
+    //ALESSANDRO
+    // Función para enviar el correo de confirmación de edición de reserva usando EmailJS
+    function enviarCorreoEdicionEmailJS() {
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+
+        const claveReserva = document.getElementById("clave-evento-reserva").value;
+        const correoDestino = document.getElementById("email-organizador-reserva").value;
+
+        const capitulo = document.getElementById("capitulo-organizador-reserva").value;
+        const destinatario = obtenerCorreoEdicion(correoDestino, capitulo)  + ", siea@aneiap.co"; // Reemplaza con la dirección de correo del destinatario junto al bancoCorreos
+
+        const asunto = `Confirmación de edición de reserva - Clave: ${claveReserva}`;
+
+        const fechaReserva = document.getElementById("fecha-evento-reserva").value;
+        const horaReserva = document.getElementById("hora-evento-reserva").value;
+        const duracionReserva = document.getElementById("duracion-evento-reserva").value;
+        const planEvento = document.getElementById("plan-evento-reserva").value;
+        const modalidadReserva = document.getElementById("modalidad-evento-reserva").value;
+        const nombrePonente = document.getElementById("nombre-ponente-reserva").value;
+        const observacionesReserva = document.getElementById("observaciones-evento-reserva").value || "No se especificaron observaciones.";
+        const ubicacionOPlataforma = modalidadReserva === "virtual" ? 
+            document.getElementById("ubicacion-plataforma-reserva").value || "" : 
+            document.getElementById("lugar-presencial-reserva").value || "";
+
+        const observacionesPublicidad = document.getElementById("observaciones-publicidad-reserva").value || "No se especificaron observaciones.";
+        const fotoPonenteURL = document.getElementById("foto-ponente-reserva").value || "";
+
+        const duracionHoras = Math.floor(duracionReserva / 60);
+        const duracionMinutos = duracionReserva % 60;
+        const horaMilitar = `${Math.floor(horaReserva / 60).toString().padStart(2, "00")}:${(horaReserva % 60).toString().padStart(2, "00")}`;
+
+        const params = {
+            tituloCorreo: "Su edición de reserva ha sido confirmada ☑️",
+            saludoInicial: `Estimado(a) ${document.getElementById("nombre-organizador-reserva").value}`,
+            mensajeIntroduccion: `Le confirmamos que su edición de reserva para el evento "${document.getElementById("nombre-evento-reserva").value}" ha sido procesada correctamente.`,
+            claveEventoReserva: claveReserva || "",
+            fechaReserva: fechaReserva || "",
+            horaReserva: horaMilitar || "",
+            capitulo: capitulo || "",
+            duracionEvento: `${duracionHoras} hora(s) ${duracionMinutos} minuto(s)`,
+            planEvento: planEvento || "",
+            observacionesReserva: observacionesReserva,
+            modalidadReserva: modalidadReserva || "",
+            ubicacionOPlataforma: ubicacionOPlataforma,
+            nombrePonente: nombrePonente || "",
+            mensajePublicidad: fotoPonenteURL ? "El organizador ha solicitado la realización de la publicidad para el evento. " : "",
+            observacionesPublicidad: fotoPonenteURL ? `Observaciones de la publicidad: ${observacionesPublicidad}` : "",
+            fotoPonenteTexto: fotoPonenteURL ? "Link de la foto del ponente: " : "",
+            fotoPonenteURL: fotoPonenteURL,
+            mensajeFinal: "Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚",
+            despedida: "Cordialmente, Alessandro Villanueva Cantillo - Administrador y creador SIEA",
+            to_email: destinatario,
+            //to_email: "avillanuevacantillo@gmail.com",
+            subject: asunto
+        };
+
+        emailjs.send("siea_6zoabdr", "registro_reservas", params)
+            .then((response) => {
+                console.log("Correo de confirmación de edición de reserva enviado exitosamente", response.status, response.text);
+                alert("Confirmación de edición de reserva enviada exitosamente.");
+            })
+            .catch((error) => {
+                console.error("Error al enviar el correo de confirmación de edición de reserva:", error);
+                alert(`Error al enviar la confirmación de edición de reserva: ${error.text || "Error desconocido"}. Por favor, consulta con el administrador.`);
+            });
     }
 
     // Función para enviar el correo de solicitud de publicidad
@@ -4751,78 +4757,193 @@ button:hover {
         });
     }
 
-    // Función para enviar el correo de edición de reserva
-    function enviarCorreoEliminar(claveReservaCreada,nombreOrganizadorReserva,correoReserva,nombreEventoReserva,fechaReserva,horaReserva,duracionReserva) {
+    //ALESSANDRO
+    // Función para enviar el correo de solicitud de publicidad para la edición de reserva usando EmailJS
+    function enviarSolicitudPublicidadEdicionEmailJS(escogioPublicidadNacional) {
+        emailjs.init("2vq1EFo6RmswvD4Ey");
 
-      // Obtener la clave de la reserva para enviar el correo
-      const claveReserva = claveReservaCreada;
+        // Banco de correos de comunicaciones asociado a cada capítulo
+        const bancoCorreos = {
+            uniguajira: "comunicaciones_uniguajira@aneiap.co",
+            unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
+            uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
+            uninorte: "comunicaciones_uninorte@aneiap.co, geraldine.mendoza@aneiap.co",
+            unisimon: "comunicaciones_unisimon@aneiap.co",
+            cuc: "comunicaciones_cuc@aneiap.co",
+            librequilla: "comunicaciones_librequilla@aneiap.co",
+            utb: "comunicaciones_utb@aneiap.co",
+            upbmonteria: "comunicaciones_upbmonteria@aneiap.co",
+            unicordoba: "comunicaciones_unicordoba@aneiap.co",
+            areandina: "comunicaciones_areandina@aneiap.co",
+            ufps: "comunicaciones_ufps@aneiap.co",
+            unalmed: "comunicaciones_unalmed@aneiap.co",
+            udea: "comunicaciones_udea@aneiap.co",
+            upbmed: "comunicaciones_upbmed@aneiap.co",
+            utp: "comunicaciones_utp@aneiap.co",
+            unalma: "comunicaciones_unalma@aneiap.co",
+            udistrital: "comunicaciones_udistrital@aneiap.co",
+            unalbog: "comunicaciones_unalbog@aneiap.co",
+            univalle: "comunicaciones_univalle@aneiap.co",
+            icesi: "comunicaciones_icesi@aneiap.co",
+            usc: "comunicaciones_usc@aneiap.co",
+            librecali: "comunicaciones_librecali@aneiap.co",
+            nacional: "proy_diseno_nacional@aneiap.co"
+        };
 
-      // Restpo de datos para el correo, datos generales
-      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
-      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
-      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-      const destinatario = correoReserva; // Reemplaza con la dirección de correo del destinatario
-      const asunto = `Confirmación de eliminación de reserva - Clave: ${claveReserva}`;
+        // Determinar el correo de destino según la elección del usuario
+        const claveReserva = document.getElementById("clave-evento-reserva").value;
+        const capitulo = document.getElementById("capitulo-organizador-reserva").value;
+        const correoDestino = escogioPublicidadNacional === "si" ? 
+            "proy_diseno_nacional@aneiap.co" : 
+            (bancoCorreos[capitulo.toLowerCase()] || "");
 
-      // Convertir duración a formato horas + minutos
-      const duracionHoras = Math.floor(duracionReserva / 60);
-      const duracionMinutos = duracionReserva % 60;
+        const asunto = `Solicitud de Publicidad para el Evento - "${document.getElementById("nombre-evento-reserva").value}" con clave de reserva terminada en ***********${claveReserva.slice(-4)}`;
 
-      // Convertir minutos a formato militar (HH:MM)
-      const horasMilitar = Math.floor(horaReserva / 60);
-      const minutosMilitar = horaReserva % 60;
-      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
+        // Datos adicionales de la solicitud de publicidad
+        const fechaReserva = document.getElementById("fecha-evento-reserva").value;
+        const horaReserva = document.getElementById("hora-evento-reserva").value;
+        const planEvento = document.getElementById("plan-evento-reserva").value;
+        const modalidadReserva = document.getElementById("modalidad-evento-reserva").value;
+        const nombrePonente = document.getElementById("nombre-ponente-reserva").value;
+        const observacionesReserva = document.getElementById("observaciones-evento-reserva").value || "No se especificaron observaciones.";
 
-      // Mensaje de correo con los datos adicionales
-      const mensaje = `
-        <html>
-          <body>
-            <h1 style="color: #C3002C;">Su eliminación de reserva ha sido confirmada ☑️</h1>
-            <p>Estimado(a) <strong>${nombreOrganizadorReserva}</strong>,</p>
-            <p>Le confirmamos que su registro de reserva para el evento <strong>${nombreEventoReserva}</strong> ha sido procesado correctamente.</p>
-            <p>A continuación, encontrará los detalles mínimos de su reserva eliminada:</p>
-            <ul>
-              <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
-              <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
-              <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
-              <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
-            </ul>
-            <p>Si tiene alguna pregunta, inquietud o necesita asistencia adicional, no dude en <a href="http://wa.me/3002252099" target="_blank">hacer clic aquí</a> para comunicarse con nosotros a través de WhatsApp.</p>
-            <p>Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚</p>
-            <p>Agradecemos su confianza en nosotros, recuerde que este correo es automático y NO debe ser respondido. Esperamos seguir construyendo A.L.M.A. 💙💚</p>
-            <p style="font-style: italic;">Cordialmente,</p>
-            <p style="font-style: italic;">Alessandro Villanueva Cantillo</p>
-            <p style="font-style: italic;">Administrador y creador SIEA</p>
-            </body>
-        </html>
-      `;
+        const observacionesPublicidad = document.getElementById("observaciones-publicidad-reserva").value || "No se especificaron observaciones.";
+        const fotoPonenteURL = document.getElementById("foto-ponente-reserva").value || "";
 
-      Email.send({
-        Host: emailHost,
-        Username: emailUsername,
-        Password: emailPassword,
-        To: `${destinatario}, siea@aneiap.co`, // Usuario que está registrando la reserva
-     //   Cc: "siea@aneiap.co", // Copia a siea para siempre tener registro de correos
-        From: emailUsername, // Debería ser la misma dirección de correo de Username
-        Subject: asunto,
-        Body: mensaje,
-        ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
-      })
-        .then((message) => {
-          console.log("Mensaje de SMTPJS:", message);
+        const ubicacionOPlataforma = modalidadReserva === "virtual" ? 
+            document.getElementById("ubicacion-plataforma-reserva").value || "" : 
+            document.getElementById("lugar-presencial-reserva").value || "";
+        const horaMilitar = `${Math.floor(horaReserva / 60).toString().padStart(2, "00")}:${(horaReserva % 60).toString().padStart(2, "00")}`;
 
-          if (message === "OK") {
-            console.log("Correo enviado con éxito");
-            // Puedes eliminar la alerta ya que no es necesaria
-          } else {
-            console.error("Error al enviar el correo:", message);
-            // Puedes manejar el error de otra manera si lo deseas
-          }
-        })
-        .catch((error) => {
-          console.error("Error en la función de envío de correo:", error);
-          // Puedes manejar el error de otra manera si lo deseas
-        });
+        const params = {
+            tituloCorreo: "Solicitud de Publicidad para el Evento",
+            saludoInicial: "Estimado Comité de Piezas Publicitarias",
+            mensajeIntroduccion: "Solicitamos la realización de publicidad para el siguiente evento:",
+            claveEventoReserva: "***********" + claveReserva.slice(-4),
+            fechaReserva: fechaReserva || "",
+            horaReserva: horaMilitar || "",
+            capitulo: capitulo || "",
+            duracionEvento: `${Math.floor(document.getElementById("duracion-evento-reserva").value / 60)} hora(s) ${document.getElementById("duracion-evento-reserva").value % 60} minuto(s)`,
+            planEvento: planEvento || "",
+            observacionesReserva: observacionesReserva,
+            modalidadReserva: modalidadReserva || "",
+            ubicacionOPlataforma: ubicacionOPlataforma,
+            nombrePonente: nombrePonente || "",
+            mensajePublicidad: "El organizador ha solicitado la realización de la publicidad para el evento.",
+            observacionesPublicidad: `Observaciones de la publicidad: ${observacionesPublicidad}`,
+            fotoPonenteTexto: fotoPonenteURL ? "Link de la foto del ponente: " : "",
+            fotoPonenteURL: fotoPonenteURL,
+            mensajeFinal: "Por favor, revise esta solicitud y proporcione detalles sobre la publicidad requerida.",
+            despedida: "Atentamente, organizadores del espacio.",
+            to_email: correoDestino,
+            //to_email: "avillanuevacantillo@gmail.com",
+            subject: asunto
+        };
+
+        emailjs.send("siea_6zoabdr", "registro_reservas", params)
+            .then((response) => {
+                console.log("Correo de solicitud de publicidad enviado exitosamente", response.status, response.text);
+                alert("Solicitud de publicidad enviada exitosamente.");
+            })
+            .catch((error) => {
+                console.error("Error al enviar la solicitud de publicidad:", error);
+                alert(`Error al enviar la solicitud de publicidad: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`);
+            });
+    }
+
+    function obtenerCorreoRegistrar(correoElectronico, capitulo) {
+        // Banco de correos asociados a cada capítulo
+        const bancoCorreos = {
+            uniguajira: "academico_uniguajira@aneiap.co, interventoria_uniguajira@aneiap.co",
+            unimagdalena: "academico_unimagdalena@aneiap.co",
+            uniatlantico: "academico_uniatlantico@aneiap.co",
+            uninorte: "academico_uninorte@aneiap.co, interventoria_uninorte@aneiap.co",
+            unisimon: "academico_unisimon@aneiap.co, interventoria_unisimon@aneiap.co",
+            cuc: "academico_cuc@aneiap.co, interventoria_cuc@aneiap.co",
+            librequilla: "academico_librequilla@aneiap.co",
+            utb: "academico_utb@aneiap.co",
+            upbmonteria: "academico_upbmonteria@aneiap.co, interventoria_upbmonteria@aneiap.co",
+            unicordoba: "academico_unicordoba@aneiap.co, interventoria_unicordoba@aneiap.co",
+            areandina: "academico_areandina@aneiap.co, interventoria_areandina@aneiap.co",
+            ufps: "academico_ufps@aneiap.co, interventoria_ufps@aneiap.co",
+            unalmed: "academico_unalmed@aneiap.co",
+            udea: "academico_udea@aneiap.co",
+            upbmed: "academico_upbmed@aneiap.co",
+            utp: "academico_utp@aneiap.co, interventoria_utp@aneiap.co",
+            unalma: "academico_unalma@aneiap.co, interventoria_unalma@aneiap.co",
+            udistrital: "academico_udistrital@aneiap.co",
+            unalbog: "academico_unalbog@aneiap.co",
+            univalle: "academico_univalle@aneiap.co",
+            icesi: "academico_icesi@aneiap.co",
+            usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
+            librecali: "academico_librecali@aneiap.co, interventoria_librecali@aneiap.co",
+            nacional: "academico@aneiap.co, interventoria@aneiap.co"
+        };
+
+        // Correo de usuario y correos asociados al capítulo
+        const correosUsuario = correoElectronico ? correoElectronico + ", " : "";
+        const correosCapitulo = bancoCorreos[capitulo.toLowerCase()] || "";
+
+        // Devolver todos los correos concatenados
+        return correosUsuario + correosCapitulo;
+    }
+
+    //ALESSANDRO
+    // Función para enviar el correo de confirmación de eliminación de reserva usando EmailJS
+    function enviarCorreoEliminarEmailJS(claveReservaCreada, nombreOrganizadorReserva, correoReserva, nombreEventoReserva, fechaReserva, horaReserva, duracionReserva, capitulo, planEvento, observacionesReserva, modalidadReserva, ubicacionOPlataforma, nombrePonente) {
+        // Inicializar EmailJS
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+
+        // Obtener los correos de registro asociados al capítulo y al correo del organizador
+        const destinatario = obtenerCorreoRegistrar(correoReserva, capitulo) + ", siea@aneiap.co";
+        // Asunto del correo
+        const asunto = `Confirmación de eliminación de reserva - Clave: ${claveReservaCreada}`;
+
+        // Convertir duración a formato horas + minutos
+        const duracionHoras = Math.floor(duracionReserva / 60);
+        const duracionMinutos = duracionReserva % 60;
+
+        // Convertir minutos a formato militar (HH:MM)
+        const horasMilitar = Math.floor(horaReserva / 60);
+        const minutosMilitar = horaReserva % 60;
+        const horaMilitar = `${horasMilitar.toString().padStart(2, "00")}:${minutosMilitar.toString().padStart(2, "00")}`;
+
+        // Parámetros para la plantilla de confirmación de eliminación en EmailJS
+        const params = {
+            tituloCorreo: "Su eliminación de reserva ha sido confirmada ☑️",
+            saludoInicial: `Estimado(a) ${nombreOrganizadorReserva}`,
+            mensajeIntroduccion: `Le confirmamos que su registro de reserva para el evento "${nombreEventoReserva}" ha sido eliminado correctamente.`,
+            claveEventoReserva: claveReservaCreada || "",
+            fechaReserva: fechaReserva || "",
+            horaReserva: horaMilitar || "",
+            capitulo: capitulo || "",
+            duracionEvento: `${duracionHoras} hora(s) ${duracionMinutos} minuto(s)`,
+            planEvento: planEvento || "",
+            observacionesReserva: observacionesReserva || "No se especificaron observaciones.",
+            modalidadReserva: modalidadReserva || "",
+            ubicacionOPlataforma: ubicacionOPlataforma || "",
+            nombrePonente: nombrePonente || "",
+            mensajePublicidad: "", // Campo vacío
+            observacionesPublicidad: "", // Campo vacío
+            fotoPonenteTexto: "", // Campo vacío
+            fotoPonenteURL: "", // Campo vacío
+            mensajeFinal: "Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚",
+            despedida: "Cordialmente, Alessandro Villanueva Cantillo - Administrador y creador SIEA",
+            to_email: destinatario, // Destinatario con los correos concatenados
+            //to_email: "avillanuevacantillo@gmail.com", // Destinatario de prueba para no enviar los correos de prueba a otras personas.
+            subject: asunto
+        };
+
+        // Enviar correo usando EmailJS con la plantilla "eliminacion_reserva"
+        emailjs.send("siea_6zoabdr", "registro_reservas", params)
+            .then((response) => {
+                console.log("Correo de confirmación de eliminación de reserva enviado exitosamente", response.status, response.text);
+                alert("Confirmación de eliminación de reserva enviada exitosamente.");
+            })
+            .catch((error) => {
+                console.error("Error al enviar el correo de confirmación de eliminación de reserva:", error);
+                alert(`Error al enviar la confirmación de eliminación de reserva: ${error.text || "Error desconocido"}. Por favor, consulta con el administrador.`);
+            });
     }
 
     function calcularIntervalosNuevaFecha(nuevaFecha, nuevaHora, nuevaDuracion) {
@@ -4867,7 +4988,7 @@ button:hover {
         // Realiza el resto de la lógica aquí
       }).catch(function(error) {
         Swal.fire({
-          title: 'Error de Consulta 🎃',
+          title: 'Error de Consulta',
           text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
           icon: 'error',
           confirmButtonText: 'Aceptar',
@@ -4904,7 +5025,7 @@ button:hover {
 
         if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
           Swal.fire({
-            title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)! 🎃',
+            title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)!',
             text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -5018,7 +5139,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
             if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅🎃',
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5035,7 +5156,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
             if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️🎃',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
               text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5052,7 +5173,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
             if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️🎃',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
               text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5069,7 +5190,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
             if (!disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕🎃',
+              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
               text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5091,7 +5212,7 @@ button:hover {
           }
         }).catch(function(error) {
           Swal.fire({
-            title: '¡ERROR DE CONSULTA! 🎃',
+            title: '¡ERROR DE CONSULTA!',
             text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
@@ -5127,7 +5248,7 @@ button:hover {
         // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
         if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
           Swal.fire({
-            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)! 🎃',
+            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)!',
             text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
@@ -5237,7 +5358,7 @@ button:hover {
             // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
             if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅🎃',
+              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
               text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
               icon: 'error',
               confirmButtonText: 'Aceptar',
@@ -5375,7 +5496,7 @@ button:hover {
         // Mostrar una alerta con los campos faltantes
         Swal.fire({
           icon: 'error',
-          title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
+          title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
           text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
           confirmButtonText: 'Aceptar',
           allowOutsideClick: true,
@@ -5392,7 +5513,7 @@ button:hover {
           // El número de celular no cumple con el patrón
           Swal.fire({
             icon: 'error',
-            title: '¡NÚMERO DE CELULAR INVÁLIDO! 🎃',
+            title: '¡NÚMERO DE CELULAR INVÁLIDO!',
             text: 'Estás escribiendo un número de celular no válido, vuelve a rectificar por favor.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -5407,7 +5528,7 @@ button:hover {
           // El correo ANEIAP no cumple con el patrón
           Swal.fire({
             icon: 'error',
-            title: '¡CORREO ANEIAP INVÁLIDO! 🎃',
+            title: '¡CORREO ANEIAP INVÁLIDO!',
             text: 'Escribe bien tu correo ANEIAP. Vuelve y verifica.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -5422,7 +5543,7 @@ button:hover {
           // El link de Drive no cumple con el patrón
           Swal.fire({
             icon: 'error',
-            title: '¡LINK DE DRIVE DE EVIDENCIAS INVÁLIDO! 🎃',
+            title: '¡LINK DE DRIVE DE EVIDENCIAS INVÁLIDO!',
             text: 'El link de Google Drive no es válido. Vuelve y verifica que lo estés diligenciando correctamente.".',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -5437,7 +5558,7 @@ button:hover {
           // Todos los campos son válidos, aquí puedes agregar la lógica para enviar el ticket al servidor o realizar otras acciones.
           // Por ejemplo, puedes enviar una solicitud HTTP para procesar el ticket en el servidor.
           // Aquí puedes agregar tu lógica de envío del ticket.
-          EnviarCorreoTicket(nombre,correo,tipoTicket,explicacion,celular,linkDrive);
+          enviarCorreoTicketEmailJS(nombre,correo,tipoTicket,explicacion,celular,linkDrive);
         }
       }
     }
@@ -5493,7 +5614,7 @@ button:hover {
             console.log("Correo enviado con éxito");
             // Puedes eliminar la alerta ya que no es necesaria
             swal.fire({
-              title: "¡TICKET ENVIADO! 🎃",
+              title: "¡TICKET ENVIADO!",
               text: `El ticket ha sido enviado correctamente a siea@aneiap.co, en máximo DOS (2) días hábiles se te dará respuesta al mismo.`,
               icon: "success",
               confirmButtonText: "OK",
@@ -5546,6 +5667,74 @@ button:hover {
       }
     });*/
 
+    function enviarCorreoTicketEmailJS(nombre, correo, tipoTicket, explicacion, celular, linkDrive) {
+        // Inicializar EmailJS
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+
+        // Asunto del correo
+        const asunto = `GENERACIÓN TICKET - TIPO ${tipoTicket}`;
+
+        // Parámetros para la plantilla de EmailJS
+        const params = {
+            tituloCorreo: `GENERACIÓN DE TICKET - TIPO "${tipoTicket}"`,
+            saludoInicial: "Estimado(a) Administrador,",
+            mensajeIntroduccion: "Se ha generado un nuevo ticket de soporte con la siguiente información:",
+            
+            // Información del ticket
+            TextoNombreCompleto: "    🔹 Nombre Solicitante: ",
+            nombreCompleto: nombre,
+            TextoCorreoElectronico: "   🔹 Correo ANEIAP: ",
+            correoElectronico: correo,
+            TextoTipoTicket: "    🔹 Tipo de Ticket: ",
+            tipoTicket: tipoTicket,
+            TextoExplicacionCaso: "   🔹 Explicación detallada del Caso: ",
+            explicacionCaso: explicacion,
+            TextoNumeroCelular: "   🔹 Número de Celular: ",
+            numeroCelular: celular,
+            TextoLinkDrive: "   🔹 Link de Google Drive con evidencias: ",
+            linkDrive: linkDrive || "No proporcionado.",
+            
+            // Mensaje adicional
+            mensajeFinal: "Por favor, revise y atienda este ticket lo antes posible. ",
+            despedida: "Cordialmente, el equipo de soporte",
+            
+            // Asunto y destinatario
+            subject: asunto,
+            to_email: `siea@aneiap.co, ${correo}` // Enviar copia al solicitante y a siea@aneiap.co
+        };
+
+        // Enviar el correo usando EmailJS
+        emailjs.send("siea_6zoabdr", "otros_correos", params)
+            .then((response) => {
+                console.log("Correo de ticket enviado exitosamente", response.status, response.text);
+                alert("Ticket enviado exitosamente."); // Agregar alerta
+                swal.fire({
+                    title: "¡TICKET ENVIADO!",
+                    text: `El ticket ha sido enviado correctamente a siea@aneiap.co, en máximo DOS (2) días hábiles se te dará respuesta al mismo.`,
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png',
+                    imageWidth: 120,
+                    imageHeight: 235,
+                    imagePosition: 'top-start'
+                });
+            })
+            .catch((error) => {
+                console.error("Error al enviar el correo de ticket:", error);
+                alert(`Error al enviar el ticket: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`); // Agregar alerta de error
+                swal.fire({
+                    title: "Error",
+                    text: "Hubo un error al enviar el ticket. Por favor, inténtelo de nuevo más tarde o contacte con el administrador.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            });
+    }
+
+
     function EjecutarAdmin(event) {
     console.log("Función EjecutarAdmin iniciada.");
 
@@ -5553,7 +5742,7 @@ button:hover {
     if (correoUsuario !== "siea@aneiap.co") {
         console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
         Swal.fire({
-            title: "¿LA CURIOSIDAD MATÓ AL GATO? 🎃🐈‍",
+            title: "¿LA CURIOSIDAD MATÓ AL GATO?",
             text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
             icon: "warning",
             confirmButtonText: "Aceptar",
@@ -5588,7 +5777,7 @@ button:hover {
 
         // Mostrar el Swal con los tres campos y las acciones
         Swal.fire({
-            title: "Actualizar Documento 🎃",
+            title: "Actualizar Documento",
             html: `
                 <label for="busquedaClave">Clave de la reserva</label>
                 <input type="text" id="busquedaClave" class="swal2-input" placeholder="Escribe para buscar...">
@@ -5701,7 +5890,7 @@ button:hover {
       if (!correo || !contrasena) {
         // Campos no diligenciados, mostrar alerta de advertencia
         Swal.fire({
-          title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃",
+          title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!",
           text: "Debes diligenciar tanto correo como contraseña para iniciar sesión.",
           icon: "warning",
           confirmButtonText: "Aceptar",
@@ -5733,7 +5922,7 @@ button:hover {
             if (correo === "academico@aneiap.co" || correo === "formacion_integral@aneiap.co") {
               // Mostrar un desplegable con la lista de todos los capítulos
               Swal.fire({
-                title: 'Selecciona el capítulo sobre el cual deseas consultar información en caso de que vayas a hacerlo: 🎃',
+                title: 'Selecciona el capítulo sobre el cual deseas consultar información en caso de que vayas a hacerlo:',
                 input: 'select',
                 inputOptions: {
                   'uniguajira': 'UNIGUAJIRA',
@@ -5915,7 +6104,7 @@ button:hover {
           } else {
             // Contraseña incorrecta, mostrar alerta de advertencia
             Swal.fire({
-              title: "Contraseña incorrecta 🎃",
+              title: "Contraseña incorrecta",
               text: "No diligenciaste correctamente la contraseña, revísala o consulta al administrador si la olvidaste.",
               icon: "warning",
               confirmButtonText: "Aceptar",
@@ -5932,7 +6121,7 @@ button:hover {
         } else {
           // El documento no existe, el correo no está registrado, mostrar alerta de error
           Swal.fire({
-            title: "Correo no válido. 🎃",
+            title: "Correo no válido.",
             text: "Recuerda que para utilizar esta función de SIEA debes ser DCA o DNA. 🦉💚",
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -5946,7 +6135,7 @@ button:hover {
       }).catch((error) => {
         // Manejar errores, mostrar alerta de error
         Swal.fire({
-          title: "Algo inesperado ha ocurrido con tu inicio de sesión, consulta al administrador o creador de SIEA para más información. 🎃",
+          title: "Algo inesperado ha ocurrido con tu inicio de sesión, consulta al administrador o creador de SIEA para más información.",
           text: error.message,
           icon: "error",
         });
@@ -6027,7 +6216,7 @@ button:hover {
                   pass: newPassword
               }).then(() => {
                   Swal.fire('Actualizado', 'Tu contraseña ha sido actualizada correctamente.', 'success');
-                  return enviarCorreoCambioContraseña(email, newPassword);
+                  return enviarCorreoCambioContraseñaEmailJS(email, newPassword);
               }).catch((error) => {
                   Swal.fire('Error', 'No se pudo actualizar la contraseña.', 'error');
               });
@@ -6111,6 +6300,40 @@ button:hover {
             console.error("Error en la función de envío de correo de confirmación de cambio de contraseña:", error);
         });
     }
+
+    function enviarCorreoCambioContraseñaEmailJS(email, newPassword) {
+        // Inicializar EmailJS
+        emailjs.init("2vq1EFo6RmswvD4Ey");
+
+        // Asunto del correo
+        const asunto = "Confirmación de Cambio de Contraseña";
+
+        // Parámetros para la plantilla de EmailJS
+        const params = {
+            tituloCorreo: "CAMBIO DE CONTRASEÑA CONFIRMADO",
+            saludoInicial: "Estimado usuario,",
+            TextoNuevaContrasena: `Este mensaje confirma que tu contraseña ha sido cambiada exitosamente. Tu nueva contraseña es: `,
+            nuevaContrasena: newPassword,
+            mensajeFinal: "Si no has solicitado este cambio, por favor contacta inmediatamente a siea@aneiap.co o genera un ticket en SIEA.",
+            despedida: "Cordialmente, Administrador SIEA",
+            
+            // Asunto y destinatario
+            subject: asunto,
+            to_email: `${email}, siea@aneiap.co` // Enviar copia al usuario y a siea@aneiap.co
+        };
+
+        // Enviar el correo usando EmailJS
+        emailjs.send("siea_6zoabdr", "otros_correos", params)
+            .then((response) => {
+                console.log("Correo de confirmación de cambio de contraseña enviado exitosamente", response.status, response.text);
+                alert("Correo de confirmación de cambio de contraseña enviado exitosamente."); // Agregar alerta de éxito
+            })
+            .catch((error) => {
+                console.error("Error al enviar el correo de cambio de contraseña:", error);
+                alert(`Error al enviar el correo de cambio de contraseña: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`); // Agregar alerta de error
+            });
+    }
+
 
     // Función para convertir números en emojis
     function numeroAEmoji(numero) {
@@ -6198,7 +6421,7 @@ button:hover {
           // Mostrar una alerta con los campos faltantes
           Swal.fire({
               icon: 'error',
-              title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃',
+              title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
               text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
               confirmButtonText: 'Aceptar',
               allowOutsideClick: true,
@@ -6277,7 +6500,7 @@ button:hover {
             reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
                 // Mostrar mensaje de éxito
                 Swal.fire({
-                  icon: 'success 🎃',
+                  icon: 'success',
                   title: '¡EVALUACIÓN ENVIADA CON ÉXITO!',
                   text: 'Gracias por tu evaluación.',
                   confirmButtonText: 'Aceptar',
@@ -6303,7 +6526,7 @@ button:hover {
                     // Mostrar mensaje de error
                     Swal.fire({
                         icon: 'error',
-                        title: '¡ERROR AL ENVIAR LA EVALUACIÓN! 🎃',
+                        title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
                         text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
                         confirmButtonText: 'Aceptar'
                     });
@@ -6314,7 +6537,7 @@ button:hover {
             // Mostrar mensaje de error
             Swal.fire({
                 icon: 'error',
-                title: '¡ERROR AL OBTENER EL EVENTO! 🎃',
+                title: '¡ERROR AL OBTENER EL EVENTO!',
                 text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
                 confirmButtonText: 'Aceptar'
             });
@@ -6325,7 +6548,7 @@ button:hover {
     // Función para mostrar mensaje de inicio de sesión exitoso con temporizador
     function mostrarMensajeInicioSesion() {
       Swal.fire({
-        title: "Iniciando sesión... 🎃",
+        title: "Iniciando sesión...",
         text: "Espera unos segundos",
         icon: "info",
         timer: 3000, // Tiempo en milisegundos (3 segundos)
@@ -6339,7 +6562,7 @@ button:hover {
         // Después de que pase el temporizador, mostrar el mensaje de inicio de sesión exitoso
         obtenerResponsable(correoUsuario).then((responsable) => {
           Swal.fire({
-            title: "Has iniciado sesión exitosamente. 🦉💚🎃",
+            title: "Has iniciado sesión exitosamente. 🦉💚",
             text: "Disfruta de SIEA " + responsable, // Utiliza el valor del responsable obtenido
             icon: "success",
             confirmButtonText: "Aceptar",
@@ -6387,7 +6610,7 @@ button:hover {
 
         // Mostrar una alerta con los campos faltantes
         Swal.fire({
-            title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS! 🎃",
+            title: "¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!",
             text: "Te falta por diligenciar los siguientes campos:\n" + camposFaltantes.join('\n'),
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -6402,7 +6625,7 @@ button:hover {
     // Validación de datos
     if (isNaN(parseInt(totalAsistentes))) {
         Swal.fire({
-            title: "¡Diligiencia bien el total de asistentes! 🎃",
+            title: "¡Diligiencia bien el total de asistentes!",
             text: "El total de asistentes debe ser un número entero sin decimales.",
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -6419,7 +6642,7 @@ button:hover {
     var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
     if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
         Swal.fire({
-            title: "¡Error! 🎃",
+            title: "¡Error!",
             text: "El enlace de evidencia debe ser un enlace válido de Google Drive.",
             icon: "error",
             confirmButtonText: "Aceptar",
@@ -6445,7 +6668,7 @@ button:hover {
                     areaTrabajo: areaTrabajo
                 }).then(function() {
                     Swal.fire({
-                      title: "¡Se ha actualizado la información con éxito! 🎃",
+                      title: "¡Se ha actualizado la información con éxito!",
                       text: "La información del espacio '" + nombreEspacio + "' se ha actualizado correctamente.",
                       icon: "success",
                       confirmButtonText: 'Aceptar',
@@ -6460,7 +6683,7 @@ button:hover {
                 }).catch(function(error) {
                     console.error("Error al actualizar el espacio:", error);
                     Swal.fire({
-                        title: "¡Error! 🎃",
+                        title: "¡Error!",
                         text: "Ha ocurrido un error al actualizar la información del espacio. Por favor, inténtalo de nuevo o comunícate con el administrador.",
                         icon: "error",
                         confirmButtonText: "Aceptar"
@@ -6471,7 +6694,7 @@ button:hover {
         .catch(function(error) {
             console.error("Error al obtener el espacio:", error);
             Swal.fire({
-                title: "¡Error! 🎃",
+                title: "¡Error!",
                 text: "Ha ocurrido un error al obtener la información del espacio. Por favor, inténtalo de nuevo o comunícate con el administrador.",
                 icon: "error",
                 confirmButtonText: "Aceptar"
@@ -6485,7 +6708,7 @@ button:hover {
         const espacioSeleccionado = document.getElementById("nombre-espacio-actualizar").value;
         if (!espacioSeleccionado) {
             Swal.fire({
-                title: '¡Espacio no seleccionado! 🎃',
+                title: '¡Espacio no seleccionado!',
                 text: 'Por favor selecciona un espacio antes de continuar.',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar'
@@ -6517,7 +6740,7 @@ button:hover {
                 const capitulosRestantes = 4 - capitulosExistentes.length;
 
                 Swal.fire({
-                    title: 'Edición de Información 🎃',
+                    title: 'Edición de Información',
                     text: '¿Deseas editar información del ponente o añadir un capítulo organizador?',
                     icon: 'question',
                     showCancelButton: true,
@@ -6530,7 +6753,7 @@ button:hover {
                         // Comprobar si ya se ha alcanzado el máximo de capítulos
                         if (capitulosRestantes <= 0) {
                             Swal.fire({
-                                title: 'Máximo de capítulos alcanzado 🎃',
+                                title: 'Máximo de capítulos alcanzado',
                                 text: 'Este espacio ya tiene 4 capítulos organizadores, que es el límite, por lo que no podrás añadirle alguno adicional.',
                                 icon: 'info',
                                 confirmButtonText: 'Aceptar'
@@ -6569,7 +6792,7 @@ button:hover {
 
                         // Mostrar el Swal con la estructura personalizada
                         Swal.fire({
-                            title: 'Selecciona capítulos adicionales 🎃',
+                            title: 'Selecciona capítulos adicionales',
                             html: seleccionCapitulosHTML,
                             showCancelButton: true,
                             confirmButtonText: 'Añadir capítulo',
@@ -6603,7 +6826,7 @@ button:hover {
                                 });
                             } else if (result.isConfirmed) {
                                 Swal.fire({
-                                    title: 'No se seleccionó ningún capítulo 🎃',
+                                    title: 'No se seleccionó ningún capítulo',
                                     text: 'No se realizó ninguna actualización porque no seleccionaste ningún capítulo nuevo.',
                                     icon: 'info',
                                     confirmButtonText: 'Aceptar'
@@ -6618,7 +6841,7 @@ button:hover {
 
                         // Crear el formulario con los campos del ponente en Swal
                         Swal.fire({
-                            title: 'Actualizar información del ponente 🎃',
+                            title: 'Actualizar información del ponente',
                             html: `
                                 <label for="nombrePonente">Nombre del ponente:</label>
                                 <input type="text" id="nombrePonente" class="swal2-input" placeholder="Nombre del ponente" value="${nombreActual}">
@@ -6679,7 +6902,7 @@ button:hover {
                 });
             } else {
                 Swal.fire({
-                    title: 'Espacio no encontrado 🎃',
+                    title: 'Espacio no encontrado',
                     text: 'No se encontró información para el espacio seleccionado en el rango de fechas especificado.',
                     icon: 'warning',
                     confirmButtonText: 'Aceptar'
@@ -6690,7 +6913,6 @@ button:hover {
             mostrarMensajeFallaTecnica();
         });
     }
-
 
     // Función para alternar la visibilidad de la tabla resumen y cambiar el texto del botón
     function toggleTablaResumen() {
@@ -7013,21 +7235,15 @@ button:hover {
       var tabla = document.getElementById("tabla-evaluaciones");
       var boton = document.getElementById("toggleEvaluaciones");
       var estadoTabla = document.getElementById("estadoTablaEvaluaciones");
-      boton.style.color = "black"; // Establece el color negro del texto en el botón
-      estadoTabla.style.color = "black"; // Establece el color negro del texto en el mensaje de estado
       if (tabla.style.display === "none") {
         tabla.style.display = "block";
         boton.textContent = "Ocultar tabla de evaluaciones";
         estadoTabla.style.display = "none"; // Oculta el mensaje de estado
-
         consultarEvaluaciones();
       } else {
         tabla.style.display = "none";
         boton.textContent = "Mostrar tabla de evaluaciones";
         estadoTabla.style.display = "block"; // Muestra el mensaje de estado
-        boton.style.color = "black"; // Establece el color negro del texto en el botón
-    estadoTabla.style.color = "black"; // Establece el color negro del texto en el mensaje de estado
-
       }
     }
 
@@ -7254,7 +7470,7 @@ button:hover {
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
             icon: 'error',
-            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME! 🎃',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
             text: 'Debe iniciar sesión como DCA para poder generar el informe.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -7270,7 +7486,7 @@ button:hover {
 
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
-          title: 'Generando informe 🎃',
+          title: 'Generando informe',
           html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
           timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
           showConfirmButton: false,
@@ -7393,7 +7609,7 @@ button:hover {
         // Avisar que ya se generó el informe y que revise en descargas
 
         Swal.fire({
-            title: 'Informe Generado 🎃',
+            title: 'Informe Generado',
             text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
             icon: 'success',
             showConfirmButton: true,
@@ -7728,7 +7944,7 @@ button:hover {
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
             icon: 'error',
-            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME! 🎃',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
             text: 'Debe iniciar sesión como DCA para poder generar el informe.',
             confirmButtonText: 'Aceptar',
             allowOutsideClick: true,
@@ -7744,7 +7960,7 @@ button:hover {
 
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
-          title: 'Generando informe 🎃',
+          title: 'Generando informe',
           html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
           timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
           showConfirmButton: false,
@@ -7820,7 +8036,7 @@ button:hover {
 
         // Avisar que ya se generó el informe y que revise en descargas
         Swal.fire({
-            title: 'Informe Generado 🎃',
+            title: 'Informe Generado',
             text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
             icon: 'success',
             showConfirmButton: true,
