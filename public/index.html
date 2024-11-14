@@ -16,6 +16,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
   <!-- Agrega el bloque del SDK de Firebase Cloud Firestore -->
   <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <!-- Agrega la biblioteca para enviar correos en Email.js -->  
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <!-- Agrega la biblioteca para enviar correos por API Gmail -->  
@@ -272,6 +273,16 @@
       font-size: 18px;
       margin-bottom: 10px; /* Añadido para separar el botón de los campos */
       width: 353px; /* Ocupar el ancho del contenedor */
+    }
+    .button-descargas {
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 173px; /* Ocupar el ancho del contenedor */
     }
     .button-consultar-disponibilidad {
       background-color: rgb(0, 4, 255);
@@ -628,8 +639,10 @@
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
-    <button type="button" class="button-generar-informe" onclick="generarInformePDF(event)">Generar Informe FI</button>
-    <button type="button" class="button-generar-informe" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white;">Generar Informe IE</button>
+    <button type="button" class="button-descargas" onclick="generarInformePDF(event)" style="background-color: #67dd19; color: white;">Generar Informe FI</button>
+    <button type="button" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white;">Generar Informe IE</button>
+    <button type="button" class="button-descargas" onclick="generarAgendaFormativa(event)" style="background-color: #006d37; color: white;">Agenda Formativa</button>
+
     <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
   </form>
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
@@ -8423,6 +8436,176 @@
         // Devolver el color del texto a negro para evitar afectar el resto del PDF
         pdf.setTextColor(0, 0, 0); // Color negro
     }
+
+    async function generarAgendaFormativa() {
+        const categorias = [
+            { nombre: "Académico", color: "#4CAF50" },
+            { nombre: "Comunicaciones", color: "#2196F3" },
+            { nombre: "Desarrollo", color: "#FFC107" },
+            { nombre: "Finanzas", color: "#9C27B0" },
+            { nombre: "Mercadeo", color: "#F44336" },
+            { nombre: "Habilidades duras", color: "#FF5722" },
+            { nombre: "Habilidades blandas", color: "#607D8B" },
+            { nombre: "Conocimiento ANEIAP", color: "#388E3C" },
+            { nombre: "TODAS", color: "#3F51B5" }
+        ];
+
+        const { value: seleccion } = await Swal.fire({
+            title: '¿Qué categoría desea consultar en la agenda formativa?',
+            html: `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: left;">
+                    ${categorias.slice(0, 8).map((cat, index) => `
+                        <label style="color: ${cat.color}; font-weight: bold;">
+                            ${cat.nombre}
+                            <input type="radio" id="categoria${index}" name="categoria" value="${cat.nombre}" style="margin-left: 10px;">
+                        </label>
+                    `).join('')}
+                    <label style="grid-column: span 2; text-align: center; color: ${categorias[8].color}; font-weight: bold;">
+                        ${categorias[8].nombre}
+                        <input type="radio" id="categoria8" name="categoria" value="${categorias[8].nombre}" style="margin-left: 10px;">
+                    </label>
+                </div>
+            `,
+            focusConfirm: false,
+            showCancelButton: false,
+            confirmButtonText: 'Consultar',
+            width: '700px',
+            preConfirm: () => {
+                const selectedRadio = document.querySelector('input[name="categoria"]:checked');
+                return selectedRadio ? selectedRadio.value : null;
+            }
+        });
+
+        if (!seleccion) return;
+
+        // Obtener datos desde Firebase según la selección del usuario
+        const dbRef = firebase.firestore().collection("agendaformativa");
+        let agendaData = [];
+
+        if (seleccion === "TODAS") {
+            const docNamesMap = {
+                academico: "Académico",
+                comunicaciones: "Comunicaciones",
+                desarrollo: "Desarrollo",
+                finanzas: "Finanzas",
+                mercadeo: "Mercadeo",
+                habilidadesduras: "Habilidades duras",
+                habilidadesblandas: "Habilidades blandas",
+                conocimientoaneiap: "Conocimiento ANEIAP"
+            };
+
+            const docNames = Object.keys(docNamesMap); // Lista de nombres limpios
+
+            for (const docName of docNames) {
+                const docRef = dbRef.doc(docName);
+                const doc = await docRef.get();
+
+                // Asumimos que los documentos siempre existen, por lo que no se verifica la existencia.
+                const data = doc.data();
+                agendaData.push({
+                    categoria: docNamesMap[docName], // Usa el nombre específico del mapeo
+                    valorAgregado: data.espacios_valoragregado || [],
+                    entrenamientoInterno: data.espacios_entrenamientointerno || []
+                });
+            }
+        } else {
+            const docRef = dbRef.doc(normalizarNombre(seleccion));
+            const doc = await docRef.get();
+            if (doc.exists) {
+                const data = doc.data();
+                agendaData.push({
+                    categoria: seleccion,
+                    valorAgregado: data.espacios_valoragregado || [],
+                    entrenamientoInterno: data.espacios_entrenamientointerno || []
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se encontraron datos para la categoría seleccionada.',
+                });
+                return;
+            }
+        }
+
+        // Construir la tabla de resultados
+        const tableContent = agendaData.map(({ categoria, valorAgregado, entrenamientoInterno }) => `
+            <h3 style="color: ${categorias.find(cat => cat.nombre === categoria).color};">${categoria}</h3>
+            <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr>
+                        <th style="border-bottom: 2px solid #ddd; padding: 8px; text-align: left; width: 40%;">Nombre Espacio</th>
+                        ${seleccion === "TODAS" ? '<th style="border-bottom: 2px solid #ddd; padding: 8px; text-align: left; width: 30%;">Área de Trabajo</th>' : ''}
+                        <th style="border-bottom: 2px solid #ddd; padding: 8px; text-align: left; width: 30%;">Tipo Espacio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${valorAgregado.map(espacio => `
+                        <tr>
+                            <td style="border-bottom: 1px solid #ddd; padding: 8px; word-wrap: break-word;">${espacio}</td>
+                            ${seleccion === "TODAS" ? `<td style="border-bottom: 1px solid #ddd; padding: 8px; word-wrap: break-word;">${categoria}</td>` : ''}
+                            <td style="border-bottom: 1px solid #ddd; padding: 8px; word-wrap: break-word;">Valor agregado</td>
+                        </tr>
+                    `).join('')}
+                    ${entrenamientoInterno.map(espacio => `
+                        <tr>
+                            <td style="border-bottom: 1px solid #ddd; padding: 8px; word-wrap: break-word;">${espacio}</td>
+                            ${seleccion === "TODAS" ? `<td style="border-bottom: 1px solid #ddd; padding: 8px; word-wrap: break-word;">${categoria}</td>` : ''}
+                            <td style="border-bottom: 1px solid #ddd; padding: 8px; word-wrap: break-word;">Entrenamiento interno</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `).join('');
+
+
+        // Mostrar los datos en un nuevo modal con búsqueda en tiempo real
+        Swal.fire({
+            title: `Agenda Formativa - ${seleccion}`,
+            html: `
+                <input type="text" id="searchInput" placeholder="Buscar un espacio..." style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd;">
+                <div id="tableContainer">${tableContent}</div>
+            `,
+            width: '1000px',
+            showCloseButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Volver',
+            confirmButtonText: 'Salir',
+            didOpen: () => {
+                const searchInput = document.getElementById('searchInput');
+                const tableContainer = document.getElementById('tableContainer');
+                
+                searchInput.addEventListener('input', () => {
+                    const filter = searchInput.value.toLowerCase();
+                    const rows = tableContainer.querySelectorAll('tbody tr');
+                    
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(filter) ? '' : 'none';
+                    });
+                });
+            }
+        }).then((result) => {
+            if (result.isDismissed) {
+                // Volver a la interfaz de selección de categoría
+                generarAgendaFormativa();
+            }
+        });
+    }
+
+    // Función para capitalizar el área de trabajo
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    // Función para limpiar el nombre de la opción y tomar el documento de la agenda formativa
+    function normalizarNombre(nombre) {
+        return nombre
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "") // Remueve tildes
+            .replace(/\s+/g, "") // Remueve espacios
+            .toLowerCase();
+    }
+
 
   </script>
 
