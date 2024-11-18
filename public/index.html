@@ -684,7 +684,7 @@
                 <div class="third">
                     <!-- CAMPO PARA COLOCAR EL CORREO ANEIAP (DEBE TERMINAR EN @ANEIAP.CO) -->
                     <label for="correo-ticket">Correo *</label>
-                    <input type="text" id="correo-ticket" name="correo" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
+                    <input type="text" id="correo-ticket" name="correo-ticket" required placeholder="Tu correo ANEIAP para el caso" pattern="^[a-zA-Z0-9._%+-]+@aneiap\.co$">
                 </div>
                 <div class="third">
                     <!-- CAMPO PARA EL TIPO DEL TICKET (ES UNA LISTA DESPLEGABLE) -->
@@ -5571,6 +5571,7 @@
           // Todos los campos son válidos, aquí puedes agregar la lógica para enviar el ticket al servidor o realizar otras acciones.
           // Por ejemplo, puedes enviar una solicitud HTTP para procesar el ticket en el servidor.
           // Aquí puedes agregar tu lógica de envío del ticket.
+          console.log("Correo ticket: " + correo)
           enviarCorreoTicketEmailJS(nombre,correo,tipoTicket,explicacion,celular,linkDrive);
         }
       }
@@ -5678,18 +5679,19 @@
           }
         });
       }
-    });
-    
+    });*/
+
     function enviarCorreoTicketEmailJS(nombre, correo, tipoTicket, explicacion, celular, linkDrive) {
         // Inicializar EmailJS
         emailjs.init("2vq1EFo6RmswvD4Ey");
-    
+
         // Asunto del correo
         const asunto = `GENERACIÓN TICKET - TIPO ${tipoTicket}`;
-    
+
         // Crear la constante para los correos destinatarios
-        const correosDestinatarios = `siea@aneiap.co, ${correo}`;
-    
+        const correosDestinatarios = `${correo}, siea@aneiap.co`;
+        console.log("correosDestinatarios: " + correosDestinatarios)
+
         // Parámetros para la plantilla de EmailJS
         const params = {
             tituloCorreo: `GENERACIÓN DE TICKET - TIPO "${tipoTicket}"`,
@@ -5718,37 +5720,6 @@
             subject: asunto,
             to_email: correosDestinatarios // Usar la constante para los correos destinatarios
         };
-    
-        // Enviar el correo usando EmailJS
-        emailjs.send("siea_6zoabdr", "otros_correos", params)
-            .then((response) => {
-                console.log("Correo de ticket enviado exitosamente", response.status, response.text);
-                alert("Ticket enviado exitosamente."); // Agregar alerta
-                swal.fire({
-                    title: "¡TICKET ENVIADO!",
-                    text: `El ticket ha sido enviado correctamente a siea@aneiap.co, en máximo DOS (2) días hábiles se te dará respuesta al mismo.`,
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    allowOutsideClick: true,
-                    backdrop: true,
-                    allowEscapeKey: true,
-                    imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png',
-                    imageWidth: 120,
-                    imageHeight: 235,
-                    imagePosition: 'top-start'
-                });
-            })
-            .catch((error) => {
-                console.error("Error al enviar el correo de ticket:", error);
-                alert(`Error al enviar el ticket: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`); // Agregar alerta de error
-                swal.fire({
-                    title: "Error",
-                    text: "Hubo un error al enviar el ticket. Por favor, inténtelo de nuevo más tarde o contacte con el administrador.",
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
-            });
-    }
 
         // Enviar el correo usando EmailJS
         emailjs.send("siea_6zoabdr", "otros_correos", params)
