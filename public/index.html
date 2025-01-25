@@ -639,8 +639,8 @@
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
-    <button type="button" class="button-descargas" onclick="generarInformePDF(event)" style="background-color: #67dd19; color: white;">Generar Informe FI</button>
-    <button type="button" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white;">Generar Informe IE</button>
+    <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformePDF(event)" style="background-color: #67dd19; color: white; display: none;">Generar Informe FI</button>
+    <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white; display: none;">Generar Informe IE</button>
     <button type="button" class="button-descargas" onclick="generarAgendaFormativa(event)" style="background-color: #006d37; color: white;">Agenda Formativa</button>
 
     <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
@@ -5991,6 +5991,9 @@
                 var fin = "@aneiap.co";
                 var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
                 capituloUsuario = capitulo;
+                // Mostrar botones para generar informes
+                document.getElementById("btnInformeFI").style.display = "inline-block";
+                document.getElementById("btnInformeIE").style.display = "inline-block";
               } else {
                 // Si el correo no empieza por "academico_", asignar "nacional"
                 capituloUsuario = "nacional";
@@ -6002,6 +6005,24 @@
               // Vaciar los campos de correo y contraseña
               document.getElementById("correo").value = "";
               document.getElementById("contrasena").value = "";
+            } else if (correo.startsWith("mercadeo_") || correo === "crm@aneiap.co") {
+              if (correo.startsWith("mercadeo_")) {
+                // Si el correo empieza por "academico_", extraer el nombre del capítulo y asignarlo a capituloUsuario
+                var inicio = "mercadeo_";
+                var fin = "@aneiap.co";
+                var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
+                capituloUsuario = capitulo;
+              } else {
+                // Si el correo no empieza por "academico_", asignar "nacional"
+                capituloUsuario = "nacional";
+              }
+              // Mostrar mensaje de inicio de sesión exitoso
+              mostrarMensajeInicioSesion();
+              // Vaciar los campos de correo y contraseña
+              document.getElementById("correo").value = "";
+              document.getElementById("contrasena").value = "";
+              desplegarInterfazCRM();
+              return;
             } else {
               // Si no se cumple ninguna de las condiciones anteriores, asignar valor "general" a capituloUsuario
               capituloUsuario = "nacional";
@@ -7483,6 +7504,675 @@
           console.log("Error obteniendo eventos:", error);
       });
     }
+ 
+    async function desplegarInterfazCRM() {
+        // Conectar con la colección de Firebase
+        const eventosRef = firebase.firestore().collection("crmeventos");
+        const consulta = eventosRef.where("capitulosOrganizadores", "array-contains", capituloUsuario);
+
+        
+        // Función para mostrar el swal inicial
+        const mostrarInterfazInicial = () => {
+            Swal.fire({
+            title: "Bienvenido al CRM de Eventos",
+            html: `
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                <button id="opcionConsultarEditar" style="background-color: #ffcccc; color: black; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Consultar/Editar Información de Eventos</button>
+                <button id="opcionRegistrar" style="background-color: #ffd700; color: black; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Registrar Nuevo Evento</button>
+                <button id="opcionConsultarRespuestas" style="background-color: #d4edda; color: black; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Consultar Respuestas</button>
+                <button id="opcionGenerarInforme" style="background-color: red; color: white; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Generar Informe CRM</button>
+                </div>
+            `,
+            showConfirmButton: false,
+            didRender: () => {
+                document.getElementById("opcionConsultarEditar").addEventListener("click", () => consultarEditarEvento());
+                document.getElementById("opcionRegistrar").addEventListener("click", () => registrarNuevoEvento());
+                document.getElementById("opcionConsultarRespuestas").addEventListener("click", () => consultarRespuestasEvento());
+                document.getElementById("opcionGenerarInforme").addEventListener("click", () => generarInformeCRM());
+            },
+            });
+        };
+        
+        // Función para consultar y editar un evento
+        const consultarEditarEvento = async () => {
+            const eventosSnapshot = await consulta.get();
+            const eventos = eventosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            if (eventos.length === 0) {
+            Swal.fire("Sin eventos", `No se encontraron eventos para el capítulo ${capituloUsuario.toUpperCase()}.`, "info");
+            return;
+            }
+
+            const opcionesEventos = eventos.map(evento => `
+            <option value="${evento.id}">
+                ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}
+            </option>`
+            ).join("");
+
+            Swal.fire({
+            title: `Eventos del capítulo ${capituloUsuario.toUpperCase()}`,
+            html: `
+                <label for="selectEvento" style="font-size: 14px; font-weight: bold;">Selecciona un evento:</label>
+                <select id="selectEvento" style="width: 100%; padding: 8px; border-radius: 4px;">
+                ${opcionesEventos}
+                </select>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "Editar",
+            cancelButtonText: "Cancelar",
+            preConfirm: () => {
+                const eventoSeleccionadoId = document.getElementById("selectEvento").value;
+                return eventos.find(evento => evento.id === eventoSeleccionadoId);
+            }
+            }).then(resultado => {
+            if (resultado.isConfirmed && resultado.value) {
+                editarEvento(resultado.value);
+            } else {
+                mostrarInterfazInicial();
+            }
+            });
+        };
+
+        // Función para editar un evento
+        const editarEvento = (evento) => {
+            const capitulos = evento.capitulosOrganizadores || [];
+            let capitulosHTML = "";
+
+            if (capitulos.length === 1) {
+            capitulosHTML = `
+                <div style="display: flex; flex-direction: column;">
+                <label>Capítulo Organizador:</label>
+                <input type="text" value="${capitulos[0]}" disabled style="width: 100%; padding: 8px; border-radius: 4px; background: #f5f5f5;">
+                </div>`;
+            } else {
+            const flexBasis = capitulos.length === 2 ? "48%" : capitulos.length === 3 ? "31%" : "23%";
+            capitulosHTML = `
+                <div style="display: flex; flex-direction: column;">
+                <label>Capítulos Organizadores:</label>
+                <div style="display: flex; gap: 10px;">
+                    ${capitulos.map(capitulo => `
+                    <div style="flex-basis: ${flexBasis};">
+                        <input type="text" value="${capitulo}" disabled style="width: 100%; padding: 8px; border-radius: 4px; background: #f5f5f5;">
+                    </div>`).join("")}
+                </div>
+                </div>`;
+            }
+
+            Swal.fire({
+            title: `Editando evento: ${evento.nombrecrmEvento}`,
+            html: `
+                <div style="border-bottom: 3px solid green; margin-bottom: 15px;"></div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="coordGeneral1">Coordinador General 1:</label>
+                    <input type="text" id="coordGeneral1" value="${evento.coordGeneral1 || ""}" placeholder="Coordinador General 1" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorCoordGeneral1" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="coordGeneral2">Coordinador General 2:</label>
+                    <input type="text" id="coordGeneral2" value="${evento.coordGeneral2 || ""}" placeholder="Coordinador General 2" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="coordMercadeo">Coordinador de Mercadeo:</label>
+                    <input type="text" id="coordMercadeo" value="${evento.coordMercadeo || ""}" placeholder="Coordinador Mercadeo" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorCoordMercadeo" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="telefonoCoordMercadeo">Teléfono del Coordinador:</label>
+                    <input type="text" id="telefonoCoordMercadeo" value="${evento.telefonoCoordMercadeo || ""}" placeholder="Teléfono Coordinador" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorTelefonoCoordMercadeo" style="color: red; font-size: 12px; display: none;">Debe ser un número válido de 10 dígitos.</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="fechaEvento">Fecha del Evento:</label>
+                    <input type="date" id="fechaEvento" value="${evento.fechaEvento || ""}" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="duracionDias">Duración (días):</label>
+                    <input type="number" id="duracionDias" value="${evento.duracionDias || 1}" placeholder="Duración (días)" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorDuracionDias" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio y debe ser mayor a 0.</span>
+                    </div>
+                </div>
+                ${capitulosHTML}
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="totalAsistentes">Total de Asistentes:</label>
+                    <input type="number" id="totalAsistentes" value="${evento.totalAsistentes || 0}" placeholder="Total Asistentes" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorTotalAsistentes" style="color: red; font-size: 12px; display: none;">Debe ser mayor que 0.</span>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="respuestasObtenidas">Respuestas (#):</label>
+                    <input type="number" id="respuestasObtenidas" value="${(evento.datoscrm1?.[4] || 0)}" disabled style="width: 100%; padding: 8px; border-radius: 4px; background: #f5f5f5;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="muestraMinima">Muestra Mínima:</label>
+                    <input type="text" id="muestraMinima" value="${calcularMuestraMinima(evento.totalAsistentes || 0)}" disabled style="width: 100%; padding: 8px; border-radius: 4px; background: #f5f5f5;">
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                    <label for="cumplimientoMuestra">Cumplimiento (%):</label>
+                    <input type="text" id="cumplimientoMuestra" value="${calcularCumplimientoMuestra(evento.datoscrm1?.[4] || 0, calcularMuestraMinima(evento.totalAsistentes || 0))}" disabled style="width: 100%; padding: 8px; border-radius: 4px; background: #f5f5f5;">
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label for="nombrecrmEvento">Nombre del Evento:</label>
+                    <input type="text" id="nombrecrmEvento" value="${evento.nombrecrmEvento || ""}" placeholder="Nombre del Evento" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorNombreEvento" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                </div>
+                </div>
+                <div style="border-bottom: 3px solid blue; margin-top: 15px; margin-bottom: 15px;"></div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "Actualizar",
+            cancelButtonText: "Cancelar",
+            didOpen: () => {
+                // Listener para actualizar muestra mínima y cumplimiento dinámicamente
+                document.getElementById("totalAsistentes").addEventListener("input", () => {
+                // Obtener el nuevo valor de total asistentes
+                const nuevosAsistentes = parseInt(document.getElementById("totalAsistentes").value.trim(), 10) || 0;
+
+                // Calcular la nueva muestra mínima
+                const nuevaMuestraMinima = calcularMuestraMinima(nuevosAsistentes);
+
+                // Obtener respuestas obtenidas actuales
+                const respuestasObtenidas = parseInt(document.getElementById("respuestasObtenidas").value.trim(), 10) || 0;
+
+                // Calcular el nuevo cumplimiento
+                const nuevoCumplimiento = calcularCumplimientoMuestra(respuestasObtenidas, nuevaMuestraMinima);
+
+                // Actualizar los valores en la interfaz
+                document.getElementById("muestraMinima").value = nuevaMuestraMinima;
+                document.getElementById("cumplimientoMuestra").value = `${nuevoCumplimiento}`;
+                });
+            },
+            preConfirm: () => {
+                let isValid = true;
+
+                // Validar coordinador general 1
+                const coordGeneral1 = document.getElementById("coordGeneral1").value.trim();
+                if (!coordGeneral1) {
+                document.getElementById("errorCoordGeneral1").style.display = "block";
+                isValid = false;
+                } else {
+                document.getElementById("errorCoordGeneral1").style.display = "none";
+                }
+                console.log("coordGeneral1: " + coordGeneral1);
+
+                // Validar coordinador general 2
+                const coordGeneral2 = document.getElementById("coordGeneral2").value.trim();
+                console.log("coordGeneral2: " + coordGeneral2);
+
+                // Validar coordinador de mercadeo
+                const coordMercadeo = document.getElementById("coordMercadeo").value.trim();
+                if (!coordMercadeo) {
+                document.getElementById("errorCoordMercadeo").style.display = "block";
+                isValid = false;
+                } else {
+                document.getElementById("errorCoordMercadeo").style.display = "none";
+                }
+                console.log("coordMercadeo: " + coordMercadeo);
+
+                // Validar teléfono coordinador de mercadeo
+                const telefonoCoordMercadeo = document.getElementById("telefonoCoordMercadeo").value.trim();
+                if (!telefonoCoordMercadeo) {
+                document.getElementById("errorTelefonoCoordMercadeo").style.display = "block";
+                isValid = false;
+                } else {
+                document.getElementById("errorTelefonoCoordMercadeo").style.display = "none";
+                }
+                console.log("telefonoCoordMercadeo: " + telefonoCoordMercadeo);
+
+                // Validar duración días
+                const duracionDias = parseInt(document.getElementById("duracionDias").value.trim(), 10);
+                if (isNaN(duracionDias) || duracionDias <= 0) {
+                document.getElementById("errorDuracionDias").style.display = "block";
+                isValid = false;
+                } else {
+                document.getElementById("errorDuracionDias").style.display = "none";
+                }
+                console.log("duracionDias: " + duracionDias);
+
+                // Validar total asistentes
+                const totalAsistentes = parseInt(document.getElementById("totalAsistentes").value.trim(), 10);
+                if (isNaN(totalAsistentes) || totalAsistentes <= 0) {
+                document.getElementById("errorTotalAsistentes").style.display = "block";
+                isValid = false;
+                } else {
+                document.getElementById("errorTotalAsistentes").style.display = "none";
+                }
+                console.log("totalAsistentes: " + totalAsistentes);
+
+                // Validar nombre del evento
+                const nombreEvento = document.getElementById("nombrecrmEvento").value.trim();
+                if (!nombreEvento) {
+                document.getElementById("errorNombreEvento").style.display = "block";
+                isValid = false;
+                } else {
+                document.getElementById("errorNombreEvento").style.display = "none";
+                }
+                console.log("nombreEvento: " + nombreEvento);
+
+                if (!isValid) {
+                return false;
+                }
+
+                return {
+                coordGeneral1,
+                coordGeneral2: document.getElementById("coordGeneral2").value.trim(),
+                coordMercadeo: document.getElementById("coordMercadeo").value.trim(),
+                telefonoCoordMercadeo: document.getElementById("telefonoCoordMercadeo").value.trim(),
+                duracionDias,
+                totalAsistentes,
+                muestraMinima: parseInt(document.getElementById("muestraMinima").value.trim(), 10), // Se asegura que sea un número
+                cumplimientoMuestra: parseFloat(document.getElementById("cumplimientoMuestra").value.trim().replace("%", "")), // Convierte a decimal eliminando el símbolo de porcentaje
+                nombrecrmEvento: nombreEvento
+                };
+            }
+            }).then(resultado => {
+            if (resultado.isConfirmed) {
+                const datos = resultado.value;
+                eventosRef.doc(evento.id).update(datos).then(() => {
+                Swal.fire("Actualizado", "Los datos del evento se han actualizado correctamente.", "success");
+                }).catch(error => {
+                Swal.fire("Error", "No se pudo actualizar, consulta con el administrador: " + error.message, "error");
+                });
+            } else {
+                consultarEditarEvento();
+            }
+            });
+        };
+
+        // Función para calcular la muestra mínima
+        const calcularMuestraMinima = (totalAsistentes) => {
+            if (totalAsistentes <= 0) return 0;
+            const z = 1.96; // Nivel de confianza 95%
+            const p = 0.5; // Proporción esperada
+            const e = 0.05; // Margen de error
+            return Math.ceil((Math.pow(z, 2) * p * (1 - p)) / Math.pow(e, 2) / (1 + ((Math.pow(z, 2) * p * (1 - p)) / (Math.pow(e, 2) * totalAsistentes))));
+        };
+
+        // Función para calcular el porcentaje de cumplimiento de la muestra
+        const calcularCumplimientoMuestra = (respuestasObtenidas, muestraMinima) => {
+            if (muestraMinima <= 0) return "0.0%";
+            return ((respuestasObtenidas / muestraMinima) * 100).toFixed(1) + "%";
+        };
+
+        // Mostrar la interfaz inicial
+        mostrarInterfazInicial();
+
+        // Función para consultar respuestas de un evento
+        const consultarRespuestasEvento = async () => {
+            const eventosSnapshot = await consulta.get();
+            const eventos = eventosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            if (eventos.length === 0) {
+                Swal.fire("Sin eventos", `No se encontraron eventos para el capítulo ${capituloUsuario.toUpperCase()}.`, "info");
+                return;
+            }
+
+            const opcionesEventos = eventos.map(evento => `
+                <option value="${evento.id}">
+                    ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}
+                </option>`
+            ).join("");
+
+            Swal.fire({
+                title: `Consultar Respuestas - Eventos del capítulo ${capituloUsuario.toUpperCase()}`,
+                html: `
+                    <label for="selectEvento" style="font-size: 14px; font-weight: bold;">Selecciona un evento:</label>
+                    <select id="selectEvento" style="width: 100%; padding: 8px; border-radius: 4px;">
+                        ${opcionesEventos}
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonText: "Consultar",
+                cancelButtonText: "Cancelar",
+                preConfirm: () => {
+                    const eventoSeleccionadoId = document.getElementById("selectEvento").value;
+                    return eventos.find(evento => evento.id === eventoSeleccionadoId);
+                }
+            }).then(async (resultado) => {
+                if (resultado.isConfirmed && resultado.value) {
+                    const evento = resultado.value;
+                    const respuestas = obtenerRespuestasDeEvento(evento);
+
+                    if (respuestas.length === 0) {
+                        Swal.fire("Sin respuestas", "Este evento no tiene respuestas aún.", "info");
+                        return;
+                    }
+
+                    mostrarTablaRespuestas(respuestas);
+                }
+            });
+        };
+
+        // Función para extraer respuestas del evento
+        const obtenerRespuestasDeEvento = (evento) => {
+            const nombres = evento.nombrescrmAsistentes?.split("|").filter(nombre => nombre) || [];
+            const correos = evento.correoscrmAsistentes?.split("|").filter(correo => correo) || [];
+            const telefonos = evento.telefonoscrmAsistentes?.split("|").filter(telefono => telefono) || [];
+            const respuestas = Array.from({ length: nombres.length }, (_, i) => ({
+                nombre: nombres[i] || "",
+                correo: correos[i] || "",
+                telefono: telefonos[i] || "",
+                r1: evento.respuestascrm1?.split("|")[i] || "",
+                r2: evento.respuestascrm2?.split("|")[i] || "",
+                r3: evento.respuestascrm3?.split("|")[i] || "",
+                r4: evento.respuestascrm4?.split("|")[i] || "",
+                r5: evento.respuestascrm5?.split("|")[i] || "",
+                r6: evento.respuestascrm6?.split("|")[i] || "",
+                r7: evento.respuestascrm7?.split("|")[i] || "",
+                r8: evento.respuestascrm8?.split("|")[i] || "",
+                r9: evento.respuestascrm9?.split("|")[i] || "",
+                r10: evento.respuestascrm10?.split("|")[i] || "",
+                r11: evento.respuestascrm11?.split("|")[i] || "",
+                r12: evento.respuestascrm12?.split("|")[i] || "",
+                r13: evento.respuestascrm13?.split("|")[i] || "",
+                r14: evento.respuestascrm14?.split("|")[i] || "",
+                comentario: evento.comentarioscrm?.split("|")[i] || ""
+            }));
+            return respuestas;
+        };
+
+        // Función para mostrar la tabla de respuestas
+        const mostrarTablaRespuestas = (respuestas) => {
+            const tablaHTML = `
+                <div style="overflow-x: auto; max-height: 400px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <thead style="position: sticky; top: 0; background-color: #f2f2f2; z-index: 1;">
+                            <tr>
+                                <th style="position: sticky; left: 0; background-color: #f2f2f2; border: 1px solid #ddd; padding: 8px;">NOMBRE</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">CORREO</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">TELÉFONO</th>
+                                ${Array.from({ length: 14 }, (_, i) => `<th style="border: 1px solid #ddd; padding: 4px;">R${i + 1}</th>`).join("")}
+                                <th style="border: 1px solid #ddd; padding: 8px;">COMENTARIO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${respuestas.map(respuesta => `
+                                <tr>
+                                    <td style="position: sticky; left: 0; background-color: #fff; border: 1px solid #ddd; padding: 8px;">${respuesta.nombre}</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">${respuesta.correo}</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">${respuesta.telefono}</td>
+                                    ${Array.from({ length: 14 }, (_, i) => `<td style="border: 1px solid #ddd; padding: 4px;">${respuesta[`r${i + 1}`]}</td>`).join("")}
+                                    <td style="border: 1px solid #ddd; padding: 8px;">${respuesta.comentario}</td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            Swal.fire({
+                title: "Respuestas del Evento",
+                html: tablaHTML,
+                width: "90%",
+                showConfirmButton: true,
+                confirmButtonText: "Volver",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    mostrarInterfazInicial(); // Llamamos a la interfaz inicial al dar clic en "Volver"
+                }
+            });
+        };
+
+        async function registrarNuevoEvento() {
+
+            Swal.fire({
+                title: "Crear Nuevo Evento",
+                html: `
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                    <label for="nombrecrmEvento">Nombre del Evento:</label>
+                    <input type="text" id="nombrecrmEvento" placeholder="Nombre del Evento" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    <span id="errorNombreEvento" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    <div>
+                    <label>Capítulos Organizadores:</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${[1, 2, 3, 4].map(i => `
+                            <div style="flex: 1 1 calc(50% - 10px);">
+                                <select id="capitulo${i}" style="width: 100%; padding: 8px; border-radius: 4px;">
+                                    <option value="" selected>N/A</option>
+                                    ${CAPITULOS.map(capitulo => `<option value="${capitulo.value}">${capitulo.label}</option>`).join("")}
+                                </select>
+                            </div>
+                        `).join("")}
+                    </div>
+                    <span id="errorCapitulos" style="color: red; font-size: 12px; display: none;">Debe seleccionar al menos un capítulo organizador.</span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label for="coordGeneral1">Coordinador General 1:</label>
+                        <input type="text" id="coordGeneral1" placeholder="Coordinador General 1" style="width: 100%; padding: 8px; border-radius: 4px;">
+                        <span id="errorCoordGeneral1" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="coordGeneral2">Coordinador General 2:</label>
+                        <input type="text" id="coordGeneral2" placeholder="Coordinador General 2" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label for="coordMercadeo">Coordinador de Mercadeo:</label>
+                        <input type="text" id="coordMercadeo" placeholder="Coordinador de Mercadeo" style="width: 100%; padding: 8px; border-radius: 4px;">
+                        <span id="errorCoordMercadeo" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="telefonoCoordMercadeo">Teléfono del Coordinador:</label>
+                        <input type="text" id="telefonoCoordMercadeo" placeholder="Teléfono del Coordinador" style="width: 100%; padding: 8px; border-radius: 4px;">
+                        <span id="errorTelefonoCoordMercadeo" style="color: red; font-size: 12px; display: none;">Debe ser un número válido de 10 dígitos y empezar en 3.</span>
+                    </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label for="fechaEvento">Fecha del Evento:</label>
+                        <input type="date" id="fechaEvento" style="width: 100%; padding: 8px; border-radius: 4px;">
+                        <span id="errorFechaEvento" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="duracionDias">Duración (días):</label>
+                        <input type="number" id="duracionDias" placeholder="Duración (días)" style="width: 100%; padding: 8px; border-radius: 4px;">
+                        <span id="errorDuracionDias" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
+                    </div>
+                    </div>
+                    <div>
+                    <label for="crmExtra1">Pregunta Extra CRM #1:</label>
+                    <input type="text" id="crmExtra1" placeholder="Pregunta Extra #1 (Opcional)" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    </div>
+                    <div>
+                    <label for="crmExtra2">Pregunta Extra CRM #2:</label>
+                    <input type="text" id="crmExtra2" placeholder="Pregunta Extra #2 (Opcional)" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    </div>
+                    <div>
+                    <label for="crmExtra3">Pregunta Extra CRM #3:</label>
+                    <input type="text" id="crmExtra3" placeholder="Pregunta Extra #3 (Opcional)" style="width: 100%; padding: 8px; border-radius: 4px;">
+                    </div>
+                </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: "Crear Evento",
+                cancelButtonText: "Cancelar",
+                preConfirm: () => {
+                let isValid = true;
+
+                // Validar cada campo obligatorio
+                const nombreEvento = document.getElementById("nombrecrmEvento").value.trim();
+                if (!nombreEvento) {
+                    document.getElementById("errorNombreEvento").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorNombreEvento").style.display = "none";
+                }
+
+                const capitulosOrganizadores = [
+                    document.getElementById("capitulo1").value,
+                    document.getElementById("capitulo2").value,
+                    document.getElementById("capitulo3").value,
+                    document.getElementById("capitulo4").value
+                ].filter(capitulo => capitulo);
+
+                if (capitulosOrganizadores.length === 0) {
+                    document.getElementById("errorCapitulos").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorCapitulos").style.display = "none";
+                }
+
+                const coordGeneral1 = document.getElementById("coordGeneral1").value.trim();
+                if (!coordGeneral1) {
+                    document.getElementById("errorCoordGeneral1").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorCoordGeneral1").style.display = "none";
+                }
+
+                const coordGeneral2 = document.getElementById("coordGeneral2").value.trim();
+
+                const coordMercadeo = document.getElementById("coordMercadeo").value.trim();
+                if (!coordMercadeo) {
+                    document.getElementById("errorCoordMercadeo").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorCoordMercadeo").style.display = "none";
+                }
+
+                const telefonoCoordMercadeo = document.getElementById("telefonoCoordMercadeo").value.trim();
+                const telefonoRegex = /^3\d{9}$/;
+                if (!telefonoRegex.test(telefonoCoordMercadeo)) {
+                    document.getElementById("errorTelefonoCoordMercadeo").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorTelefonoCoordMercadeo").style.display = "none";
+                }
+
+                const fechaEvento = document.getElementById("fechaEvento").value.trim();
+                if (!fechaEvento) {
+                    document.getElementById("errorFechaEvento").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorFechaEvento").style.display = "none";
+                }
+
+                const duracionDias = parseInt(document.getElementById("duracionDias").value.trim(), 10);
+                if (isNaN(duracionDias) || duracionDias <= 0) {
+                    document.getElementById("errorDuracionDias").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("errorDuracionDias").style.display = "none";
+                }
+
+                // Obtener y reasignar las preguntas extra en orden
+                const preguntasExtra = [
+                    document.getElementById("crmExtra1").value.trim(),
+                    document.getElementById("crmExtra2").value.trim(),
+                    document.getElementById("crmExtra3").value.trim()
+                ].filter(pregunta => pregunta); // Filtrar las preguntas no vacías
+
+                if (!isValid) {
+                    return false;
+                }
+
+                return {
+                    nombrecrmEvento: nombreEvento,
+                    capitulosOrganizadores,
+                    coordGeneral1,
+                    coordGeneral2,
+                    coordMercadeo,
+                    telefonoCoordMercadeo,
+                    fechaEvento,
+                    duracionDias,
+                    crmExtra1: preguntasExtra[0] || "", // Si no existe, será un string vacío
+                    crmExtra2: preguntasExtra[1] || "", // Si no existe, será un string vacío
+                    crmExtra3: preguntasExtra[2] || ""  // Si no existe, será un string vacío
+                };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                const datosEvento = result.value;
+                const claveEvento = generarClaveEvento();
+
+                const nuevoEvento = {
+                    ...datosEvento,
+                    clavecrmEvento: claveEvento,
+                    comentarioscrm: "",
+                    crm: "si",
+                    datoscrm1: [0, 0, 0, 0, 0],
+                    datoscrm2: [0, 0, 0, 0, 0],
+                    datoscrm3: [0, 0, 0, 0, 0],
+                    datoscrm4: [0, 0, 0, 0, 0],
+                    datoscrm5: [0, 0, 0, 0, 0],
+                    datoscrm6: [0, 0, 0, 0, 0],
+                    datoscrm7: [0, 0, 0, 0, 0],
+                    datoscrm8: [0, 0, 0, 0, 0],
+                    datoscrm9: [0, 0, 0, 0, 0],
+                    datoscrm10: [0, 0, 0, 0, 0],
+                    datoscrm11: [0, 0, 0, 0, 0],
+                    nombrescrmAsistentes: "",
+                    correoscrmAsistentes: "",
+                    respuestascrm1: "", respuestascrm2: "", respuestascrm3: "", respuestascrm4: "",
+                    respuestascrm5: "", respuestascrm6: "", respuestascrm7: "", respuestascrm8: "",
+                    respuestascrm9: "", respuestascrm10: "", respuestascrm11: "",
+                    telefonoscrmAsistentes: "",
+                    ...(datosEvento.crmExtra1 && { datoscrm12: [0, 0, 0, 0, 0], respuestascrm12: "" }),
+                    ...(datosEvento.crmExtra2 && { datoscrm13: [0, 0, 0, 0, 0], respuestascrm13: "" }),
+                    ...(datosEvento.crmExtra3 && { datoscrm14: [0, 0, 0, 0, 0], respuestascrm14: "" })
+                };
+
+                // Conexión a Firestore
+                const eventosRef = firebase.firestore().collection("crmeventos");
+
+                eventosRef
+                    .doc(claveEvento)
+                    .set(nuevoEvento)
+                    .then(() => {
+                    Swal.fire("Éxito", "El evento se ha creado correctamente.", "success");
+                    })
+                    .catch((error) => {
+                    Swal.fire("Error", "No se pudo crear el evento: " + error.message, "error");
+                    });
+
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    mostrarInterfazInicial(); // Volver a la interfaz inicial cuando se cancela
+                }
+            });
+
+            }
+
+
+        }
+
+    const CAPITULOS = [
+        { value: "uniguajira", label: "UNIGUAJIRA" },
+        { value: "unimagdalena", label: "UNIMAGDALENA" },
+        { value: "uniatlantico", label: "UNIATLÁNTICO" },
+        { value: "uninorte", label: "UNINORTE" },
+        { value: "unisimon", label: "UNISIMÓN" },
+        { value: "cuc", label: "CUC" },
+        { value: "librequilla", label: "LIBREQUILLA" },
+        { value: "utb", label: "UTB" },
+        { value: "upbmonteria", label: "UPBMONTERÍA" },
+        { value: "unicordoba", label: "UNICÓRDOBA" },
+        { value: "areandina", label: "AREANDINA" },
+        { value: "ufps", label: "UFPS" },
+        { value: "unalmed", label: "UNALMED" },
+        { value: "udea", label: "UDEA" },
+        { value: "upbmed", label: "UPBMED" },
+        { value: "utp", label: "UTP" },
+        { value: "unalma", label: "UNALMA" },
+        { value: "udistrital", label: "UDISTRITAL" },
+        { value: "unalbog", label: "UNALBOG" },
+        { value: "univalle", label: "UNIVALLE" },
+        { value: "icesi", label: "ICESI" },
+        { value: "usc", label: "USC" },
+        { value: "librecali", label: "LIBRECALI" },
+        { value: "nacional", label: "ANEIAP NACIONAL" }
+        ];
 
     async function generarInformePDF(event) {
       
