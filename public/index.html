@@ -5758,11 +5758,11 @@
     console.log("Función EjecutarAdmin iniciada.");
 
     // Verifica si el usuario es administrador mediante correoUsuario
-    if (correoUsuario !== "siea@aneiap.co") {
+    if (correoUsuario !== "siea@aneiap.co" && correoUsuario !== "academico@aneiap.co") {
         console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
         Swal.fire({
             title: "¿LA CURIOSIDAD MATÓ AL GATO?",
-            text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
+            text: "Solo el administrador y DNA pueden acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
             icon: "warning",
             confirmButtonText: "Aceptar",
             allowOutsideClick: true,
