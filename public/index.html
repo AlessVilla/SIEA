@@ -7573,6 +7573,21 @@
             });
         };
 
+        async function generarInformeCRM() {
+          
+          Swal.fire({
+            title: '¡𝐂𝐎𝐌𝐈𝐍𝐆 𝐒𝐎𝐎𝐍... 🛠️⚙️🧰!',
+            text: 'La generación de informes CRM automáticos estará disponible 𝐌𝐔𝐘 𝐏𝐑𝐎𝐍𝐓𝐎, por ahora disfruta de ya no tener que realizar encuestas y conteo manualmente, recuerda que siempre puedes consultar las respuestas EN VIVO para tus eventos, nos vemos el próximo MIÉRCOLES 05 DE MARZO',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+        }
+
         // Función para editar un evento
         const editarEvento = (evento) => {
             const capitulos = evento.capitulosOrganizadores || [];
