@@ -751,7 +751,7 @@
         </div>
         <div class="row">
           <div class="half">
-              <label for="crm-pregunta3"><b>3️⃣ </b> ¿Cómo calificarías la puntualidad en el desarrollo de las actividades? *</label>
+              <label for="crm-pregunta3"><b>3️⃣ </b> ¿Cómo calificarías la puntualidad en las actividades? *</label>
               <select id="crm-pregunta3">
                   <option value="" disabled selected hidden>Califica del 1 al 10.</option>
                   <option value="1">1</option>
@@ -805,7 +805,7 @@
               </div>
               <!-- Segundo half -->
               <div class="half">
-                <label for="crm-pregunta6"><b>6️⃣ </b> ¿Cómo calificarías el trabajo logístico del comité organizador? *</label>
+                <label for="crm-pregunta6"><b>6️⃣ </b> ¿Cómo calificarías el trabajo logístico del comité? *</label>
                 <select id="crm-pregunta6">
                     <option value="" disabled selected hidden>Califica del 1 al 10.</option>
                     <option value="1">1</option>
@@ -825,7 +825,7 @@
           <div class="row">
               <!-- Primer half -->
               <div class="half">
-                  <label for="crm-pregunta7"><b>7️⃣ </b> ¿Cómo calificarías la atención por parte del comité organizador? *</label>
+                  <label for="crm-pregunta7"><b>7️⃣ </b> ¿Cómo calificarías la atención por parte del comité? *</label>
                   <select id="crm-pregunta7">
                       <option value="" disabled selected hidden>Califica del 1 al 10.</option>
                       <option value="1">1</option>
@@ -901,7 +901,7 @@
           <div class="row">
               <!-- Primer half -->
               <div class="half">
-                  <label for="crm-pregunta11"><b>1️⃣1️⃣ </b> ¿Qué tan adecuada consideras que fue la publicidad del evento? *</label>
+                  <label for="crm-pregunta11"><b>1️⃣1️⃣ </b> ¿Qué tan adecuada fue la publicidad del evento? *</label>
                   <select id="crm-pregunta11">
                       <option value="" disabled selected hidden>Califica del 1 al 10.</option>
                       <option value="1">1</option>
@@ -1560,6 +1560,7 @@
     // la función que cambia entre la evaluación de espacio y la evaluación de evento
     function alternarEvaluacion() {
       // Decirle al usuario que está en construcción la parte del CRM del evento
+      /*
       Swal.fire({
             title: '¡𝐂𝐎𝐌𝐈𝐍𝐆 𝐒𝐎𝐎𝐍... 🛠️⚙️🧰!',
             text: 'Esta funcionalidad de SIEA (Evaluar eventos magnos, SCC, nacionales, etc.) por medio del CRM (Antes era un formulario de google) estará disponible 𝐌𝐔𝐘 𝐏𝐑𝐎𝐍𝐓𝐎, por ahora disfruta de la evaluación de espacios capitulares (capacitaciones, integraciones, etc.)',
@@ -1572,6 +1573,7 @@
           });
           return; // Detener la edición de la reserva
       // Obtener el contenedor de la evaluación de espacio
+      */
       const evaluarEspacio = document.getElementById("evaluar-espacio");
       // Obtener el contenedor de la evaluación de evento
       const evaluarEvento = document.getElementById("evaluar-evento");
@@ -1601,35 +1603,82 @@
         }
     }
 
-    // Función para consultar eventos en Firebase y actualizar el desplegable del CRM
-    function consultarEventosCRM() {
-      // Realizar la consulta a Firebase para obtener los eventos
-      var reservasRef = firebase.firestore().collection("crmeventos");
-      var consultaEventos = reservasRef.where("crm", "==", "si");
+    async function consultarEventosCRM() {
+        const capitulos = {
+            "uniguajira": "UNIGUAJIRA",
+            "unimagdalena": "UNIMAGDALENA",
+            "uniatlantico": "UNIATLÁNTICO",
+            "uninorte": "UNINORTE",
+            "unisimon": "UNISIMÓN",
+            "cuc": "CUC",
+            "librequilla": "LIBREQUILLA",
+            "utb": "UTB",
+            "upbmonteria": "UPBMONTERÍA",
+            "unicordoba": "UNICÓRDOBA",
+            "areandina": "AREANDINA",
+            "ufps": "UFPS",
+            "unalmed": "UNALMED",
+            "udea": "UDEA",
+            "upbmed": "UPBMED",
+            "utp": "UTP",
+            "unalma": "UNALMA",
+            "udistrital": "UDISTRITAL",
+            "unalbog": "UNALBOG",
+            "univalle": "UNIVALLE",
+            "icesi": "ICESI",
+            "usc": "USC",
+            "librecali": "LIBRECALI",
+            "nacional": "ANEIAP NACIONAL"
+        };
 
-      // Limpiar las opciones actuales del desplegable
-      var selectEvento = document.getElementById("evento-crm");
-      selectEvento.innerHTML = '<option value="" disabled selected hidden>Selecciona un evento capitular/nacional</option>';
+        Swal.fire({
+            title: 'Selecciona el capítulo que organizó el evento',
+            html: '<p style="font-size: 14px; color: gray;">Si el evento que calificarás es un evento nacional, selecciona <b>"ANEIAP Nacional"</b></p>',
+            input: 'select',
+            inputOptions: capitulos,
+            inputPlaceholder: 'Selecciona un capítulo',
+            showCancelButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonText: 'Aceptar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes seleccionar un capítulo antes de continuar';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                const capituloSeleccionadoSwalfire = result.value;
+                console.log("Capítulo seleccionado: " + capituloSeleccionadoSwalfire);
 
-      // Obtener los nombres de los eventos y agregarlos como opciones al desplegable
-      consultaEventos.get().then((querySnapshot) => {
-          if (querySnapshot.empty) {
-              // Si no se encontraron eventos, agregar una opción indicando que no hay eventos con CRM pendiente
-              selectEvento.innerHTML = '<option value="">No hay ningún evento con CRM pendiente.</option>';
-          } else {
-              // Si se encontraron eventos, agregar cada evento como una opción en el desplegable
-              querySnapshot.forEach((doc) => {
-                  var capitulocrmEvento = doc.data().capitulocrmEvento.toUpperCase(); // Capítulo en mayúsculas
-                  var nombrecrmEvento = doc.data().nombrecrmEvento; // Ajusta este campo según la estructura de tu base de datos
-                  var option = document.createElement("option");
-                  option.text = capitulocrmEvento.toUpperCase() + " || " + nombrecrmEvento;
-                  option.value = nombrecrmEvento; // Asignar el valor del nombre del evento como valor de la opción
-                  selectEvento.add(option);
-              });
-          }
-      }).catch((error) => {
-          console.log("Error obteniendo eventos:", error);
-      });
+                var reservasRef = firebase.firestore().collection("crmeventos");
+                var consultaEventos = reservasRef
+                    .where("crm", "==", "si")
+                    .where("capitulosOrganizadores", "array-contains", capituloSeleccionadoSwalfire);
+
+                var selectEvento = document.getElementById("evento-crm");
+                selectEvento.innerHTML = '<option value="" disabled selected hidden>Selecciona un evento capitular/nacional</option>';
+
+                consultaEventos.get().then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        selectEvento.innerHTML = '<option value="">No hay ningún evento con CRM pendiente.</option>';
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            console.log("Documento encontrado:", doc.id);
+                            console.log("Datos del documento:", doc.data());
+                            
+                            var nombrecrmEvento = doc.data().nombrecrmEvento;
+                            var option = document.createElement("option");
+                            option.text = nombrecrmEvento;
+                            option.value = nombrecrmEvento;
+                            selectEvento.add(option);
+                        });
+                    }
+                }).catch((error) => {
+                    console.log("Error obteniendo eventos:", error);
+                });
+            }
+        });
     }
 
     function evaluarEvento() {
