@@ -29,8 +29,6 @@
   <script src="https://smtpjs.com/v3/smtp.js"></script>
   <!-- Incluye html2canvas.js usando una CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-  <!-- Incluir la biblioteca jsPDF-AutoTable -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.17/jspdf.plugin.autotable.min.js"></script>
   <!-- Agrega la biblioteca Google API Client -->  
   <script src="https://apis.google.com/js/api.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
@@ -630,6 +628,7 @@
 
     <!-- Agrega la referencia al script de jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/1.0.27/jspdf.plugin.autotable.min.js"></script>
     <!-- Botón de modo de visualización-->
     <!--<button id="modo-switch" class="light-mode">
       <span class="icon"></span>
@@ -1522,7 +1521,7 @@
           </div>
 
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL EVENTO 📝</p></h2>
-        <p>Recientemente estuviste en un evento organizado por la ANEIAP. Del 0 al 10, siendo 10 el puntaje máximo.</p>
+        <p>Recientemente estuviste en un evento organizado por la ANEIAP. Del 1 al 10, siendo 10 el puntaje máximo.</p>
         <div class="row">
           <div class="half">
             <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan probable es que recomiendes los eventos de la ANEIAP a otras personas? *</label>
@@ -5758,11 +5757,11 @@
     console.log("Función EjecutarAdmin iniciada.");
 
     // Verifica si el usuario es administrador mediante correoUsuario
-    if (correoUsuario !== "siea@aneiap.co" && correoUsuario !== "academico@aneiap.co") {
+    if (correoUsuario !== "siea@aneiap.co") {
         console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
         Swal.fire({
             title: "¿LA CURIOSIDAD MATÓ AL GATO?",
-            text: "Solo el administrador y DNA pueden acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
+            text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
             icon: "warning",
             confirmButtonText: "Aceptar",
             allowOutsideClick: true,
@@ -7520,7 +7519,7 @@
                 <button id="opcionConsultarEditar" style="background-color: #ffcccc; color: black; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Consultar/Editar Información de Eventos</button>
                 <button id="opcionRegistrar" style="background-color: #ffd700; color: black; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Registrar Nuevo Evento</button>
                 <button id="opcionConsultarRespuestas" style="background-color: #d4edda; color: black; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Consultar Respuestas</button>
-                <button id="opcionGenerarInforme" style="background-color: red; color: white; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Generar Informe CRM</button>
+                <button id="opcionGenerarInforme" style="background-color: red; color: white; width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Generar Informe de Satisfacción de Evento</button>
                 </div>
             `,
             showConfirmButton: false,
@@ -7572,21 +7571,6 @@
             }
             });
         };
-
-        async function generarInformeCRM() {
-          
-          Swal.fire({
-            title: '¡𝐂𝐎𝐌𝐈𝐍𝐆 𝐒𝐎𝐎𝐍... 🛠️⚙️🧰!',
-            text: 'La generación de informes CRM automáticos estará disponible 𝐌𝐔𝐘 𝐏𝐑𝐎𝐍𝐓𝐎, por ahora disfruta de ya no tener que realizar encuestas y conteo manualmente, recuerda que siempre puedes consultar las respuestas EN VIVO para tus eventos, nos vemos el próximo MIÉRCOLES 05 DE MARZO',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener la edición de la reserva
-        }
 
         // Función para editar un evento
         const editarEvento = (evento) => {
@@ -7808,7 +7792,7 @@
             const z = 1.96; // Nivel de confianza 95%
             const p = 0.5; // Proporción esperada
             const e = 0.05; // Margen de error
-            return Math.ceil((Math.pow(z, 2) * p * (1 - p)) / Math.pow(e, 2) / (1 + ((Math.pow(z, 2) * p * (1 - p)) / (Math.pow(e, 2) * totalAsistentes))));
+            return Math.ceil((Math.pow(z, 2) * p * (1  - p)) / Math.pow(e, 2) / (1 + ((Math.pow(z, 2) * p * (1 - p)) / (Math.pow(e, 2) * totalAsistentes))));
         };
 
         // Función para calcular el porcentaje de cumplimiento de la muestra
@@ -8159,6 +8143,680 @@
 
             }
 
+        async function generarInformeCRM() { 
+          const eventosSnapshot = await consulta.get();
+          const eventos = eventosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+          if (eventos.length === 0) {
+              Swal.fire("Sin eventos", `No se encontraron eventos para el capítulo ${capituloUsuario.toUpperCase()}.`, "info");
+              return;
+          }
+      
+          const opcionesEventos = eventos.map(evento => `
+              <option value="${evento.id}">${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}</option>`
+          ).join("");
+      
+          Swal.fire({
+              title: `Seleccione el evento al cual desea el Informe de Satisfaccion al Evento`,
+              html: `
+                  <label for="selectEvento" style="font-size: 14px; font-weight: bold;">Selecciona un evento:</label>
+                  <select id="selectEvento" style="width: 100%; padding: 8px; border-radius: 4px;">
+                      ${opcionesEventos}
+                  </select>
+              `,
+              showCancelButton: true,
+              confirmButtonText: "Seleccionar",
+              cancelButtonText: "Cancelar",
+              preConfirm: () => {
+                  const eventoSeleccionadoId = document.getElementById("selectEvento").value;
+                  return eventos.find(evento => evento.id === eventoSeleccionadoId);
+              }
+          }).then(async (resultado) => {
+              if (resultado.isConfirmed && resultado.value) {
+                  const eventoSeleccionado = resultado.value;
+                  const nombreEvento = eventoSeleccionado.nombrecrmEvento;
+                  const totalAsistentes = eventoSeleccionado.totalAsistentes;
+      
+                  const doc = await eventosRef.doc(eventoSeleccionado.id).get();
+      
+                  if (doc.exists) {
+                      const datosEvento = doc.data();
+      
+                      // 🔹 Filtrar solo las claves de respuestas
+                      const respuestas = Object.keys(datosEvento)
+                          .filter(key => key.startsWith("respuestascrm"))
+                          .reduce((obj, key) => {
+                              obj[key] = datosEvento[key];
+                              return obj;
+                          }, {});
+      
+                      // 🔹 Obtener cantidad de preguntas
+                      const cantidadPreguntas = Object.keys(respuestas).length;
+      
+                      // 🔹 Analizar respuestas
+                      const resultadoAnalisis = analizarRespuestasTotales(respuestas, cantidadPreguntas);
+      
+                      // 🔹 Crear el PDF
+                      var pdf = new jsPDF();
+                      var margenizq = 15;
+                      var margender = 180;
+                      var y = 35;
+      
+                      // 🔹 Portada del informe
+                      var fondo_portada_informe_crm = new Image();
+                      fondo_portada_informe_crm.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_portada_informe_crm.png';
+                      pdf.addImage(fondo_portada_informe_crm, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+      
+                      // Insertar datos generales del evento en la portada
+                      // 🔹 Ajuste del ancho máximo permitido para el texto en la portada
+                      const maxWidthPortada = pdf.internal.pageSize.getWidth() - 70; // Margen de 20px a cada lado
+
+                      // 🔹 Obtener y formatear los capítulos organizadores en mayúsculas
+                      let capitulos = datosEvento.capitulosOrganizadores
+                          .map(capitulo => capitulo.toUpperCase()) // Convertir cada capítulo a mayúsculas
+                          .join(" | "); // Unirlos con " | "
+
+                      // 🔹 Obtener y formatear el nombre del evento
+                      let nombreEvento = datosEvento.nombrecrmEvento || "NOMBRE DEL EVENTO NO DISPONIBLE";
+                      let nombreEventoDividido = pdf.splitTextToSize(`Evento: ${nombreEvento}`, maxWidthPortada);
+
+                      // 🔹 Obtener la fecha de inicio y calcular el intervalo si dura más de un día
+                      // 🔹 Obtener la fecha de inicio y calcular el intervalo si dura más de un día
+                      let fechaInicio = datosEvento.fechaEvento ? new Date(datosEvento.fechaEvento) : null;
+                      let duracionDias = datosEvento.duracionDias || 1; // Si no está definido, asumimos 1 día
+
+                      let fechaInicioFormateada = "NO DISPONIBLE";
+                      let fechaFinFormateada = "";
+
+                      if (fechaInicio) {
+                          // Formatear la fecha de inicio
+                          fechaInicioFormateada = fechaInicio.toLocaleDateString("es-ES", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric"
+                          }).replace(/\b\w/g, l => l.toUpperCase()); // Convertir la primera letra del mes a mayúscula
+
+                          // Si el evento dura más de 1 día, calcular la fecha final
+                          if (duracionDias > 1) {
+                              let fechaFin = new Date(fechaInicio);
+                              fechaFin.setDate(fechaFin.getDate() + (duracionDias - 1)); // Sumar días restantes
+
+                              fechaFinFormateada = fechaFin.toLocaleDateString("es-ES", {
+                                  day: "2-digit",
+                                  month: "long",
+                                  year: "numeric"
+                              }).replace(/\b\w/g, l => l.toUpperCase());
+                          }
+                      }
+
+                      // 🔹 Ajustar coordenadas para alineación adecuada
+                      let xCentro = pdf.internal.pageSize.getWidth() / 2; // Centrar en la página
+                      let yInicio = 180; // Posición base para evitar solapamientos con la imagen de fondo
+
+                      // 🔹 Insertar Capítulos Organizadores
+                      pdf.setFontSize(20);
+                      pdf.setFont(undefined, "bold");
+                      pdf.text("Capítulos organizadores:", xCentro, yInicio, { align: "center" });
+                      yInicio += 10;
+                      pdf.setFontSize(20);
+                      pdf.text(capitulos, xCentro, yInicio, { align: "center" });
+                      yInicio += 25; // Espaciado antes del nombre del evento
+
+                      // 🔹 Insertar Nombre del Evento con manejo de textos largos
+                      pdf.setFontSize(20);
+                      pdf.setFont(undefined, "bold");
+                      nombreEventoDividido.forEach((linea, index) => {
+                          pdf.text(linea, xCentro, yInicio + (index * 10), { align: "center" });
+                      });
+                      yInicio += nombreEventoDividido.length > 1 ? 40 : 30; // Ajustar espacio si el título tiene más de una línea
+                      // 🔹 Concatenar "Fecha: [Fecha Inicio]"
+                      let textoFechaCompleto = `Fecha: ${fechaInicioFormateada}`;
+                      let anchoTextoFecha = pdf.getTextWidth(textoFechaCompleto);
+                      let xCentroFecha = (pdf.internal.pageSize.getWidth() - anchoTextoFecha) / 2;
+
+                      // 🔹 Insertar "Fecha: [Fecha Inicio]" centrado
+                      pdf.setFontSize(20);
+                      pdf.setFont(undefined, "bold");
+                      pdf.text(textoFechaCompleto, xCentroFecha, yInicio);
+
+                      // 🔹 Si hay fecha final, agregar "a [Fecha Fin]" en la siguiente línea
+                      if (fechaFinFormateada) {
+                          let textoFechaFin = `a ${fechaFinFormateada}`;
+                          let anchoTextoFechaFin = pdf.getTextWidth(textoFechaFin);
+                          let xCentroFechaFin = (pdf.internal.pageSize.getWidth() - anchoTextoFechaFin) / 2;
+
+                          yInicio += 10;
+                          pdf.setFont(undefined, "bold");
+                          pdf.text(textoFechaFin, xCentroFechaFin, yInicio);
+                      }
+
+                      pdf.setFontSize(12);
+
+
+                      // Información del evento
+
+                      pdf.addPage();
+                      var img_fondo_crm = new Image();
+                      img_fondo_crm.src = 'https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/fondo_informe_crm.png';
+                      pdf.addImage(img_fondo_crm, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+      
+                      // 🔹 Datos sobre la encuesta
+                      const respuestasObtenidas = eventoSeleccionado.datoscrm1?.[4] || 0;
+                      var muestraMinima = calcularMuestraMinima(totalAsistentes);
+                      var cumplimiento_logrado = parseFloat(calcularCumplimientoMuestra(respuestasObtenidas, muestraMinima));
+      
+                      var confiabilidad = cumplimiento_logrado >= 100
+                          ? "este informe se puede considerar que es de confianza ya que se cumple con la muestra mínima necesaria."
+                          : "este informe puede tener limitaciones en su confiabilidad, ya que la muestra utilizada parece no haber alcanzado la muestra mínima necesaria para garantizar resultados plenamente representativos.";
+      
+                      // 🔹 Título
+                      // Ajuste del ancho máximo permitido para el título
+                      const maxWidthTitulo = pdf.internal.pageSize.getWidth() - 80; // Margen de 20px a cada lado
+
+                      // Construcción del título del informe
+                      let tituloInforme = `INFORME DE SATISFACCIÓN ${nombreEvento}`;
+
+                      // Dividir el título en caso de ser muy largo
+                      let tituloDividido = pdf.splitTextToSize(tituloInforme, maxWidthTitulo);
+
+                      // Insertar el título, centrado
+                      pdf.setFontSize(18);
+                      tituloDividido.forEach((linea, index) => {
+                          pdf.text(linea, pdf.internal.pageSize.getWidth() / 2, 20 + (index * 10), { align: "center" });
+                      });
+
+                      // Ajustar `y` dependiendo de cuántas líneas ocupó el título
+                      y = 20 + (tituloDividido.length * 10) + 10;
+      
+                      // 🔹 Introducción
+                      pdf.setFontSize(12);
+                      const textoIntroduccion = `Las encuestas de satisfacción nos dan a conocer qué tan buen servicio se está prestando al ente externo, resaltando fortalezas y debilidades en la organización de eventos. Este informe busca mejorar los aspectos débiles y mantener los puntos fuertes. La encuesta fue resuelta por ${respuestasObtenidas} personas de ${totalAsistentes} asistentes. Por lo cual, ${confiabilidad} Adicionalmente, la encuesta consistió en ${cantidadPreguntas} preguntas de valoración numérica. NPS = %Promotores - %Detractores`;
+                      let telefonoCRM = datosEvento.telefonoCoordMercadeo || "Teléfono no detectado";
+
+
+                      const textoDividido = pdf.splitTextToSize(textoIntroduccion, margender);
+                        textoDividido.forEach(linea => {
+                            pdf.text(linea, margenizq, y);
+                            y += 7;
+                        });
+                        y += 10;
+                      
+                      const preguntas_estandar_CRM = [ 
+                        "Recientemente estuvo en un evento organizado por ANEIAP. Del 1 al 10, ¿Qué tan probable es que recomiende los eventos ANEIAP a otras personas?",
+                        "Del 1 al 10, ¿Qué tan adecuados considera que fueron las instalaciones del evento?",
+                        "Del 1 al 10, ¿Cómo calificaría la puntualidad en el desarrollo de las actividades?",
+                        "Del 1 al 10, ¿Cómo calificaría su paso por la mesa de acreditación?",
+                        "Del 1 al 10, ¿Cómo calificaría la apertura del evento?",
+                        "Del 1 al 10, ¿Cómo calificaría el trabajo logístico del comité organizador?",
+                        "Del 1 al 10, ¿Cómo calificaría la atención por parte del comité organizador?",
+                        "Del 1 al 10, ¿Cómo calificaría la agenda del evento?",
+                        "Del 1 al 10, ¿Cómo calificarías al/los conferencista(s)?",
+                        "Del 1 al 10, ¿Cómo calificaría la o las temáticas del evento?",
+                        "Del 1 al 10, ¿Qué tan adecuada considera que fue la publicidad del evento?"
+                      ];
+
+                      const item_pregunta_CRM = [
+                          "LA PROBABILIDAD DE QUE LAS PERSONAS RECOMIENDEN ASISTIR A EVENTOS DE ANEIAP ",
+                          "LAS INSTALACIONES UTILIZADAS EN EL TRANSCURSO DEL EVENTO ",
+                          "LA PUNTUALIDAD EN EL DESARROLLO DE LAS ACTIVIDADES ",
+                          "EL PASO POR LA MESA DE ACREDITACIÓN ",
+                          "LA APERTURA DEL EVENTO ",
+                          "EL TRABAJO LOGÍSTICO DEL COMITÉ ORGANIZADOR ",
+                          "LA ATENCIÓN POR PARTE DEL COMITÉ ORGANIZADOR ",
+                          "LA AGENDA DEL EVENTO ",
+                          "LA ELECCIÓN DE CONFERENCISTAS ",
+                          "LA TEMÁTICA DEL EVENTO ",
+                          "LA PUBLICIDAD DEL EVENTO " 
+                      ];
+
+                      let npsResultados = [];
+                      const pageWidth = pdf.internal.pageSize.getWidth();
+                      const imgHeight = 60;
+                      pageHeight = pdf.internal.pageSize.getHeight()
+                      let tablaRespuestas = [];
+                      for (let i = 1; i <= cantidadPreguntas; i++) {
+                        const key = `respuestascrm${i}`;
+                        if (!respuestas[key]) continue;
+                        // Convertir respuestas a array de números
+                        var valores = respuestas[key].split("|").map(Number);
+                        tablaRespuestas.push(valores);
+                      }
+
+                      //Primera grafica/pregunta
+                        i = 1;
+                        // Calcular datos NPS
+                        var fila_i = tablaRespuestas[i - 1].slice().filter(num => num !== 0);
+                        console.log(fila_i + " esta es la fila "+ i);
+
+
+                        
+                        //Analizar que Ocurre en estas siguientes 8 lineas
+                        var total = fila_i.length;
+                        var detractores = fila_i.filter(r => r >= 1 && r <= 6).length;
+                        var pasivos = fila_i.filter(r => r >= 7 && r <= 8).length;
+                        var promotores = fila_i.filter(r => r >= 9 && r <= 10).length;
+                        var porcentaje_Promotores = Number(((promotores / total) * 100).toFixed(2));
+                        var porcentaje_Pasivos    = Number(((pasivos / total) * 100).toFixed(2));
+                        var porcentaje_Detractores= Number(((detractores / total) * 100).toFixed(2));
+                        //var total = fila_i.length;
+                        var nps = ((promotores - detractores) / total * 100).toFixed(2);
+
+                        // Agregar título de la pregunta centrado
+                        let questionTitle = "";
+                        // Si i está entre 1 y 11 (equivalente a preguntas 1-11), usar la lista preguntas_estandar_CRM
+                        if (i <= 11) {
+                            questionTitle = `${i}. ${preguntas_estandar_CRM[i-1]}`;
+                        } 
+                        // Si i es 12 (Pregunta 12), tomar crmExtra1
+                        else if (i === 12) {
+                            questionTitle = `12. ${datosEvento.crmExtra1 || "Pregunta adicional 1"}`;
+                        } 
+                        // Si i es 13 (Pregunta 13), tomar crmExtra2
+                        else if (i === 13) {
+                            questionTitle = `13. ${datosEvento.crmExtra2 || "Pregunta adicional 2"}`;
+                        } 
+                        // Si i es 14 (Pregunta 14), tomar crmExtra3
+                        else if (i === 14) {
+                            questionTitle = `14. ${datosEvento.crmExtra3 || "Pregunta adicional 3"}`;
+                        }
+
+                        pdf.setFontSize(12);
+                        const maxWidth = margender - margenizq;
+                        const lines = pdf.splitTextToSize(questionTitle, maxWidth);
+                        lines.forEach(line => {
+                          pdf.text(line, margenizq, y);
+                          y += 7;
+                        });
+                        
+                        // **Crear un gráfico de pastel dinámico**
+                        const canvas = document.createElement("canvas");
+                        canvas.width = 300;
+                        canvas.height = 300;
+                        document.body.appendChild(canvas);
+
+                        const ctx = canvas.getContext("2d");
+                        new Chart(ctx, {
+                            type: "pie",
+                            data: {
+                                labels: ["Promotores", "Pasivos", "Detractores"],
+                                datasets: [{
+                                    data: [
+                                      porcentaje_Promotores,
+                                      porcentaje_Pasivos,
+                                      porcentaje_Detractores,
+                                    ],
+                                    backgroundColor: ["#4CAF50", "#FFC107", "#F44336"]
+                                }]
+                            },
+                            options: {
+                              responsive: false,
+                              animation: {
+                                // Desactivar animaciones reduce redondeos intermedios
+                                animateRotate: false,
+                                animateScale: false
+                              },
+                                plugins: {
+                                    legend: { position: "bottom" }
+                                }
+                            }
+                        });
+
+                        // **Convertir la gráfica en imagen y agregarla al PDF**
+                        await new Promise(resolve => {
+                            setTimeout(() => {
+                                html2canvas(canvas).then(canvasImage => {
+                                    const imageData = canvasImage.toDataURL("image/png");
+                                    const imgWidth = 60; // Ancho de la imagen en el PDF
+                                    const minSpaceNeeded = imgHeight + 50;
+
+                                    if (y + minSpaceNeeded > pageHeight  - 30) { 
+                                      pdf.addPage();
+                                      pdf.addImage(img_fondo_crm, "PNG", 0, 0, pageWidth, pageHeight);
+                                      y = 40; // Reiniciar posición en la nueva página
+                                    } 
+
+                                    const xPosImg = (pageWidth - imgWidth) / 2; // Cálculo para centrar
+                                    pdf.addImage(imageData, "PNG", xPosImg, y, imgWidth, imgWidth);
+
+                                    document.body.removeChild(canvas); // Eliminar la imagen del DOM
+                                    y += 70; // Agregar espacio después de la imagen
+                                    resolve();
+                                });
+                            }, 500); // Esperar para permitir la renderización de Chart.js
+                        });
+
+                        // Agregar texto de análisis centrado
+                        pdf.setFontSize(12);
+                        pdf.text(`Promotores: ${promotores} de ${total} (${porcentaje_Promotores}%)`, pageWidth / 2, y, { align: "center" });
+                        pdf.text(`Pasivos: ${pasivos} de ${total} (${porcentaje_Pasivos}%)`, pageWidth / 2, y + 7, { align: "center" });
+                        pdf.text(`Detractores: ${detractores} de ${total} (${porcentaje_Detractores}%)`, pageWidth / 2, y + 14, { align: "center" });
+                        //pdf.text(`NPS = %Promotores - %Detractores`, pageWidth / 2, y + 21, { align: "center" });
+                        pdf.text(`NPS = ${((promotores / total) * 100).toFixed(2)}% - ${((detractores / total) * 100).toFixed(2)}% = ${nps}%`, pageWidth / 2, y + 28, { align: "center" });
+
+                        // Conclusión basada en el NPS
+                        let conclusion = "";
+                        let itemTexto = item_pregunta_CRM[i - 1] ? item_pregunta_CRM[i - 1] : " "; // Evita undefined
+
+                        if (nps >= 80) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE EXCELENTE.";
+                        } else if (nps >= 50) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE BUENO, PERO AÚN SE PUEDE MEJORAR.";
+                        } else if (nps >= 0) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE DE NIVEL MODERADO, POR LO QUE SE RECOMIENDA REVISAR POSIBLES MEJORAS.";
+                        } else if (nps >= -50) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE DE NIVEL BAJO, POR LO CUAL, ES UN ASPECTO QUE SE REQUIERE MEJORAR URGENTEMENTE.";
+                        } else {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " ESTÁ EN UN NIVEL CRÍTICO, LO CUAL INDICA QUE ES UN ÁREA DE GRAN PREOCUPACIÓN Y NECESITA UNA REVISIÓN INMEDIATA.";
+                        }
+
+                        y += 40;
+                        const conclusionText = pdf.splitTextToSize(`AL ESTAR EN ${nps}% ${conclusion}`, 180);
+
+                        pdf.setFontSize(10);
+                        pdf.setFont(undefined, 'bold');
+                        pdf.text(conclusionText, pdf.internal.pageSize.getWidth() / 2, y, { align: "center" });
+                        pdf.setFont(undefined, 'normal');
+        
+                        y += 20;
+                        let itemEvaluado = (i <= 11) 
+                          ? item_pregunta_CRM[i - 1].toUpperCase() // Ítems estándar en mayúsculas
+                          : (i === 12) ? (datosEvento.crmExtra1 ? datosEvento.crmExtra1.toUpperCase() : "PREGUNTA ADICIONAL 1") 
+                          : (i === 13) ? (datosEvento.crmExtra2 ? datosEvento.crmExtra2.toUpperCase() : "PREGUNTA ADICIONAL 2")
+                          : (i === 14) ? (datosEvento.crmExtra3 ? datosEvento.crmExtra3.toUpperCase() : "PREGUNTA ADICIONAL 3")
+                          : "PREGUNTA DESCONOCIDA"; // En caso de que haya más preguntas extras en el futuro
+
+                        // Guardar los resultados en la lista para posterior análisis
+                        
+                        npsResultados.push({ indice: i, item: itemEvaluado, nps: parseFloat(nps) });
+
+
+        // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+                  
+                      //Segunda grafica en adelante
+                      for (let i = 2; i <= cantidadPreguntas - 1; i++) {
+
+                        // **Añadir nueva página al inicio**
+                        if ((i - 2) % 2 === 0) {  // Se añade una nueva página cada 2 preguntas
+                            pdf.addPage();
+
+                            console.log("i donde se añade página: " + i)
+                            pdf.addImage(img_fondo_crm, "PNG", 0, 0, pageWidth, pageHeight);
+                            y = 20;  // Reiniciar la posición Y en la nueva página
+            
+                        }
+
+    // 📌 Asegurar que se inserta el teléfono CRM en todas las páginas excepto la primera
+    pdf.setFont(undefined, "normal");
+    let currentPage = pdf.internal.getNumberOfPages(); // Obtener la página actual
+    pdf.setPage(currentPage);
+    
+    // 📌 Asegurar que el color del texto es visible
+    pdf.setTextColor("#E4E4E4"); // Blanco agrisado para mejor visibilidad
+    pdf.setFontSize(11);
+
+    // 📌 Insertar el teléfono en una posición más abajo para evitar solapamiento
+    let xTelefono = 98.5;
+    let yTelefono = 291.5; // Intentar 290 en vez de 301.5 para ver si estaba solapado
+    console.log(`Insertando teléfono CRM en página ${currentPage}: ${telefonoCRM}`);
+    pdf.text(telefonoCRM, xTelefono, yTelefono); 
+
+    // 📌 Restaurar color del texto a negro después de escribir el teléfono
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(12);
+
+                        // Calcular datos NPS
+                        var fila_i = tablaRespuestas[i - 1].slice().filter(num => num !== 0);
+                        console.log(fila_i + " esta es la fila "+ i);
+                        var detractores = fila_i.filter(r => r >= 1 && r <= 6).length;
+                        var pasivos = fila_i.filter(r => r >= 7 && r <= 8).length;
+                        var promotores = fila_i.filter(r => r >= 9 && r <= 10).length;
+                        var porcentaje_Promotores = Number(((promotores / total) * 100).toFixed(2));
+                        var porcentaje_Pasivos    = Number(((pasivos / total) * 100).toFixed(2));
+                        var porcentaje_Detractores= Number(((detractores / total) * 100).toFixed(2));
+                        var total = fila_i.length;
+                        var nps = ((promotores - detractores) / total * 100).toFixed(2);
+
+                        // Agregar título de la pregunta centrado
+                        let questionTitle = "";
+                        // Si i está entre 1 y 11 (equivalente a preguntas 1-11), usar la lista preguntas_estandar_CRM
+                        if (i <= 11) {
+                            questionTitle = `${i}. ${preguntas_estandar_CRM[i-1]}`;
+                        } 
+                        // Si i es 12 (Pregunta 12), tomar crmExtra1
+                        else if (i === 12) {
+                            questionTitle = `12. ${datosEvento.crmExtra1 || "Pregunta adicional 1"}`;
+                        } 
+                        // Si i es 13 (Pregunta 13), tomar crmExtra2
+                        else if (i === 13) {
+                            questionTitle = `13. ${datosEvento.crmExtra2 || "Pregunta adicional 2"}`;
+                        } 
+                        // Si i es 14 (Pregunta 14), tomar crmExtra3
+                        else if (i === 14) {
+                            questionTitle = `14. ${datosEvento.crmExtra3 || "Pregunta adicional 3"}`;
+                        }
+
+                        pdf.setFontSize(12);
+                        const maxWidth = margender - margenizq;
+                        const lines = pdf.splitTextToSize(questionTitle, maxWidth);
+                        lines.forEach(line => {
+                          pdf.text(line, margenizq, y);
+                          y += 7;
+                        });
+                        
+                        // **Crear un gráfico de pastel dinámico**
+                        const canvas = document.createElement("canvas");
+                        canvas.width = 250;
+                        canvas.height = 250;
+                        document.body.appendChild(canvas);
+
+                        const ctx = canvas.getContext("2d");
+                        new Chart(ctx, {
+                            type: "pie",
+                            data: {
+                                labels: ["Promotores", "Pasivos", "Detractores"],
+                                datasets: [{
+                                    data: [
+                                      porcentaje_Promotores,
+                                      porcentaje_Pasivos,
+                                      porcentaje_Detractores,
+                                    ],
+                                    backgroundColor: ["#4CAF50", "#FFC107", "#F44336"]
+                                }]
+                            },
+                            options: {
+                              responsive: false,
+                              animation: {
+                                // Desactivar animaciones reduce redondeos intermedios
+                                animateRotate: false,
+                                animateScale: false
+                              },
+                                plugins: {
+                                    legend: { position: "bottom" }
+                                }
+                            }
+                        });
+
+                        // **Convertir la gráfica en imagen y agregarla al PDF**
+                        await new Promise(resolve => {
+                            setTimeout(() => {
+                                html2canvas(canvas).then(canvasImage => {
+                                    const imageData = canvasImage.toDataURL("image/png");
+                                    const imgWidth = 50; // Ancho de la imagen en el PDF
+                                    const minSpaceNeeded = imgHeight + 50;
+
+                                    if (y + minSpaceNeeded > pageHeight  - 30) { 
+                                      pdf.addPage();
+                                      pdf.addImage(img_fondo_crm, "PNG", 0, 0, pageWidth, pageHeight);
+                                      y = 40; // Reiniciar posición en la nueva página
+                                    } 
+
+                                    const xPosImg = (pageWidth - imgWidth) / 2; // Cálculo para centrar
+                                    pdf.addImage(imageData, "PNG", xPosImg, y, imgWidth, imgWidth);
+
+                                    document.body.removeChild(canvas); // Eliminar la imagen del DOM
+                                    y += 70; // Agregar espacio después de la imagen
+                                    resolve();
+                                });
+                            }, 500); // Esperar para permitir la renderización de Chart.js
+                        });
+
+
+                        pdf.text(`Promotores: ${promotores} de ${total} (${porcentaje_Promotores}%)`, pageWidth / 2, y, { align: "center" });
+                        pdf.text(`Pasivos: ${pasivos} de ${total} (${porcentaje_Pasivos}%)`, pageWidth / 2, y + 7, { align: "center" });
+                        pdf.text(`Detractores: ${detractores} de ${total} (${porcentaje_Detractores}%)`, pageWidth / 2, y + 14, { align: "center" });
+                        //pdf.text(`NPS = %Promotores - %Detractores`, pageWidth / 2, y + 21, { align: "center" });
+                        pdf.text(`NPS = ${((promotores / total) * 100).toFixed(2)}% - ${((detractores / total) * 100).toFixed(2)}% = ${nps}%`, pageWidth / 2, y + 21, { align: "center" });
+        
+                        // Conclusión basada en el NPS
+                        let conclusion = "";
+                        let itemTexto = item_pregunta_CRM[i - 1] ? item_pregunta_CRM[i - 1] : " "; // Evita undefined
+
+                        if (nps >= 80) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE EXCELENTE.";
+                        } else if (nps >= 50) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE BUENO, PERO AÚN SE PUEDE MEJORAR.";
+                        } else if (nps >= 0) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE DE NIVEL MODERADO, POR LO QUE SE RECOMIENDA REVISAR POSIBLES MEJORAS.";
+                        } else if (nps >= -50) {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " FUE DE NIVEL BAJO, POR LO CUAL, ES UN ASPECTO QUE SE REQUIERE MEJORAR URGENTEMENTE.";
+                        } else {
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + " ESTÁ EN UN NIVEL CRÍTICO ❌, LO CUAL INDICA QUE ES UN ÁREA DE GRAN PREOCUPACIÓN Y NECESITA UNA REVISIÓN INMEDIATA.";
+                        }
+        
+                        y += 35;
+                        const conclusionText = pdf.splitTextToSize(`AL ESTAR EN ${nps}% ${conclusion}`, 180);
+                        pdf.setFontSize(10);
+                        pdf.setFont(undefined, 'bold');
+                        pdf.text(conclusionText, pdf.internal.pageSize.getWidth() / 2, y, { align: "center" });
+                        pdf.setFont(undefined, 'normal');
+
+                        y += 15;
+                        let itemEvaluado = (i <= 11) 
+                          ? item_pregunta_CRM[i - 1].toUpperCase() // Ítems estándar en mayúsculas
+                          : (i === 12) ? (datosEvento.crmExtra1 ? datosEvento.crmExtra1.toUpperCase() : "PREGUNTA ADICIONAL 1") 
+                          : (i === 13) ? (datosEvento.crmExtra2 ? datosEvento.crmExtra2.toUpperCase() : "PREGUNTA ADICIONAL 2")
+                          : (i === 14) ? (datosEvento.crmExtra3 ? datosEvento.crmExtra3.toUpperCase() : "PREGUNTA ADICIONAL 3")
+                          : "PREGUNTA DESCONOCIDA"; // En caso de que haya más preguntas extras en el futuro
+
+                        // Guardar los resultados en la lista para posterior análisis
+                        npsResultados.push({ indice: i, item: itemEvaluado, nps: parseFloat(nps) });
+                    }
+                      npsResultados.sort((a, b) => b.nps - a.nps);
+
+                      const top3 = npsResultados.slice(0, 3); // 3 mejores NPS
+                      const bottom3 = npsResultados.slice(-3); // 3 peores NPS
+                      
+                      // **Generar el texto de conclusión**
+                      let conclusionFinal = `Se han identificado los siguientes tres aspectos con mejor evaluación, los cuales son áreas de fortaleza del evento y se buscará mantener las buenas prácticas que permitieron alcanzar estos puntajes:
+                      
+                      1. ${top3[0].item} - NPS: ${top3[0].nps}%
+                      2. ${top3[1].item} - NPS: ${top3[1].nps}%
+                      3. ${top3[2].item} - NPS: ${top3[2].nps}%
+                      
+Por otro lado, se han identificado los tres aspectos con menor evaluación. Se analizarán en detalle los factores que influyeron en estos puntajes para mejorar en futuras ediciones:
+                      
+                      1. ${bottom3[2].item} - NPS: ${bottom3[2].nps}%
+                      2. ${bottom3[1].item} - NPS: ${bottom3[1].nps}%
+                      3. ${bottom3[0].item} - NPS: ${bottom3[0].nps}%
+                      
+Con base en esta información, se tomarán medidas estratégicas para reforzar las áreas destacadas y mejorar aquellos aspectos que han recibido retroalimentación menos positiva.
+                      `;
+                      
+                      // **Agregar salto de página antes de la conclusión si es necesario**
+                      if (y + 60 > pdf.internal.pageSize.getHeight() - 30) {
+                          pdf.addPage();
+                          pdf.addImage(img_fondo_crm, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+                          y = 40;
+                      }
+                      
+                      // **Agregar la conclusión al PDF**
+                      pdf.setFontSize(14);
+                      pdf.setFont(undefined, "bold");
+                      pdf.text("Conclusión Final", margenizq, y);
+
+                      y += 10;
+                      pdf.setFontSize(12);
+                      pdf.setFont(undefined, "normal");
+                      
+                      const conclusionTextoDividido = pdf.splitTextToSize(conclusionFinal, margender);
+                      conclusionTextoDividido.forEach(linea => {
+                          pdf.text(linea, margenizq, y);
+                          y += 7;
+                      });
+
+    // 📌 Asegurar que se inserta el teléfono CRM en todas las páginas excepto la primera
+    pdf.setFont(undefined, "normal");
+    let currentPage = pdf.internal.getNumberOfPages(); // Obtener la página actual
+    pdf.setPage(currentPage);
+    
+    // 📌 Asegurar que el color del texto es visible
+    pdf.setTextColor("#E4E4E4"); // Blanco agrisado para mejor visibilidad
+    pdf.setFontSize(11);
+
+    // 📌 Insertar el teléfono en una posición más abajo para evitar solapamiento
+    let xTelefono = 98.5;
+    let yTelefono = 291.5; // Intentar 290 en vez de 301.5 para ver si estaba solapado
+    console.log(`Insertando teléfono CRM en página ${currentPage}: ${telefonoCRM}`);
+    pdf.text(telefonoCRM, xTelefono, yTelefono); 
+    pdf.setPage(2);
+    pdf.text(telefonoCRM, xTelefono, yTelefono); 
+
+    // 📌 Restaurar color del texto a negro después de escribir el teléfono
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(12);
+
+
+    
+                      // Reemplazar espacios por "_"
+                      let nombreLimpio = nombreEvento.replace(/\s+/g, "_");
+
+                      // Guardar el PDF con el nombre modificado
+                      pdf.save(`Informe_CRM_${nombreLimpio}.pdf`);
+                      //toggleVisualizarActualizarEspacios();
+      
+                      var pdfURL = pdf.output('bloburl');
+                      window.open(pdfURL, '_blank');
+                  }
+              }
+          });
+
+          }
+          
+          // 🔹 Función de análisis de respuestas
+        const analizarRespuestasTotales = (respuestas, cantidadPreguntas) => {
+              let resumenTotal = { detractores: 0, pasivos: 0, promotores: 0, totalRespuestas: 0 };
+              let resumenPorPregunta = {}; 
+          
+              for (let i = 1; i <= cantidadPreguntas; i++) { 
+                  const key = `respuestascrm${i}`;
+                  if (!respuestas[key]) continue;
+          
+                  const valores = respuestas[key].split("|").map(Number);
+          
+                  const detractores = valores.filter(r => r >= 1 && r <= 6).length;
+                  const pasivos = valores.filter(r => r >= 7 && r <= 8).length;
+                  const promotores = valores.filter(r => r >= 9 && r <= 10).length;
+          
+                  const total = valores.length;
+                  const indiceSatisfaccion = ((promotores - detractores) / total).toFixed(2);
+          
+                  // Guardamos los datos por pregunta
+                  resumenPorPregunta[key] = { detractores, pasivos, promotores, total, indiceSatisfaccion };
+          
+                  // Sumamos al total general
+                  resumenTotal.detractores += detractores;
+                  resumenTotal.pasivos += pasivos;
+                  resumenTotal.promotores += promotores;
+                  resumenTotal.totalRespuestas += total;
+              }
+          
+              // Calcular el índice de satisfacción general
+              resumenTotal.indiceSatisfaccion = ((resumenTotal.promotores - resumenTotal.detractores) / resumenTotal.totalRespuestas).toFixed(2);
+          
+              return { resumenTotal, resumenPorPregunta, cantidadPreguntas };
+          };
 
         }
 
@@ -9147,6 +9805,31 @@
         // Devolver el color del texto a negro para evitar afectar el resto del PDF
         pdf.setTextColor(0, 0, 0); // Color negro
     }
+
+    function agregarTelefonoCRM(pdf, datosEvento) {
+        // Obtener el teléfono del coordinador de mercadeo
+        let telefono = datosEvento.telefonoCoordMercadeo || "TELÉFONO NO DISPONIBLE";
+
+        // Cambiar el color del texto a un blanco ligeramente gris
+        pdf.setTextColor("#EDEDED"); // Blanco agrisado para mejor visibilidad
+        pdf.setFontSize(11);
+
+        const x = 91; // Coordenada X
+        const y = 301.5; // Coordenada Y
+
+        // Obtener la página actual del PDF
+        const currentPage = pdf.internal.pageNumber;
+
+        // Establecer la página actual donde quieres añadir el teléfono
+        pdf.setPage(currentPage);
+
+        // Agregar el texto del teléfono en la posición deseada
+        pdf.text(telefono, x, y);
+
+        // Restaurar el color del texto a negro para evitar afectar el resto del PDF
+        pdf.setTextColor(0, 0, 0);
+    }
+
 
     async function generarAgendaFormativa() {
         const categorias = [
