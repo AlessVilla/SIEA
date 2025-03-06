@@ -8776,6 +8776,19 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                       pdf.save(`Informe_CRM_${nombreLimpio}.pdf`);
                       //toggleVisualizarActualizarEspacios();
       
+                      Swal.fire({
+                          title: 'Informe Generado',
+                          text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
+                          icon: 'success',
+                          showConfirmButton: true,
+                          confirmButtonColor: '#3085d6',
+                          confirmButtonText: 'Aceptar',
+                          imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png',
+                          imageWidth: 120,
+                          imageHeight: 235,
+                          imageAlt: 'Éxito',
+                      });
+
                       var pdfURL = pdf.output('bloburl');
                       window.open(pdfURL, '_blank');
                   }
