@@ -8181,7 +8181,20 @@
       
                   if (doc.exists) {
                       const datosEvento = doc.data();
-      
+   
+                      // Mostrar alerta de carga al iniciar la generación del informe
+                      Swal.fire({
+                        title: 'Generando informe...',
+                        text: 'Por favor espera, se está generando el informe.',
+                        allowOutsideClick: false,  // No permitir clics fuera de la alerta
+                        allowEscapeKey: false,     // No permitir la tecla Escape para cerrar
+                        allowEnterKey: false,      // No permitir la tecla Enter para aceptar
+                        didOpen: () => {
+                          // Mostrar indicador de carga
+                          Swal.showLoading();
+                        }
+                      });
+
                       // 🔹 Filtrar solo las claves de respuestas
                       const respuestas = Object.keys(datosEvento)
                           .filter(key => key.startsWith("respuestascrm"))
@@ -8775,7 +8788,9 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                       // Guardar el PDF con el nombre modificado
                       pdf.save(`Informe_CRM_${nombreLimpio}.pdf`);
                       //toggleVisualizarActualizarEspacios();
-      
+                      
+                      Swal.close();
+
                       Swal.fire({
                           title: 'Informe Generado',
                           text: 'Su informe ha sido generado exitosamente, se debió abrir en una pestaña nueva y también guardar en tu carpeta de descargas, gracias por utilizar SIEA, un abrazo enorme.',
