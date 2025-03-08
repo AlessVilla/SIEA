@@ -1747,9 +1747,15 @@
 
             // Verificar si la pregunta 12 está activa (tiene texto en el label)
             var pregunta12 = eventoConsultado.crmExtra1;
+            var pregunta13 = eventoConsultado.crmExtra2;
+            var pregunta14 = eventoConsultado.crmExtra3;
             if (pregunta12 !== "") {
                 preguntas.push({ id: "crm-pregunta12", nombre: "Pregunta 12" });
+            }
+            if (pregunta13 !== "") {
                 preguntas.push({ id: "crm-pregunta13", nombre: "Pregunta 13" });
+            }
+            if (pregunta14 !== "") {
                 preguntas.push({ id: "crm-pregunta14", nombre: "Pregunta 14" });
             }
 
