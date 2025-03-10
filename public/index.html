@@ -8925,9 +8925,34 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                   "Entrenamiento interno: " + valorSEI + "\n" +
                   "Ninguno: " + valorSNI;
 
+      // Función para obtener la abreviatura de un mes en español
+      function obtenerAbreviaturaMes(mes) {
+          const meses = {
+              "01": "FEB", "02": "FEB", "03": "MAR", "04": "ABR", "05": "MAY", "06": "JUN",
+              "07": "JUL", "08": "AGO", "09": "SEP", "10": "OCT", "11": "NOV", "12": "DIC"
+          };
+          return meses[mes] || "";
+      }
+
+      // Extraer año y mes de las fechas
+      let añoInicial = fechaInicialPDF.substring(0, 4);
+      let mesInicial = obtenerAbreviaturaMes(fechaInicialPDF.substring(5, 7));
+      let añoFinal = fechaFinalPDF.substring(0, 4);
+      let mesFinal = obtenerAbreviaturaMes(fechaFinalPDF.substring(5, 7));
+
+      // Determinar el nombre del periodo
+      let nombrePeriodo = `${mesInicial}-${mesFinal}_${añoFinal}`;
+      if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+          nombrePeriodo = "ANUAL_2024";
+      } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+          nombrePeriodo = "ANUAL_2025";
+      } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+          nombrePeriodo = "TODOS_LOS_PERIODOS";
+      }
+
       // Título del informe
       pdf.setFontSize(18);
-      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " " + periodosDisponibles[periodoSeleccionado].etiqueta,
+      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " " + nombrePeriodo,
       margenizq, 20, { align: "justify", maxWidth: margender });
       // Texto de introducción
       pdf.setFontSize(12);
@@ -9193,8 +9218,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                                 pdf.addPage(); // Agregar una nueva página al PDF
                                 pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
                                 pdf.setFontSize(15);
-                                pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
-                                    margenizq, 22, { align: "justify", maxWidth: margender });
+                                pdf.text(`3. RESPUESTAS DE SATISFACCIÓN DEL ${fechaInicialPDF} AL ${fechaFinalPDF}`, margenizq, 22, { align: "justify", maxWidth: margender });
 
                                 posYTabla = 20; // Reiniciar la posición vertical
 
@@ -9457,9 +9481,34 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
       document.getElementById("fecha-inicial").value = fechaInicialPDF;
       document.getElementById("fecha-final").value = fechaFinalPDF;
 
+      // Función para obtener la abreviatura de un mes en español
+      function obtenerAbreviaturaMes(mes) {
+          const meses = {
+              "01": "FEB", "02": "FEB", "03": "MAR", "04": "ABR", "05": "MAY", "06": "JUN",
+              "07": "JUL", "08": "AGO", "09": "SEP", "10": "OCT", "11": "NOV", "12": "DIC"
+          };
+          return meses[mes] || "";
+      }
+
+      // Extraer año y mes de las fechas
+      let añoInicial = fechaInicialPDF.substring(0, 4);
+      let mesInicial = obtenerAbreviaturaMes(fechaInicialPDF.substring(5, 7));
+      let añoFinal = fechaFinalPDF.substring(0, 4);
+      let mesFinal = obtenerAbreviaturaMes(fechaFinalPDF.substring(5, 7));
+
+      // Determinar el nombre del periodo
+      let nombrePeriodo = `${mesInicial}-${mesFinal}_${añoFinal}`;
+      if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+          nombrePeriodo = "ANUAL_2024";
+      } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+          nombrePeriodo = "ANUAL_2025";
+      } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+          nombrePeriodo = "TODOS_LOS_PERIODOS";
+      }
+
       // Título del informe
       pdf.setFontSize(18);
-      pdf.text("INFORME DE SEGUIMIENTO INTEGRACIÓN CON EL ENTORNO " + capituloUsuario.toUpperCase() + " 2024-2",
+      pdf.text("INFORME DE SEGUIMIENTO INTEGRACIÓN CON EL ENTORNO " + capituloUsuario.toUpperCase() + " " + nombrePeriodo,
       margenizq, 20, { align: "justify", maxWidth: margender });
       // Texto de introducción
       pdf.setFontSize(12);
@@ -9799,8 +9848,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                                 pdf.addPage(); // Agregar una nueva página al PDF
                                 pdf.addImage(img, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
                                 pdf.setFontSize(15);
-                                pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
-                                    margenizq, 22, { align: "justify", maxWidth: margender });
+                                pdf.text(`3. RESPUESTAS DE SATISFACCIÓN I.E DEL ${fechaInicialPDF} AL ${fechaFinalPDF}`, margenizq, 22, { align: "justify", maxWidth: margender });
 
                                 posYTabla = 20; // Reiniciar la posición vertical
 
