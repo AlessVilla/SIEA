@@ -8098,7 +8098,10 @@
               if (resultado.isConfirmed && resultado.value) {
                   const eventoSeleccionado = resultado.value;
                   const nombreEvento = eventoSeleccionado.nombrecrmEvento;
-                  const totalAsistentes = eventoSeleccionado.totalAsistentes;
+                  const totalAsistentes = eventoSeleccionado.totalAsistentes 
+                  ? eventoSeleccionado.totalAsistentes 
+                  : "¡¡ EDITA TOTAL ASISTENTES !!";
+
       
                   const doc = await eventosRef.doc(eventoSeleccionado.id).get();
       
@@ -8126,8 +8129,8 @@
                               return obj;
                           }, {});
       
-                      // 🔹 Obtener cantidad de preguntas
-                      const cantidadPreguntas = Object.keys(respuestas).length;
+                      // 🔹 Filtrar respuestas para excluir los valores que sean 0
+                      const cantidadPreguntas = Object.values(respuestas).filter(value => value !== 0).length;
       
                       // 🔹 Analizar respuestas
                       const resultadoAnalisis = analizarRespuestasTotales(respuestas, cantidadPreguntas);
@@ -8166,6 +8169,9 @@
 
                       if (fechaInicio) {
                           // Formatear la fecha de inicio
+                          // 🔹 Corregir la fecha sumando 1 día
+                          fechaInicio.setDate(fechaInicio.getDate() + 1);
+
                           fechaInicioFormateada = fechaInicio.toLocaleDateString("es-ES", {
                               day: "2-digit",
                               month: "long",
@@ -8237,7 +8243,10 @@
                       pdf.addImage(img_fondo_crm, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
       
                       // 🔹 Datos sobre la encuesta
-                      const respuestasObtenidas = eventoSeleccionado.datoscrm1?.[4] || 0;
+                      const respuestasObtenidas = eventoSeleccionado.respuestascrm1 
+                      ? (eventoSeleccionado.respuestascrm1.match(/\|/g) || []).length 
+                      : 0;
+
                       var muestraMinima = calcularMuestraMinima(totalAsistentes);
                       var cumplimiento_logrado = parseFloat(calcularCumplimientoMuestra(respuestasObtenidas, muestraMinima));
       
@@ -8448,6 +8457,7 @@
                         y += 40;
                         const conclusionText = pdf.splitTextToSize(`AL ESTAR EN ${nps}% ${conclusion}`, 180);
 
+                        
                         pdf.setFontSize(10);
                         pdf.setFont(undefined, 'bold');
                         pdf.text(conclusionText, pdf.internal.pageSize.getWidth() / 2, y, { align: "center" });
@@ -8471,7 +8481,7 @@
         // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
                   
                       //Segunda grafica en adelante
-                      for (let i = 2; i <= cantidadPreguntas - 1; i++) {
+                      for (let i = 2; i <= cantidadPreguntas /*- 1*/; i++) {
 
                         // **Añadir nueva página al inicio**
                         if ((i - 2) % 2 === 0) {  // Se añade una nueva página cada 2 preguntas
@@ -8618,7 +8628,7 @@
                         } else if (nps >= -50) {
                             conclusion = "SE CONSIDERA QUE " + itemTexto + "FUE DE NIVEL BAJO, POR LO CUAL, ES UN ASPECTO QUE SE REQUIERE MEJORAR URGENTEMENTE.";
                         } else {
-                            conclusion = "SE CONSIDERA QUE " + itemTexto + "ESTÁ EN UN NIVEL CRÍTICO ❌, LO CUAL INDICA QUE ES UN ÁREA DE GRAN PREOCUPACIÓN Y NECESITA UNA REVISIÓN INMEDIATA.";
+                            conclusion = "SE CONSIDERA QUE " + itemTexto + "ESTÁ EN UN NIVEL CRÍTICO, LO CUAL INDICA QUE ES UN ÁREA DE GRAN PREOCUPACIÓN Y NECESITA UNA REVISIÓN INMEDIATA.";
                         }
         
                         y += 35;
@@ -8647,21 +8657,21 @@
                       // **Generar el texto de conclusión**
                       let conclusionFinal = `Se han identificado los siguientes tres aspectos con mejor evaluación, los cuales son áreas de fortaleza del evento y se buscará mantener las buenas prácticas que permitieron alcanzar estos puntajes:
                       
-                      1. ${top3[0].item} - NPS: ${top3[0].nps}%
-                      2. ${top3[1].item} - NPS: ${top3[1].nps}%
-                      3. ${top3[2].item} - NPS: ${top3[2].nps}%
+1. ${top3[0].item} - NPS: ${top3[0].nps}%
+2. ${top3[1].item} - NPS: ${top3[1].nps}%
+3. ${top3[2].item} - NPS: ${top3[2].nps}%
                       
 Por otro lado, se han identificado los tres aspectos con menor evaluación. Se analizarán en detalle los factores que influyeron en estos puntajes para mejorar en futuras ediciones:
                       
-                      1. ${bottom3[2].item} - NPS: ${bottom3[2].nps}%
-                      2. ${bottom3[1].item} - NPS: ${bottom3[1].nps}%
-                      3. ${bottom3[0].item} - NPS: ${bottom3[0].nps}%
+1. ${bottom3[2].item} - NPS: ${bottom3[2].nps}%
+2. ${bottom3[1].item} - NPS: ${bottom3[1].nps}%
+3. ${bottom3[0].item} - NPS: ${bottom3[0].nps}%
                       
 Con base en esta información, se tomarán medidas estratégicas para reforzar las áreas destacadas y mejorar aquellos aspectos que han recibido retroalimentación menos positiva.
                       `;
                       
                       // **Agregar salto de página antes de la conclusión si es necesario**
-                      if (y + 60 > pdf.internal.pageSize.getHeight() - 30) {
+                      if (y + /*60*/9999 > pdf.internal.pageSize.getHeight() - 30) {
                           pdf.addPage();
                           pdf.addImage(img_fondo_crm, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
                           y = 40;
@@ -10309,7 +10319,6 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
             .replace(/\s+/g, "") // Remueve espacios
             .toLowerCase();
     }
-
 
   </script>
 
