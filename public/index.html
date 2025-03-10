@@ -1987,7 +1987,7 @@
                         // Llamar a la función para que la tabla resumen se actualice
                         generarTablaResumen();
                         ActualizarCamposConNombreEspacio();
-                        generarGraficos();
+                        generarGraficos(fechaInicialPDF, fechaFinalPDF);
                   })
                   .catch(function(error) {
                         // Manejar errores
@@ -6032,114 +6032,7 @@
               document.getElementById("contrasena").value = "";
             }
 
-            // Realizar la consulta a la colección "reservas"
-            var reservasRef = firebase.firestore().collection("reservas");
-            var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
-              .where("fechaEvento", ">=", fechaInicialPDF)
-              .where("fechaEvento", "<=", fechaFinalPDF)
-              .orderBy("fechaEvento", "asc");
 
-            consulta.get().then(function(querySnapshot) {
-              // Filtrar los documentos por tipoEvento
-              var documentosFiltrados = querySnapshot.docs.filter(function(doc) {
-                var tipoEvento = doc.data().tipoEvento;
-                var asistentes = doc.data().asistentes;
-                return (tipoEvento === "valor-agregado" || tipoEvento === "entrenamiento-interno") &&
-                  asistentes !== undefined && asistentes !== null && asistentes !== ""; // Filtrar por tipoEvento diferente de "undefined" y cadena vacía
-              });
-
-              // Iterar sobre los resultados de la consulta
-              documentosFiltrados.forEach(function(doc) {
-                var data = doc.data();
-                // Construir la cadena de texto vectorial para este evento
-                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
-                // Agregar la cadena al array
-                tablaResumen.push(eventoString);
-                var claveEvento = data.claveEvento; // Obtener la clave del evento
-                clavesInforme += `${claveEvento}|`; // Concatenar la clave del evento a clavesInforme
-              });
-
-              // Guardar el array en el campo "tablaResumen" de la colección "cuentas"
-              var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
-              cuentasRef.update({
-                tablaResumen: tablaResumen,
-                clavesInforme: clavesInforme
-              }).then(function() {
-                tablaResumenPDF = tablaResumen;
-                console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'.");
-                console.log(tablaResumenPDF);
-              }).catch(function(error) {
-                console.error("Error al guardar la tabla resumen:", error);
-              });
-
-              // Realizar la consulta y filtrado adicional para "tablaResumenConEI"
-              var documentosConEI = querySnapshot.docs.filter(function(doc) {
-                var tipoEvento = doc.data().tipoEvento;
-                var asistentes = doc.data().asistentes;
-                return (tipoEvento === "entrenamiento-interno") ||
-                  (tipoEvento === "valor-agregado" && asistentes !== undefined && asistentes !== null && asistentes !== "");
-              });
-
-              var tablaResumenConEI = [];
-              documentosConEI.forEach(function(doc) {
-                var data = doc.data();
-                // Determinar el valor para satisfacción
-                var satisfaccionValue = (data.asistentes && data.asistentes.length > 0) ? `${(data.satisfaccion * 100).toFixed(2)}%` : "N/A";
-                // Determinar el valor para contactoPonente
-                var contactoPonente = data.emailPonente || data.telefonoPonente || "No se tiene";
-                // Construir la cadena de texto vectorial para este evento
-                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${contactoPonente}|${data.totalAsistentes}|${satisfaccionValue}|${data.evidencia}`;
-                // Agregar la cadena al array
-                tablaResumenConEI.push(eventoString);
-              });
-
-              // Guardar el array en el nuevo campo "tablaResumenConEI" de la colección "cuentas"
-              cuentasRef.update({
-                tablaResumenConEI: tablaResumenConEI
-              }).then(function() {
-                tablaResumenPDF = tablaResumenConEI;
-                console.log("Tabla resumen con EI guardada exitosamente en la colección 'cuentas'.");
-                console.log(tablaResumenConEI);
-              }).catch(function(error) {
-                console.error("Error al guardar la tabla resumen con EI:", error);
-              });
-
-              // Filtrar los documentos por tipoEvento "entrenamiento-interno" y asistentes no vacíos
-              var documentosIE = querySnapshot.docs.filter(function(doc) {
-                var tipoEvento = doc.data().tipoEvento;
-                var asistentes = doc.data().asistentes;
-                return tipoEvento === "integracion-entorno" &&
-                  asistentes !== undefined && asistentes !== null && asistentes !== "";
-              });
-
-              var tablaResumenIE = [];
-              var clavesInformeIE = "";
-              documentosIE.forEach(function(doc) {
-                var data = doc.data();
-                // Construir la cadena de texto vectorial para este evento
-                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.fechaEvento}|${data.nombrePonente}|${data.planEvento}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
-                // Agregar la cadena al array
-                tablaResumenIE.push(eventoString);
-                var claveEvento = data.claveEvento; // Obtener la clave del evento
-                clavesInformeIE += `${claveEvento}|`; // Concatenar la clave del evento a clavesInformeIE
-              });
-
-              // Guardar el array en el campo "tablaResumenIE" y las claves en "clavesInformeIE" de la colección "cuentas"
-              cuentasRef.update({
-                tablaResumenIE: tablaResumenIE,
-                clavesInformeIE: clavesInformeIE
-              }).then(function() {
-                tablaResumenPDFIE = tablaResumenIE;
-                console.log("Tabla resumen IE y claves guardadas exitosamente en la colección 'cuentas'.");
-                console.log(tablaResumenIE);
-                console.log(clavesInformeIE);
-              }).catch(function(error) {
-                console.error("Error al guardar la tabla resumen IE y claves:", error);
-              });
-
-            }).catch(function(error) {
-              console.error("Error al obtener las reservas:", error);
-            });
           } else {
             // Contraseña incorrecta, mostrar alerta de advertencia
             Swal.fire({
@@ -6995,7 +6888,7 @@
     }
 
     // Función para generar los gráficos y actualizarlos dentro del acordeón 5
-    async function generarGraficos() {
+    async function generarGraficos(fechaInicialPDF, fechaFinalPDF) {
         console.log("Empezamos el proceso de graficación de metas y satisfacción");
 
         try {
@@ -7019,12 +6912,42 @@
             var totalVA = 0; // Total de Valor Agregado
             var totalEI = 0; // Total de Entrenamiento Interno
 
+            /*
             // Realizar consultas
             var metasSnapshot = await consultaMetas.get();
             metasSnapshot.forEach(doc => {
                 metaVA = 3;
                 metaEI = 2;
             });
+            */
+
+            if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
+                metaVA = 3;
+                metaEI = 2; // 2024 Semestre 1
+            } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
+                metaVA = 3;
+                metaEI = 2; // 2024 Semestre 2
+            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+                metaVA = 6;
+                metaEI = 4; // 2024 Año Completo (Suma de 2024-1 y 2024-2)
+            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-05-31") {
+                metaVA = 4;
+                metaEI = 2; // 2025 Semestre 1
+            } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
+                metaVA = 4;
+                metaEI = 2; // 2025 Semestre 2
+            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+                metaVA = 8;
+                metaEI = 4; // 2025 Año Completo (Suma de 2025-1 y 2025-2)
+            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+                metaVA = 14;
+                metaEI = 8; // Todos los periodos (Suma de 2024 y 2025)
+            } else {
+                metaVA = 3;
+                metaEI = 2; // Meta por defecto
+            }
+
+            console.log(`Metas establecidas -> metaVA: ${metaVA}, metaEI: ${metaEI}`);
 
             // Calcular meta general
             var metaGeneral = metaVA + metaEI;
@@ -8894,6 +8817,51 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         return; // Detener el proceso de evaluación
       }
 
+      // Opciones de periodos disponibles
+      const periodosDisponibles = {
+          "2024 Sem1": { inicio: "2024-02-01", fin: "2024-05-31" },
+          "2024 Sem2": { inicio: "2024-08-01", fin: "2024-11-30" },
+          "2024 Año": { inicio: "2024-02-01", fin: "2024-11-30" },
+          "2025 Sem1": { inicio: "2025-02-01", fin: "2025-05-31" },
+          "2025 Sem2": { inicio: "2025-08-01", fin: "2025-11-30" },
+          "2025 Año": { inicio: "2025-02-01", fin: "2025-11-30" },
+          "Todos los periodos": { inicio: "2024-02-01", fin: "2025-11-30" }
+      };
+
+      // Convertir las claves en opciones válidas para el menú desplegable
+      const opcionesPeriodo = Object.keys(periodosDisponibles);
+
+      // Mostrar el menú de selección de periodo con SweetAlert
+      const { value: periodoSeleccionado } = await Swal.fire({
+          title: 'Selecciona el periodo',
+          input: 'select',
+          inputOptions: opcionesPeriodo.reduce((obj, periodo) => {
+              obj[periodo] = periodo; // Mostrar solo el nombre del periodo
+              return obj;
+          }, {}),
+          inputPlaceholder: 'Selecciona un periodo',
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Cancelar',
+          allowOutsideClick: false,
+          allowEscapeKey: false
+      });
+
+      // Si el usuario canceló la selección, detener la ejecución
+      if (!periodoSeleccionado) {
+          return;
+      }
+
+      // Asignar las fechas según el periodo seleccionado
+      var fechaInicialPDF = periodosDisponibles[periodoSeleccionado].inicio;
+      var fechaFinalPDF = periodosDisponibles[periodoSeleccionado].fin;
+
+      console.log(`Periodo seleccionado: ${periodoSeleccionado}`);
+      console.log(`Fecha Inicial: ${fechaInicialPDF}`);
+      console.log(`Fecha Final: ${fechaFinalPDF}`);
+
+      actualizarClavesInforme(capituloUsuario, correoUsuario, fechaInicialPDF, fechaFinalPDF)
+
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
           title: 'Generando informe',
@@ -8928,7 +8896,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         await toggleVisualizarActualizarEspacios();
         await toggleDashboard();
 
-        var objetoGraficos = await generarGraficos();
+        var objetoGraficos = await generarGraficos(fechaInicialPDF, fechaFinalPDF)
         var valoresPorcentajes = objetoGraficos.porcentajes;
 
       // Define el valor para las satisfacciones dependiendo de si hay espacios de ese tipo/área o no.
@@ -8959,11 +8927,11 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
 
       // Título del informe
       pdf.setFontSize(18);
-      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " 2024-2",
+      pdf.text("INFORME DE SEGUIMIENTO A LA FORMACIÓN " + capituloUsuario.toUpperCase() + " " + periodosDisponibles[periodoSeleccionado].etiqueta,
       margenizq, 20, { align: "justify", maxWidth: margender });
       // Texto de introducción
       pdf.setFontSize(12);
-      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-2.",
+      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico " + periodosDisponibles[periodoSeleccionado].etiqueta + ".",
       margenizq, 35, { align: "justify", maxWidth: margender });
 
       // Sección: Dashboard y Metas
@@ -9013,9 +8981,9 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         pdf.text(valoresText, margenizq, 271, { align: "justify", maxWidth: margender });
 
         // Llamar a la función para agregar la tabla resumen siendo esta la 3ra página y a veces hasta 4ta página
-        agregarTablaResumen(pdf, tablaResumenPDF, margenizq, margender);
+        agregarTablaResumen(pdf, tablaResumenPDF, margenizq, margender, fechaInicialPDF, fechaFinalPDF)
         // Llamar a la función para agregar la tabla resumen siendo esta la 4ta o 5ta página y a veces hasta 5ta o 6ta página
-        agregarSatisfaccionesYComentarios(pdf, img, margenizq, margender, correoUsuario)
+        agregarSatisfaccionesYComentarios(pdf, img, margenizq, margender, correoUsuario, fechaInicialPDF, fechaFinalPDF)
         // Avisar que ya se generó el informe y que revise en descargas
 
         Swal.fire({
@@ -9034,7 +9002,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
 
     }
 
-    function agregarTablaResumen(pdf, tablaResumenPDF, margenizq, margender) {
+    function agregarTablaResumen(pdf, tablaResumenPDF, margenizq, margender, fechaInicialPDF, fechaFinalPDF) {
       const anchoPorcentaje = {
         nombreEvento: 22,
         areaTrabajo: 14,
@@ -9059,7 +9027,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         }
 
         pdf.setFontSize(15);
-        pdf.text("2. TABLA RESUMEN CON CADA UNO DE LOS ESPACIOS QUE HA TENIDO EL CAPÍTULO", margenizq, 22, { align: "justify", maxWidth: margender });
+        pdf.text(`2. TABLA RESUMEN DE EVENTOS DEL ${fechaInicialPDF} AL ${fechaFinalPDF}`, margenizq, 22, { align: "justify", maxWidth: margender });
 
         var posY = 35; // Posición vertical inicial
         pdf.setFontSize(7);
@@ -9133,7 +9101,8 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
     }
 
     // Función para agregar la tabla de satisfacciones y comentarios por espacio
-    async function agregarSatisfaccionesYComentarios(pdf, img, margenizq, margender, correoUsuario) {
+    async function agregarSatisfaccionesYComentarios(pdf, img, margenizq, margender, correoUsuario, fechaInicialPDF, fechaFinalPDF) {
+        
         var componenteComentarios = 0;
         var posY = 35; // Posición vertical inicial
         var maxPosY = 270; // Límite de posición vertical
@@ -9146,8 +9115,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         console.log("Página de satisfacciones y comentarios añadida.");
 
         pdf.setFontSize(15);
-        pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
-            margenizq, 22, { align: "justify", maxWidth: margender });
+        pdf.text(`3. RESPUESTAS DE SATISFACCIÓN DEL ${fechaInicialPDF} AL ${fechaFinalPDF}`, margenizq, 22, { align: "justify", maxWidth: margender });
 
         console.log("Título de la sección añadido.");
 
@@ -9325,7 +9293,34 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                 }
 
                 // Guardar el PDF con el nombre especificado
-                pdf.save('Informe_Seguimiento_Formación_' + capituloUsuario.toUpperCase() + '_AGO-NOV_2024-2.pdf');
+                // Función para obtener la abreviatura de un mes en español
+                function obtenerAbreviaturaMes(mes) {
+                    const meses = {
+                        "01": "FEB", "02": "FEB", "03": "MAR", "04": "ABR", "05": "MAY", "06": "JUN",
+                        "07": "JUL", "08": "AGO", "09": "SEP", "10": "OCT", "11": "NOV", "12": "DIC"
+                    };
+                    return meses[mes] || "";
+                }
+
+                // Extraer año y mes de las fechas
+                let añoInicial = fechaInicialPDF.substring(0, 4);
+                let mesInicial = obtenerAbreviaturaMes(fechaInicialPDF.substring(5, 7));
+                let añoFinal = fechaFinalPDF.substring(0, 4);
+                let mesFinal = obtenerAbreviaturaMes(fechaFinalPDF.substring(5, 7));
+
+                // Determinar el nombre del periodo
+                let nombrePeriodo = `${mesInicial}-${mesFinal}_${añoFinal}`;
+                if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+                    nombrePeriodo = "ANUAL_2024";
+                } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+                    nombrePeriodo = "ANUAL_2025";
+                } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+                    nombrePeriodo = "TODOS_LOS_PERIODOS";
+                }
+
+                // Guardar el archivo con el nombre dinámico
+                pdf.save(`Informe_Seguimiento_Formación_${capituloUsuario.toUpperCase()}_${nombrePeriodo}.pdf`);
+
                 toggleVisualizarActualizarEspacios();
 
                 // Abrir automáticamente el PDF después de descargarlo
@@ -9368,6 +9363,68 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         return; // Detener el proceso de evaluación
       }
 
+      if (capituloUsuario === "" || correoUsuario === "") {
+        Swal.fire({
+            icon: 'error',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
+            text: 'Debe iniciar sesión como DCA para poder generar el informe.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener el proceso de evaluación
+      }
+
+      // Opciones de periodos disponibles
+      const periodosDisponibles = {
+          "2024 Sem1": { inicio: "2024-02-01", fin: "2024-05-31" },
+          "2024 Sem2": { inicio: "2024-08-01", fin: "2024-11-30" },
+          "2024 Año": { inicio: "2024-02-01", fin: "2024-11-30" },
+          "2025 Sem1": { inicio: "2025-02-01", fin: "2025-05-31" },
+          "2025 Sem2": { inicio: "2025-08-01", fin: "2025-11-30" },
+          "2025 Año": { inicio: "2025-02-01", fin: "2025-11-30" },
+          "Todos los periodos": { inicio: "2024-02-01", fin: "2025-11-30" }
+      };
+
+      // Convertir las claves en opciones válidas para el menú desplegable
+      const opcionesPeriodo = Object.keys(periodosDisponibles);
+
+      // Mostrar el menú de selección de periodo con SweetAlert
+      const { value: periodoSeleccionado } = await Swal.fire({
+          title: 'Selecciona el periodo',
+          input: 'select',
+          inputOptions: opcionesPeriodo.reduce((obj, periodo) => {
+              obj[periodo] = periodo; // Mostrar solo el nombre del periodo
+              return obj;
+          }, {}),
+          inputPlaceholder: 'Selecciona un periodo',
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Cancelar',
+          allowOutsideClick: false,
+          allowEscapeKey: false
+      });
+
+      // Si el usuario canceló la selección, detener la ejecución
+      if (!periodoSeleccionado) {
+          return;
+      }
+
+      // Asignar las fechas según el periodo seleccionado
+      var fechaInicialPDF = periodosDisponibles[periodoSeleccionado].inicio;
+      var fechaFinalPDF = periodosDisponibles[periodoSeleccionado].fin;
+
+      console.log(`Periodo seleccionado: ${periodoSeleccionado}`);
+      console.log(`Fecha Inicial: ${fechaInicialPDF}`);
+      console.log(`Fecha Final: ${fechaFinalPDF}`);
+
+      actualizarClavesInforme(capituloUsuario, correoUsuario, fechaInicialPDF, fechaFinalPDF)
+
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
           title: 'Generando informe',
@@ -9406,7 +9463,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
       margenizq, 20, { align: "justify", maxWidth: margender });
       // Texto de introducción
       pdf.setFontSize(12);
-      pdf.text("Este informe contiene un seguimiento detallado de los espacios de integración con el entorno correspondientes al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico 2024-2.",
+      pdf.text("Este informe contiene un seguimiento detallado de la formación correspondiente al capítulo " + capituloUsuario.toUpperCase() + " del periodo académico " + periodosDisponibles[periodoSeleccionado].etiqueta + ".",
       margenizq, 35, { align: "justify", maxWidth: margender });
 
       // Sección: Dashboard y Metas
@@ -9419,7 +9476,8 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
       margenizq, 83, { align: "justify", maxWidth: margender });
 
       // Llama a la función para agregar el gráfico de cumplimiento
-      agregarGraficoCumplimientoIE(pdf, tablaResumenPDFIE, margenizq, margender);
+      console.log("tablaResumenPDFIE: " + tablaResumenPDFIE)
+      agregarGraficoCumplimientoIE(pdf, margenizq, margender, fechaInicialPDF, fechaFinalPDF, correoUsuario);
 
         // Colocar el teléfono del DCA en cada pie de página
         pdf.setTextColor("#EDEDED"); //Blanco un poquitín agriseado por fines visuales
@@ -9440,9 +9498,9 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
       setTimeout(function() {
 
         // Llamar a la función para agregar la tabla resumen siendo esta la 3ra página y a veces hasta 4ta página
-        agregarTablaResumenIE(pdf, tablaResumenPDFIE, margenizq, margender);
+        agregarTablaResumenIE(pdf, tablaResumenPDFIE, margenizq, margender, fechaInicialPDF, fechaFinalPDF);
 
-        agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario)
+        agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario, fechaInicialPDF, fechaFinalPDF)
 
         // Avisar que ya se generó el informe y que revise en descargas
         Swal.fire({
@@ -9461,61 +9519,100 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
 
     }
 
-    function agregarGraficoCumplimientoIE(pdf, tablaResumenPDFIE, margenizq, margender) {
-        var totalEspacios = tablaResumenPDFIE.length;
-        var meta = 3; // Meta fija en 3
-        var extra = totalEspacios > meta ? totalEspacios - meta : 0;
+    function agregarGraficoCumplimientoIE(pdf, margenizq, margender, fechaInicialPDF, fechaFinalPDF, correoUsuario) {
+        // Obtener la cantidad de elementos en tablaResumenIE desde Firebase
+        var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
 
-        // Posiciones para el gráfico en el PDF
-        var posX = margenizq;
-        var posY = 100; // Posición vertical
-        var anchoBarra = margender - margenizq; // El ancho siempre será el mismo
-        var altoBarra = 15; // Altura de la barra
+        cuentasRef.get().then((doc) => {
+            if (!doc.exists) {
+                console.error("❌ Error: El documento de usuario no existe en Firebase.");
+                return;
+            }
 
-        // La escala debe adaptarse al número de espacios realizados
-        var escalaMax = totalEspacios > meta ? totalEspacios : meta;
+            // Asegurarse de que el campo 'tablaResumenIE' existe antes de acceder a su longitud
+            var data = doc.data();
+            if (!data || !data.tablaResumenIE) {
+                console.error("⚠ Advertencia: 'tablaResumenIE' no está definido en el documento de Firebase.");
+                return;
+            }
 
-        // Dibujar la escala (marcando desde 0 hasta el mayor valor entre meta y total de espacios)
-        pdf.setTextColor(0, 0, 0);
-        pdf.setFontSize(10);
-        for (let i = 0; i <= escalaMax; i++) {
-            let xPos = posX + (i / escalaMax) * anchoBarra;
-            pdf.text(i.toString(), xPos, posY + altoBarra + 5);
-        }
+            var totalEspacios = data.tablaResumenIE.length;
 
-        // Dibujar la barra de fondo (gris para la parte no cumplida)
-        var anchoGris = (meta / escalaMax) * anchoBarra; // Parte que corresponde a la meta
-        pdf.setDrawColor(150); // Color del borde
-        pdf.setFillColor(230); // Relleno gris claro
-        pdf.rect(posX, posY, anchoGris, altoBarra, 'F'); // Dibujar el fondo hasta la meta
+            // Determinar la meta en función del periodo seleccionado
+            var meta = 0;
+            if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
+                meta = 2; // 2024 Semestre 1
+            } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
+                meta = 2; // 2024 Semestre 2
+            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+                meta = 4; // 2024 Año Completo
+            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-05-31") {
+                meta = 3; // 2025 Semestre 1
+            } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
+                meta = 2; // 2025 Semestre 2
+            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+                meta = 6; // 2025 Año Completo (3 en el primer semestre + 3 en el segundo semestre)
+            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+                meta = 10; // Todos los periodos (4 de 2024 + 6 de 2025)
+            } else {
+                meta = 3; // Meta por defecto
+            }
 
-        // Dibujar la barra de cumplimiento (verde claro hasta la meta)
-        var anchoCumplimiento = Math.min((totalEspacios / escalaMax) * anchoBarra, (meta / escalaMax) * anchoBarra);
-        pdf.setFillColor(0, 200, 0); // Verde claro
-        pdf.rect(posX, posY, anchoCumplimiento, altoBarra, 'F');
+            var extra = totalEspacios > meta ? totalEspacios - meta : 0;
 
-        // Si hay espacios extra, dibujar la parte adicional de la barra (verde oscuro)
-        if (extra > 0) {
-            var anchoExtra = ((extra / escalaMax) * anchoBarra);
-            pdf.setFillColor(0, 100, 0); // Verde oscuro para extra
-            pdf.rect(posX + anchoCumplimiento, posY, anchoExtra, altoBarra, 'F');
-        }
+            // Posiciones para el gráfico en el PDF
+            var posX = margenizq;
+            var posY = 100; // Posición vertical
+            var anchoBarra = margender - margenizq; // El ancho siempre será el mismo
+            var altoBarra = 15; // Altura de la barra
 
-        // Añadir etiquetas de cumplimiento
-        pdf.setFontSize(12);
-        pdf.text(`Cumplimiento: ${totalEspacios}/${meta}`, posX, posY + altoBarra + 20);
+            // La escala debe adaptarse al número de espacios realizados
+            var escalaMax = totalEspacios > meta ? totalEspacios : meta;
 
-        // Añadir tabla con datos del análisis
-        var tablaInicioY = posY + altoBarra + 40;
-        pdf.text("Análisis de Cumplimiento:", posX, tablaInicioY);
-        pdf.text(`Espacios realizados: ${totalEspacios}`, posX, tablaInicioY + 10);
-        pdf.text(`Meta: ${meta} espacios`, posX, tablaInicioY + 20);
-        if (extra > 0) {
-            pdf.text(`Extras: ${extra} espacios adicionales`, posX, tablaInicioY + 30);
-        }
+            // Dibujar la escala (marcando desde 0 hasta el mayor valor entre meta y total de espacios)
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(10);
+            for (let i = 0; i <= escalaMax; i++) {
+                let xPos = posX + (i / escalaMax) * anchoBarra;
+                pdf.text(i.toString(), xPos, posY + altoBarra + 5);
+            }
+
+            // Dibujar la barra de fondo (gris para la parte no cumplida)
+            var anchoGris = (meta / escalaMax) * anchoBarra; // Parte que corresponde a la meta
+            pdf.setDrawColor(150); // Color del borde
+            pdf.setFillColor(230); // Relleno gris claro
+            pdf.rect(posX, posY, anchoGris, altoBarra, 'F'); // Dibujar el fondo hasta la meta
+
+            // Dibujar la barra de cumplimiento (verde claro hasta la meta)
+            var anchoCumplimiento = Math.min((totalEspacios / escalaMax) * anchoBarra, (meta / escalaMax) * anchoBarra);
+            pdf.setFillColor(0, 200, 0); // Verde claro
+            pdf.rect(posX, posY, anchoCumplimiento, altoBarra, 'F');
+
+            // Si hay espacios extra, dibujar la parte adicional de la barra (verde oscuro)
+            if (extra > 0) {
+                var anchoExtra = ((extra / escalaMax) * anchoBarra);
+                pdf.setFillColor(0, 100, 0); // Verde oscuro para extra
+                pdf.rect(posX + anchoCumplimiento, posY, anchoExtra, altoBarra, 'F');
+            }
+
+            // Añadir etiquetas de cumplimiento
+            pdf.setFontSize(12);
+            pdf.text(`Cumplimiento: ${totalEspacios}/${meta}`, posX, posY + altoBarra + 20);
+
+            // Añadir tabla con datos del análisis
+            var tablaInicioY = posY + altoBarra + 40;
+            pdf.text("Análisis de Cumplimiento:", posX, tablaInicioY);
+            pdf.text(`Espacios realizados: ${totalEspacios}`, posX, tablaInicioY + 10);
+            pdf.text(`Meta: ${meta} espacios`, posX, tablaInicioY + 20);
+            if (extra > 0) {
+                pdf.text(`Extras: ${extra} espacios adicionales`, posX, tablaInicioY + 30);
+            }
+        }).catch((error) => {
+            console.error("❌ Error al obtener los datos de Firebase:", error);
+        });
     }
 
-    function agregarTablaResumenIE(pdf, tablaResumenPDF, margenizq, margender) {
+    function agregarTablaResumenIE(pdf, tablaResumenPDF, margenizq, margender, fechaInicialPDF, fechaFinalPDF) {
       const anchoPorcentaje = {
         nombreEvento: 15,
         areaTrabajo: 15,
@@ -9540,7 +9637,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         }
 
         pdf.setFontSize(15);
-        pdf.text("2. TABLA RESUMEN CON CADA UNO DE LOS ESPACIOS I.E. QUE HA TENIDO EL CAPÍTULO", margenizq, 22, { align: "justify", maxWidth: margender });
+        pdf.text(`2. TABLA RESUMEN DE EVENTOS I.E DEL ${fechaInicialPDF} AL ${fechaFinalPDF}`, margenizq, 22, { align: "justify", maxWidth: margender });
         agregarTelefonoPieDePagina(pdf, telefonoCuenta);
 
         var posY = 35; // Posición vertical inicial
@@ -9611,7 +9708,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
     }
 
     // Función para agregar la tabla de satisfacciones y comentarios por espacio
-    async function agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario) {
+    async function agregarSatisfaccionesYComentariosIE(pdf, img, margenizq, margender, correoUsuario, fechaInicialPDF, fechaFinalPDF) {
         var componenteComentarios = 0;
         var posY = 35; // Posición vertical inicial
         var maxPosY = 270; // Límite de posición vertical
@@ -9624,8 +9721,7 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         console.log("Página de satisfacciones y comentarios añadida.");
 
         pdf.setFontSize(15);
-        pdf.text("3. RESPUESTAS DE SATISFACCIÓN POR CADA UNO DE LOS ESPACIOS",
-            margenizq, 22, { align: "justify", maxWidth: margender });
+        pdf.text(`3. RESPUESTAS DE SATISFACCIÓN I.E DEL ${fechaInicialPDF} AL ${fechaFinalPDF}`, margenizq, 22, { align: "justify", maxWidth: margender });
 
         console.log("Título de la sección añadido.");
 
@@ -9802,14 +9898,153 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                     pdf.text(textoTelefono, x, y);
                 }
 
-                // Guardar el PDF con el nombre especificado
-                pdf.save('Informe_Seguimiento_Integración_Entorno_' + capituloUsuario.toUpperCase() + '_AUG-NOV_2024-2.pdf');
+                // Función para obtener la abreviatura de un mes en español
+                function obtenerAbreviaturaMes(mes) {
+                    const meses = {
+                        "01": "FEB", "02": "FEB", "03": "MAR", "04": "ABR", "05": "MAY", "06": "JUN",
+                        "07": "JUL", "08": "AGO", "09": "SEP", "10": "OCT", "11": "NOV", "12": "DIC"
+                    };
+                    return meses[mes] || "";
+                }
+
+                // Extraer año y mes de las fechas
+                let añoInicial = fechaInicialPDF.substring(0, 4);
+                let mesInicial = obtenerAbreviaturaMes(fechaInicialPDF.substring(5, 7));
+                let añoFinal = fechaFinalPDF.substring(0, 4);
+                let mesFinal = obtenerAbreviaturaMes(fechaFinalPDF.substring(5, 7));
+
+                // Determinar el nombre del periodo
+                let nombrePeriodo = `${mesInicial}-${mesFinal}_${añoFinal}`;
+                if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+                    nombrePeriodo = "ANUAL_2024";
+                } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+                    nombrePeriodo = "ANUAL_2025";
+                } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+                    nombrePeriodo = "TODOS_LOS_PERIODOS";
+                }
+
+                // Guardar el archivo con el nombre dinámico
+                pdf.save(`Informe_Seguimiento_Integración_Entorno_${capituloUsuario.toUpperCase()}_${nombrePeriodo}.pdf`);
+
                 toggleVisualizarActualizarEspacios();
 
                 // Abrir automáticamente el PDF después de descargarlo
                 var pdfURL = pdf.output('bloburl');
                 window.open(pdfURL, '_blank');
             }
+        });
+    }
+
+    async function actualizarClavesInforme(capituloUsuario, correoUsuario, fechaInicialPDF, fechaFinalPDF) {
+        var reservasRef = firebase.firestore().collection("reservas");
+        var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
+            .where("fechaEvento", ">=", fechaInicialPDF)
+            .where("fechaEvento", "<=", fechaFinalPDF)
+            .orderBy("fechaEvento", "asc");
+
+        consulta.get().then(function(querySnapshot) {
+            // Filtrar los documentos por tipoEvento
+            var documentosFiltrados = querySnapshot.docs.filter(function(doc) {
+                var tipoEvento = doc.data().tipoEvento;
+                var asistentes = doc.data().asistentes;
+                return (tipoEvento === "valor-agregado" || tipoEvento === "entrenamiento-interno") &&
+                    asistentes !== undefined && asistentes !== null && asistentes !== ""; // Filtrar por tipoEvento diferente de "undefined" y cadena vacía
+            });
+
+            var tablaResumen = [];
+            var clavesInforme = "";
+
+            // Iterar sobre los resultados de la consulta
+            documentosFiltrados.forEach(function(doc) {
+                var data = doc.data();
+                // Construir la cadena de texto vectorial para este evento
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
+                // Agregar la cadena al array
+                tablaResumen.push(eventoString);
+                var claveEvento = data.claveEvento; // Obtener la clave del evento
+                clavesInforme += `${claveEvento}|`; // Concatenar la clave del evento a clavesInforme
+            });
+
+            // Guardar el array en el campo "tablaResumen" de la colección "cuentas"
+            var cuentasRef = firebase.firestore().collection("cuentas").doc(correoUsuario);
+            cuentasRef.update({
+                tablaResumen: tablaResumen,
+                clavesInforme: clavesInforme
+            }).then(function() {
+                tablaResumenPDF = tablaResumen;
+                console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'.");
+                console.log(tablaResumenPDF);
+            }).catch(function(error) {
+                console.error("Error al guardar la tabla resumen:", error);
+            });
+
+            // Realizar la consulta y filtrado adicional para "tablaResumenConEI"
+            var documentosConEI = querySnapshot.docs.filter(function(doc) {
+                var tipoEvento = doc.data().tipoEvento;
+                var asistentes = doc.data().asistentes;
+                return (tipoEvento === "entrenamiento-interno") ||
+                    (tipoEvento === "valor-agregado" && asistentes !== undefined && asistentes !== null && asistentes !== "");
+            });
+
+            var tablaResumenConEI = [];
+            documentosConEI.forEach(function(doc) {
+                var data = doc.data();
+                // Determinar el valor para satisfacción
+                var satisfaccionValue = (data.asistentes && data.asistentes.length > 0) ? `${(data.satisfaccion * 100).toFixed(2)}%` : "N/A";
+                // Determinar el valor para contactoPonente
+                var contactoPonente = data.emailPonente || data.telefonoPonente || "No se tiene";
+                // Construir la cadena de texto vectorial para este evento
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.tipoEvento}|${data.fechaEvento}|${data.nombrePonente}|${contactoPonente}|${data.totalAsistentes}|${satisfaccionValue}|${data.evidencia}`;
+                // Agregar la cadena al array
+                tablaResumenConEI.push(eventoString);
+            });
+
+            // Guardar el array en el nuevo campo "tablaResumenConEI" de la colección "cuentas"
+            cuentasRef.update({
+                tablaResumenConEI: tablaResumenConEI
+            }).then(function() {
+                tablaResumenPDF = tablaResumenConEI;
+                console.log("Tabla resumen con EI guardada exitosamente en la colección 'cuentas'.");
+                console.log(tablaResumenConEI);
+            }).catch(function(error) {
+                console.error("Error al guardar la tabla resumen con EI:", error);
+            });
+
+            // Filtrar los documentos por tipoEvento "integracion-entorno" y asistentes no vacíos
+            var documentosIE = querySnapshot.docs.filter(function(doc) {
+                var tipoEvento = doc.data().tipoEvento;
+                var asistentes = doc.data().asistentes;
+                return tipoEvento === "integracion-entorno" &&
+                    asistentes !== undefined && asistentes !== null && asistentes !== "";
+            });
+
+            var tablaResumenIE = [];
+            var clavesInformeIE = "";
+            documentosIE.forEach(function(doc) {
+                var data = doc.data();
+                // Construir la cadena de texto vectorial para este evento
+                var eventoString = `${data.nombreEvento}|${data.areaTrabajo}|${data.fechaEvento}|${data.nombrePonente}|${data.planEvento}|${data.totalAsistentes}|${(data.satisfaccion * 100).toFixed(2)}%|${data.evidencia}`;
+                // Agregar la cadena al array
+                tablaResumenIE.push(eventoString);
+                var claveEvento = data.claveEvento; // Obtener la clave del evento
+                clavesInformeIE += `${claveEvento}|`; // Concatenar la clave del evento a clavesInformeIE
+            });
+
+            // Guardar el array en el campo "tablaResumenIE" y las claves en "clavesInformeIE" de la colección "cuentas"
+            cuentasRef.update({
+                tablaResumenIE: tablaResumenIE,
+                clavesInformeIE: clavesInformeIE
+            }).then(function() {
+                tablaResumenPDFIE = tablaResumenIE;
+                console.log("Tabla resumen IE y claves guardadas exitosamente en la colección 'cuentas'.");
+                console.log(tablaResumenIE);
+                console.log(clavesInformeIE);
+            }).catch(function(error) {
+                console.error("Error al guardar la tabla resumen IE y claves:", error);
+            });
+
+        }).catch(function(error) {
+            console.error("Error al obtener las reservas:", error);
         });
     }
 
@@ -9857,7 +10092,6 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
         // Restaurar el color del texto a negro para evitar afectar el resto del PDF
         pdf.setTextColor(0, 0, 0);
     }
-
 
     async function generarAgendaFormativa() {
         const categorias = [
