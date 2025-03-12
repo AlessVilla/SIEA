@@ -8764,6 +8764,9 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                       var pdfURL = pdf.output('bloburl');
                       window.open(pdfURL, '_blank');
                   }
+              } else if (resultado.isDismissed) {  
+                  // 🚀 Si el usuario cancela, ejecutar mostrarInterfazInicial()
+                  mostrarInterfazInicial();
               }
           });
 
