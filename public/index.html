@@ -7764,11 +7764,27 @@
                     const respuestas = obtenerRespuestasDeEvento(evento);
 
                     if (respuestas.length === 0) {
-                        Swal.fire("Sin respuestas", "Este evento no tiene respuestas aún.", "info");
-                        return;
-                    }
+                        Swal.fire({
+                            title: "Sin respuestas",
+                            text: "Este evento no tiene respuestas aún.",
+                            icon: "info",
+                            showConfirmButton: true,
+                            confirmButtonText: "Volver",
+                            confirmButtonColor: "#3085d6",
+                            allowOutsideClick: false, // Evita cerrar haciendo clic fuera del modal
+                            allowEscapeKey: false, // Evita cerrar con la tecla Escape
+                            allowEnterKey: false, // Evita cerrar con Enter
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                              consultarRespuestasEvento(); // Se ejecuta al hacer clic en "Volver"
+                            }
+                        });
 
+                        
+                    }
                     mostrarTablaRespuestas(respuestas);
+                } else if (resultado.isDismissed) { 
+                    mostrarInterfazInicial();
                 }
             });
         };
@@ -7833,12 +7849,12 @@
             Swal.fire({
                 title: "Respuestas del Evento",
                 html: tablaHTML,
-                width: "90%",
+                width: "100%",
                 showConfirmButton: true,
                 confirmButtonText: "Volver",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    mostrarInterfazInicial(); // Llamamos a la interfaz inicial al dar clic en "Volver"
+                  consultarRespuestasEvento(); // Llamamos a la interfaz anterior al dar clic en "Volver"
                 }
             });
         };
@@ -8731,11 +8747,19 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                           showConfirmButton: true,
                           confirmButtonColor: '#3085d6',
                           confirmButtonText: 'Aceptar',
+                          allowOutsideClick: false, // Evita cerrar al hacer clic fuera
+                          allowEscapeKey: false, // Evita cerrar con la tecla Escape
+                          allowEnterKey: false, // Evita cerrar con Enter
                           imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png',
                           imageWidth: 120,
                           imageHeight: 235,
-                          imageAlt: 'Éxito',
+                          imageAlt: 'Éxito'
+                      }).then((result) => {
+                          if (result.isConfirmed) {
+                              mostrarInterfazInicial(); // Ejecutar la función al cerrar el modal
+                          }
                       });
+
 
                       var pdfURL = pdf.output('bloburl');
                       window.open(pdfURL, '_blank');
