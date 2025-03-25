@@ -7588,6 +7588,12 @@
                     <input type="text" id="nombrecrmEvento" value="${evento.nombrecrmEvento || ""}" placeholder="Nombre del Evento" style="width: 100%; padding: 8px; border-radius: 4px;">
                     <span id="errorNombreEvento" style="color: red; font-size: 12px; display: none;">Este campo es obligatorio.</span>
                 </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label style="margin-top:10px">Comentarios Finales / Conclusión:</label>
+                    <textarea id="conclusionComentarios" class="swal2-textarea" placeholder="En esta sección, escribe una conclusion basada en los comentarios dejados en el formulario por los asistentes del evento">${evento.conclusion_comentarios || ''}</textarea>
+                    <label style="margin-top:10px">Top 3 Conclusiones:</label>
+                    <textarea id="conclusionTop3" class="swal2-textarea" placeholder="En esta sección, destaca y detalla cuales son las 3 áreas identificadas de mayor fortaleza y las 3 areas de mayor debilidad del evento...">${evento.conclusion_top_3 || ''}</textarea>
+                </div>
                 </div>
                 <div style="border-bottom: 3px solid blue; margin-top: 15px; margin-bottom: 15px;"></div>
             `,
@@ -7694,7 +7700,9 @@
                 totalAsistentes,
                 muestraMinima: parseInt(document.getElementById("muestraMinima").value.trim(), 10), // Se asegura que sea un número
                 cumplimientoMuestra: parseFloat(document.getElementById("cumplimientoMuestra").value.trim().replace("%", "")), // Convierte a decimal eliminando el símbolo de porcentaje
-                nombrecrmEvento: nombreEvento
+                nombrecrmEvento: nombreEvento,
+                conclusion_comentarios : document.getElementById("conclusionComentarios").value,
+                conclusion_top_3: document.getElementById("conclusionTop3").value
                 };
             }
             }).then(resultado => {
@@ -8339,22 +8347,24 @@
                       let tablaRespuestas = [];
                       for (let i = 1; i <= cantidadPreguntas; i++) {
                         const key = `respuestascrm${i}`;
-                        if (!respuestas[key]) continue;
-                        // Convertir respuestas a array de números
-                        var valores = respuestas[key].split("|").map(Number);
-                        tablaRespuestas.push(valores);
+                        if (!respuestas[key] || respuestas[key].trim() === "") {
+                          continue; // saltar si no hay ese campo o está vacío
+                        }
+                        var valores = respuestas[key].split("|").map(Number).filter(n => !isNaN(n));
+                        if (valores.length > 0) {
+                          // Se guarda en la posición normal “i-1”
+                          tablaRespuestas.push(valores);
+                        }
                       }
 
                       //Primera grafica/pregunta
                         i = 1;
                         // Calcular datos NPS
                         var fila_i = tablaRespuestas[i - 1].slice().filter(num => num !== 0);
-                        console.log(fila_i + " esta es la fila "+ i);
-
-
                         
                         //Analizar que Ocurre en estas siguientes 8 lineas
                         var total = fila_i.length;
+                         // Salta la pregunta sin respuestas válidas
                         var detractores = fila_i.filter(r => r >= 1 && r <= 6).length;
                         var pasivos = fila_i.filter(r => r >= 7 && r <= 8).length;
                         var promotores = fila_i.filter(r => r >= 9 && r <= 10).length;
@@ -8531,8 +8541,14 @@
     pdf.setFontSize(12);
 
                         // Calcular datos NPS
-                        var fila_i = tablaRespuestas[i - 1].slice().filter(num => num !== 0);
+                        if (!tablaRespuestas[i - 1]) {
+                          continue; // o break, según prefieras
+                        }
+                        var fila_i = tablaRespuestas[i-1].filter(num => num !== 0);
                         console.log(fila_i + " esta es la fila "+ i);
+                        if (!fila_i.length) {
+                          continue;
+                        }
                         var detractores = fila_i.filter(r => r >= 1 && r <= 6).length;
                         var pasivos = fila_i.filter(r => r >= 7 && r <= 8).length;
                         var promotores = fila_i.filter(r => r >= 9 && r <= 10).length;
@@ -8540,6 +8556,7 @@
                         var porcentaje_Pasivos    = Number(((pasivos / total) * 100).toFixed(2));
                         var porcentaje_Detractores= Number(((detractores / total) * 100).toFixed(2));
                         var total = fila_i.length;
+                        if (total === 0) continue;
                         var nps = ((promotores - detractores) / total * 100).toFixed(2);
 
                         // Agregar título de la pregunta centrado
@@ -8671,31 +8688,41 @@
 
                       const top3 = npsResultados.slice(0, 3); // 3 mejores NPS
                       const bottom3 = npsResultados.slice(-3); // 3 peores NPS
+                      const conclusion_comentarios = datosEvento.conclusion_comentarios || "";
+                      const conclusion_top_3 = datosEvento.conclusion_top_3 || "";
+                      let conclusionFinal = "";
+
+                      if (conclusion_comentarios?.trim() && conclusion_top_3?.trim()) {
+                        conclusionFinal = `${conclusion_comentarios}\n\nTop 3:\n${conclusion_top_3}`;
+                      } else {
+                         // **Generar el texto de conclusión**
+                       conclusionFinal = `Se han identificado los siguientes tres aspectos con mejor evaluación, los cuales son áreas de fortaleza del evento y se buscará mantener las buenas prácticas que permitieron alcanzar estos puntajes:
                       
-                      // **Generar el texto de conclusión**
-                      let conclusionFinal = `Se han identificado los siguientes tres aspectos con mejor evaluación, los cuales son áreas de fortaleza del evento y se buscará mantener las buenas prácticas que permitieron alcanzar estos puntajes:
+                      1. ${top3[0].item} - NPS: ${top3[0].nps}%
+                      2. ${top3[1].item} - NPS: ${top3[1].nps}%
+                      3. ${top3[2].item} - NPS: ${top3[2].nps}%
+                                            
+                      Por otro lado, se han identificado los tres aspectos con menor evaluación. Se analizarán en detalle los factores que influyeron en estos puntajes para mejorar en futuras ediciones:
+                                            
+                      1. ${bottom3[2].item} - NPS: ${bottom3[2].nps}%
+                      2. ${bottom3[1].item} - NPS: ${bottom3[1].nps}%
+                      3. ${bottom3[0].item} - NPS: ${bottom3[0].nps}%
+                                            
+                      Con base en esta información, se tomarán medidas estratégicas para reforzar las áreas destacadas y mejorar aquellos aspectos que han recibido retroalimentación menos positiva.
+                      Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mejores aspectos y los 3 mejores aspectos del evento segun la perspectiva del asistente,su analisis debe ser personal y no el presentado aca.                      `;
                       
-1. ${top3[0].item} - NPS: ${top3[0].nps}%
-2. ${top3[1].item} - NPS: ${top3[1].nps}%
-3. ${top3[2].item} - NPS: ${top3[2].nps}%
-                      
-Por otro lado, se han identificado los tres aspectos con menor evaluación. Se analizarán en detalle los factores que influyeron en estos puntajes para mejorar en futuras ediciones:
-                      
-1. ${bottom3[2].item} - NPS: ${bottom3[2].nps}%
-2. ${bottom3[1].item} - NPS: ${bottom3[1].nps}%
-3. ${bottom3[0].item} - NPS: ${bottom3[0].nps}%
-                      
-Con base en esta información, se tomarán medidas estratégicas para reforzar las áreas destacadas y mejorar aquellos aspectos que han recibido retroalimentación menos positiva.
-                      `;
-                      
-                      // **Agregar salto de página antes de la conclusión si es necesario**
-                      if (y + /*60*/9999 > pdf.internal.pageSize.getHeight() - 30) {
-                          pdf.addPage();
-                          pdf.addImage(img_fondo_crm, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-                          y = 40;
                       }
-                      
-                      // **Agregar la conclusión al PDF**
+
+                      const conclusionDividida = pdf.splitTextToSize(conclusionFinal, margender);
+                      const altoNecesario = conclusionDividida.length * 7;
+
+                      if (y + altoNecesario > pageHeight - 30) {
+                      // **Agregar salto de página antes de la conclusión si es necesario**
+                      pdf.addPage();
+                      pdf.addImage(img_fondo_crm, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+                      y = 40; // Posición vertical de arranque para la nueva página
+                      }
+
                       pdf.setFontSize(14);
                       pdf.setFont(undefined, "bold");
                       pdf.text("Conclusión Final", margenizq, y);
@@ -8703,12 +8730,19 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
                       y += 10;
                       pdf.setFontSize(12);
                       pdf.setFont(undefined, "normal");
+
+                      if (conclusion_comentarios?.trim() && conclusion_top_3?.trim()) {
+                        pdf.setTextColor(0, 0, 0);
+                      } else {
+                        pdf.setTextColor("#FF0000");
                       
+                      }
                       const conclusionTextoDividido = pdf.splitTextToSize(conclusionFinal, margender);
                       conclusionTextoDividido.forEach(linea => {
                           pdf.text(linea, margenizq, y);
                           y += 7;
-                      });
+                      }
+                    );
 
     // 📌 Asegurar que se inserta el teléfono CRM en todas las páginas excepto la primera
     pdf.setFont(undefined, "normal");
@@ -8781,9 +8815,9 @@ Con base en esta información, se tomarán medidas estratégicas para reforzar l
           
               for (let i = 1; i <= cantidadPreguntas; i++) { 
                   const key = `respuestascrm${i}`;
-                  if (!respuestas[key]) continue;
+                  if (!respuestas[key] || respuestas[key].trim() === "") continue;
           
-                  const valores = respuestas[key].split("|").map(Number);
+                  const valores = respuestas[key].split("|").map(Number).filter(n => !isNaN(n));
           
                   const detractores = valores.filter(r => r >= 1 && r <= 6).length;
                   const pasivos = valores.filter(r => r >= 7 && r <= 8).length;
