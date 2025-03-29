@@ -1006,6 +1006,7 @@
         var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloSeleccionado)
                                   .where("fechaEvento", ">=", fechaTresSemanasAtras)
                                   .where("fechaEvento", "<=", fechaHoy)
+                                  .where("crm", "==", "no")
 
         consulta.get().then(function(querySnapshot) {
           var nombresEventos = [];
