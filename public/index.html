@@ -8693,7 +8693,17 @@
                       let conclusionFinal = "";
 
                       if (conclusion_comentarios?.trim() && conclusion_top_3?.trim()) {
-                        conclusionFinal = `${conclusion_comentarios}\n\nTop 3:\n${conclusion_top_3}`;
+                        conclusionFinal = `Conclusión general y de comentarios del informe:\n\n${conclusion_comentarios}\n\n` +
+                      `Adicionalmente, se han identificado los siguientes tres aspectos con mejor evaluación:\n\n` +
+                      `1. ${top3[0].item} - NPS: ${top3[0].nps}%\n` +
+                      `2. ${top3[1].item} - NPS: ${top3[1].nps}%\n` +
+                      `3. ${top3[2].item} - NPS: ${top3[2].nps}%\n\n` +
+                      `Por otro lado, se han identificado los tres aspectos con menor evaluación:\n\n` +
+                      `1. ${bottom3[2].item} - NPS: ${bottom3[2].nps}%\n` +
+                      `2. ${bottom3[1].item} - NPS: ${bottom3[1].nps}%\n` +
+                      `3. ${bottom3[0].item} - NPS: ${bottom3[0].nps}%` +
+                      `Conclusión TOP 3 y LAST 3:\n\n` +
+                      `${conclusion_top_3}\n\n`; // Se agrega aquí la conclusión específica del TOP 3
                       } else {
                          // **Generar el texto de conclusión**
                        conclusionFinal = `Se han identificado los siguientes tres aspectos con mejor evaluación, los cuales son áreas de fortaleza del evento y se buscará mantener las buenas prácticas que permitieron alcanzar estos puntajes:
@@ -8712,6 +8722,7 @@
                       Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mejores aspectos y los 3 mejores aspectos del evento segun la perspectiva del asistente,su analisis debe ser personal y no el presentado aca.                      `;
                       
                       }
+                      pdf.setTextColor(0, 0, 0); // Asegurar que el texto sea negro
 
                       const conclusionDividida = pdf.splitTextToSize(conclusionFinal, margender);
                       const altoNecesario = conclusionDividida.length * 7;
