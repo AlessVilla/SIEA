@@ -1706,7 +1706,7 @@
       // Verificar el formato del teléfono del ponente (debe empezar por 3 y tener 10 dígitos) si está diligenciado
       var crmTelefonoAsistente = document.getElementById("crm-telefono-asistente").value;
       var crmTelefonoAsistenteRegex = /^3\d{9}$/;
-      if (crmTelefonoAsistente === "" && !crmTelefonoAsistenteRegex.test(crmTelefonoAsistente)  || crmTelefonoAsistente.length !== 10) {
+      if (crmTelefonoAsistente !== "" && (!crmTelefonoAsistenteRegex.test(crmTelefonoAsistente)  || crmTelefonoAsistente.length !== 10)) {
         Swal.fire({
           title: '¡TELÉFONO INCORRECTO!',
           text: 'Digita un número de teléfono válido, debe ser de 10 dígitos y sin espacios, símbolos o letras.',
