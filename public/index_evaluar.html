@@ -692,26 +692,30 @@
 
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL EVENTO CAPITULAR/NACIONAL 🏢</p></h2>
           <div class="row">
-            <div class="fourth">
-                <label for="crm-nombre-asistente"><b>Nombre completo asistente: *</b></label>
-                <input type="text" id="crm-nombre-asistente" placeholder="Ingresa tu nombre.">
+            <div class="half">
+              <label for="evento-crm"><b>Evento al que asististe: *</b></label>
+              <select id="evento-crm">
+                <option value="" disabled selected hidden>Selecciona el evento.</option>
+                <!-- Agrega opciones para otros eventos -->
+              </select>
             </div>
-            <div class="fourth">
-                <label for="crm-telefono-asistente"><b>Teléfono asistente (opcional): </b></label>
-                <input type="tel" id="crm-telefono-asistente" placeholder="Ingresa tu número de teléfono.">
-            </div>
-            <div class="fourth">
-                <label for="crm-correo-asistente"><b>Correo del asistente: *</b></label>
-                <input type="text" id="crm-correo-asistente" placeholder="Ingresa tu correo electrónico.">
-            </div>
-            <div class="fourth">
-                <label for="evento-crm"><b>Evento al que asististe: *</b></label>
-                <select id="evento-crm">
-                  <option value="" disabled selected hidden>Selecciona el evento.</option>
-                  <!-- Agrega opciones para otros eventos -->
-                </select>
+            <div class="half">
+              <label for="crm-nombre-asistente"><b>Nombre completo asistente: *</b></label>
+              <input type="text" id="crm-nombre-asistente" placeholder="Ingresa tu nombre.">
             </div>
           </div>
+          
+          <div class="row">
+            <div class="half">
+              <label for="crm-correo-asistente"><b>Correo del asistente: *</b></label>
+              <input type="text" id="crm-correo-asistente" placeholder="Ingresa tu correo electrónico.">
+            </div>
+            <div class="half">
+              <label for="crm-telefono-asistente"><b>Teléfono asistente (opcional): </b></label>
+              <input type="tel" id="crm-telefono-asistente" placeholder="Ingresa tu número de teléfono.">
+            </div>
+          </div>
+
 
         <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL EVENTO 📝</p></h2>
         <p>Recientemente estuviste en un evento organizado por la ANEIAP. Del 0 al 10, siendo 10 el puntaje máximo.</p>
