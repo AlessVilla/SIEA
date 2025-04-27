@@ -1770,6 +1770,7 @@
           </div>
           <!-- Botón para ocultar o mostrar la tabla de evaluaciones -->
           <button id="toggleEvaluaciones" onclick="toggleEvaluaciones()">Mostrar tabla de evaluaciones</button>
+          <button id="toggleEvaluaciones" onclick="GenerarListadoAsistencia()">Generar listado histórico de asistencia</button>
           <!-- Mensaje de estado de la tabla -->
           <p id="estadoTablaEvaluaciones" style="text-align: center; display: block;">La tabla de evaluaciones de satisfacción está oculta</p>
           <!-- Tabla con las evaluaciones -->
@@ -10396,6 +10397,69 @@
             .toLowerCase();
     }
 
+    async function GenerarListadoAsistencia() {
+      const capituloUsuario = window.capituloUsuario; // Asumimos disponible globalmente
+      const reservasRef = firebase.firestore().collection("reservas");
+      const reservasSnapshot = await reservasRef
+        .where("capitulosOrganizadores", "array-contains", capituloUsuario)
+        .get();
+      
+      if (reservasSnapshot.empty) {
+        alert("No se encontraron reservas para tu capítulo.");
+        return;
+      }
+
+      const listadoFinal = [];
+
+      reservasSnapshot.forEach(doc => {
+        const data = doc.data();
+        const nombreEvento = data.nombreEvento || "";
+        const asistentes = (data.asistentes || "").split("|").map(a => a.trim());
+        const correos = (data.correosAsistentes || "").split("|").map(c => c.trim());
+
+        for (let i = 0; i < asistentes.length; i++) {
+          if (asistentes[i]) { // Solo insertar si realmente hay nombre
+            listadoFinal.push({
+              "Nombre espacio": nombreEvento,
+              "Nombre del asistente": asistentes[i],
+              "Correo asistente": correos[i] ? correos[i] : "" // Si existe correo lo pone, si no, vacío
+            });
+          }
+        }
+      });
+
+      if (listadoFinal.length === 0) {
+        alert("No hay asistentes registrados en las reservas.");
+        return;
+      }
+
+      // 📋 Ordenar alfabéticamente por "Nombre espacio"
+      listadoFinal.sort((a, b) => a["Nombre espacio"].localeCompare(b["Nombre espacio"]));
+
+      // 📥 Generar el archivo Excel
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(listadoFinal);
+      XLSX.utils.book_append_sheet(wb, ws, "Listado Asistencia");
+
+      // Obtener fecha y hora en horario Colombia (GMT-5)
+      const ahoraColombia = new Date(ahora.getTime() - (5 * 60 * 60 * 1000)); // Restar 5 horas para horario Colombia
+
+      const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+      const dia = String(ahoraColombia.getDate()).padStart(2, '0');
+      const mes = meses[ahoraColombia.getMonth()];
+      const anio = ahoraColombia.getFullYear();
+      const hora = String(ahoraColombia.getHours()).padStart(2, '0');
+      const minutos = String(ahoraColombia.getMinutes()).padStart(2, '0');
+
+      const fechaHora = `${dia}_${mes}_${anio}_${hora}:${minutos}`;
+
+      const nombreArchivo = `Listado_Asistencia_Historico_${capituloUsuario.toUpperCase()}_${fechaHora}.xlsx`;
+
+      XLSX.writeFile(wb, nombreArchivo);
+    }
+
+    
   </script>
 
 </body>
