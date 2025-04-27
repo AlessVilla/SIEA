@@ -10009,7 +10009,9 @@
                 // Añadir satisfacción promedio en la antepenúltima página
                 pdf.setPage(totalPages - 1 - componenteComentarios); // Cambiar a la antepenúltima página
                 pdf.setFontSize(12);
-                pdf.text(`Satisfacción Promedio (Integración con el Entorno): ${satisfaccionPromedioCapitularTexto}`, margenizq, PosYParaSG, { align: "justify", maxWidth: margender });
+                if (satisfaccionPromedioCapitularTexto && satisfaccionPromedioCapitularTexto !== "NaN%") {
+                    pdf.text(`Satisfacción Promedio (Integración con el Entorno): ${satisfaccionPromedioCapitularTexto}`, margenizq, PosYParaSG, { align: "justify", maxWidth: margender });
+                }
 
                 // Ajustes de la portada
                 pdf.setTextColor("#32620E"); //Verde académico
