@@ -10398,7 +10398,6 @@
     }
 
     async function GenerarListadoAsistencia() {
-      const capituloUsuario = window.capituloUsuario; // Asumimos disponible globalmente
       const reservasRef = firebase.firestore().collection("reservas");
       const reservasSnapshot = await reservasRef
         .where("capitulosOrganizadores", "array-contains", capituloUsuario)
@@ -10416,13 +10415,15 @@
         const nombreEvento = data.nombreEvento || "";
         const asistentes = (data.asistentes || "").split("|").map(a => a.trim());
         const correos = (data.correosAsistentes || "").split("|").map(c => c.trim());
+        const totalAsistentesEvento = asistentes.filter(a => a).length; // Contar asistentes no vacíos
 
         for (let i = 0; i < asistentes.length; i++) {
           if (asistentes[i]) { // Solo insertar si realmente hay nombre
             listadoFinal.push({
               "Nombre espacio": nombreEvento,
               "Nombre del asistente": asistentes[i],
-              "Correo asistente": correos[i] ? correos[i] : "" // Si existe correo lo pone, si no, vacío
+              "Correo asistente": correos[i] ? correos[i] : "",
+              "Total asistentes en espacio": totalAsistentesEvento // Nueva columna agregada
             });
           }
         }
@@ -10441,8 +10442,9 @@
       const ws = XLSX.utils.json_to_sheet(listadoFinal);
       XLSX.utils.book_append_sheet(wb, ws, "Listado Asistencia");
 
-      // Obtener fecha y hora en horario Colombia (GMT-5)
-      const ahoraColombia = new Date(ahora.getTime() - (5 * 60 * 60 * 1000)); // Restar 5 horas para horario Colombia
+      // 📅 Obtener fecha y hora en horario Colombia (GMT-5)
+      const ahora = new Date();
+      const ahoraColombia = new Date(ahora.getTime() - (5 * 60 * 60 * 1000)); // Restar 5 horas
 
       const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
@@ -10452,12 +10454,13 @@
       const hora = String(ahoraColombia.getHours()).padStart(2, '0');
       const minutos = String(ahoraColombia.getMinutes()).padStart(2, '0');
 
-      const fechaHora = `${dia}_${mes}_${anio}_${hora}:${minutos}`;
+      const fechaHora = `${dia}_${mes}_${anio}_${hora}-${minutos}`; // 🛠️ Cambiado ":" por "-"
 
       const nombreArchivo = `Listado_Asistencia_Historico_${capituloUsuario.toUpperCase()}_${fechaHora}.xlsx`;
 
       XLSX.writeFile(wb, nombreArchivo);
     }
+
 
     
   </script>
