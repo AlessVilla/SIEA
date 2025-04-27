@@ -10413,6 +10413,7 @@
       reservasSnapshot.forEach(doc => {
         const data = doc.data();
         const nombreEvento = data.nombreEvento || "";
+        const fechaEvento = data.fechaEvento || "";
         const asistentes = (data.asistentes || "").split("|").map(a => a.trim());
         const correos = (data.correosAsistentes || "").split("|").map(c => c.trim());
         const totalAsistentesEvento = asistentes.filter(a => a).length; // Contar asistentes no vacíos
@@ -10423,6 +10424,7 @@
               "Nombre espacio": nombreEvento,
               "Nombre del asistente": asistentes[i],
               "Correo asistente": correos[i] ? correos[i] : "",
+              "Fecha evento": fechaEvento,
               "Total asistentes en espacio": totalAsistentesEvento // Nueva columna agregada
             });
           }
