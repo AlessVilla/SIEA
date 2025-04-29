@@ -6672,7 +6672,7 @@
                 const eventoDoc = querySnapshot.docs[0]; // Selecciona el primer documento
                 const eventoData = eventoDoc.data();
                 const capitulosExistentes = eventoData.capitulosOrganizadores || [];
-                const capitulosRestantes = 4 - capitulosExistentes.length;
+                const capitulosRestantes = 5 - capitulosExistentes.length;
 
                 Swal.fire({
                     title: 'Edición de Información',
@@ -6689,7 +6689,7 @@
                         if (capitulosRestantes <= 0) {
                             Swal.fire({
                                 title: 'Máximo de capítulos alcanzado',
-                                text: 'Este espacio ya tiene 4 capítulos organizadores, que es el límite, por lo que no podrás añadirle alguno adicional.',
+                                text: 'Este espacio ya tiene 5 capítulos organizadores, que es el límite, por lo que no podrás añadirle alguno adicional.',
                                 icon: 'info',
                                 confirmButtonText: 'Aceptar'
                             });
@@ -6711,7 +6711,8 @@
                             const numeroCapitulo = capitulosExistentes.length + i + 1;  // Calcula el número correcto del capítulo
                             const etiquetaCapitulo = numeroCapitulo === 2 ? "Segundo capítulo" :
                                                 numeroCapitulo === 3 ? "Tercer capítulo" :
-                                                "Cuarto capítulo";
+                                                numeroCapitulo === 4 ? "Cuarto capítulo" :
+                                                "Quinto capítulo"; // Nuevo
                             seleccionCapitulosHTML += `
                                 <label for="capituloOpcion${i + 1}"><b>${etiquetaCapitulo}</b></label>
                                 <select id="capituloOpcion${i + 1}">
