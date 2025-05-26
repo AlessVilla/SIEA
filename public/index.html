@@ -7043,38 +7043,46 @@
     // Función para calcular promedios de satisfacción por área de trabajo
     async function calcularPromediosSatisfaccion(consultaEventos) {
         var consultasSatisfaccion = [
-            consultaEventos.where("areaTrabajo", "==", "academico"),
-            consultaEventos.where("areaTrabajo", "==", "comunicaciones"),
-            consultaEventos.where("areaTrabajo", "==", "desarrollo"),
-            consultaEventos.where("areaTrabajo", "==", "finanzas"),
-            consultaEventos.where("areaTrabajo", "==", "mercadeo"),
-            consultaEventos.where("areaTrabajo", "==", "habilidades-duras"),
-            consultaEventos.where("areaTrabajo", "==", "habilidades-blandas"),
-            consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap"),
-            consultaEventos.where("tipoEvento", "==", "valor-agregado"),
-            consultaEventos.where("tipoEvento", "==", "entrenamiento-interno"),
-            consultaEventos.where("tipoEvento", "==", "ninguno")
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "academico") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "comunicaciones") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "desarrollo") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "finanzas") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "mercadeo") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "habilidades-duras") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "habilidades-blandas") },
+            { tipo: "area", query: consultaEventos.where("areaTrabajo", "==", "conocimiento-aneiap") },
+            { tipo: "tipo", query: consultaEventos.where("tipoEvento", "==", "valor-agregado") },
+            { tipo: "tipo", query: consultaEventos.where("tipoEvento", "==", "entrenamiento-interno") },
+            { tipo: "tipo", query: consultaEventos.where("tipoEvento", "==", "ninguno") }
         ];
 
-        var promesasSatisfaccion = consultasSatisfaccion.map(async consulta => {
-            var querySnapshot = await consulta.get();
+        var promesasSatisfaccion = consultasSatisfaccion.map(async item => {
+            var querySnapshot = await item.query.get();
             var totalSatisfaccion = 0;
-            var totalEventos = querySnapshot.size;
+            var totalEventos = 0;
 
-            if (totalEventos > 0) {
-                querySnapshot.forEach(doc => {
-                    totalSatisfaccion += doc.data().satisfaccion;
-                });
-                console.log(totalSatisfaccion / totalEventos)
-                return totalSatisfaccion / totalEventos;
-            } else {
-                console.log("no hay")
-                return 0; // Asignar cero si no hay eventos
-            }
+            querySnapshot.forEach(doc => {
+                const satisfaccion = doc.data().satisfaccion;
+
+                // Solo cuenta si es tipo "area" y la satisfacción es válida
+                if (item.tipo === "area") {
+                    if (satisfaccion !== undefined && satisfaccion !== 0) {
+                        totalSatisfaccion += satisfaccion;
+                        totalEventos++;
+                    }
+                } else {
+                    // En tipoEvento se cuenta siempre, aunque sea 0 o undefined
+                    totalSatisfaccion += satisfaccion || 0;
+                    totalEventos++;
+                }
+            });
+
+            return totalEventos > 0 ? (totalSatisfaccion / totalEventos) : 0;
         });
 
         return Promise.all(promesasSatisfaccion);
     }
+
 
     // Función para actualizar el gráfico de satisfacción
     function actualizarGraficoSatisfaccion(satisfaccionPromedioAcademico, satisfaccionPromedioComunicaciones, 
