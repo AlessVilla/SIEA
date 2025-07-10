@@ -7809,7 +7809,13 @@
             const z = 1.959963984540054; // Nivel de confianza 95%
             const p = 0.5; // Proporción esperada
             const e = 0.05; // Margen de error
-            return Math.ceil((Math.pow(z, 2) * p * (1  - p)) / Math.pow(e, 2) / (1 + ((Math.pow(z, 2) * p * (1 - p)) / (Math.pow(e, 2) * totalAsistentes))));
+          
+            const numerador = Math.pow(z, 2) * p * (1 - p);
+            const denominador = Math.pow(e, 2) + (numerador / totalAsistentes);
+            const muestra = numerador / denominador;
+        
+            const parteEntera = Math.trunc(muestra);
+            return parteEntera + 1;
         };
 
         // Función para calcular el porcentaje de cumplimiento de la muestra
