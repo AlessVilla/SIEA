@@ -7829,20 +7829,24 @@
 
         // Función para consultar respuestas de un evento
         const consultarRespuestasEvento = async () => {
+            // Obtenemos los eventos desde Firestore
             const eventosSnapshot = await consulta.get();
             const eventos = eventosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
+            // Si no se encuentran eventos, mostramos un mensaje
             if (eventos.length === 0) {
                 Swal.fire("Sin eventos", `No se encontraron eventos para el capítulo ${capituloUsuario.toUpperCase()}.`, "info");
                 return;
             }
 
+            // Creamos el listado de opciones de eventos
             const opcionesEventos = eventos.map(evento => `
                 <option value="${evento.id}">
                     ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}
                 </option>`
             ).join("");
 
+            // Mostramos un Swal para seleccionar el evento
             Swal.fire({
                 title: `Consultar Respuestas - Eventos del capítulo ${capituloUsuario.toUpperCase()}`,
                 html: `
@@ -7861,8 +7865,9 @@
             }).then(async (resultado) => {
                 if (resultado.isConfirmed && resultado.value) {
                     const evento = resultado.value;
-                    const respuestas = obtenerRespuestasDeEvento(evento);
+                    const respuestas = obtenerRespuestasDeEvento(evento);  // Obtener las respuestas del evento seleccionado
 
+                    // Si no hay respuestas, mostramos un mensaje informando
                     if (respuestas.length === 0) {
                         Swal.fire({
                             title: "Sin respuestas",
@@ -7876,24 +7881,78 @@
                             allowEnterKey: false, // Evita cerrar con Enter
                         }).then((result) => {
                             if (result.isConfirmed) {
-                              consultarRespuestasEvento(); // Se ejecuta al hacer clic en "Volver"
+                                consultarRespuestasEvento(); // Se ejecuta al hacer clic en "Volver"
                             }
                         });
+                    } else {
+                        // Mostrar la tabla de respuestas
+                        mostrarTablaRespuestas(respuestas);
 
-                        
-                    }
-                    mostrarTablaRespuestas(respuestas);
-                } else if (resultado.isDismissed) { 
-                    mostrarInterfazInicial();
+                        /*
+                        // Agregar el botón de descarga de Excel junto al de "Volver"
+                        Swal.fire({
+                            title: "Respuestas del Evento",
+                            html: `
+                                <div style="overflow-x: auto; max-height: 600px; width: 100%; display: block;">
+                                    <table style="border-collapse: collapse; font-size: 12px; width: 100%; table-layout: fixed;">
+                                        <thead style="position: sticky; top: 0; background-color: #f2f2f2; z-index: 1;">
+                                            <tr>
+                                                <th style="position: sticky; left: 0; background-color: #f2f2f2; border: 1px solid #ddd; padding: 12px; width: 25%; text-align: center; white-space: normal;">NOMBRE</th>
+                                                <th style="border: 1px solid #ddd; padding: 12px; width: 25%; text-align: center; white-space: normal;">CORREO</th>
+                                                <th style="border: 1px solid #ddd; padding: 12px; width: 15%; text-align: center; white-space: normal;">TELÉFONO</th>
+                                                ${Array.from({ length: 14 }, (_, i) => `<th style="border: 1px solid #ddd; padding: 8px; width: 4%; text-align: center; white-space: normal;">R${i + 1}</th>`).join("")}
+                                                <th style="border: 1px solid #ddd; padding: 12px; width: 20%; text-align: center; white-space: normal; max-width: 300px; overflow: hidden; word-wrap: break-word;">COMENTARIO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${respuestas.map(respuesta => `
+                                                <tr>
+                                                    <td style="position: sticky; left: 0; background-color: #fff; border: 1px solid #ddd; padding: 12px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta.nombre}</td>
+                                                    <td style="border: 1px solid #ddd; padding: 12px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta.correo}</td>
+                                                    <td style="border: 1px solid #ddd; padding: 12px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta.telefono}</td>
+                                                    ${Array.from({ length: 14 }, (_, i) => `<td style="border: 1px solid #ddd; padding: 8px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta[`r${i + 1}`]}</td>`).join("")}
+                                                    <td style="border: 1px solid #ddd; padding: 12px; word-wrap: break-word; text-align: center; white-space: normal; max-width: 300px; overflow: hidden; word-wrap: break-word;">${respuesta.comentario}</td>
+                                                </tr>
+                                            `).join("")}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `,
+                            width: "90%",  // Usamos el 90% del ancho de la pantalla
+                            showCancelButton: true,
+                            cancelButtonText: "Descargar Excel",
+                            confirmButtonText: "Volver",
+                            cancelButtonColor: "#007bff",
+                            confirmButtonColor: "#3085d6",
+                            didOpen: () => {
+                                // Asegurarnos de que el modal tiene suficiente espacio para mostrar la tabla correctamente
+                                const swalModal = document.querySelector(".swal2-popup");
+                                swalModal.style.width = "100%";  // Forzar el modal a ocupar el 100% del ancho disponible
+                                swalModal.style.maxWidth = "none";  // Eliminar cualquier restricción de maxWidth
+                                swalModal.style.padding = "20px";  // Aseguramos que haya suficiente espacio dentro del modal
+                            },
+                            preConfirm: () => {
+                                // Llamar a la función para descargar el Excel con las respuestas
+                                descargarExcelRespuestas(respuestas);  // 'respuestas' es el array con los datos que obtuviste anteriormente
+                            },
+                            willClose: () => {
+                                // Cuando se hace clic en "Volver", ejecutamos la función mostrarInterfazInicial
+                                mostrarInterfazInicial();
+                            }
+                        });
+                        */
+                      }
+                } else if (resultado.isDismissed) {
+                    mostrarInterfazInicial();  // Si el usuario cancela, volvemos al menú inicial
                 }
             });
         };
 
         // Función para extraer respuestas del evento
         const obtenerRespuestasDeEvento = (evento) => {
-            const nombres = evento.nombrescrmAsistentes?.split("|").filter(nombre => nombre) || [];
-            const correos = evento.correoscrmAsistentes?.split("|").filter(correo => correo) || [];
-            const telefonos = evento.telefonoscrmAsistentes?.split("|").filter(telefono => telefono) || [];
+            const nombres = evento.nombrescrmAsistentes?.split("|") || [];
+            const correos = evento.correoscrmAsistentes?.split("|") || [];
+            const telefonos = evento.telefonoscrmAsistentes?.split("|") || [];
             const respuestas = Array.from({ length: nombres.length }, (_, i) => ({
                 nombre: nombres[i] || "",
                 correo: correos[i] || "",
@@ -7919,46 +7978,95 @@
 
         // Función para mostrar la tabla de respuestas
         const mostrarTablaRespuestas = (respuestas) => {
-            const tablaHTML = `
-                <div style="overflow-x: auto; max-height: 400px;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                        <thead style="position: sticky; top: 0; background-color: #f2f2f2; z-index: 1;">
-                            <tr>
-                                <th style="position: sticky; left: 0; background-color: #f2f2f2; border: 1px solid #ddd; padding: 8px;">NOMBRE</th>
-                                <th style="border: 1px solid #ddd; padding: 8px;">CORREO</th>
-                                <th style="border: 1px solid #ddd; padding: 8px;">TELÉFONO</th>
-                                ${Array.from({ length: 14 }, (_, i) => `<th style="border: 1px solid #ddd; padding: 4px;">R${i + 1}</th>`).join("")}
-                                <th style="border: 1px solid #ddd; padding: 8px;">COMENTARIO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${respuestas.map(respuesta => `
-                                <tr>
-                                    <td style="position: sticky; left: 0; background-color: #fff; border: 1px solid #ddd; padding: 8px;">${respuesta.nombre}</td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;">${respuesta.correo}</td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;">${respuesta.telefono}</td>
-                                    ${Array.from({ length: 14 }, (_, i) => `<td style="border: 1px solid #ddd; padding: 4px;">${respuesta[`r${i + 1}`]}</td>`).join("")}
-                                    <td style="border: 1px solid #ddd; padding: 8px;">${respuesta.comentario}</td>
-                                </tr>
-                            `).join("")}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
             Swal.fire({
                 title: "Respuestas del Evento",
-                html: tablaHTML,
-                width: "100%",
-                showConfirmButton: true,
-                confirmButtonText: "Volver",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                  consultarRespuestasEvento(); // Llamamos a la interfaz anterior al dar clic en "Volver"
+                html: `
+                    <div style="overflow-x: auto; max-height: 600px; width: 100%; display: block;">
+                        <table style="border-collapse: collapse; font-size: 10px; width: 100%; table-layout: fixed;">
+                            <thead style="position: sticky; top: 0; background-color: #f2f2f2; z-index: 1;">
+                                <tr>
+                                    <th style="position: sticky; left: 0; background-color: #f2f2f2; border: 1px solid #ddd; padding: 3px; width: 15%; text-align: center; white-space: normal;">NOMBRE</th>
+                                    <th style="border: 1px solid #ddd; padding: 3px; width: 25%; text-align: center; white-space: normal;">CORREO</th>
+                                    <th style="border: 1px solid #ddd; padding: 3px; width: 8%; text-align: center; white-space: normal;">TELÉFONO</th>
+                                    ${Array.from({ length: 14 }, (_, i) => `<th style="border: 1px solid #ddd; padding: 2px; width: 3%; text-align: center; white-space: normal;">R${i + 1}</th>`).join("")}
+                                    <th style="border: 1px solid #ddd; padding: 3px; width: 30%; text-align: center; white-space: normal; max-width: 600px; overflow: hidden; word-wrap: break-word;">COMENTARIO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${respuestas.map(respuesta => `
+                                    <tr>
+                                        <td style="position: sticky; left: 0; background-color: #fff; border: 1px solid #ddd; padding: 6px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta.nombre}</td>
+                                        <td style="border: 1px solid #ddd; padding: 6px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta.correo}</td>
+                                        <td style="border: 1px solid #ddd; padding: 6px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta.telefono}</td>
+                                        ${Array.from({ length: 14 }, (_, i) => `<td style="border: 1px solid #ddd; padding: 2px; word-wrap: break-word; text-align: center; white-space: normal;">${respuesta[`r${i + 1}`]}</td>`).join("")}
+                                        <td style="border: 1px solid #ddd; padding: 6px; word-wrap: break-word; text-align: center; white-space: normal; max-width: 600px; overflow: hidden; word-wrap: break-word;">${respuesta.comentario}</td>
+                                    </tr>
+                                `).join("")}
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                width: "95%",  // Usamos el 90% del ancho de la pantalla
+                heightAuto: false, // Esto evita que se estire más de lo necesario
+                showCancelButton: true,
+                cancelButtonText: "Volver",
+                confirmButtonText: "Descargar respuestas",
+                cancelButtonColor: "#007bff",
+                confirmButtonColor: "#3085d6",
+                didOpen: () => {
+                    // Asegurarnos de que el modal tiene suficiente espacio para mostrar la tabla correctamente
+                    const swalModal = document.querySelector(".swal2-popup");
+                    swalModal.style.width = "100%";  // Forzar el modal a ocupar el 100% del ancho disponible
+                    swalModal.style.maxWidth = "none";  // Eliminar cualquier restricción de maxWidth
+                    swalModal.style.padding = "20px";  // Aseguramos que haya suficiente espacio dentro del modal
+                },
+                preConfirm: () => {
+                    // Llamar a la función para descargar el Excel con las respuestas
+                    descargarExcelRespuestas(respuestas);  // 'respuestas' es el array con los datos que obtuviste anteriormente
+                },
+                willClose: () => {
+                    // Cuando se hace clic en "Volver", ejecutamos la función mostrarInterfazInicial
+                    mostrarInterfazInicial();
                 }
             });
         };
 
+        // Función para descargar excel de respuestas de la satisfacción de evento
+        const descargarExcelRespuestas = (respuestas) => {
+            // Obtener la fecha y hora en Colombia (UTC-5)
+            const colombiaTime = new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" });
+            const formattedTime = colombiaTime.replace(/[\/: ]/g, "_");  // Reemplazar caracteres no permitidos en nombres de archivo
+
+            // Crear una nueva hoja de trabajo
+            const wb = XLSX.utils.book_new();
+            
+            // Definir las cabeceras para las columnas
+            const encabezados = [
+                "NOMBRE", "CORREO", "TELÉFONO", 
+                ...Array.from({ length: 14 }, (_, i) => `R${i + 1}`),
+                "COMENTARIO"
+            ];
+            
+            // Crear los datos de las filas (incluyendo las respuestas)
+            const datos = respuestas.map(respuesta => [
+                respuesta.nombre,
+                respuesta.correo,
+                respuesta.telefono,
+                ...Array.from({ length: 14 }, (_, i) => respuesta[`r${i + 1}`] || ""),  // Asegurarse de que si no hay valor, se deje vacío
+                respuesta.comentario
+            ]);
+
+            // Crear una hoja de trabajo con los datos
+            const ws = XLSX.utils.aoa_to_sheet([encabezados, ...datos]);
+
+            // Agregar la hoja al libro de trabajo
+            XLSX.utils.book_append_sheet(wb, ws, "Respuestas");
+
+            // Crear un enlace para descargar el archivo Excel con la hora colombiana
+            const excelFileName = `Respuestas_Evento_${formattedTime}.xlsx`;
+            XLSX.writeFile(wb, excelFileName);
+        };
+      
         async function registrarNuevoEvento() {
 
             Swal.fire({
