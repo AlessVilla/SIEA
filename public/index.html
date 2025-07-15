@@ -7124,31 +7124,101 @@
             });
             */
 
-            if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
-                metaVA = 3;
-                metaEI = 2; // 2024 Semestre 1
-            } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
-                metaVA = 3;
-                metaEI = 2; // 2024 Semestre 2
-            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
-                metaVA = 6;
-                metaEI = 4; // 2024 Año Completo (Suma de 2024-1 y 2024-2)
-            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-06-20") {
-                metaVA = 4;
-                metaEI = 2; // 2025 Semestre 1
-            } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
-                metaVA = 4;
-                metaEI = 2; // 2025 Semestre 2
-            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
-                metaVA = 8;
-                metaEI = 4; // 2025 Año Completo (Suma de 2025-1 y 2025-2)
-            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
-                metaVA = 14;
-                metaEI = 8; // Todos los periodos (Suma de 2024 y 2025)
-            } else {
-                metaVA = 3;
-                metaEI = 2; // Meta por defecto
-            }
+          // Calcular metas dinámicamente dependiendo del rango de fechas
+          // Obtención de las metas correspondientes a los periodos de las fechas seleccionadas
+          var metasRef = firebase.firestore().collection("metas");
+          
+          let metasSnapshot;
+          if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
+              // Si corresponde al semestre 1 de 2024
+              metasSnapshot = await metasRef.doc("2024-1").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+          } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
+              // Si corresponde al semestre 2 de 2024
+              metasSnapshot = await metasRef.doc("2024-2").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+          } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-06-20") {
+              // Si corresponde al semestre 1 de 2025
+              metasSnapshot = await metasRef.doc("2025-1").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+          } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
+              // Si corresponde al semestre 2 de 2025
+              metasSnapshot = await metasRef.doc("2025-2").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+          } else if (fechaInicialPDF === "2026-02-01" && fechaFinalPDF === "2026-06-20") {
+              // Si corresponde al semestre 1 de 2025
+              metasSnapshot = await metasRef.doc("2026-1").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+          } else if (fechaInicialPDF === "2026-08-01" && fechaFinalPDF === "2026-11-30") {
+              // Si corresponde al semestre 2 de 2025
+              metasSnapshot = await metasRef.doc("2026-2").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+
+          } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
+          // Si corresponde al periodo de 2024 completo (2024-1 y 2024-2)
+          metasSnapshot = await metasRef.doc("2024-1").get();
+          metaVA = metasSnapshot.data().metaVA;
+          metaEI = metasSnapshot.data().metaEI;
+
+          // Añadir metas de 2024-2
+          const metas2024_2 = await metasRef.doc("2024-2").get();
+          metaVA += metas2024_2.data().metaVA;
+          metaEI += metas2024_2.data().metaEI;
+
+          } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
+              // Si corresponde al periodo de 2025 completo (2025-1 y 2025-2)
+              metasSnapshot = await metasRef.doc("2025-1").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+
+              // Añadir metas de 2025-2
+              const metas2025_2 = await metasRef.doc("2025-2").get();
+              metaVA += metas2025_2.data().metaVA;
+              metaEI += metas2025_2.data().metaEI;
+          
+          } else if (fechaInicialPDF === "2026-02-01" && fechaFinalPDF === "2026-11-30") {
+              // Si corresponde al periodo de 2026 completo (2026-1 y 2026-2)
+              metasSnapshot = await metasRef.doc("2026-1").get();
+              metaVA = metasSnapshot.data().metaVA;
+              metaEI = metasSnapshot.data().metaEI;
+
+              // Añadir metas de 2026-2
+              const metas2026_2 = await metasRef.doc("2026-2").get();
+              metaVA += metas2026_2.data().metaVA;
+              metaEI += metas2026_2.data().metaEI;
+          }
+
+          else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
+            // Si corresponde al periodo total entre 2024 y 2025
+            metasSnapshot = await metasRef.doc("2024-1").get();
+            metaVA = metasSnapshot.data().metaVA;
+            metaEI = metasSnapshot.data().metaEI;
+
+            // Añadir metas de 2024-2
+            const metas2024_2 = await metasRef.doc("2024-2").get();
+            metaVA += metas2024_2.data().metaVA;
+            metaEI += metas2024_2.data().metaEI;
+
+            // Añadir metas de 2025-1
+            const metas2025_1 = await metasRef.doc("2025-1").get();
+            metaVA += metas2025_1.data().metaVA;
+            metaEI += metas2025_1.data().metaEI;
+
+            // Añadir metas de 2025-2
+            const metas2025_2 = await metasRef.doc("2025-2").get();
+            metaVA += metas2025_2.data().metaVA;
+            metaEI += metas2025_2.data().metaEI;
+          } else {
+              // En caso de que no se cumpla ninguna de las fechas específicas, usar una meta por defecto
+              metaVA = 3;
+              metaEI = 2; // Meta por defecto
+          }
 
             console.log(`Metas establecidas -> metaVA: ${metaVA}, metaEI: ${metaEI}`);
 
@@ -9994,75 +10064,106 @@
 
             var totalEspacios = data.tablaResumenIE.length;
 
-            // Determinar la meta en función del periodo seleccionado
-            var meta = 0;
-            if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
-                meta = 2; // 2024 Semestre 1
-            } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
-                meta = 2; // 2024 Semestre 2
-            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
-                meta = 4; // 2024 Año Completo
-            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-06-20") {
-                meta = 3; // 2025 Semestre 1
-            } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
-                meta = 2; // 2025 Semestre 2
-            } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
-                meta = 6; // 2025 Año Completo (3 en el primer semestre + 3 en el segundo semestre)
-            } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
-                meta = 10; // Todos los periodos (4 de 2024 + 6 de 2025)
-            } else {
-                meta = 3; // Meta por defecto
-            }
+            // Calcular metas dinámicamente dependiendo del rango de fechas
+            var metasRef = firebase.firestore().collection("metas");
 
-            var extra = totalEspacios > meta ? totalEspacios - meta : 0;
+            // Realizar la carga de las metas de forma secuencial utilizando Promesas
+            const calcularMeta = (fechaInicialPDF, fechaFinalPDF) => {
+                return new Promise((resolve, reject) => {
+                    let meta = 0;
 
-            // Posiciones para el gráfico en el PDF
-            var posX = margenizq;
-            var posY = 100; // Posición vertical
-            var anchoBarra = margender - margenizq; // El ancho siempre será el mismo
-            var altoBarra = 15; // Altura de la barra
+                    if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
+                        metasRef.doc("2024-1").get().then(doc => {
+                            meta = doc.data().metaIE;
+                            resolve(meta);
+                        }).catch(reject);
+                    } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
+                        metasRef.doc("2024-2").get().then(doc => {
+                            meta = doc.data().metaIE;
+                            resolve(meta);
+                        }).catch(reject);
+                    } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-06-20") {
+                        metasRef.doc("2025-1").get().then(doc => {
+                            meta = doc.data().metaIE;
+                            resolve(meta);
+                        }).catch(reject);
+                    } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
+                        metasRef.doc("2025-2").get().then(doc => {
+                            meta = doc.data().metaIE;
+                            resolve(meta);
+                        }).catch(reject);
+                    } else if (fechaInicialPDF === "2026-02-01" && fechaFinalPDF === "2026-06-20") {
+                        metasRef.doc("2026-1").get().then(doc => {
+                            meta = doc.data().metaIE;
+                            resolve(meta);
+                        }).catch(reject);
+                    } else if (fechaInicialPDF === "2026-08-01" && fechaFinalPDF === "2026-11-30") {
+                        metasRef.doc("2026-2").get().then(doc => {
+                            meta = doc.data().metaIE;
+                            resolve(meta);
+                        }).catch(reject);
+                    } else {
+                        reject("Periodo no encontrado");
+                    }
+                });
+            };
 
-            // La escala debe adaptarse al número de espacios realizados
-            var escalaMax = totalEspacios > meta ? totalEspacios : meta;
+            // Aquí esperamos a que la meta sea calculada antes de seguir
+            calcularMeta(fechaInicialPDF, fechaFinalPDF)
+                .then(meta => {
+                    var extra = totalEspacios > meta ? totalEspacios - meta : 0;
 
-            // Dibujar la escala (marcando desde 0 hasta el mayor valor entre meta y total de espacios)
-            pdf.setTextColor(0, 0, 0);
-            pdf.setFontSize(10);
-            for (let i = 0; i <= escalaMax; i++) {
-                let xPos = posX + (i / escalaMax) * anchoBarra;
-                pdf.text(i.toString(), xPos, posY + altoBarra + 5);
-            }
+                    // Posiciones para el gráfico en el PDF
+                    var posX = margenizq;
+                    var posY = 100; // Posición vertical
+                    var anchoBarra = margender - margenizq; // El ancho siempre será el mismo
+                    var altoBarra = 15; // Altura de la barra
 
-            // Dibujar la barra de fondo (gris para la parte no cumplida)
-            var anchoGris = (meta / escalaMax) * anchoBarra; // Parte que corresponde a la meta
-            pdf.setDrawColor(150); // Color del borde
-            pdf.setFillColor(230); // Relleno gris claro
-            pdf.rect(posX, posY, anchoGris, altoBarra, 'F'); // Dibujar el fondo hasta la meta
+                    // La escala debe adaptarse al número de espacios realizados
+                    var escalaMax = totalEspacios > meta ? totalEspacios : meta;
 
-            // Dibujar la barra de cumplimiento (verde claro hasta la meta)
-            var anchoCumplimiento = Math.min((totalEspacios / escalaMax) * anchoBarra, (meta / escalaMax) * anchoBarra);
-            pdf.setFillColor(0, 200, 0); // Verde claro
-            pdf.rect(posX, posY, anchoCumplimiento, altoBarra, 'F');
+                    // Dibujar la escala (marcando desde 0 hasta el mayor valor entre meta y total de espacios)
+                    pdf.setTextColor(0, 0, 0);
+                    pdf.setFontSize(10);
+                    for (let i = 0; i <= escalaMax; i++) {
+                        let xPos = posX + (i / escalaMax) * anchoBarra;
+                        pdf.text(i.toString(), xPos, posY + altoBarra + 5);
+                    }
 
-            // Si hay espacios extra, dibujar la parte adicional de la barra (verde oscuro)
-            if (extra > 0) {
-                var anchoExtra = ((extra / escalaMax) * anchoBarra);
-                pdf.setFillColor(0, 100, 0); // Verde oscuro para extra
-                pdf.rect(posX + anchoCumplimiento, posY, anchoExtra, altoBarra, 'F');
-            }
+                    // Dibujar la barra de fondo (gris para la parte no cumplida)
+                    var anchoGris = (meta / escalaMax) * anchoBarra; // Parte que corresponde a la meta
+                    pdf.setDrawColor(150); // Color del borde
+                    pdf.setFillColor(230); // Relleno gris claro
+                    pdf.rect(posX, posY, anchoGris, altoBarra, 'F'); // Dibujar el fondo hasta la meta
 
-            // Añadir etiquetas de cumplimiento
-            pdf.setFontSize(12);
-            pdf.text(`Cumplimiento: ${totalEspacios}/${meta}`, posX, posY + altoBarra + 20);
+                    // Dibujar la barra de cumplimiento (verde claro hasta la meta)
+                    var anchoCumplimiento = Math.min((totalEspacios / escalaMax) * anchoBarra, (meta / escalaMax) * anchoBarra);
+                    pdf.setFillColor(0, 200, 0); // Verde claro
+                    pdf.rect(posX, posY, anchoCumplimiento, altoBarra, 'F');
 
-            // Añadir tabla con datos del análisis
-            var tablaInicioY = posY + altoBarra + 40;
-            pdf.text("Análisis de Cumplimiento:", posX, tablaInicioY);
-            pdf.text(`Espacios realizados: ${totalEspacios}`, posX, tablaInicioY + 10);
-            pdf.text(`Meta: ${meta} espacios`, posX, tablaInicioY + 20);
-            if (extra > 0) {
-                pdf.text(`Extras: ${extra} espacios adicionales`, posX, tablaInicioY + 30);
-            }
+                    // Si hay espacios extra, dibujar la parte adicional de la barra (verde oscuro)
+                    if (extra > 0) {
+                        var anchoExtra = ((extra / escalaMax) * anchoBarra);
+                        pdf.setFillColor(0, 100, 0); // Verde oscuro para extra
+                        pdf.rect(posX + anchoCumplimiento, posY, anchoExtra, altoBarra, 'F');
+                    }
+
+                    // Añadir etiquetas de cumplimiento
+                    pdf.setFontSize(12);
+                    pdf.text(`Cumplimiento: ${totalEspacios}/${meta}`, posX, posY + altoBarra + 20);
+
+                    // Añadir tabla con datos del análisis
+                    var tablaInicioY = posY + altoBarra + 40;
+                    pdf.text("Análisis de Cumplimiento:", posX, tablaInicioY);
+                    pdf.text(`Espacios realizados: ${totalEspacios}`, posX, tablaInicioY + 10);
+                    pdf.text(`Meta: ${meta} espacios`, posX, tablaInicioY + 20);
+                    if (extra > 0) {
+                        pdf.text(`Extras: ${extra} espacios adicionales`, posX, tablaInicioY + 30);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error al obtener las metas: ", err);
+                });
         }).catch((error) => {
             console.error("❌ Error al obtener los datos de Firebase:", error);
         });
