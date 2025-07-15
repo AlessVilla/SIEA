@@ -314,7 +314,7 @@
       margin-bottom: 10px; /* Añadido para separar el botón de los campos */
       width: 120px; /* Ocupar el ancho del contenedor */
     }
-    .button-cambio-contrasena {
+    .button-cambio-credenciales {
       color: #000000;
       background-color: #FDF55F;
       padding: 5px 10px;
@@ -645,7 +645,7 @@
     <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
   </form>
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
-  <button type="button" class="button-cambio-contrasena" onclick="cambiar_contrasena()">Cambiar Contraseña</button>
+  <button type="button" class="button-cambio-credenciales" onclick="cambiar_credenciales()">Cambiar Credenciales</button>
   <!-- Elemento para mostrar el saludo -->
   <div id="saludoUsuario" style="color: orange;">¡Hola, ANEIAPo!</div>
 
@@ -6153,86 +6153,211 @@
       });
     }
 
-    function cambiar_contrasena() {
-      Swal.fire({
-          title: 'Cambio de Contraseña',
-          html: `
-              <label for="email">Correo electrónico</label>
-              <input type="email" id="email" class="swal2-input input-email" placeholder="Correo">
-              
-              <label for="oldPassword">Contraseña actual</label>
-              <input type="password" id="oldPassword" class="swal2-input input-password" placeholder="Contraseña Actual">
-              <span class="toggle-password" onclick="togglePasswordVisibility('oldPassword')">&#128065;</span>
-              
-              <label for="newPassword">Nueva contraseña</label>
-              <input type="password" id="newPassword" class="swal2-input input-password" placeholder="Nueva Contraseña">
-              <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')">&#128065;</span>
-              
-              <label for="confirmNewPassword">Confirmación contraseña</label>
-              <input type="password" id="confirmNewPassword" class="swal2-input input-password" placeholder="Confirmar Nueva Contraseña">
-              <span class="toggle-password" onclick="togglePasswordVisibility('confirmNewPassword')">&#128065;</span>
-          `,
-          confirmButtonText: 'Cambiar Contraseña',
-          focusConfirm: false,
-          preConfirm: () => {
-              const email = Swal.getPopup().querySelector('#email').value;
-              const oldPassword = Swal.getPopup().querySelector('#oldPassword').value;
-              const newPassword = Swal.getPopup().querySelector('#newPassword').value;
-              const confirmNewPassword = Swal.getPopup().querySelector('#confirmNewPassword').value;
-              
-              if (!email || !oldPassword || !newPassword || !confirmNewPassword) {
-                  Swal.showValidationMessage(`Todos los campos son obligatorios.`);
-                  return false;
-              }
-
-              if (oldPassword === newPassword) {
-                  Swal.showValidationMessage(`Tu nueva contraseña debe ser diferente a la actual.`);
-                  return false;
-              }
-
-              if (newPassword !== confirmNewPassword) {
-                  Swal.showValidationMessage(`Las contraseñas nuevas no coinciden.`);
-                  return false;
-              }
-
-              // Referencia al documento en la colección "cuentas"
-              var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
-
-              return cuentaRef.get().then((doc) => {
-                  if (!doc.exists) {
-                      Swal.showValidationMessage('No se encontró una cuenta asociada a ese correo.');
-                      return false;
-                  }
-
-                  const storedPassword = doc.data().pass;
-                  if (oldPassword !== storedPassword) {
-                      Swal.showValidationMessage('La contraseña actual no es correcta.');
-                      return false;
-                  }
-
-                  return { email: email, oldPassword: oldPassword, newPassword: newPassword };
-              });
-          },
-          showCancelButton: true,
-          cancelButtonText: 'Cancelar'
-      }).then((result) => {
-          if (result.value) {
-              const { email, newPassword } = result.value;
-
-              // Actualizar la contraseña en Firestore
-              var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
-              cuentaRef.update({
-                  pass: newPassword
-              }).then(() => {
-                  Swal.fire('Actualizado', 'Tu contraseña ha sido actualizada correctamente.', 'success');
-                  return enviarCorreoCambioContraseñaEmailJS(email, newPassword);
-              }).catch((error) => {
-                  Swal.fire('Error', 'No se pudo actualizar la contraseña.', 'error');
-              });
-          }
-      }).catch((error) => {
-          Swal.fire('Error', error.message, 'error');
-      });
+    function cambiar_credenciales() {
+        // Primer paso: mostrar menú para elegir qué campo cambiar
+        Swal.fire({
+            title: 'Selecciona el campo a cambiar',
+            html: `
+                <p>Selecciona qué campo deseas cambiar:</p>
+            `,
+            input: 'radio',
+            inputOptions: {
+                'nombre': 'Cambiar Nombre',
+                'telefono': 'Cambiar Teléfono',
+                'contrasena': 'Cambiar Contraseña'
+            },
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes seleccionar una opción';
+                }
+            },
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Continuar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const campoSeleccionado = result.value;
+    
+                // Verificar la opción seleccionada
+                if (campoSeleccionado === 'contrasena') {
+                    // Procedemos con el flujo de cambio de contraseña
+                    Swal.fire({
+                        title: 'Cambio de Contraseña',
+                        html: `
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" class="swal2-input input-email" placeholder="Correo">
+                            
+                            <label for="oldPassword">Contraseña actual</label>
+                            <input type="password" id="oldPassword" class="swal2-input input-password" placeholder="Contraseña Actual">
+                            <span class="toggle-password" onclick="togglePasswordVisibility('oldPassword')">&#128065;</span>
+                            
+                            <label for="newPassword">Nueva contraseña</label>
+                            <input type="password" id="newPassword" class="swal2-input input-password" placeholder="Nueva Contraseña">
+                            <span class="toggle-password" onclick="togglePasswordVisibility('newPassword')">&#128065;</span>
+                            
+                            <label for="confirmNewPassword">Confirmación contraseña</label>
+                            <input type="password" id="confirmNewPassword" class="swal2-input input-password" placeholder="Confirmar Nueva Contraseña">
+                            <span class="toggle-password" onclick="togglePasswordVisibility('confirmNewPassword')">&#128065;</span>
+                        `,
+                        confirmButtonText: 'Cambiar Contraseña',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            const email = Swal.getPopup().querySelector('#email').value;
+                            const oldPassword = Swal.getPopup().querySelector('#oldPassword').value;
+                            const newPassword = Swal.getPopup().querySelector('#newPassword').value;
+                            const confirmNewPassword = Swal.getPopup().querySelector('#confirmNewPassword').value;
+                            
+                            if (!email || !oldPassword || !newPassword || !confirmNewPassword) {
+                                Swal.showValidationMessage(`Todos los campos son obligatorios.`);
+                                return false;
+                            }
+    
+                            if (oldPassword === newPassword) {
+                                Swal.showValidationMessage(`Tu nueva contraseña debe ser diferente a la actual.`);
+                                return false;
+                            }
+    
+                            if (newPassword !== confirmNewPassword) {
+                                Swal.showValidationMessage(`Las contraseñas nuevas no coinciden.`);
+                                return false;
+                            }
+    
+                            // Referencia al documento en la colección "cuentas"
+                            var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
+    
+                            return cuentaRef.get().then((doc) => {
+                                if (!doc.exists) {
+                                    Swal.showValidationMessage('No se encontró una cuenta asociada a ese correo.');
+                                    return false;
+                                }
+    
+                                const storedPassword = doc.data().pass;
+                                if (oldPassword !== storedPassword) {
+                                    Swal.showValidationMessage('La contraseña actual no es correcta.');
+                                    return false;
+                                }
+    
+                                return { email: email, oldPassword: oldPassword, newPassword: newPassword };
+                            });
+                        },
+                        showCancelButton: true,
+                        cancelButtonText: 'Volver al Menú',
+                        cancelButtonColor: '#ff6347'  // Establecer un color rojo para volver al menú
+                    }).then((result) => {
+                        if (result.isDismissed) {
+                            // Si el usuario da click en "Volver al Menú", volvemos a mostrar el primer menú
+                            cambiar_credenciales();
+                        } else if (result.value) {
+                            const { email, newPassword } = result.value;
+    
+                            // Actualizar la contraseña en Firestore
+                            var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
+                            cuentaRef.update({
+                                pass: newPassword
+                            }).then(() => {
+                                Swal.fire('Actualizado', 'Tu contraseña ha sido actualizada correctamente.', 'success');
+                            }).catch((error) => {
+                                Swal.fire('Error', 'No se pudo actualizar la contraseña.', 'error');
+                            });
+                        }
+                    }).catch((error) => {
+                        Swal.fire('Error', error.message, 'error');
+                    });
+                } else {
+                    // Si se selecciona cambiar nombre o teléfono, el flujo es similar
+                    Swal.fire({
+                        title: `Cambio de ${campoSeleccionado.charAt(0).toUpperCase() + campoSeleccionado.slice(1)}`,
+                        html: `
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" class="swal2-input input-email" placeholder="Correo">
+                            
+                            <label for="oldPassword">Contraseña actual</label>
+                            <input type="password" id="oldPassword" class="swal2-input input-password" placeholder="Contraseña Actual">
+                            <span class="toggle-password" onclick="togglePasswordVisibility('oldPassword')">&#128065;</span>
+                            
+                            <label for="newValue">Nuevo ${campoSeleccionado === 'nombre' ? 'Nombre' : 'Teléfono'}</label>
+                            <input type="${campoSeleccionado === 'telefono' ? 'tel' : 'text'}" id="newValue" class="swal2-input input-password" placeholder="Nuevo ${campoSeleccionado === 'nombre' ? 'Nombre' : 'Teléfono'}">
+                            
+                            <label for="confirmNewValue">Confirmación ${campoSeleccionado === 'nombre' ? 'Nombre' : 'Teléfono'}</label>
+                            <input type="${campoSeleccionado === 'telefono' ? 'tel' : 'text'}" id="confirmNewValue" class="swal2-input input-password" placeholder="Confirmar ${campoSeleccionado === 'nombre' ? 'Nombre' : 'Teléfono'}">
+                        `,
+                        confirmButtonText: `Cambiar ${campoSeleccionado.charAt(0).toUpperCase() + campoSeleccionado.slice(1)}`,
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            const email = Swal.getPopup().querySelector('#email').value;
+                            const oldPassword = Swal.getPopup().querySelector('#oldPassword').value;
+                            const newValue = Swal.getPopup().querySelector('#newValue').value;
+                            const confirmNewValue = Swal.getPopup().querySelector('#confirmNewValue').value;
+    
+                            if (!email || !oldPassword || !newValue || !confirmNewValue) {
+                                Swal.showValidationMessage(`Todos los campos son obligatorios.`);
+                                return false;
+                            }
+    
+                            if (newValue !== confirmNewValue) {
+                                Swal.showValidationMessage(`El nuevo ${campoSeleccionado === 'nombre' ? 'nombre' : 'teléfono'} no coincide con la confirmación.`);
+                                return false;
+                            }
+    
+                            // Referencia al documento en la colección "cuentas"
+                            var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
+    
+                            return cuentaRef.get().then((doc) => {
+                                if (!doc.exists) {
+                                    Swal.showValidationMessage('No se encontró una cuenta asociada a ese correo.');
+                                    return false;
+                                }
+    
+                                const storedPassword = doc.data().pass;
+                                if (oldPassword !== storedPassword) {
+                                    Swal.showValidationMessage('La contraseña actual no es correcta.');
+                                    return false;
+                                }
+    
+                                return { email: email, newValue: newValue, campoSeleccionado: campoSeleccionado };
+                            });
+                        },
+                        showCancelButton: true,
+                        cancelButtonText: 'Volver al Menú',
+                        cancelButtonColor: '#ff6347'  // Establecer un color rojo para volver al menú
+                    }).then((result) => {
+                        if (result.isDismissed) {
+                            // Si el usuario da click en "Volver al Menú", volvemos a mostrar el primer menú
+                            cambiar_credenciales();
+                        } else if (result.value) {
+                            const { email, newValue, campoSeleccionado } = result.value;
+    
+                            let updateData = {};
+                            if (campoSeleccionado === 'nombre') {
+                                updateData.responsable = newValue;
+                            } else if (campoSeleccionado === 'telefono') {
+                                // Validamos si el correo comienza con "mercadeo" y usamos el campo correcto
+                                if (email.startsWith('mercadeo')) {
+                                    updateData.telefonoDCM = newValue;
+                                } else {
+                                    updateData.telefonoDCA = newValue;
+                                }
+                            }
+    
+                            // Actualizar el valor en Firestore
+                            var cuentaRef = firebase.firestore().collection("cuentas").doc(email);
+                            cuentaRef.update(updateData)
+                                .then(() => {
+                                    Swal.fire('Actualizado', `Tu ${campoSeleccionado.charAt(0).toUpperCase() + campoSeleccionado.slice(1)} ha sido actualizado correctamente.`, 'success');
+                                })
+                                .catch((error) => {
+                                    Swal.fire('Error', 'No se pudo actualizar los datos.', 'error');
+                                });
+                        }
+                    }).catch((error) => {
+                        Swal.fire('Error', error.message, 'error');
+                    });
+                }
+            } else if (result.isDismissed) {
+                // Si el usuario cancela el primer swal, se sale normalmente
+                Swal.fire('Operación cancelada', '', 'info');
+            }
+        });
     }
 
     function obtenerResponsable(correoUsuario) {
