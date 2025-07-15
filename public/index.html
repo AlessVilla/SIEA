@@ -1938,6 +1938,9 @@
     var clavesInforme = ""; //TRIPIANTE
     var fechaInicialPDF = '2025-02-01';
     var fechaFinalPDF = '2025-06-20';
+    var globalMetaVA = 0;
+    var globalMetaEI = 0;
+    var globalMetaIE = 0;
     var valoresPorcentajes = 2;
     var PosYParaSG = '';
     // Cargar la imagen que deseas usar como fondo para fi
@@ -7211,128 +7214,21 @@
         try {
             // Obtener datos necesarios para los gráficos desde Firebase
             // Consulta para obtener los eventos del capítulo dentro del rango de fechas
-            var fechaInicial = document.getElementById("fecha-inicial").value;
-            var fechaFinal = document.getElementById("fecha-final").value;
             var fechaHoy = new Date().toISOString().slice(0, 10);
             var reservasRef = firebase.firestore().collection("reservas");
             var consultaEventos = reservasRef.where("capitulosOrganizadores", "array-contains", capituloUsuario)
-                .where("fechaEvento", ">=", fechaInicial)
-                .where("fechaEvento", "<=", fechaFinal);
+                .where("fechaEvento", ">=", fechaInicialPDF)
+                .where("fechaEvento", "<=", fechaFinalPDF);
 
             // Consulta para obtener las metas del capítulo
             var cuentasRef = firebase.firestore().collection("cuentas");
             var consultaMetas = cuentasRef.where("capitulo", "==", capituloUsuario);
 
             // Variables para almacenar los resultados
-            var metaVA = 0; // Meta de Valor Agregado
-            var metaEI = 0; // Meta de Entrenamiento Interno
+            var metaVA = globalMetaVA; // Meta de Valor Agregado
+            var metaEI = globalMetaEI; // Meta de Entrenamiento Interno
             var totalVA = 0; // Total de Valor Agregado
             var totalEI = 0; // Total de Entrenamiento Interno
-
-            /*
-            // Realizar consultas
-            var metasSnapshot = await consultaMetas.get();
-            metasSnapshot.forEach(doc => {
-                metaVA = 3;
-                metaEI = 2;
-            });
-            */
-
-          // Calcular metas dinámicamente dependiendo del rango de fechas
-          // Obtención de las metas correspondientes a los periodos de las fechas seleccionadas
-          var metasRef = firebase.firestore().collection("metas");
-          
-          let metasSnapshot;
-          if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
-              // Si corresponde al semestre 1 de 2024
-              metasSnapshot = await metasRef.doc("2024-1").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-          } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
-              // Si corresponde al semestre 2 de 2024
-              metasSnapshot = await metasRef.doc("2024-2").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-          } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-06-20") {
-              // Si corresponde al semestre 1 de 2025
-              metasSnapshot = await metasRef.doc("2025-1").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-          } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
-              // Si corresponde al semestre 2 de 2025
-              metasSnapshot = await metasRef.doc("2025-2").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-          } else if (fechaInicialPDF === "2026-02-01" && fechaFinalPDF === "2026-06-20") {
-              // Si corresponde al semestre 1 de 2025
-              metasSnapshot = await metasRef.doc("2026-1").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-          } else if (fechaInicialPDF === "2026-08-01" && fechaFinalPDF === "2026-11-30") {
-              // Si corresponde al semestre 2 de 2025
-              metasSnapshot = await metasRef.doc("2026-2").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-
-          } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
-          // Si corresponde al periodo de 2024 completo (2024-1 y 2024-2)
-          metasSnapshot = await metasRef.doc("2024-1").get();
-          metaVA = metasSnapshot.data().metaVA;
-          metaEI = metasSnapshot.data().metaEI;
-
-          // Añadir metas de 2024-2
-          const metas2024_2 = await metasRef.doc("2024-2").get();
-          metaVA += metas2024_2.data().metaVA;
-          metaEI += metas2024_2.data().metaEI;
-
-          } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
-              // Si corresponde al periodo de 2025 completo (2025-1 y 2025-2)
-              metasSnapshot = await metasRef.doc("2025-1").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-
-              // Añadir metas de 2025-2
-              const metas2025_2 = await metasRef.doc("2025-2").get();
-              metaVA += metas2025_2.data().metaVA;
-              metaEI += metas2025_2.data().metaEI;
-          
-          } else if (fechaInicialPDF === "2026-02-01" && fechaFinalPDF === "2026-11-30") {
-              // Si corresponde al periodo de 2026 completo (2026-1 y 2026-2)
-              metasSnapshot = await metasRef.doc("2026-1").get();
-              metaVA = metasSnapshot.data().metaVA;
-              metaEI = metasSnapshot.data().metaEI;
-
-              // Añadir metas de 2026-2
-              const metas2026_2 = await metasRef.doc("2026-2").get();
-              metaVA += metas2026_2.data().metaVA;
-              metaEI += metas2026_2.data().metaEI;
-          }
-
-          else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
-            // Si corresponde al periodo total entre 2024 y 2025
-            metasSnapshot = await metasRef.doc("2024-1").get();
-            metaVA = metasSnapshot.data().metaVA;
-            metaEI = metasSnapshot.data().metaEI;
-
-            // Añadir metas de 2024-2
-            const metas2024_2 = await metasRef.doc("2024-2").get();
-            metaVA += metas2024_2.data().metaVA;
-            metaEI += metas2024_2.data().metaEI;
-
-            // Añadir metas de 2025-1
-            const metas2025_1 = await metasRef.doc("2025-1").get();
-            metaVA += metas2025_1.data().metaVA;
-            metaEI += metas2025_1.data().metaEI;
-
-            // Añadir metas de 2025-2
-            const metas2025_2 = await metasRef.doc("2025-2").get();
-            metaVA += metas2025_2.data().metaVA;
-            metaEI += metas2025_2.data().metaEI;
-          } else {
-              // En caso de que no se cumpla ninguna de las fechas específicas, usar una meta por defecto
-              metaVA = 3;
-              metaEI = 2; // Meta por defecto
-          }
 
             console.log(`Metas establecidas -> metaVA: ${metaVA}, metaEI: ${metaEI}`);
 
