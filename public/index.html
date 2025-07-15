@@ -9408,28 +9408,20 @@
         return; // Detener el proceso de evaluación
       }
 
-      // Opciones de periodos disponibles
-      const periodosDisponibles = {
-          "2024 Sem1": { inicio: "2024-02-01", fin: "2024-05-31" },
-          "2024 Sem2": { inicio: "2024-08-01", fin: "2024-11-30" },
-          "2024 Año": { inicio: "2024-02-01", fin: "2024-11-30" },
-          "2025 Sem1": { inicio: "2025-02-01", fin: "2025-06-20" },
-          "2025 Sem2": { inicio: "2025-08-01", fin: "2025-11-30" },
-          "2025 Año": { inicio: "2025-02-01", fin: "2025-11-30" },
-          "Todos los periodos": { inicio: "2024-02-01", fin: "2025-11-30" }
-      };
-
-      // Convertir las claves en opciones válidas para el menú desplegable
-      const opcionesPeriodo = Object.keys(periodosDisponibles);
 
       // Mostrar el menú de selección de periodo con SweetAlert
       const { value: periodoSeleccionado } = await Swal.fire({
           title: 'Selecciona el periodo',
           input: 'select',
-          inputOptions: opcionesPeriodo.reduce((obj, periodo) => {
-              obj[periodo] = periodo; // Mostrar solo el nombre del periodo
-              return obj;
-          }, {}),
+          inputOptions: {
+              '2024 Sem1': '2024 Semestre 1',
+              '2024 Sem2': '2024 Semestre 2',
+              '2024 Año': '2024 Año Completo',
+              '2025 Sem1': '2025 Semestre 1',
+              '2025 Sem2': '2025 Semestre 2',
+              '2025 Año': '2025 Año Completo',
+              'Todos los periodos': '2024 y 2025 Año Completo'
+          },
           inputPlaceholder: 'Selecciona un periodo',
           showCancelButton: true,
           confirmButtonText: 'Aceptar',
@@ -9443,11 +9435,130 @@
           return;
       }
 
-      // Asignar las fechas según el periodo seleccionado
-      var fechaInicialPDF = periodosDisponibles[periodoSeleccionado].inicio;
-      var fechaFinalPDF = periodosDisponibles[periodoSeleccionado].fin;
-
       console.log(`Periodo seleccionado: ${periodoSeleccionado}`);
+
+      // Obtener las fechas desde Firestore
+      const metasRef = firebase.firestore().collection("metas");
+      let fechaInicialPDF, fechaFinalPDF;
+
+      switch (periodoSeleccionado) {
+          case '2024 Sem1':
+              const doc2024Sem1 = await metasRef.doc('2024-1').get();
+              fechaInicialPDF = doc2024Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2024Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2024Sem1.data().metaVA;
+              globalMetaEI = doc2024Sem1.data().metaEI;
+              globalMetaIE = doc2024Sem1.data().metaIE;
+              break;
+
+          case '2024 Sem2':
+              const doc2024Sem2 = await metasRef.doc('2024-2').get();
+              fechaInicialPDF = doc2024Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2024Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2024Sem2.data().metaVA;
+              globalMetaEI = doc2024Sem2.data().metaEI;
+              globalMetaIE = doc2024Sem2.data().metaIE;
+              break;
+
+          case '2024 Año':
+              const doc2024Sem1A = await metasRef.doc('2024-1').get();
+              const doc2024Sem2A = await metasRef.doc('2024-2').get();
+              fechaInicialPDF = doc2024Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2024Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2024Sem1A.data().metaVA + doc2024Sem2A.data().metaVA;
+              globalMetaEI = doc2024Sem1A.data().metaEI + doc2024Sem2A.data().metaEI;
+              globalMetaIE = doc2024Sem1A.data().metaIE + doc2024Sem2A.data().metaIE;
+              break;
+
+          case '2025 Sem1':
+              const doc2025Sem1 = await metasRef.doc('2025-1').get();
+              fechaInicialPDF = doc2025Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2025Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2025Sem1.data().metaVA;
+              globalMetaEI = doc2025Sem1.data().metaEI;
+              globalMetaIE = doc2025Sem1.data().metaIE;
+              break;
+
+          case '2025 Sem2':
+              const doc2025Sem2 = await metasRef.doc('2025-2').get();
+              fechaInicialPDF = doc2025Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2025Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2025Sem2.data().metaVA;
+              globalMetaEI = doc2025Sem2.data().metaEI;
+              globalMetaIE = doc2025Sem2.data().metaIE;
+              break;
+
+          case '2025 Año':
+              const doc2025Sem1A = await metasRef.doc('2025-1').get();
+              const doc2025Sem2A = await metasRef.doc('2025-2').get();
+              fechaInicialPDF = doc2025Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2025Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2025Sem1A.data().metaVA + doc2025Sem2A.data().metaVA;
+              globalMetaEI = doc2025Sem1A.data().metaEI + doc2025Sem2A.data().metaEI;
+              globalMetaIE = doc2025Sem1A.data().metaIE + doc2025Sem2A.data().metaIE;
+              break;
+
+          case '2026 Sem1':
+              const doc2026Sem1 = await metasRef.doc('2026-1').get();
+              fechaInicialPDF = doc2026Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2026Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2026Sem1.data().metaVA;
+              globalMetaEI = doc2026Sem1.data().metaEI;
+              globalMetaIE = doc2026Sem1.data().metaIE;
+              break;
+
+          case '2026 Sem2':
+              const doc2026Sem2 = await metasRef.doc('2026-2').get();
+              fechaInicialPDF = doc2026Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2026Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2026Sem2.data().metaVA;
+              globalMetaEI = doc2026Sem2.data().metaEI;
+              globalMetaIE = doc2026Sem2.data().metaIE;
+              break;
+
+          case '2026 Año':
+              const doc2026Sem1A = await metasRef.doc('2026-1').get();
+              const doc2026Sem2A = await metasRef.doc('2026-2').get();
+              fechaInicialPDF = doc2026Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2026Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2026Sem1A.data().metaVA + doc2026Sem2A.data().metaVA;
+              globalMetaEI = doc2026Sem1A.data().metaEI + doc2026Sem2A.data().metaEI;
+              globalMetaIE = doc2026Sem1A.data().metaIE + doc2026Sem2A.data().metaIE;
+              break;
+
+          case '2027 Sem1':
+              const doc2027Sem1 = await metasRef.doc('2027-1').get();
+              fechaInicialPDF = doc2027Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2027Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2027Sem1.data().metaVA;
+              globalMetaEI = doc2027Sem1.data().metaEI;
+              globalMetaIE = doc2027Sem1.data().metaIE;
+              break;
+
+          case '2027 Sem2':
+              const doc2027Sem2 = await metasRef.doc('2027-2').get();
+              fechaInicialPDF = doc2027Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2027Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2027Sem2.data().metaVA;
+              globalMetaEI = doc2027Sem2.data().metaEI;
+              globalMetaIE = doc2027Sem2.data().metaIE;
+              break;
+
+          case '2027 Año':
+              const doc2027Sem1A = await metasRef.doc('2027-1').get();
+              const doc2027Sem2A = await metasRef.doc('2027-2').get();
+              fechaInicialPDF = doc2027Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2027Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2027Sem1A.data().metaVA + doc2027Sem2A.data().metaVA;
+              globalMetaEI = doc2027Sem1A.data().metaEI + doc2027Sem2A.data().metaEI;
+              globalMetaIE = doc2027Sem1A.data().metaIE + doc2027Sem2A.data().metaIE;
+              break;
+
+          default:
+              console.error('Periodo no válido');
+              return;
+      }
+
       console.log(`Fecha Inicial: ${fechaInicialPDF}`);
       console.log(`Fecha Final: ${fechaFinalPDF}`);
 
@@ -9946,37 +10057,6 @@
     }
 
     async function generarInformeIE(event) {
-      /*
-      Swal.fire({
-          title: '¡TE ESPERAMOS EL MARTES 24 DE SEPTIEMBRE!',
-          text: 'Esta función de SIEA se estrenará el 24 de septiembre, prepárate y actualiza la información de Integración con el Entorno (IE) para que puedas disfrutarla lo más antes posible. 💚',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: true,
-          backdrop: true,
-          allowEscapeKey: true,
-          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-      });
-      return; // Detener el proceso de evaluación
-      */
-      if (capituloUsuario === "" || correoUsuario === "") {
-        Swal.fire({
-            icon: 'error',
-            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
-            text: 'Debe iniciar sesión como DCA para poder generar el informe.',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: true,
-            backdrop: true,
-            allowEscapeKey: true,
-            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        return; // Detener el proceso de evaluación
-      }
 
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
@@ -9995,28 +10075,41 @@
         return; // Detener el proceso de evaluación
       }
 
-      // Opciones de periodos disponibles
-      const periodosDisponibles = {
-          "2024 Sem1": { inicio: "2024-02-01", fin: "2024-05-31" },
-          "2024 Sem2": { inicio: "2024-08-01", fin: "2024-11-30" },
-          "2024 Año": { inicio: "2024-02-01", fin: "2024-11-30" },
-          "2025 Sem1": { inicio: "2025-02-01", fin: "2025-06-20" },
-          "2025 Sem2": { inicio: "2025-08-01", fin: "2025-11-30" },
-          "2025 Año": { inicio: "2025-02-01", fin: "2025-11-30" },
-          "Todos los periodos": { inicio: "2024-02-01", fin: "2025-11-30" }
-      };
-
-      // Convertir las claves en opciones válidas para el menú desplegable
-      const opcionesPeriodo = Object.keys(periodosDisponibles);
+      if (capituloUsuario === "" || correoUsuario === "") {
+        Swal.fire({
+            icon: 'error',
+            title: '¡DEBE INICIAR SESIÓN PARA GENERAR EL INFORME!',
+            text: 'Debe iniciar sesión como DCA para poder generar el informe.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener el proceso de evaluación
+      }
 
       // Mostrar el menú de selección de periodo con SweetAlert
       const { value: periodoSeleccionado } = await Swal.fire({
           title: 'Selecciona el periodo',
           input: 'select',
-          inputOptions: opcionesPeriodo.reduce((obj, periodo) => {
-              obj[periodo] = periodo; // Mostrar solo el nombre del periodo
-              return obj;
-          }, {}),
+          inputOptions: {
+              '2024 Sem1': '2024 Sem1',
+              '2024 Sem2': '2024 Sem2',
+              '2024 Año': '2024 Año',
+              '2025 Sem1': '2025 Sem1',
+              '2025 Sem2': '2025 Sem2',
+              '2025 Año': '2025 Año',
+              '2026 Sem1': '2026 Sem1',
+              '2026 Sem2': '2026 Sem2',
+              '2026 Año': '2026 Año',
+              '2027 Sem1': '2027 Sem1',
+              '2027 Sem2': '2027 Sem2',
+              '2027 Año': '2027 Año'
+          },
           inputPlaceholder: 'Selecciona un periodo',
           showCancelButton: true,
           confirmButtonText: 'Aceptar',
@@ -10025,18 +10118,150 @@
           allowEscapeKey: false
       });
 
-      // Si el usuario canceló la selección, detener la ejecución
+      // Si el usuario cancela la selección, detener la ejecución
       if (!periodoSeleccionado) {
           return;
       }
 
-      // Asignar las fechas según el periodo seleccionado
-      var fechaInicialPDF = periodosDisponibles[periodoSeleccionado].inicio;
-      var fechaFinalPDF = periodosDisponibles[periodoSeleccionado].fin;
+      // Obtener las fechas y metas correspondientes según el periodo seleccionado
+      const metasRef = firebase.firestore().collection("metas");
 
-      console.log(`Periodo seleccionado: ${periodoSeleccionado}`);
+      switch (periodoSeleccionado) {
+          case '2024 Sem1':
+              const doc2024Sem1 = await metasRef.doc('2024-1').get();
+              fechaInicialPDF = doc2024Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2024Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2024Sem1.data().metaVA;
+              globalMetaEI = doc2024Sem1.data().metaEI;
+              globalMetaIE = doc2024Sem1.data().metaIE;
+              nombrePeriodo = "2024_Sem1";
+              break;
+
+          case '2024 Sem2':
+              const doc2024Sem2 = await metasRef.doc('2024-2').get();
+              fechaInicialPDF = doc2024Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2024Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2024Sem2.data().metaVA;
+              globalMetaEI = doc2024Sem2.data().metaEI;
+              globalMetaIE = doc2024Sem2.data().metaIE;
+              nombrePeriodo = "2024_Sem2";
+              break;
+
+          case '2024 Año':
+              const doc2024Sem1A = await metasRef.doc('2024-1').get();
+              const doc2024Sem2A = await metasRef.doc('2024-2').get();
+              fechaInicialPDF = doc2024Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2024Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2024Sem1A.data().metaVA + doc2024Sem2A.data().metaVA;
+              globalMetaEI = doc2024Sem1A.data().metaEI + doc2024Sem2A.data().metaEI;
+              globalMetaIE = doc2024Sem1A.data().metaIE + doc2024Sem2A.data().metaIE;
+              nombrePeriodo = "ANUAL_2024";
+              break;
+
+          case '2025 Sem1':
+              const doc2025Sem1 = await metasRef.doc('2025-1').get();
+              fechaInicialPDF = doc2025Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2025Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2025Sem1.data().metaVA;
+              globalMetaEI = doc2025Sem1.data().metaEI;
+              globalMetaIE = doc2025Sem1.data().metaIE;
+              nombrePeriodo = "2025_Sem1";
+              break;
+
+          case '2025 Sem2':
+              const doc2025Sem2 = await metasRef.doc('2025-2').get();
+              fechaInicialPDF = doc2025Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2025Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2025Sem2.data().metaVA;
+              globalMetaEI = doc2025Sem2.data().metaEI;
+              globalMetaIE = doc2025Sem2.data().metaIE;
+              nombrePeriodo = "2025_Sem2";
+              break;
+
+          case '2025 Año':
+              const doc2025Sem1A = await metasRef.doc('2025-1').get();
+              const doc2025Sem2A = await metasRef.doc('2025-2').get();
+              fechaInicialPDF = doc2025Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2025Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2025Sem1A.data().metaVA + doc2025Sem2A.data().metaVA;
+              globalMetaEI = doc2025Sem1A.data().metaEI + doc2025Sem2A.data().metaEI;
+              globalMetaIE = doc2025Sem1A.data().metaIE + doc2025Sem2A.data().metaIE;
+              nombrePeriodo = "ANUAL_2025";
+              break;
+
+          case '2026 Sem1':
+              const doc2026Sem1 = await metasRef.doc('2026-1').get();
+              fechaInicialPDF = doc2026Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2026Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2026Sem1.data().metaVA;
+              globalMetaEI = doc2026Sem1.data().metaEI;
+              globalMetaIE = doc2026Sem1.data().metaIE;
+              nombrePeriodo = "2026_Sem1";
+              break;
+
+          case '2026 Sem2':
+              const doc2026Sem2 = await metasRef.doc('2026-2').get();
+              fechaInicialPDF = doc2026Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2026Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2026Sem2.data().metaVA;
+              globalMetaEI = doc2026Sem2.data().metaEI;
+              globalMetaIE = doc2026Sem2.data().metaIE;
+              nombrePeriodo = "2026_Sem2";
+              break;
+
+          case '2026 Año':
+              const doc2026Sem1A = await metasRef.doc('2026-1').get();
+              const doc2026Sem2A = await metasRef.doc('2026-2').get();
+              fechaInicialPDF = doc2026Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2026Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2026Sem1A.data().metaVA + doc2026Sem2A.data().metaVA;
+              globalMetaEI = doc2026Sem1A.data().metaEI + doc2026Sem2A.data().metaEI;
+              globalMetaIE = doc2026Sem1A.data().metaIE + doc2026Sem2A.data().metaIE;
+              nombrePeriodo = "ANUAL_2026";
+              break;
+
+          case '2027 Sem1':
+              const doc2027Sem1 = await metasRef.doc('2027-1').get();
+              fechaInicialPDF = doc2027Sem1.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2027Sem1.data().fechaFinSemestre;
+              globalMetaVA = doc2027Sem1.data().metaVA;
+              globalMetaEI = doc2027Sem1.data().metaEI;
+              globalMetaIE = doc2027Sem1.data().metaIE;
+              nombrePeriodo = "2027_Sem1";
+              break;
+
+          case '2027 Sem2':
+              const doc2027Sem2 = await metasRef.doc('2027-2').get();
+              fechaInicialPDF = doc2027Sem2.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2027Sem2.data().fechaFinSemestre;
+              globalMetaVA = doc2027Sem2.data().metaVA;
+              globalMetaEI = doc2027Sem2.data().metaEI;
+              globalMetaIE = doc2027Sem2.data().metaIE;
+              nombrePeriodo = "2027_Sem2";
+              break;
+
+          case '2027 Año':
+              const doc2027Sem1A = await metasRef.doc('2027-1').get();
+              const doc2027Sem2A = await metasRef.doc('2027-2').get();
+              fechaInicialPDF = doc2027Sem1A.data().fechaInicioSemestre;
+              fechaFinalPDF = doc2027Sem2A.data().fechaFinSemestre;
+              globalMetaVA = doc2027Sem1A.data().metaVA + doc2027Sem2A.data().metaVA;
+              globalMetaEI = doc2027Sem1A.data().metaEI + doc2027Sem2A.data().metaEI;
+              globalMetaIE = doc2027Sem1A.data().metaIE + doc2027Sem2A.data().metaIE;
+              nombrePeriodo = "ANUAL_2027";
+              break;
+
+          default:
+              console.error('Periodo no válido');
+              return;
+      }
+
+      // Ahora las fechas y metas globales están listos y actualizados
       console.log(`Fecha Inicial: ${fechaInicialPDF}`);
       console.log(`Fecha Final: ${fechaFinalPDF}`);
+      console.log(`Meta VA: ${globalMetaVA}`);
+      console.log(`Meta EI: ${globalMetaEI}`);
+      console.log(`Meta IE: ${globalMetaIE}`);
 
       actualizarClavesInforme(capituloUsuario, correoUsuario, fechaInicialPDF, fechaFinalPDF)
 
@@ -10044,7 +10269,7 @@
       Swal.fire({
           title: 'Generando informe',
           html: '<p>¡Estamos preparando tu informe!<br>Esto podría llevar hasta 30 segundos, si demora más de esto, entonces hay un error en la información de tus espacios, actualízala.</p><p>Mientras tanto, ¿por qué no tomas un pequeño descanso o preparas una taza de café?</p><p>El informe estará disponible en la carpeta de descargas cuando esté listo.</p>',
-          timer: tiempoCarga*2, // Duración en milisegundos (60 segundos)
+          timer: tiempoCarga*5, // Duración en milisegundos (60 segundos)
           showConfirmButton: false,
           allowOutsideClick: false,
           allowEscapeKey: false,
@@ -10056,7 +10281,7 @@
 
       // Crear un nuevo objeto jsPDF
       var pdf = new jsPDF();
-      var tiempoCarga = 3000;
+      var tiempoCarga = 10000;
       var margenizq = 15; //Margen izquierdo
       var margender = 180;//Margen derecho
       var coordenadaY = 35;
@@ -10086,16 +10311,6 @@
       let mesInicial = obtenerAbreviaturaMes(fechaInicialPDF.substring(5, 7));
       let añoFinal = fechaFinalPDF.substring(0, 4);
       let mesFinal = obtenerAbreviaturaMes(fechaFinalPDF.substring(5, 7));
-
-      // Determinar el nombre del periodo
-      let nombrePeriodo = `${mesInicial}-${mesFinal}_${añoFinal}`;
-      if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-11-30") {
-          nombrePeriodo = "ANUAL_2024";
-      } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-11-30") {
-          nombrePeriodo = "ANUAL_2025";
-      } else if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2025-11-30") {
-          nombrePeriodo = "TODOS_LOS_PERIODOS";
-      }
 
       // Título del informe
       pdf.setFontSize(18);
@@ -10155,7 +10370,7 @@
             imageHeight: 235,
             imageAlt: 'Éxito',
         });
-      }, tiempoCarga); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
+      }, tiempoCarga*2); // Espera 60 segundos antes de obtener los canvas y convertirlos en imágenes
 
     }
 
@@ -10184,40 +10399,13 @@
             // Realizar la carga de las metas de forma secuencial utilizando Promesas
             const calcularMeta = (fechaInicialPDF, fechaFinalPDF) => {
                 return new Promise((resolve, reject) => {
-                    let meta = 0;
+                    let meta = globalMetaIE;  // Ya tenemos la meta calculada y almacenada en globalMetaIE
 
-                    if (fechaInicialPDF === "2024-02-01" && fechaFinalPDF === "2024-05-31") {
-                        metasRef.doc("2024-1").get().then(doc => {
-                            meta = doc.data().metaIE;
-                            resolve(meta);
-                        }).catch(reject);
-                    } else if (fechaInicialPDF === "2024-08-01" && fechaFinalPDF === "2024-11-30") {
-                        metasRef.doc("2024-2").get().then(doc => {
-                            meta = doc.data().metaIE;
-                            resolve(meta);
-                        }).catch(reject);
-                    } else if (fechaInicialPDF === "2025-02-01" && fechaFinalPDF === "2025-06-20") {
-                        metasRef.doc("2025-1").get().then(doc => {
-                            meta = doc.data().metaIE;
-                            resolve(meta);
-                        }).catch(reject);
-                    } else if (fechaInicialPDF === "2025-08-01" && fechaFinalPDF === "2025-11-30") {
-                        metasRef.doc("2025-2").get().then(doc => {
-                            meta = doc.data().metaIE;
-                            resolve(meta);
-                        }).catch(reject);
-                    } else if (fechaInicialPDF === "2026-02-01" && fechaFinalPDF === "2026-06-20") {
-                        metasRef.doc("2026-1").get().then(doc => {
-                            meta = doc.data().metaIE;
-                            resolve(meta);
-                        }).catch(reject);
-                    } else if (fechaInicialPDF === "2026-08-01" && fechaFinalPDF === "2026-11-30") {
-                        metasRef.doc("2026-2").get().then(doc => {
-                            meta = doc.data().metaIE;
-                            resolve(meta);
-                        }).catch(reject);
+                    // Simplemente devolver el valor de la meta
+                    if (meta) {
+                        resolve(meta);  // Si la meta existe, resolvemos la promesa con el valor
                     } else {
-                        reject("Periodo no encontrado");
+                        reject("Meta no encontrada");  // Si no hay meta calculada, rechazamos la promesa
                     }
                 });
             };
