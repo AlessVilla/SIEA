@@ -5827,150 +5827,264 @@
             });
     }
 
-
     function EjecutarAdmin(event) {
-    console.log("Función EjecutarAdmin iniciada.");
+        console.log("Función EjecutarAdmin iniciada.");
 
-    // Verifica si el usuario es administrador mediante correoUsuario
-    if (correoUsuario !== "siea@aneiap.co") {
-        console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
+        // Verifica si el usuario es administrador mediante correoUsuario
+        if (correoUsuario !== "siea@aneiap.co" && correoUsuario !== "academico@aneiap.co") {
+            console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
+            Swal.fire({
+                title: "¿LA CURIOSIDAD MATÓ AL GATO?",
+                text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
+                icon: "warning",
+                confirmButtonText: "Aceptar",
+                allowOutsideClick: true,
+                backdrop: true,
+                allowEscapeKey: true,
+                imageWidth: 120,
+                imageHeight: 235,
+            });
+            console.log("Fin de la función por falta de permisos.");
+            return;
+        }
+
+        console.log("Usuario autorizado. Continuando con la obtención de documentos.");
+
+        // Mostrar el menú para seleccionar "Editar reserva" o "Editar metas"
         Swal.fire({
-            title: "¿LA CURIOSIDAD MATÓ AL GATO?",
-            text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
-            icon: "warning",
-            confirmButtonText: "Aceptar",
-            allowOutsideClick: true,
-            backdrop: true,
-            allowEscapeKey: true,
-            imageWidth: 120,
-            imageHeight: 235,
-        });
-        console.log("Fin de la función por falta de permisos.");
-        return;
-    }
-
-    console.log("Usuario autorizado. Continuando con la obtención de documentos.");
-
-    // Obtener todos los documentos de la colección "reservas"
-    const reservasRef = firebase.firestore().collection("reservas");
-    reservasRef.get().then(reservasSnapshot => {
-        const reservasList = reservasSnapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }));
-        console.log("Lista de documentos procesada:", reservasList);
-
-        // Lista de campos de un documento en Firebase
-        const camposFirebase = [
-            "areaTrabajo", "asistentes", "capitulo", "capitulosOrganizadores", "claveEvento", "comentarios",
-            "correosAsistentes", "crm", "detractores", "duracionEvento", "emailOrganizador", "emailPonente", "evidencia",
-            "fechaEvento", "fotoPonenteURL", "horaEvento", "lugarPresencial", "modalidadEvento", "nombreEvento",
-            "nombreOrganizador", "nombrePonente", "observacionesEvento", "observacionesPublicidad", "pasivos",
-            "planEvento", "promotores", "publicidadComite", "respuestas1", "respuestas2", "respuestas3", "satisfaccion",
-            "telefonoOrganizador", "telefonoPonente", "telefonosAsistentes", "tipoEvento", "totalAsistentes",
-            "ubicacionPlataforma"
-        ];
-
-        // Mostrar el Swal con los tres campos y las acciones
-        Swal.fire({
-            title: "Actualizar Documento",
-            html: `
-                <label for="busquedaClave">Clave de la reserva</label>
-                <input type="text" id="busquedaClave" class="swal2-input" placeholder="Escribe para buscar...">
-                <select id="documentoSelect" class="swal2-input" style="width: 100%; height: 90px;" size="15">
-                    ${reservasList.map(reserva => `<option value="${reserva.id}">${reserva.id}</option>`).join('')}
-                </select>
-                <br>
-                <label for="campoSelect">Campo a editar</label>
-                <select id="campoSelect" class="swal2-input" style="width: 100%;" placeholder="Selecciona un campo">
-                    ${camposFirebase.map(campo => `<option value="${campo}">${campo}</option>`).join('')}
-                </select>
-                <br>
-                <label for="nuevoValor">Valor a colocar</label>
-                <input id="nuevoValor" class="swal2-input" placeholder="Escribe el nuevo valor">
-                <p id="mensajeError" style="color: red; display: none;">Todos los campos deben ser diligenciados</p>
-            `,
-            showCancelButton: true,
-            confirmButtonText: "Actualizar",
-            cancelButtonText: "Cancelar",
-            didOpen: () => {
-                // Agregar eventos para actualización dinámica de "Valor a colocar" y búsqueda en "Clave de la reserva"
-                document.getElementById("documentoSelect").addEventListener("change", actualizarValorActual);
-                document.getElementById("campoSelect").addEventListener("change", actualizarValorActual);
-                document.getElementById("busquedaClave").addEventListener("input", filtrarDocumentos);
-
-                // Función para actualizar el valor en el tercer slot
-                function actualizarValorActual() {
-                    const documentoId = document.getElementById("documentoSelect").value;
-                    const campoSeleccionado = document.getElementById("campoSelect").value;
-
-                    if (documentoId && campoSeleccionado) {
-                        const docRef = reservasRef.doc(documentoId);
-                        docRef.get().then(docSnapshot => {
-                            if (docSnapshot.exists) {
-                                const valorActual = docSnapshot.data()[campoSeleccionado] || "";
-                                document.getElementById("nuevoValor").value = valorActual;
-                                console.log(`Valor actual del campo ${campoSeleccionado} en el documento ${documentoId}:`, valorActual);
-                            } else {
-                                console.log("Documento no encontrado en Firebase.");
-                            }
-                        }).catch(error => {
-                            console.error("Error al obtener el documento:", error);
-                            mostrarMensajeFallaTecnica();
-                        });
-                    }
-                }
-
-                // Función de búsqueda dinámica en el campo "Clave de la reserva"
-                function filtrarDocumentos() {
-                    const searchText = document.getElementById("busquedaClave").value.toLowerCase();
-                    const documentoSelect = document.getElementById("documentoSelect");
-                    documentoSelect.innerHTML = reservasList
-                        .filter(reserva => reserva.id.toLowerCase().startsWith(searchText)) // Filtra solo si comienza con el texto
-                        .map(reserva => `<option value="${reserva.id}">${reserva.id}</option>`)
-                        .join('');
-                }
+            title: "Selecciona lo que deseas actualizar",
+            input: 'select',
+            inputOptions: {
+                'editarReserva': 'Editar Reserva',
+                'editarMetas': 'Editar Metas',
             },
-            preConfirm: () => {
-                console.log("Validando campos seleccionados.");
+            inputPlaceholder: '¿Qué deseas hacer?',
+            showCancelButton: true,
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                return; // Si se cancela, no hacer nada
+            }
 
-                // Validación de los campos
-                const documentoId = document.getElementById("documentoSelect").value;
-                const campoSeleccionado = document.getElementById("campoSelect").value;
-                const nuevoValor = document.getElementById("nuevoValor").value;
+            const opcionSeleccionada = result.value;
+            
+            if (opcionSeleccionada === 'editarReserva') {
+                // Si elige "Editar Reserva", mostrar el swal.fire original
+                console.log("Opción seleccionada: Editar Reserva");
+                actualizarDocumentoReserva();
+            } else if (opcionSeleccionada === 'editarMetas') {
+                // Si elige "Editar Metas", mostrar un nuevo swal.fire para seleccionar el documento de metas
+                console.log("Opción seleccionada: Editar Metas");
 
-                console.log("Valores capturados:", { documentoId, campoSeleccionado, nuevoValor });
+                // Mostrar el swal para seleccionar un documento de metas
+                const metasRef = firebase.firestore().collection("metas");
 
-                if (!documentoId || !campoSeleccionado || !nuevoValor) {
-                    document.getElementById("mensajeError").style.display = "block";
-                    return false;
-                } else {
-                    document.getElementById("mensajeError").style.display = "none";
-                }
+                metasRef.get().then((snapshot) => {
+                    const opcionesMetas = snapshot.docs.map(doc => doc.id);
+                    Swal.fire({
+                        title: 'Selecciona el documento de metas',
+                        input: 'select',
+                        inputOptions: opcionesMetas.reduce((acc, metaDoc) => {
+                            acc[metaDoc] = metaDoc;
+                            return acc;
+                        }, {}),
+                        inputPlaceholder: 'Selecciona el periodo al que le editarás las metas',
+                        showCancelButton: true,
+                        confirmButtonText: 'Continuar',
+                        cancelButtonText: 'Cancelar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                    }).then((metaResult) => {
+                        if (!metaResult.isConfirmed || !metaResult.value) {
+                            return; // Si no hay valor seleccionado o se cancela, no hacer nada
+                        }
 
-                console.log("Campos completos. Iniciando actualización en Firebase.");
+                        const docMetaSeleccionado = metaResult.value;
+                        console.log("Documento de metas seleccionado:", docMetaSeleccionado);
 
-                // Referencia al documento seleccionado en Firebase
-                const docRef = reservasRef.doc(documentoId);
+                        // Obtener los datos actuales del documento de metas seleccionado
+                        metasRef.doc(docMetaSeleccionado).get().then((docMeta) => {
+                            const dataMeta = docMeta.data();
+                            // Mostrar el swal para editar los valores de metaVA, metaEI, metaIE
+                            Swal.fire({
+                                title: `Editar metas para ${docMetaSeleccionado}`,
+                                html: ` 
+                                    <label for="metaVA">Meta VA</label>
+                                    <input type="number" id="metaVA" class="swal2-input" value="${dataMeta.metaVA}">
+                                    
+                                    <label for="metaEI">Meta EI</label>
+                                    <input type="number" id="metaEI" class="swal2-input" value="${dataMeta.metaEI}">
+                                    
+                                    <label for="metaIE">Meta IE</label>
+                                    <input type="number" id="metaIE" class="swal2-input" value="${dataMeta.metaIE}">
+                                `,
+                                confirmButtonText: 'Actualizar',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancelar',
+                                preConfirm: () => {
+                                    // Obtener los valores editados
+                                    const nuevaMetaVA = document.getElementById('metaVA').value;
+                                    const nuevaMetaEI = document.getElementById('metaEI').value;
+                                    const nuevaMetaIE = document.getElementById('metaIE').value;
 
-                // Actualizar el campo en Firebase
-                const actualizacion = {};
-                actualizacion[campoSeleccionado] = nuevoValor;
-                console.log("Datos a actualizar:", actualizacion);
+                                    // Validar que no estén vacíos
+                                    if (!nuevaMetaVA || !nuevaMetaEI || !nuevaMetaIE) {
+                                        Swal.showValidationMessage('Todos los campos son obligatorios.');
+                                        return false;
+                                    }
 
-                return docRef.update(actualizacion)
-                    .then(() => {
-                        console.log("Actualización exitosa en Firebase.");
-                        mostrarMensajeActualizarEspacio();
-                    })
-                    .catch((error) => {
-                        console.error("Error al actualizar en Firebase:", error);
-                        mostrarMensajeFallaTecnica();
+                                    // Actualizar los valores en Firestore
+                                    return metasRef.doc(docMetaSeleccionado).update({
+                                        metaVA: nuevaMetaVA,
+                                        metaEI: nuevaMetaEI,
+                                        metaIE: nuevaMetaIE
+                                    }).then(() => {
+                                        Swal.fire('Actualizado', 'Las metas se han actualizado correctamente.', 'success');
+                                    }).catch((error) => {
+                                        Swal.fire('Error', 'No se pudieron actualizar las metas.', 'error');
+                                    });
+                                }
+                            });
+                        }).catch((error) => {
+                            Swal.fire('Error', 'No se pudo obtener el documento de metas.', 'error');
+                        });
                     });
+                }).catch((error) => {
+                    Swal.fire('Error', 'No se pudo cargar los documentos de metas.', 'error');
+                });
             }
         });
-    }).catch(error => {
-        console.error("Error al obtener documentos de Firebase:", error);
-        mostrarMensajeFallaTecnica();
-    });
-}
+    }
+
+    function actualizarDocumentoReserva() {
+        // Aquí va el código que ya tenías para editar la reserva.
+        // Este código NO cambia, simplemente lo estamos moviendo a una función separada.
+
+        console.log("Iniciando la actualización de la reserva.");
+
+        // Obtener todos los documentos de la colección "reservas"
+        const reservasRef = firebase.firestore().collection("reservas");
+        reservasRef.get().then(reservasSnapshot => {
+            const reservasList = reservasSnapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }));
+            console.log("Lista de documentos procesada:", reservasList);
+
+            // Lista de campos de un documento en Firebase
+            const camposFirebase = [
+                "areaTrabajo", "asistentes", "capitulo", "capitulosOrganizadores", "claveEvento", "comentarios",
+                "correosAsistentes", "crm", "detractores", "duracionEvento", "emailOrganizador", "emailPonente", "evidencia",
+                "fechaEvento", "fotoPonenteURL", "horaEvento", "lugarPresencial", "modalidadEvento", "nombreEvento",
+                "nombreOrganizador", "nombrePonente", "observacionesEvento", "observacionesPublicidad", "pasivos",
+                "planEvento", "promotores", "publicidadComite", "respuestas1", "respuestas2", "respuestas3", "satisfaccion",
+                "telefonoOrganizador", "telefonoPonente", "telefonosAsistentes", "tipoEvento", "totalAsistentes",
+                "ubicacionPlataforma"
+            ];
+
+            // Mostrar el Swal con los tres campos y las acciones
+            Swal.fire({
+                title: "Actualizar Documento",
+                html: ` 
+                    <label for="busquedaClave">Clave de la reserva</label>
+                    <input type="text" id="busquedaClave" class="swal2-input" placeholder="Escribe para buscar...">
+                    <select id="documentoSelect" class="swal2-input" style="width: 100%; height: 90px;" size="15">
+                        ${reservasList.map(reserva => `<option value="${reserva.id}">${reserva.id}</option>`).join('')}
+                    </select>
+                    <br>
+                    <label for="campoSelect">Campo a editar</label>
+                    <select id="campoSelect" class="swal2-input" style="width: 100%;" placeholder="Selecciona un campo">
+                        ${camposFirebase.map(campo => `<option value="${campo}">${campo}</option>`).join('')}
+                    </select>
+                    <br>
+                    <label for="nuevoValor">Valor a colocar</label>
+                    <input id="nuevoValor" class="swal2-input" placeholder="Escribe el nuevo valor">
+                    <p id="mensajeError" style="color: red; display: none;">Todos los campos deben ser diligenciados</p>
+                `,
+                showCancelButton: true,
+                confirmButtonText: "Actualizar",
+                cancelButtonText: "Cancelar",
+                didOpen: () => {
+                    // Agregar eventos para actualización dinámica de "Valor a colocar" y búsqueda en "Clave de la reserva"
+                    document.getElementById("documentoSelect").addEventListener("change", actualizarValorActual);
+                    document.getElementById("campoSelect").addEventListener("change", actualizarValorActual);
+                    document.getElementById("busquedaClave").addEventListener("input", filtrarDocumentos);
+
+                    // Función para actualizar el valor en el tercer slot
+                    function actualizarValorActual() {
+                        const documentoId = document.getElementById("documentoSelect").value;
+                        const campoSeleccionado = document.getElementById("campoSelect").value;
+
+                        if (documentoId && campoSeleccionado) {
+                            const docRef = reservasRef.doc(documentoId);
+                            docRef.get().then(docSnapshot => {
+                                if (docSnapshot.exists) {
+                                    const valorActual = docSnapshot.data()[campoSeleccionado] || "";
+                                    document.getElementById("nuevoValor").value = valorActual;
+                                    console.log(`Valor actual del campo ${campoSeleccionado} en el documento ${documentoId}:`, valorActual);
+                                } else {
+                                    console.log("Documento no encontrado en Firebase.");
+                                }
+                            }).catch(error => {
+                                console.error("Error al obtener el documento:", error);
+                                mostrarMensajeFallaTecnica();
+                            });
+                        }
+                    }
+
+                    // Función de búsqueda dinámica en el campo "Clave de la reserva"
+                    function filtrarDocumentos() {
+                        const searchText = document.getElementById("busquedaClave").value.toLowerCase();
+                        const documentoSelect = document.getElementById("documentoSelect");
+                        documentoSelect.innerHTML = reservasList
+                            .filter(reserva => reserva.id.toLowerCase().startsWith(searchText)) // Filtra solo si comienza con el texto
+                            .map(reserva => `<option value="${reserva.id}">${reserva.id}</option>`)
+                            .join('');
+                    }
+                },
+                preConfirm: () => {
+                    console.log("Validando campos seleccionados.");
+
+                    // Validación de los campos
+                    const documentoId = document.getElementById("documentoSelect").value;
+                    const campoSeleccionado = document.getElementById("campoSelect").value;
+                    const nuevoValor = document.getElementById("nuevoValor").value;
+
+                    console.log("Valores capturados:", { documentoId, campoSeleccionado, nuevoValor });
+
+                    if (!documentoId || !campoSeleccionado || !nuevoValor) {
+                        document.getElementById("mensajeError").style.display = "block";
+                        return false;
+                    } else {
+                        document.getElementById("mensajeError").style.display = "none";
+                    }
+
+                    console.log("Campos completos. Iniciando actualización en Firebase.");
+
+                    // Referencia al documento seleccionado en Firebase
+                    const docRef = reservasRef.doc(documentoId);
+
+                    // Actualizar el campo en Firebase
+                    const actualizacion = {};
+                    actualizacion[campoSeleccionado] = nuevoValor;
+                    console.log("Datos a actualizar:", actualizacion);
+
+                    return docRef.update(actualizacion)
+                        .then(() => {
+                            console.log("Actualización exitosa en Firebase.");
+                            mostrarMensajeActualizarEspacio();
+                        })
+                        .catch((error) => {
+                            console.error("Error al actualizar en Firebase:", error);
+                            mostrarMensajeFallaTecnica();
+                        });
+                }
+            });
+        }).catch(error => {
+            console.error("Error al obtener documentos de Firebase:", error);
+            mostrarMensajeFallaTecnica();
+        });
+    }
 
     function validar_login() {
       // Obtener los valores de correo y contraseña desde los campos del formulario
