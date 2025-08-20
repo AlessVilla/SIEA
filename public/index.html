@@ -875,6 +875,7 @@
                 <option value="icesi">ICESI</option>
                 <option value="uao">UAO</option>
                 <option value="usc">USC</option>
+                <option value="librecali">LIBRECALI</option>
                 <option value="nacional">ANEIAP NACIONAL</option>
               </select>
             </div>
@@ -953,6 +954,7 @@
               <option value="icesi">ICESI</option>
               <option value="uao">UAO</option>
               <option value="usc">USC</option>
+              <option value="librecali">LIBRECALI</option>
               <option value="nacional">ANEIAP NACIONAL</option>
             </select>
           </div>
@@ -1109,6 +1111,7 @@
                   <option value="icesi">ICESI</option>
                   <option value="uao">UAO</option>
                   <option value="usc">USC</option>
+                  <option value="librecali">LIBRECALI</option>
                   <option value="nacional">ANEIAP NACIONAL</option>
                 </select>
             </div>
@@ -1287,6 +1290,7 @@
                 <option value="icesi">ICESI</option>
                 <option value="uao">UAO</option>
                 <option value="usc">USC</option>
+                <option value="librecali">LIBRECALI</option>
                 <option value="nacional">ANEIAP NACIONAL</option>
               </select>
               </div>
@@ -1423,6 +1427,7 @@
               <option value="icesi">ICESI</option>
               <option value="uao">UAO</option>
               <option value="usc">USC</option>
+              <option value="librecali">LIBRECALI</option>
               <option value="nacional">ANEIAP NACIONAL</option>
             </select>
           </div>
@@ -1684,7 +1689,7 @@
                   <option value="entrenamiento-interno">ENTRENAMIENTO INTERNO 🏋🏻</option>
                   <option value="integracion-entorno">INTEGRACIÓN CON EL ENTORNO 🏭</option>
                   <option value="escuela-directores">ESCUELA DE DIRECTORES 📚</option>
-                  <option value="ninguno">No es espacio de FI o IE</option>
+                  <option value="ninguno">NINGUNA DE LAS ANTERIORES</option>
                 </select>
               </div>
               <div class="half">
@@ -1701,7 +1706,7 @@
                   <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
                   <option value="integracion-entorno">INTEGRACIÓN CON EL ENTORNO 🏭</option>
                   <option value="escuela-directores">ESCUELA DE DIRECTORES 📚</option>
-                  <option value="ninguno">No es espacio de FI o IE</option>
+                  <option value="ninguno">NINGUNA DE LAS ANTERIORES</option>
                 </select>
               </div>
             </div>
@@ -1858,12 +1863,11 @@
 
     // Listener para el caso en que el usuario seleccione Entrenamiento Interno en tipo de espacio
     document.addEventListener("DOMContentLoaded", function() {
-      var tipoEspacio = document.getElementById("tipo-espacio");
-      var areaTrabajo = document.getElementById("area-trabajo");
-      var nombreEspacioActualizar = document.getElementById("nombre-espacio-actualizar");
+      const tipoEspacio   = document.getElementById("tipo-espacio");
+      const areaTrabajo   = document.getElementById("area-trabajo");
 
-      // Guardar las opciones originales del campo areaTrabajo
-      var opcionesOriginalesAreaTrabajo = `
+      // Opciones originales (FI u otros)
+      const opcionesOriginalesAreaTrabajo = `
         <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
         <option value="academico">ACADÉMICO 💚</option>
         <option value="comunicaciones">COMUNICACIONES 🩵</option>
@@ -1874,60 +1878,73 @@
         <option value="habilidades-blandas">HABILIDADES BLANDAS 🫂</option>
         <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
         <option value="escuela-directores">ESCUELA DE DIRECTORES 📚</option>
-        <option value="ninguno">No es espacio de FI o IE</option>
+        <option value="ninguno">NINGUNA DE LAS ANTERIORES</option>
       `;
 
-      tipoEspacio.addEventListener("change", function() {
-        if (tipoEspacio.value === "integracion-entorno") {
-          // Vaciar el campo de área de trabajo
-          if (!areaTrabajo.value) {
-          areaTrabajo.innerHTML = '<option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>';
-          }
-          // Obtener el nombre del espacio
-          var nombreEspacio = nombreEspacioActualizar.value || "No has seleccionado aún un espacio";
+      // Opciones para Integración con el Entorno (IE)
+      const opcionesIE = `
+        <option value="" disabled selected hidden>Selecciona el área de trabajo del espacio.</option>
+        <option value="foro-conversatorio">Foro/Conversatorio</option>
+        <option value="taller">Taller</option>
+        <option value="visita-tecnica-industrial">Visita técnica/industrial</option>
+        <option value="simulacion">Simulación</option>
+        <option value="mentoria">Mentoría</option>
+        <option value="voluntariado-campana">Voluntariado/Campaña</option>
+      `;
 
-          // Mostrar alerta para ingresar el área de trabajo
-          Swal.fire({
-            title: 'Ingrese el área de trabajo para el espacio de integración con el entorno',
-            text: `Espacio seleccionado: 🟩${nombreEspacio.toUpperCase()}🟦`,
-            input: 'text',
-            inputPlaceholder: 'Escriba el área de trabajo aquí...',
-            inputAttributes: {
-              maxlength: 80
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Aceptar',
-            cancelButtonText: 'Cancelar',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: true,
-            inputValidator: (value) => {
-              if (!value) {
-                return 'Debe ingresar un área de trabajo!';
-              }
-              if (value.length > 80) {
-                return 'El área de trabajo no debe tener más de 80 caracteres!';
-              }
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // Asignar el valor ingresado al campo de área de trabajo
-              areaTrabajo.innerHTML = `<option value="${result.value}" selected>${result.value}</option>`;
-            } else {
-              // Restaurar el valor original del campo de tipo de espacio si se cancela
-              tipoEspacio.value = "";
-              if (!areaTrabajo.value) {
-              areaTrabajo.innerHTML = opcionesOriginalesAreaTrabajo;
-              }
-            }
-          });
+      // Opciones para Escuela de Directores (ED) opción única
+      const opcionesED = `
+        <option value="escuela-directores" selected>ESCUELA DE DIRECTORES 📚</option>
+      `;
+
+      // Opciones para Ninguna de las Anteriores (NA) opción única
+      const opcionesNA = `
+        <option value="ninguno" selected>NINGUNA DE LAS ANTERIORES</option>
+      `;
+
+      // Helper para reemplazar opciones y mostrar placeholder
+      function setOpciones(selectEl, optionsHTML) {
+        selectEl.innerHTML = optionsHTML;
+        selectEl.selectedIndex = 0; // muestra el placeholder
+      }
+
+      // Listener principal (ocultar/mostrar label y select según el tipo)
+      tipoEspacio.addEventListener("change", function () {
+        const labelAT = document.querySelector('label[for="area-trabajo"]');
+
+        if (tipoEspacio.value === "integracion-entorno") {
+          setOpciones(areaTrabajo, opcionesIE);
+          if (labelAT) labelAT.style.display = "";
+          areaTrabajo.style.display = "";
+        } else if (tipoEspacio.value === "escuela-directores") {
+          setOpciones(areaTrabajo, opcionesED); // única opción ya selected
+          if (labelAT) labelAT.style.display = "none";
+          areaTrabajo.style.display = "none";
+        } else if (tipoEspacio.value === "ninguno") {
+          setOpciones(areaTrabajo, opcionesNA); // única opción ya selected
+          if (labelAT) labelAT.style.display = "none";
+          areaTrabajo.style.display = "none";
         } else {
-          // Restaurar las opciones originales del campo areaTrabajo si el valor no es "integracion-entorno"
-          if (!areaTrabajo.value) {
-          areaTrabajo.innerHTML = opcionesOriginalesAreaTrabajo;
-          }
+          setOpciones(areaTrabajo, opcionesOriginalesAreaTrabajo);
+          if (labelAT) labelAT.style.display = "";
+          areaTrabajo.style.display = "";
         }
+
+        // Opcional: si otras lógicas dependen del change de area-trabajo
+        areaTrabajo.dispatchEvent(new Event('change', { bubbles: true }));
       });
+
+      // Estado inicial
+      if (tipoEspacio.value === "integracion-entorno") {
+        setOpciones(areaTrabajo, opcionesIE);
+      } else if (tipoEspacio.value === "escuela-directores") {
+        setOpciones(areaTrabajo, opcionesED);
+      } else if (tipoEspacio.value === "ninguno") {
+        setOpciones(areaTrabajo, opcionesNA);
+      } else {
+        setOpciones(areaTrabajo, opcionesOriginalesAreaTrabajo);
+      }
+      
     });
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
@@ -2059,7 +2076,7 @@
               <option value="conocimiento-aneiap">CONOCIMIENTO ANEIAP 💚💙</option>
               <option value="integracion-entorno">INTEGRACIÓN CON EL ENTORNO 🏭</option>
               <option value="escuela-directores">ESCUELA DE DIRECTORES 📚</option>
-              <option value="ninguno">No es espacio de FI o IE</option>
+              <option value="ninguno">NINGUNA DE LAS ANTERIORES</option>
             `;
             areaTrabajo.innerHTML = opcionesOriginalesAreaTrabajo;
               // Verificar si se encontró algún documento con el nombre del espacio seleccionado
@@ -4290,6 +4307,7 @@
           icesi: "academico_icesi@aneiap.co",
           uao: "academico_uao@aneiap.co, interventoria_uao@aneiap.co",
           usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
+          librecali: "academico_librecali@aneiap.co, interventoria_librecali@aneiap.co",
           nacional: "academico@aneiap.co, interventoria@aneiap.co"
       };
 
@@ -4501,6 +4519,7 @@
         icesi: "comunicaciones_icesi@aneiap.co",
         uao: "comunicaciones_uao@aneiap.co",
         usc: "comunicaciones_usc@aneiap.co",
+        librecali: "comunicaciones_librecali@aneiap.co",
         nacional: "proy_diseno_nacional@aneiap.co"
       };
 
@@ -4750,6 +4769,7 @@
         icesi: "comunicaciones_icesi@aneiap.co",
         uao: "comunicaciones_uao@aneiap.co",
         usc: "comunicaciones_usc@aneiap.co",
+        librecali: "comunicaciones_librecali@aneiap.co",
         nacional: "proy_diseno_nacional@aneiap.co"
       };
 
@@ -4878,6 +4898,7 @@
             icesi: "comunicaciones_icesi@aneiap.co",
             uao: "comunicaciones_uao@aneiap.co",
             usc: "comunicaciones_usc@aneiap.co",
+            librecali: "comunicaciones_librecali@aneiap.co",
             nacional: "proy_diseno_nacional@aneiap.co"
         };
 
@@ -4968,6 +4989,7 @@
             icesi: "academico_icesi@aneiap.co",
             uao: "academico_uao@aneiap.co, interventoria_uao@aneiap.co",
             usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
+            librecali: "academico_librecali@aneiap.co, interventoria_librecali@aneiap.co",
             nacional: "academico@aneiap.co, interventoria@aneiap.co"
         };
 
@@ -6159,6 +6181,7 @@
                   'icesi': 'ICESI',
                   'uao': 'UAO',
                   'usc': 'USC',
+                  'librecali': 'LIBRECALI',
                   'nacional': 'NACIONAL',
                 },
                 inputPlaceholder: 'Selecciona un capítulo',
@@ -7019,7 +7042,7 @@
                             "cuc", "librequilla", "utb", "upbmonteria", "unicordoba", 
                             "areandina", "ufps", "unalmed", "udea", "upbmed", 
                             "utp", "unalma", "udistrital", "unalbog", "univalle", 
-                            "icesi", "uao", "usc"
+                            "icesi", "uao", "usc", "librecali"
                         ];
                         
                         // Crear la estructura HTML para los desplegables y textos adicionales
@@ -9283,6 +9306,7 @@
         { value: "icesi", label: "ICESI" },
         { value: "uao", label: "UAO" },
         { value: "usc", label: "USC" },
+        { value: "librecali", label: "LIBRECALI" },
         { value: "nacional", label: "ANEIAP NACIONAL" }
         ];
 
@@ -11241,6 +11265,5 @@
 
 </body>
 </html>
-
 
 
