@@ -5839,135 +5839,169 @@
     }
 
     function EjecutarAdmin(event) {
-        console.log("Función EjecutarAdmin iniciada.");
+      console.log("Función EjecutarAdmin iniciada.");
 
-        // Verifica si el usuario es administrador mediante correoUsuario
-        if (correoUsuario !== "siea@aneiap.co" && correoUsuario !== "academico@aneiap.co") {
-            console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
-            Swal.fire({
-                title: "¿LA CURIOSIDAD MATÓ AL GATO?",
-                text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
-                icon: "warning",
-                confirmButtonText: "Aceptar",
-                allowOutsideClick: true,
-                backdrop: true,
-                allowEscapeKey: true,
-                imageWidth: 120,
-                imageHeight: 235,
-            });
-            console.log("Fin de la función por falta de permisos.");
-            return;
+      // Verifica si el usuario es administrador mediante correoUsuario
+      if (correoUsuario !== "siea@aneiap.co" && correoUsuario !== "academico@aneiap.co") {
+        console.log("Usuario no autorizado. Mostrando mensaje de advertencia.");
+        Swal.fire({
+          title: "¿LA CURIOSIDAD MATÓ AL GATO?",
+          text: "Solo el administrador puede acceder a esta función SECRETA de SIEA. ¿Quieres saber qué es? Sacia tu curiosidad escribiéndole al admin. 👀",
+          icon: "warning",
+          confirmButtonText: "Aceptar",
+          allowOutsideClick: true,
+          backdrop: true,
+          allowEscapeKey: true,
+          imageWidth: 120,
+          imageHeight: 235,
+        });
+        console.log("Fin de la función por falta de permisos.");
+        return;
+      }
+
+      console.log("Usuario autorizado. Continuando con la obtención de documentos.");
+
+      // Mostrar el menú para seleccionar "Editar reserva" o "Editar metas o fechas"
+      Swal.fire({
+        title: "Selecciona lo que deseas actualizar",
+        input: 'select',
+        inputOptions: {
+          'editarReserva': 'Editar Reserva',
+          'editarMetasFechas': 'Editar Metas o Fechas',
+        },
+        inputPlaceholder: '¿Qué deseas hacer?',
+        showCancelButton: true,
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      }).then((result) => {
+        if (!result.isConfirmed) return;
+
+        const opcionSeleccionada = result.value;
+
+        if (opcionSeleccionada === 'editarReserva') {
+          console.log("Opción seleccionada: Editar Reserva");
+          actualizarDocumentoReserva();
+          return;
         }
 
-        console.log("Usuario autorizado. Continuando con la obtención de documentos.");
+        if (opcionSeleccionada === 'editarMetasFechas') {
+          console.log("Opción seleccionada: Editar Metas o Fechas");
 
-        // Mostrar el menú para seleccionar "Editar reserva" o "Editar metas"
-        Swal.fire({
-            title: "Selecciona lo que deseas actualizar",
-            input: 'select',
-            inputOptions: {
-                'editarReserva': 'Editar Reserva',
-                'editarMetas': 'Editar Metas',
-            },
-            inputPlaceholder: '¿Qué deseas hacer?',
-            showCancelButton: true,
-            confirmButtonText: 'Continuar',
-            cancelButtonText: 'Cancelar',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-        }).then((result) => {
-            if (!result.isConfirmed) {
-                return; // Si se cancela, no hacer nada
-            }
+          const metasRef = firebase.firestore().collection("metas");
 
-            const opcionSeleccionada = result.value;
-            
-            if (opcionSeleccionada === 'editarReserva') {
-                // Si elige "Editar Reserva", mostrar el swal.fire original
-                console.log("Opción seleccionada: Editar Reserva");
-                actualizarDocumentoReserva();
-            } else if (opcionSeleccionada === 'editarMetas') {
-                // Si elige "Editar Metas", mostrar un nuevo swal.fire para seleccionar el documento de metas
-                console.log("Opción seleccionada: Editar Metas");
+          metasRef.get().then((snapshot) => {
+            const opcionesMetas = snapshot.docs.map(doc => doc.id);
 
-                // Mostrar el swal para seleccionar un documento de metas
-                const metasRef = firebase.firestore().collection("metas");
+            return Swal.fire({
+              title: 'Selecciona el documento de metas',
+              input: 'select',
+              inputOptions: opcionesMetas.reduce((acc, metaDoc) => {
+                acc[metaDoc] = metaDoc;
+                return acc;
+              }, {}),
+              inputPlaceholder: 'Selecciona el periodo al que le editarás',
+              showCancelButton: true,
+              confirmButtonText: 'Continuar',
+              cancelButtonText: 'Cancelar',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            });
+          }).then((metaResult) => {
+            if (!metaResult || !metaResult.isConfirmed || !metaResult.value) return;
 
-                metasRef.get().then((snapshot) => {
-                    const opcionesMetas = snapshot.docs.map(doc => doc.id);
-                    Swal.fire({
-                        title: 'Selecciona el documento de metas',
-                        input: 'select',
-                        inputOptions: opcionesMetas.reduce((acc, metaDoc) => {
-                            acc[metaDoc] = metaDoc;
-                            return acc;
-                        }, {}),
-                        inputPlaceholder: 'Selecciona el periodo al que le editarás las metas',
-                        showCancelButton: true,
-                        confirmButtonText: 'Continuar',
-                        cancelButtonText: 'Cancelar',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                    }).then((metaResult) => {
-                        if (!metaResult.isConfirmed || !metaResult.value) {
-                            return; // Si no hay valor seleccionado o se cancela, no hacer nada
-                        }
+            const docMetaSeleccionado = metaResult.value;
+            console.log("Documento de metas seleccionado:", docMetaSeleccionado);
 
-                        const docMetaSeleccionado = metaResult.value;
-                        console.log("Documento de metas seleccionado:", docMetaSeleccionado);
+            return firebase.firestore().collection("metas").doc(docMetaSeleccionado).get()
+              .then((docMeta) => {
+                if (!docMeta.exists) {
+                  Swal.fire('Error', 'No se pudo obtener el documento de metas.', 'error');
+                  return;
+                }
+                const dataMeta = docMeta.data() || {};
 
-                        // Obtener los datos actuales del documento de metas seleccionado
-                        metasRef.doc(docMetaSeleccionado).get().then((docMeta) => {
-                            const dataMeta = docMeta.data();
-                            // Mostrar el swal para editar los valores de metaVA, metaEI, metaIE
-                            Swal.fire({
-                                title: `Editar metas para ${docMetaSeleccionado}`,
-                                html: ` 
-                                    <label for="metaVA">Meta VA</label>
-                                    <input type="number" id="metaVA" class="swal2-input" value="${dataMeta.metaVA}">
-                                    
-                                    <label for="metaEI">Meta EI</label>
-                                    <input type="number" id="metaEI" class="swal2-input" value="${dataMeta.metaEI}">
-                                    
-                                    <label for="metaIE">Meta IE</label>
-                                    <input type="number" id="metaIE" class="swal2-input" value="${dataMeta.metaIE}">
-                                `,
-                                confirmButtonText: 'Actualizar',
-                                showCancelButton: true,
-                                cancelButtonText: 'Cancelar',
-                                preConfirm: () => {
-                                    // Obtener los valores editados
-                                    const nuevaMetaVA = document.getElementById('metaVA').value;
-                                    const nuevaMetaEI = document.getElementById('metaEI').value;
-                                    const nuevaMetaIE = document.getElementById('metaIE').value;
+                // Editor de 5 campos (metas + fechas como string yyyy-mm-dd)
+                return Swal.fire({
+                  title: `Editar metas/fechas para ${docMetaSeleccionado}`,
+                  html: `
+                    <label for="metaVA">Meta VA</label>
+                    <input type="number" id="metaVA" class="swal2-input" value="${dataMeta.metaVA ?? ''}" inputmode="numeric">
 
-                                    // Validar que no estén vacíos
-                                    if (!nuevaMetaVA || !nuevaMetaEI || !nuevaMetaIE) {
-                                        Swal.showValidationMessage('Todos los campos son obligatorios.');
-                                        return false;
-                                    }
+                    <label for="metaEI">Meta EI</label>
+                    <input type="number" id="metaEI" class="swal2-input" value="${dataMeta.metaEI ?? ''}" inputmode="numeric">
 
-                                    // Actualizar los valores en Firestore
-                                    return metasRef.doc(docMetaSeleccionado).update({
-                                        metaVA: nuevaMetaVA,
-                                        metaEI: nuevaMetaEI,
-                                        metaIE: nuevaMetaIE
-                                    }).then(() => {
-                                        Swal.fire('Actualizado', 'Las metas se han actualizado correctamente.', 'success');
-                                    }).catch((error) => {
-                                        Swal.fire('Error', 'No se pudieron actualizar las metas.', 'error');
-                                    });
-                                }
-                            });
-                        }).catch((error) => {
-                            Swal.fire('Error', 'No se pudo obtener el documento de metas.', 'error');
-                        });
+                    <label for="metaIE">Meta IE</label>
+                    <input type="number" id="metaIE" class="swal2-input" value="${dataMeta.metaIE ?? ''}" inputmode="numeric">
+
+                    <label for="fechaInicioSemestre">Fecha inicio semestre (YYYY-MM-DD)</label>
+                    <input type="date" id="fechaInicioSemestre" class="swal2-input" value="${(dataMeta.fechaInicioSemestre ?? '')}">
+
+                    <label for="fechaFinSemestre">Fecha fin semestre (YYYY-MM-DD)</label>
+                    <input type="date" id="fechaFinSemestre" class="swal2-input" value="${(dataMeta.fechaFinSemestre ?? '')}">
+                  `,
+                  confirmButtonText: 'Actualizar',
+                  showCancelButton: true,
+                  cancelButtonText: 'Cancelar',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                  preConfirm: () => {
+                    const getVal = (id) => (document.getElementById(id).value || "").toString().trim();
+
+                    const nuevaMetaVA = getVal('metaVA');
+                    const nuevaMetaEI = getVal('metaEI');
+                    const nuevaMetaIE = getVal('metaIE');
+
+                    const nuevaFechaInicio = getVal('fechaInicioSemestre');
+                    const nuevaFechaFin    = getVal('fechaFinSemestre');
+
+                    // Validaciones básicas
+                    if (!nuevaMetaVA || !nuevaMetaEI || !nuevaMetaIE || !nuevaFechaInicio || !nuevaFechaFin) {
+                      Swal.showValidationMessage('Todos los campos son obligatorios.');
+                      return false;
+                    }
+
+                    const isoRegex = /^\d{4}-\d{2}-\d{2}$/;
+                    if (!isoRegex.test(nuevaFechaInicio) || !isoRegex.test(nuevaFechaFin)) {
+                      Swal.showValidationMessage('Las fechas deben tener formato YYYY-MM-DD.');
+                      return false;
+                    }
+
+                    // Validar que sean fechas válidas del calendario
+                    const isValidISODate = (s) => {
+                      const [y, m, d] = s.split('-').map(Number);
+                      const dt = new Date(Date.UTC(y, m - 1, d));
+                      // Comprobar que conserva año/mes/día
+                      return dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d;
+                    };
+                    if (!isValidISODate(nuevaFechaInicio) || !isValidISODate(nuevaFechaFin)) {
+                      Swal.showValidationMessage('Alguna de las fechas no es válida en el calendario.');
+                      return false;
+                    }
+
+                    // Actualizar como STRING en Firestore (metas y fechas)
+                    return firebase.firestore().collection("metas").doc(docMetaSeleccionado).update({
+                      metaVA: nuevaMetaVA,
+                      metaEI: nuevaMetaEI,
+                      metaIE: nuevaMetaIE,
+                      fechaInicioSemestre: nuevaFechaInicio, // string YYYY-MM-DD
+                      fechaFinSemestre:    nuevaFechaFin     // string YYYY-MM-DD
+                    }).then(() => {
+                      Swal.fire('Actualizado', 'Los datos se han actualizado correctamente.', 'success');
+                    }).catch((error) => {
+                      Swal.fire('Error', 'No se pudieron actualizar los datos.', 'error');
                     });
-                }).catch((error) => {
-                    Swal.fire('Error', 'No se pudo cargar los documentos de metas.', 'error');
+                  }
                 });
-            }
-        });
+              }).catch((error) => {
+                Swal.fire('Error', 'No se pudo obtener el documento de metas.', 'error');
+              });
+          }).catch((error) => {
+            Swal.fire('Error', 'No se pudo cargar los documentos de metas.', 'error');
+          });
+        }
+      });
     }
 
     function actualizarDocumentoReserva() {
@@ -11248,6 +11282,7 @@
 
 </body>
 </html>
+
 
 
 
