@@ -638,9 +638,10 @@
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
-    <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformePDF(event)" style="background-color: #67dd19; color: white; display: none;">Generar Informe FI</button>
-    <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #1926dd; color: white; display: none;">Generar Informe IE</button>
-    <button type="button" class="button-descargas" onclick="generarAgendaFormativa(event)" style="background-color: #006d37; color: white;">Agenda Formativa</button>
+    <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformePDF(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe FI</button>
+    <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe IE</button>
+    <button type="button" class="button-descargas" onclick="generarAgendaFormativaFI(event)" style="background-color: #7ba460; color: white;">Agenda FI</button>
+    <button type="button" class="button-descargas" onclick="generarAgendaFormativaIE(event)" style="background-color: #7ba460; color: white;">Agenda IE</button>
 
     <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
   </form>
@@ -10866,7 +10867,7 @@
         pdf.setTextColor(0, 0, 0);
     }
 
-    async function generarAgendaFormativa() {
+    async function generarAgendaFormativaFI() {
         const categorias = [
             { nombre: "Académico", color: "#4CAF50" },
             { nombre: "Comunicaciones", color: "#2196F3" },
@@ -11017,9 +11018,154 @@
         }).then((result) => {
             if (result.isDismissed) {
                 // Volver a la interfaz de selección de categoría
-                generarAgendaFormativa();
+                generarAgendaFormativaFI();
             }
         });
+    }
+
+    async function generarAgendaFormativaIE() {
+      // === Catálogo de categorías y colores ===
+      const categoriasIE = [
+        { nombre: "ANEIAP - ONU",               color: "#3F51B5" },
+        { nombre: "Apoyo universitario",        color: "#009688" },
+        { nombre: "Impacto social",             color: "#E91E63" },
+        { nombre: "Mundo laboral",              color: "#9C27B0" },
+        { nombre: "Visita industrial / técnica",color: "#FF9800" },
+        { nombre: "TODAS",                      color: "#607D8B" }
+      ];
+
+      // Mapeo Display -> DocID y DocID -> Display
+      const docMap = {
+        aneiaponu:               "ANEIAP - ONU",
+        apoyouniversitario:      "Apoyo universitario",
+        impactosocial:           "Impacto social",
+        mundolaboral:            "Mundo laboral",
+        visitaindustrialtecnica: "Visita industrial / técnica"
+      };
+      const displayToDoc = Object.fromEntries(
+        Object.entries(docMap).map(([id, display]) => [display, id])
+      );
+
+      // === Selector de categoría (SweetAlert2) ===
+      const { value: seleccion } = await Swal.fire({
+        title: '¿Qué categoría desea consultar en la agenda IE?',
+        html: `
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;text-align:left;">
+            ${categoriasIE.slice(0,5).map((cat, i) => `
+              <label style="color:${cat.color};font-weight:bold;">
+                ${cat.nombre}
+                <input type="radio" id="catIE${i}" name="catIE" value="${cat.nombre}" style="margin-left:10px;">
+              </label>
+            `).join('')}
+            <label style="grid-column:span 2;text-align:center;color:${categoriasIE[5].color};font-weight:bold;">
+              ${categoriasIE[5].nombre}
+              <input type="radio" id="catIE5" name="catIE" value="${categoriasIE[5].nombre}" style="margin-left:10px;">
+            </label>
+          </div>
+        `,
+        focusConfirm: false,
+        showCancelButton: false,
+        confirmButtonText: 'Consultar',
+        width: '700px',
+        preConfirm: () => {
+          const selected = document.querySelector('input[name="catIE"]:checked');
+          return selected ? selected.value : null;
+        }
+      });
+
+      if (!seleccion) return;
+
+      // === Lectura Firestore ===
+      const dbRef = firebase.firestore().collection("agendaformativa");
+      let agendaData = [];
+
+      try {
+        if (seleccion === "TODAS") {
+          // Trae los 5 docs en orden del docMap
+          for (const docId of Object.keys(docMap)) {
+            const snap = await dbRef.doc(docId).get();
+            if (snap.exists) {
+              const data = snap.data() || {};
+              const espacios = Array.isArray(data.espacios_ie) ? data.espacios_ie : [];
+              agendaData.push({
+                categoria: docMap[docId],
+                espacios
+              });
+            }
+          }
+        } else {
+          const docId = displayToDoc[seleccion];
+          if (!docId) throw new Error("Categoría no reconocida.");
+
+          const snap = await dbRef.doc(docId).get();
+          if (!snap.exists) {
+            throw new Error("No se encontraron datos para la categoría seleccionada.");
+          }
+          const data = snap.data() || {};
+          const espacios = Array.isArray(data.espacios_ie) ? data.espacios_ie : [];
+          agendaData.push({
+            categoria: seleccion,
+            espacios
+          });
+        }
+      } catch (err) {
+        await Swal.fire({ icon: "error", title: "Error", text: err.message || String(err) });
+        return;
+      }
+
+      // === Construcción de tabla(s) ===
+      const getColor = (nombreCat) => (categoriasIE.find(c => c.nombre === nombreCat) || {}).color || "#333";
+
+      const tableContent = agendaData.map(({ categoria, espacios }) => `
+        <h3 style="color:${getColor(categoria)};">${categoria}</h3>
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;margin-bottom:20px;">
+          <thead>
+            <tr>
+              <th style="border-bottom:2px solid #ddd;padding:8px;text-align:left;width:${seleccion === "TODAS" ? "70%" : "100%"};">Nombre del espacio</th>
+              ${seleccion === "TODAS" ? '<th style="border-bottom:2px solid #ddd;padding:8px;text-align:left;width:30%;">Categoría</th>' : ''}
+            </tr>
+          </thead>
+          <tbody>
+            ${espacios.map(esp => `
+              <tr>
+                <td style="border-bottom:1px solid #ddd;padding:8px;word-wrap:break-word;">${esp}</td>
+                ${seleccion === "TODAS" ? `<td style="border-bottom:1px solid #ddd;padding:8px;word-wrap:break-word;">${categoria}</td>` : ''}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `).join('');
+
+      // === Modal con buscador en tiempo real ===
+      Swal.fire({
+        title: `Agenda IE - ${seleccion}`,
+        html: `
+          <input type="text" id="searchInputIE" placeholder="Buscar un espacio..." style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #ddd;">
+          <div id="tableContainerIE">${tableContent}</div>
+        `,
+        width: '1000px',
+        showCloseButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Volver',
+        confirmButtonText: 'Salir',
+        didOpen: () => {
+          const searchInput = document.getElementById('searchInputIE');
+          const tableContainer = document.getElementById('tableContainerIE');
+
+          searchInput.addEventListener('input', () => {
+            const filter = searchInput.value.toLowerCase();
+            const rows = tableContainer.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+              const text = row.textContent.toLowerCase();
+              row.style.display = text.includes(filter) ? '' : 'none';
+            });
+          });
+        }
+      }).then((res) => {
+        if (res.isDismissed) {
+          generarAgendaFormativaIE(); // regresar al selector
+        }
+      });
     }
 
     // Función para capitalizar el área de trabajo
