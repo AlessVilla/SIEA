@@ -638,7 +638,7 @@
   <form>
     <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
-    <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformePDF(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe FI</button>
+    <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformeFI(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe FI</button>
     <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe IE</button>
     <button type="button" class="button-descargas" onclick="generarAgendaFormativaFI(event)" style="background-color: #7ba460; color: white;">Agenda FI</button>
     <button type="button" class="button-descargas" onclick="generarAgendaFormativaIE(event)" style="background-color: #7ba460; color: white;">Agenda IE</button>
@@ -6204,6 +6204,13 @@
                   // Mostrar mensaje de inicio de sesión exitoso
                   mostrarMensajeInicioSesion();
                   console.log("El capítulo del usuario es: " + capituloUsuario);
+
+                  // Mostrar botones para generar informes
+                  document.getElementById("btnInformeFI").style.display = "inline-block";
+                  document.getElementById("btnInformeIE").style.display = "inline-block";
+                  
+                  var storedTelefonoCuenta = doc.data().telefonoDCA;
+                  telefonoCuenta = storedTelefonoCuenta;
                 }
               });
             } else if (correo.startsWith("academico_") || correo === "informes@aneiap.co") {
@@ -9315,7 +9322,7 @@
         { value: "nacional", label: "ANEIAP NACIONAL" }
         ];
 
-    async function generarInformePDF(event) {
+    async function generarInformeFI(event) {
       
       if (capituloUsuario === "" || correoUsuario === "") {
         Swal.fire({
@@ -9495,6 +9502,13 @@
 
       actualizarClavesInforme(capituloUsuario, correoUsuario, fechaInicialPDF, fechaFinalPDF)
 
+      // Crear un nuevo objeto jsPDF
+      var pdf = new jsPDF();
+      var tiempoCarga = 30000;
+      var margenizq = 15; //Margen izquierdo
+      var margender = 180;//Margen derecho
+      var coordenadaY = 35;
+
       // Mostrar SweetAlert de espera personalizado
       Swal.fire({
           title: 'Generando informe',
@@ -9509,12 +9523,6 @@
           }
       });
 
-      // Crear un nuevo objeto jsPDF
-      var pdf = new jsPDF();
-      var tiempoCarga = 30000;
-      var margenizq = 15; //Margen izquierdo
-      var margender = 180;//Margen derecho
-      var coordenadaY = 35;
       // Añadir imagen de fondo a la primera página
       pdf.addImage(imgPortadaFI, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
@@ -10763,7 +10771,7 @@
                 clavesInforme: clavesInforme
             }).then(function() {
                 tablaResumenPDF = tablaResumen;
-                console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'.");
+                console.log("Tabla resumen guardada exitosamente en la colección 'cuentas'. del correo '" + correoUsuario + "'");
                 console.log(tablaResumenPDF);
             }).catch(function(error) {
                 console.error("Error al guardar la tabla resumen:", error);
@@ -11184,6 +11192,57 @@
         }
       });
     }
+
+async function descargarDatosMultiplesColeccionesExcel() {
+    // Referencias a las colecciones de Firebase
+    const colecciones = [
+        { nombre: "reservas", ref: firebase.firestore().collection("reservas") },
+        { nombre: "cuentas", ref: firebase.firestore().collection("cuentas") },
+        { nombre: "piezas", ref: firebase.firestore().collection("piezas") },
+        { nombre: "crmeventos", ref: firebase.firestore().collection("crmeventos") }
+    ];
+
+    try {
+        // Crear un nuevo libro de trabajo
+        const workbook = XLSX.utils.book_new();
+
+        for (const coleccion of colecciones) {
+            const querySnapshot = await coleccion.ref.get();
+            const data = [];
+
+            // Procesar cada documento de la colección
+            querySnapshot.forEach(doc => {
+                const docData = doc.data();
+                docData.id = doc.id; // Añadir el ID del documento como un campo
+
+                // Crear un objeto ordenado alfabéticamente
+                const docDataOrdenado = {};
+                Object.keys(docData).sort().forEach(key => {
+                    docDataOrdenado[key] = docData[key];
+                });
+                data.push(docDataOrdenado);
+            });
+
+            // Crear una hoja de trabajo a partir de los datos de la colección
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, coleccion.nombre.charAt(0).toUpperCase() + coleccion.nombre.slice(1));
+        }
+
+        // Obtener la fecha y hora actual para el nombre del archivo
+        const now = new Date();
+        const fecha = now.toISOString().slice(0, 10);
+        const hora = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+        const nombreArchivo = `Backup_MultiplesColecciones_${fecha}_${hora}.xlsx`;
+
+        // Descargar el archivo Excel con todas las hojas
+        XLSX.writeFile(workbook, nombreArchivo);
+        alert("Copia de seguridad descargada correctamente con todas las colecciones.");
+
+    } catch (error) {
+        console.error("Error al descargar las colecciones:", error);
+        alert("Ocurrió un error al descargar la copia de seguridad.");
+    }
+}
 
     // Función para capitalizar el área de trabajo
     function capitalize(str) {
