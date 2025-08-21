@@ -3768,6 +3768,7 @@
         // Acá se verifica que se haya insertado una fecha, si no insertaste nada, para el proceso y le notifica al usuario.
         if (fechaConsulta.trim() === "") {
           // Mostrar mensaje de error si no se ha seleccionado una fecha válida
+          /*
           Swal.fire({
             title: '¡FECHA NO SELECCIONADA!',
             text: 'Por favor, selecciona una fecha para consultar la disponibilidad.',
@@ -3781,10 +3782,12 @@
             imageHeight: 235, // Alto de la imagen en píxeles
             imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
           });
+          */
           return;
         }
         if (capituloConsulta.trim() === "") {
           // Mostrar mensaje de error si no se ha seleccionado una fecha válida
+          /*
           Swal.fire({
             title: '¡CAPÍTULO NO SELECCIONADO!',
             text: 'Por favor, selecciona el capítulo del cual deseas consultar la disponibilidad.',
@@ -3798,6 +3801,7 @@
             imageHeight: 235, // Alto de la imagen en píxeles
             imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom-end')
           });
+          */
           return;
         }
         /* Comentario opcional por si se desea considerar o no la limitación de fecha de hoy al consultar
@@ -3966,6 +3970,7 @@
       // Verificar que se haya seleccionado una fecha y capítulo
       if (fechaConsultaDirecta.trim() === "" || capituloConsulta.trim() === "") {
         // Mostrar mensaje de error si no se ha seleccionado una fecha o capítulo válidos
+        /*
         Swal.fire({
           title: '¡FECHA O CAPÍTULO NO SELECCIONADOS!',
           text: 'Por favor, selecciona una fecha y un capítulo para consultar la disponibilidad semanal.',
@@ -3979,6 +3984,7 @@
           imageHeight: 235,
           imagePosition: 'top-start'
         });
+        */
         return;
       }
 
@@ -11329,6 +11335,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
