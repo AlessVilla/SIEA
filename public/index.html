@@ -9223,7 +9223,14 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
     pdf.setTextColor(0, 0, 0);
     pdf.setFontSize(12);
 
-
+    const pageCount = pdf.getNumberOfPages();
+    for (let i = 2; i <= pageCount; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(11);
+      pdf.setTextColor(255, 255, 255); // blanco
+      pdf.setFont(undefined, "bold");  // negrilla
+      pdf.text('GM-DA-01', 10, yTelefono); // mismo Y que el teléfono, X más a la izquierda
+    }
     
                       // Reemplazar espacios por "_"
                       let nombreLimpio = nombreEvento.replace(/\s+/g, "_");
@@ -9989,6 +9996,15 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
                     nombrePeriodo = "TODOS_LOS_PERIODOS";
                 }
 
+                const pageCount = pdf.getNumberOfPages();
+                for (let i = 2; i <= pageCount; i++) {
+                  pdf.setPage(i);
+                  pdf.setFontSize(11);
+                  pdf.setTextColor(255, 255, 255); // blanco
+                  pdf.setFont(undefined, "bold");  // negrilla
+                  pdf.text('GA-DA-01', 10, 291.5); // mismo Y que el teléfono, X más a la izquierda
+                }
+              
                 // Guardar el archivo con el nombre dinámico
                 pdf.save(`Informe_Seguimiento_Formación_${capituloUsuario.toUpperCase()}_${nombrePeriodo}.pdf`);
 
@@ -10728,6 +10744,15 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
                     nombrePeriodo = "TODOS_LOS_PERIODOS";
                 }
 
+                const pageCount = pdf.getNumberOfPages();
+                for (let i = 2; i <= pageCount; i++) {
+                  pdf.setPage(i);
+                  pdf.setFontSize(11);
+                  pdf.setTextColor(255, 255, 255); // blanco
+                  pdf.setFont(undefined, "bold");  // negrilla
+                  pdf.text('GA-DA-02', 10, 291.5); // mismo Y que el teléfono, X más a la izquierda
+                }
+              
                 // Guardar el archivo con el nombre dinámico
                 pdf.save(`Informe_Seguimiento_Integración_Entorno_${capituloUsuario.toUpperCase()}_${nombrePeriodo}.pdf`);
 
@@ -11335,6 +11360,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
