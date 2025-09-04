@@ -9223,14 +9223,26 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
     pdf.setTextColor(0, 0, 0);
     pdf.setFontSize(12);
 
-    const pageCount = pdf.getNumberOfPages();
-    for (let i = 2; i <= pageCount; i++) {
-      pdf.setPage(i);
-      pdf.setFontSize(11);
-      pdf.setTextColor(255, 255, 255); // blanco
-      pdf.setFont(undefined, "bold");  // negrilla
-      pdf.text('GM-DA-01', 10, yTelefono); // mismo Y que el teléfono, X más a la izquierda
-    }
+                const pageCount = pdf.getNumberOfPages();
+                const yFooter = 291.5;
+                const margin = 5;
+
+                for (let i = 2; i <= pageCount; i++) {
+                  pdf.setPage(i);
+
+                  // estilo
+                  pdf.setFontSize(11);
+                  pdf.setTextColor(255, 255, 255);     // blanco
+                  // si cargaste Century Gothic: pdf.setFont('CenturyGothic','bold');
+                  pdf.setFont(undefined, 'bold');      // negrilla
+
+                  // izquierda
+                  pdf.text('GM-DA-01', margin+5, yFooter);
+
+                  // derecha (10 desde el borde derecho)
+                  const pageW = pdf.internal.pageSize.getWidth();
+                  pdf.text(`Pág. ${i}/${pageCount}`, pageW - margin, yFooter, { align: 'right' });
+                }
     
                       // Reemplazar espacios por "_"
                       let nombreLimpio = nombreEvento.replace(/\s+/g, "_");
@@ -9997,12 +10009,24 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
                 }
 
                 const pageCount = pdf.getNumberOfPages();
+                const yFooter = 291.5;
+                const margin = 5;
+
                 for (let i = 2; i <= pageCount; i++) {
                   pdf.setPage(i);
+
+                  // estilo
                   pdf.setFontSize(11);
-                  pdf.setTextColor(255, 255, 255); // blanco
-                  pdf.setFont(undefined, "bold");  // negrilla
-                  pdf.text('GA-DA-01', 10, 291.5); // mismo Y que el teléfono, X más a la izquierda
+                  pdf.setTextColor(255, 255, 255);     // blanco
+                  // si cargaste Century Gothic: pdf.setFont('CenturyGothic','bold');
+                  pdf.setFont(undefined, 'bold');      // negrilla
+
+                  // izquierda
+                  pdf.text('GA-DA-01', margin+5, yFooter);
+
+                  // derecha (10 desde el borde derecho)
+                  const pageW = pdf.internal.pageSize.getWidth();
+                  pdf.text(`Pág. ${i}/${pageCount}`, pageW - margin, yFooter, { align: 'right' });
                 }
               
                 // Guardar el archivo con el nombre dinámico
@@ -10745,12 +10769,24 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
                 }
 
                 const pageCount = pdf.getNumberOfPages();
+                const yFooter = 291.5;
+                const margin = 5;
+
                 for (let i = 2; i <= pageCount; i++) {
                   pdf.setPage(i);
+
+                  // estilo
                   pdf.setFontSize(11);
-                  pdf.setTextColor(255, 255, 255); // blanco
-                  pdf.setFont(undefined, "bold");  // negrilla
-                  pdf.text('GA-DA-02', 10, 291.5); // mismo Y que el teléfono, X más a la izquierda
+                  pdf.setTextColor(255, 255, 255);     // blanco
+                  // si cargaste Century Gothic: pdf.setFont('CenturyGothic','bold');
+                  pdf.setFont(undefined, 'bold');      // negrilla
+
+                  // izquierda
+                  pdf.text('GA-DA-02', margin+5, yFooter);
+
+                  // derecha (10 desde el borde derecho)
+                  const pageW = pdf.internal.pageSize.getWidth();
+                  pdf.text(`Pág. ${i}/${pageCount}`, pageW - margin, yFooter, { align: 'right' });
                 }
               
                 // Guardar el archivo con el nombre dinámico
@@ -11360,6 +11396,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
