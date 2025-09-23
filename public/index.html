@@ -5095,239 +5095,272 @@
 
     function verificarDisponibilidadEdicion() {
       return new Promise((resolve, reject) => {
-
-      // Obtener una referencia al documento del evento en Firestore
-      var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
-      const eventoRef = firebase.firestore().collection("reservas").doc(claveEventoReserva);
-
-      console.log("actualizaremos la fecha a 31-dic");
-      // Actualizar el evento como si la nueva fecha fuera el 31 de diciembre de 2023, esto es con fines prácticas para
-      // lograr que este evento no sea tomado nunca dentro de la colección reservas debido a que cuando la
-      // nueva fecha sea igual a la actual (no cambió de fecha) no queremos que el evento se autobloquee la disponibilidad
-      return eventoRef.update({fechaEvento: "2023-12-31"})
-      .then(() => {
-        console.log("actualización exitosa, ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
-        // Resto del código
-
-        var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
-
-        var claveEvento = document.getElementById("clave-evento-reserva").value;
-        var nuevaFecha = document.getElementById("fecha-evento-reserva").value;
-        var nuevaHora = document.getElementById("hora-evento-reserva").value;
-        var nuevaDuracion = document.getElementById("duracion-evento-reserva").value;
-        var nuevoCapitulo = document.getElementById("capitulo-organizador-reserva").value;
-
-        if (parseInt(nuevaDuracion) + parseInt(nuevaHora) > 1321) {
-          Swal.fire({
-            title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)!',
-            text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener el registro del evento
-        }
-
-        // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
-        var reservasRef = firebase.firestore().collection("reservas");
-
-          console.log("ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
-
-        // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
-        if (nuevoCapitulo === "nacional") {
-          // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
-          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
-        } else {
-          // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
-          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "in", [nuevoCapitulo, "nacional"]);
-        }
-
-        console.log("queremos empezar a hacer la consulta");
-
-        // Realizar el filtrado para obtener intervalos disponibles y no disponibles
-        consulta.get().then(function(querySnapshot) {
-          console.log("entramos a hacer consulta");
-          // Ciclo para revisar cada evento reservado para la nueva fecha
-          querySnapshot.forEach(function(doc) {
-            console.log("este es el doc: " + doc);
-            var horaEvento = doc.data().horaEvento; // Hora en minutos (ej. 540 para 09:00)
-            var duracionEvento = doc.data().duracionEvento; // Duración en minutos (ej. 120 para 2 horas)
-            console.log("hora del evento con clave: " + doc.data().claveEvento + ": " + horaEvento);
-            console.log("duracion del evento con clave: " + doc.data().claveEvento + ": " + duracionEvento);
-            // Calcular los índices de inicio y fin del intervalo que ocupará el evento
-            var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
-            var finIntervalo = inicioIntervalo + duracionEvento / 30;
-            console.log("inicio intervalo: " + inicioIntervalo);
-            console.log("fin intervalo: " + finIntervalo);
-
-            // Marcar los intervalos como ocupados en el arreglo de disponibilidad
-            for (var i = inicioIntervalo; i < finIntervalo; i++) {
-              disponibilidadHorarios[i] = false;
+    
+        // Obtener una referencia al documento del evento en Firestore
+        var claveEventoReserva = document.getElementById("clave-evento-reserva").value;
+        const eventoRef = firebase.firestore().collection("reservas").doc(claveEventoReserva);
+    
+        console.log("actualizaremos la fecha a 31-dic");
+        // Actualizar el evento temporalmente para que no se autobloquee
+        return eventoRef.update({ fechaEvento: "2023-12-31" })
+          .then(() => {
+            console.log("actualización exitosa, ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
+    
+            var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
+    
+            var claveEvento = document.getElementById("clave-evento-reserva").value;
+            var nuevaFecha = document.getElementById("fecha-evento-reserva").value;
+            var nuevaHora = Number(document.getElementById("hora-evento-reserva").value);
+            var nuevaDuracion = Number(document.getElementById("duracion-evento-reserva").value);
+            var nuevoCapitulo = document.getElementById("capitulo-organizador-reserva").value;
+    
+            if (nuevaDuracion + nuevaHora > 1321) {
+              Swal.fire({
+                title: '¡ESTÁS INTENTANDO MOVER EL ESPACIO PARA DESPUÉS DE LAS 22:00 (10PM)!',
+                text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+                imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png',
+                imageWidth: 120,
+                imageHeight: 235,
+                imagePosition: 'top-start'
+              });
+              resolve(false);
+              return;
             }
-            console.log("estas son las disponibilidades de los intervalos:");
-            console.log(disponibilidadHorarios);
-          });
-          
-          var disponibilidadMatutino = true;
-          var disponibilidadVesperino = true;
-          var disponibilidadNocturno = true;
-
-          // Colocar los intervalos de un mismo paquete horario (matutino, vespertino o nocturno) ocupados
-          // Verificar el paquete horario matutino (intervalos 1 al 10, es decir, 8:00 a 13:00)
-          for (var i = 0; i <= 9; i++) {
-            if (!disponibilidadHorarios[i]) {
-              for (var j = 0; j <= 9; j++) {
-                disponibilidadHorarios[j] = false;
+    
+            // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
+            var reservasRef = firebase.firestore().collection("reservas");
+            var consulta;
+    
+            console.log("ahora obtendremos la consulta de todos los eventos en esa nueva fecha");
+    
+            // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
+            if (nuevoCapitulo === "nacional") {
+              // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
+              consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
+            } else {
+              // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
+              consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "in", [nuevoCapitulo, "nacional"]);
+            }
+    
+            console.log("queremos empezar a hacer la consulta");
+    
+            // Realizar el filtrado para obtener intervalos disponibles y no disponibles
+            consulta.get().then(function (querySnapshot) {
+              console.log("entramos a hacer consulta");
+    
+              // Ciclo para revisar cada evento reservado para la nueva fecha
+              querySnapshot.forEach(function (doc) {
+                var data = doc.data();
+    
+                // ---------- FILTRO ADICIONAL ----------
+                // Ignorar (no marcar como ocupados) los eventos que sean:
+                // capitulo === "nacional"  &&  tipoEvento === "escuela-directores"
+                if (data && data.capitulo === "nacional" && data.tipoEvento === "escuela-directores") {
+                  console.log("Ignorando (escuela-directores nacional) doc:", doc.id);
+                  return; // saltar este documento
+                }
+                // ---------------------------------------
+    
+                console.log("este es el doc: " + doc.id);
+                var horaEvento = Number(data.horaEvento); // Hora en minutos (ej. 540 para 09:00)
+                var duracionEvento = Number(data.duracionEvento); // Duración en minutos (ej. 120 para 2 horas)
+                console.log("hora del evento con clave: " + data.claveEvento + ": " + horaEvento);
+                console.log("duracion del evento con clave: " + data.claveEvento + ": " + duracionEvento);
+    
+                // Calcular los índices de inicio y fin del intervalo que ocupará el evento
+                var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
+                var finIntervalo = inicioIntervalo + Math.floor(duracionEvento / 30);
+                console.log("inicio intervalo: " + inicioIntervalo);
+                console.log("fin intervalo: " + finIntervalo);
+    
+                // Asegurar límites válidos
+                inicioIntervalo = Math.max(0, inicioIntervalo);
+                finIntervalo = Math.min(28, finIntervalo);
+    
+                // Marcar los intervalos como ocupados en el arreglo de disponibilidad
+                for (var i = inicioIntervalo; i < finIntervalo; i++) {
+                  disponibilidadHorarios[i] = false;
+                }
+                console.log("estas son las disponibilidades de los intervalos:");
+                console.log(disponibilidadHorarios);
+              });
+    
+              var disponibilidadMatutino = true;
+              var disponibilidadVesperino = true;
+              var disponibilidadNocturno = true;
+    
+              // Colocar los intervalos de un mismo paquete horario (matutino, vespertino o nocturno) ocupados
+              // Verificar el paquete horario matutino (intervalos 0 al 9, es decir, 8:00 a 13:00)
+              for (var i = 0; i <= 9; i++) {
+                if (!disponibilidadHorarios[i]) {
+                  for (var j = 0; j <= 9; j++) {
+                    disponibilidadHorarios[j] = false;
+                  }
+                  disponibilidadMatutino = false;
+                  break;
+                }
               }
-              disponibilidadMatutino = false;
-              break; // Al menos un intervalo está ocupado, salir del ciclo
-            }
-          }
-
-          // Verificar el paquete horario vespertino (intervalos 11 al 20, es decir, 13:00 a 18:00)
-          for (var i = 10; i <= 19; i++) {
-            if (!disponibilidadHorarios[i]) {
-              for (var j = 10; j <= 19; j++) {
-                disponibilidadHorarios[j] = false;
+    
+              // Verificar el paquete horario vespertino (intervalos 10 al 19, es decir, 13:00 a 18:00)
+              for (var i = 10; i <= 19; i++) {
+                if (!disponibilidadHorarios[i]) {
+                  for (var j = 10; j <= 19; j++) {
+                    disponibilidadHorarios[j] = false;
+                  }
+                  disponibilidadVesperino = false;
+                  break;
+                }
               }
-              disponibilidadVesperino = false;
-              break; // Al menos un intervalo está ocupado, salir del ciclo
-            }
-          }
-
-          // Verificar el paquete horario nocturno (intervalos 21 al 28, es decir, 18:00 a 22:00)
-          for (var i = 20; i <= 27; i++) {
-            if (!disponibilidadHorarios[i]) {
-              for (var j = 20; j <= 27; j++) {
-                disponibilidadHorarios[j] = false;
+    
+              // Verificar el paquete horario nocturno (intervalos 20 al 27, es decir, 18:00 a 22:00)
+              for (var i = 20; i <= 27; i++) {
+                if (!disponibilidadHorarios[i]) {
+                  for (var j = 20; j <= 27; j++) {
+                    disponibilidadHorarios[j] = false;
+                  }
+                  disponibilidadNocturno = false;
+                  break;
+                }
               }
-              disponibilidadNocturno = false;
-              break; // Al menos un intervalo está ocupado, salir del ciclo
-            }
-          }
-
-          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
-          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
-          var finNuevoIntervalo = inicioNuevoIntervalo + nuevaDuracion / 30;
-
-          // Verifica si alguno de los nuevos intervalos está ocupado
-          var algunIntervaloOcupado = false;
-          for (var i = inicioNuevoIntervalo; i < finNuevoIntervalo; i++) {
-            console.log("esta es la disponibilidad del intervalo " + i + ": " + disponibilidadHorarios[i]);
-            if (!disponibilidadHorarios[i]) {
-              console.log("está ocupado el intervalo " + i);
-              algunIntervaloOcupado = true;
-              break; // Si uno está ocupado, no es necesario verificar los demás
-            }
-          }
-
-          if (algunIntervaloOcupado) {
-            // Al menos uno de los intervalos no está disponible
-            // Actualizar la fecha del evento de vuelta a la fecha que tenía porque ahora mismo está en 31 de diciembre.
-            var fechaEventoReservaBackup = guardarBackupFechaEventoReserva();
-            console.log('fecha evento reserva backup' + fechaEventoReservaBackup);
-            eventoRef.update({fechaEvento: fechaEventoReservaBackup});
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
-            if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
+    
+              // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
+              var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
+              var finNuevoIntervalo = inicioNuevoIntervalo + Math.floor(nuevaDuracion / 30);
+    
+              // Asegurar límites válidos
+              inicioNuevoIntervalo = Math.max(0, inicioNuevoIntervalo);
+              finNuevoIntervalo = Math.min(28, finNuevoIntervalo);
+    
+              // Verifica si alguno de los nuevos intervalos está ocupado
+              var algunIntervaloOcupado = false;
+              for (var k = inicioNuevoIntervalo; k < finNuevoIntervalo; k++) {
+                console.log("esta es la disponibilidad del intervalo " + k + ": " + disponibilidadHorarios[k]);
+                if (!disponibilidadHorarios[k]) {
+                  console.log("está ocupado el intervalo " + k);
+                  algunIntervaloOcupado = true;
+                  break;
+                }
+              }
+    
+              if (algunIntervaloOcupado) {
+                // Al menos uno de los intervalos no está disponible
+                // Actualizar la fecha del evento de vuelta a la fecha que tenía porque ahora mismo está en 31 de diciembre.
+                var fechaEventoReservaBackup = guardarBackupFechaEventoReserva();
+                console.log('fecha evento reserva backup' + fechaEventoReservaBackup);
+                eventoRef.update({ fechaEvento: fechaEventoReservaBackup });
+    
+                // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
+                if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
+                  Swal.fire({
+                    title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
+                    text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/LPTDqcy/AVATAR-NODISPOTODODIA-removebg-preview.png',
+                    imageWidth: 120,
+                    imageHeight: 235,
+                    imagePosition: 'top-start'
+                  });
+                  resolve(false);
+                  return;
+                }
+    
+                // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
+                if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
+                  Swal.fire({
+                    title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
+                    text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png',
+                    imageWidth: 120,
+                    imageHeight: 235,
+                    imagePosition: 'top-start'
+                  });
+                  resolve(false);
+                  return;
+                }
+    
+                // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
+                if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
+                  Swal.fire({
+                    title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
+                    text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png',
+                    imageWidth: 120,
+                    imageHeight: 235,
+                    imagePosition: 'top-start'
+                  });
+                  resolve(false);
+                  return;
+                }
+    
+                // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
+                if (!disponibilidadNocturno) {
+                  Swal.fire({
+                    title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
+                    text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png',
+                    imageWidth: 120,
+                    imageHeight: 235,
+                    imagePosition: 'top-start'
+                  });
+                  resolve(false);
+                  return;
+                }
+    
+              } else {
+                // Todos los intervalos están disponibles
+                // Realiza la edición de la reserva (el caller puede seguir con la actualización)
+                resolve(true); // Resolver la promesa con 'true' si todos los intervalos están disponibles
+                return;
+              }
+            }).catch(function (error) {
               Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
-              text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar',
-              allowOutsideClick: true,
-              backdrop: true,  
-              allowEscapeKey: true,
-              imageUrl: 'https://i.ibb.co/LPTDqcy/AVATAR-NODISPOTODODIA-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                title: '¡ERROR DE CONSULTA!',
+                text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: true,
+                backdrop: true,
+                allowEscapeKey: true,
+                imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png',
+                imageWidth: 120,
+                imageHeight: 235,
+                imagePosition: 'top-start'
+              });
+              console.log(error);
+              resolve(false);
+              return;
             });
-            return; // Detener la ejecución de la función
-            }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
-            if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
-              Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
-              text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar',
-              allowOutsideClick: true,
-              backdrop: true,  
-              allowEscapeKey: true,
-              imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-            });
-            return; // Detener la ejecución de la función
-            }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
-            if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
-              Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
-              text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar',
-              allowOutsideClick: true,
-              backdrop: true,  
-              allowEscapeKey: true,
-              imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-            });
-            return; // Detener la ejecución de la función
-            }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
-            if (!disponibilidadNocturno) {
-              Swal.fire({
-              title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
-              text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar',
-              allowOutsideClick: true,
-              backdrop: true,  
-              allowEscapeKey: true,
-              imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-            });
-            return; // Detener la ejecución de la función
-            }
-          } else {
-            // Todos los intervalos están disponibles
-            // Realiza la edición de la reserva
-            // ...
-            resolve(true); // Resolver la promesa con 'true' si todos los intervalos están disponibles
-          }
-        }).catch(function(error) {
-          Swal.fire({
-            title: '¡ERROR DE CONSULTA!',
-            text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: true,
-            backdrop: true,  
-            allowEscapeKey: true,
-            imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+    
+          })
+          .catch(error => {
+            console.error("Error al actualizar el evento:", error);
+            resolve(false);
           });
-          console.log(error);
-          resolve(false); // Resolver la promesa con 'false' en caso de error
-          return;
-        });
-        
-      })
-      .catch(error => console.error("Error al actualizar el evento:", error));
-
+    
+      });
     }
-  )}
+    
 
     function verificarDisponibilidadRegistro() {
         return new Promise((resolve, reject) => {
@@ -11396,6 +11429,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
