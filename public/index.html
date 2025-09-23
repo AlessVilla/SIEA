@@ -5978,9 +5978,9 @@
                   preConfirm: () => {
                     const getVal = (id) => (document.getElementById(id).value || "").toString().trim();
 
-                    const nuevaMetaVA = getVal('metaVA');
-                    const nuevaMetaEI = getVal('metaEI');
-                    const nuevaMetaIE = getVal('metaIE');
+                    const nuevaMetaVA = Number(getVal('metaVA')); // convertir a number
+                    const nuevaMetaEI = Number(getVal('metaEI')); // convertir a number
+                    const nuevaMetaIE = Number(getVal('metaIE')); // convertir a number
 
                     const nuevaFechaInicio = getVal('fechaInicioSemestre');
                     const nuevaFechaFin    = getVal('fechaFinSemestre');
@@ -11429,6 +11429,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
