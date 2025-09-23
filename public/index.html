@@ -4068,7 +4068,7 @@
       var reservasRef = firebase.firestore().collection("reservas");
       
       var consultaCapitulo = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", capituloConsulta);
-      var consultaNacional = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", "nacional");
+      var consultaNacional = reservasRef.where("fechaEvento", "==", fechaDiaTipoFirebase).where("capitulosOrganizadores", "array-contains", "nacional").where("tipoEvento", "!=", "escuela-directores");
 
       Promise.all([consultaCapitulo.get(), consultaNacional.get()])
         .then(function(results) {
@@ -11429,6 +11429,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
