@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Descargar SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<head>
+  <title>ENCUESTAS DE SATISFACCIÓN SIEA 💚💙</title>
+  <title>Evalúa tu espacio o evento de forma automática</title>
+  <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <!-- incluir el plugin de anotación de Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+  <!-- Agrega el SDK de Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+  <!-- Agrega el bloque del SDK de Firebase Cloud Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+  <!-- Agrega la biblioteca para enviar correos en Email.js -->  
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <!-- Agrega la biblioteca para enviar correos por API Gmail -->  
+  <script src="https://apis.google.com/js/client.js"></script>
+  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Importar el google auth provider para autenticar con google -->  
+  <!-- <script import { GoogleAuthProvider } from "firebase/auth"></script> -->  
+  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <!-- Agrega la biblioteca Google API Client -->  
+  <script src="https://apis.google.com/js/api.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIEA 💚💙</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Incluir Chart.js desde una CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Incluir el archivo JavaScript desde la carpeta config dentro del repositorio -->
+  <script>
+    /*ENCUESTAS DE SATISFACCIÓN SIEA
+    Evalúa tu espacio o evento de forma automática con el Sistema Integral de Espacios Documental.*/
+    var firebaseConfig = {
+        apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
+        authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
+        projectId: "bddreservaaneiapuninorte",
+        storageBucket: "bddreservaaneiapuninorte.appspot.com",
+        messagingSenderId: "227754886829",
+        appId: "1:227754886829:web:00047755b1aaa727242824",
+        measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const firestore = firebase.firestore();
+  </script>
+
+  <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
+  <style>
+    body {
+      /* Establece la imagen de fondo */
+      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
+      /* Fija la imagen de fondo para que no se desplace con el contenido */
+      background-attachment: fixed;
+      /* Escala la imagen para cubrir todo el cuerpo */
+      background-size: contain;
+      /* Centra la imagen */
+      background-position: center;
+      /* Establece un color de fondo de respaldo */
+      background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
+    @font-face {
+      font-family: 'Century Gothic';
+      src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
+          url('ruta/a/la/fuente/CenturyGothic.woff') format('woff');
+      /* Agrega más formatos de fuentes si es necesario */
+      font-weight: normal;
+      font-style: normal;
+    }
+    /* Estilos para el contenedor de la imagen */
+    .centered-text {
+      text-align: center;
+    }
+    .image-container {
+      display: flex;
+      justify-content: center;
+      animation: slide-in 2s ease-in-out;
+    }
+    @keyframes slide-in {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    .image-container img {
+      max-width: 15%;
+      height: auto;
+      transition: transform 6s ease-in-out;
+    }
+    .image-container img:hover {
+      transform: rotate(4320deg);
+    }
+    /* Estilos para el cuadro de datos generales del evento */
+    .datos-generales,
+    .datos-organizador,
+    .datos-ponente {
+      background-color: rgb(253, 198, 166);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    /* Estilos para los campos de formulario */
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    select, textarea, input[type="text"], input[type="date"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      margin-top: 5px;
+      font-size: 18px;
+    }
+    h2 {
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+    .reserva {
+      background-color: darkgreen;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .row .half {
+      width: 48%;
+    }
+    .third {
+      flex-basis: 33.33%;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    .disponibilidad-group {
+      margin-bottom: 15px;
+      background-color: #c3d6ff; /* Color de fondo azul muy claro */
+      padding: 10px;
+      border: 1px solid #0004ff; /* Borde azul */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }    
+    .reservar-group {
+      margin-bottom: 15px;
+      background-color: #a8f7a1; /* Color de fondo verde muy claro */
+      padding: 10px;
+      border: 1px solid #15ff00; /* Borde verde claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .editar-group {
+      margin-bottom: 15px;
+      background-color: #ffc67c; /* Color de fondo naranja muy claro */
+      padding: 10px;
+      border: 1px solid #ff9100; /* Borde naranja claro */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .eliminar-group {
+      margin-bottom: 15px;
+      background-color: #fd8c8ca4; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #ff0000a4; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .acordeon4-content-inner {
+      margin-bottom: 15px;
+      background-color: #A1C8D7D9; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #648b9bD9; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .actualizar-group {
+      margin-bottom: 15px;
+      background-color: #cccccc; /* Color de fondo rojo muy claro */
+      padding: 10px;
+      border: 1px solid #4d4d4d; /* Borde rojo */
+      border-radius: 8px; /* Bordes redondeados para el contenedor */
+    }
+    .radio-buttons-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* Espacio entre los botones SÍ y NO */
+    }
+    .custom-file-input {
+      display: inline-block;
+      position: relative;
+    }
+    .custom-file-input input[type="file"] {
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+    .custom-file-input label {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }    
+    .field-container {
+      background-color: #fff;
+      padding: 10px; /* Ajusta el valor según el espacio deseado entre el contenido y el borde */
+      border-radius: 5px; /* Ajusta el valor para cambiar la curvatura de las esquinas */
+    }
+    /* Estilos para los acordeones */
+    .acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .acordeon0 {
+      background-color: #307B98;
+    }
+    .acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .acordeon1 {
+      background-color: #00B30F;
+    }
+    .acordeon2 {
+      background-color: #F47B28;
+    }
+    .acordeon3 {
+      background-color: #DC1E1E;
+    }
+    .acordeon4 {
+      background-color: #648b9b;
+    }
+    .acordeon5 {
+      background-color: #4d4d4d;
+    }
+    .button-consultar-disponibilidad, .button-reservar, .button-consultar, .button-consultar, .button-evaluar, .button-eliminar, .button-actualizar {
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
+      width: 353px; /* Ocupar el ancho del contenedor */
+    }
+    .button-consultar-disponibilidad {
+      background-color: rgb(0, 4, 255);
+    }
+    .button-reservar {
+      background-color: rgb(0, 141, 37);
+    }
+    .button-consultar {
+      background-color: orange;
+    }
+    .button-eliminar {
+      background-color: red;
+    }
+    .button-evaluar {
+      background-color: #648b9b;
+    }
+    .button-actualizar {
+      background-color: #4d4d4d;
+    }
+    /* Estilo para los campos de correo del forms y contraseña */
+    input[type="email"],
+    input[type="password"] {
+      font-size: 18px; /* Mismo tamaño de fuente que el botón */
+      padding: 5px 10px;
+      margin-bottom: 10px; /* Espaciado inferior */
+      width: 150px; /* Ocupar el ancho del contenedor */
+    }
+    .disponibilidad-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .disponibilidad-item {
+      width: 100px;
+      height: 50px;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .disponibilidad-item.green {
+      background-color: green;
+    }
+    .disponibilidad-item.red {
+      background-color: red;
+    }
+    .disponibilidad-item.gray {
+      background-color: rgb(185, 185, 185);
+    }
+    /* Estilos para las pestañas */
+    .tab-container {
+      display: flex;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid #9900CC;
+      background-color: #f7d1f3;
+      border-radius: 8px 8px 0 0;
+    }
+    .tab:hover {
+      background-color: #f0f0f0;
+    }
+    /* Estilos para los contenidos de las pestañas */
+    .tab-content {
+      display: none;
+      padding: 10px;
+      border: 3px solid #D55DFF;
+      background-color: #f7d1f3;
+      border-radius: 20 20px 20px 20px;
+      width: 100%
+    }
+    /* Mostrar el contenido de la pestaña activa */
+    .tab-content.active {
+      display: block;
+    }    
+    /* Estilos para el botón */
+    #modo-switch {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 60px; /* Aumenta el ancho del botón */
+      height: 40px; /* Aumenta la altura del botón */
+      background-color: #777777; /* Color de fondo del botón en light mode */
+      border-radius: 50%; /* Hace que el botón sea circular */
+      cursor: pointer;
+      border: none;
+      outline: none;
+      padding: 2px;
+      display: flex; /* Para centrar verticalmente el emoji */
+      justify-content: center; /* Para centrar horizontalmente el emoji */
+      align-items: center; /* Para centrar verticalmente el emoji */
+    }
+    /* Estilos para el ícono del sol */
+    .icon::before {
+      content: "\2600"; /* Código Unicode para el sol */
+      font-size: 28px; /* Aumenta el tamaño del emoji */
+      color: #ffcc00; /* Color del sol en light mode */
+      display: inline-block;
+    }
+    /* Estilos para el ícono de la luna */
+    .dark-mode .icon::before {
+      content: "\1F319"; /* Código Unicode para la luna */
+      color: #333; /* Color de la luna en dark mode */
+    }
+    body.light-mode {
+      background-color: white; /* Fondo blanco en el modo claro */
+      transition: background-color 1s ease; /* Efecto de transición suave */
+    }
+    body.dark-mode {
+      background-color: rgb(29, 29, 29); /* Fondo negro en el modo oscuro */
+      transition: background-color 1s ease; /* Efecto de transición suave */
+    }
+    body {
+      transition: background-color 1s ease; /* Efecto de transición suave para todo el cuerpo */
+      font-family: 'Century Gothic', sans-serif;
+    }
+    /* Estilo del texto en modo claro */
+    .light-mode {
+      color: black; /* Color del texto en modo claro */
+    }
+    .logo.dark-mode {
+      display: none; /* Oculta el logo del dark mode por defecto */
+    }
+    /* Estilo del texto en modo oscuro */
+    .dark-mode .light-mode {
+      color: white; /* Color del texto en modo oscuro */
+    }
+    /* Estilos para los títulos de documentos */
+    .document-title a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+    /* Estilos para los enlaces "AQUÍ" */
+    .document-link a {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+    /* Estilos para el icono de Word */
+    .document-link img {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+    }
+    .swal2-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .swal2-input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px; /* Ajusta según sea necesario */
+    }
+    /* Estilos para la tabla resumen */
+    #tabla-resumen {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-x: auto; /* Permitir desplazamiento horizontal */
+    }
+    #tabla-resumen-container {
+    width: 100%;
+    overflow-x: auto; /* Permitir desplazamiento horizontal si es necesario */
+    }
+    #tabla-resumen th,
+    #tabla-resumen td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    #tabla-resumen th {
+        background-color: #76c04e;
+    }
+    #tabla-resumen tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    #tabla-resumen tbody tr:hover {
+        background-color: #76c04e;
+        transition: background-color 0.3s ease;
+    }
+    #tabla-resumen td:nth-child(n + 8) {
+        text-align: center;
+    }
+    #tabla-resumen td:nth-child(13) {
+
+        font-size: 10px;
+        overflow: hidden;
+    }
+    /* Ajuste de anchos de columnas */
+    #tabla-resumen th,
+    #tabla-resumen td {
+        width: auto; /* Permitir que las columnas se ajusten automáticamente */
+    }
+    #tabla-evaluaciones {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto; /* Permitir desplazamiento horizontal */
+    }
+    #tabla-evaluaciones th,
+    #tabla-evaluaciones td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    #tabla-evaluaciones th {
+        background-color: #76c04e;
+    }
+    #tabla-evaluaciones tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    #tabla-evaluaciones tbody tr:hover {
+        background-color: #76c04e;
+        transition: background-color 0.3s ease;
+    }
+    /* Ajuste de anchos de columnas */
+    #tabla-evaluaciones th,
+    #tabla-evaluaciones td {
+        width: auto; /* Permitir que las columnas se ajusten automáticamente */
+    }
+    /* Alineación de columnas */
+    #tabla-evaluaciones td:nth-child(1),
+    #tabla-evaluaciones td:nth-child(2),
+    #tabla-evaluaciones td:nth-child(7) {
+        text-align: left; /* Columnas de nombre del asistente, correo asistente y comentarios alineadas a la izquierda */
+    }
+    #tabla-evaluaciones td {
+        text-align: center; /* Resto de columnas centradas */
+    }
+    /* Estilos para el contenedor del calendario */
+    #calendario-semanal {
+      margin: 20px auto; /* Margen externo para centrar el calendario */
+      width: 100%; /* Ancho del calendario */
+    }
+    /* Estilos para la tabla del calendario */
+    .calendario-semanal-table {
+      width: 100%; /* Ancho de la tabla */
+      border-collapse: collapse; /* Colapso de bordes de celda */
+    }
+    /* Estilos para las celdas del encabezado */
+    .calendario-semanal-table th {
+      background-color: #618796; /* Color de fondo */
+      padding: 10px; /* Espaciado interno */
+      text-align: left; /* Alineación de texto a la izquierda */
+      border-bottom: 1px solid #ddd; /* Borde inferior */
+      color: #fff; /* Color del texto */
+    }
+    /* Estilos para las celdas del cuerpo */
+    .calendario-semanal-table td {
+      padding: 10px; /* Espaciado interno */
+      border-bottom: 1px solid #ddd; /* Borde inferior */
+    }
+    /* Estilos para las filas impares del cuerpo */
+    .calendario-semanal-table tbody tr:nth-child(odd) {
+      background-color: #f9f9f9; /* Color de fondo para filas impares */
+    }
+    /* Estilos para la primera columna (día de la semana) */
+    .calendario-semanal-table tbody td:first-child {
+      width: 15%; /* Ancho del 10% para la primera columna */
+    }
+    /* Estilos para la segunda columna (eventos reservados) */
+    .calendario-semanal-table tbody td:nth-child(2) {
+      width: 85%; /* Ancho del 90% para la segunda columna */
+      margin: 0; /* Eliminar margen interno del párrafo */
+    }
+    /* Estilos para las filas al pasar el mouse */
+    .calendario-semanal-table tbody tr:hover {
+      background-color: #76c04e; /* Cambio de color al pasar el mouse */
+      cursor: pointer; /* Cambio de cursor al pasar el mouse */
+    }
+    /* Estilos para centrar los encabezados */
+    .calendario-semanal-table th {
+      text-align: center; /* Alineación centrada */
+    }
+
+  </style>
+</head>
+<body class="dark-mode">
+
+  <!-- Proceso para insertar el logo de la herramienta de SIEA y adicionalmente detalles iniciales y generales de la página -->
+    <!-- Botón de modo de visualización-->
+    <!--<button id="modo-switch" class="light-mode">
+        <span class="icon"></span>
+      </button>-->
+    <script src="script.js"></script>
+  <div class="main-content">
+    <!-- El contenido principal de tu página va aquí -->
+  </div>
+
+  <!-- DETALLES DEL ACORDEÓN 4 PARA EVALUACIÓN DE SATISFACCIÓN DEL ESPACIO -->
+  <div class="acordeon4">EVALÚA UN ESPACIO / EVENTO 🌟</div>
+  <div id="acordeon4-content" style="display: block">
+    <div class="acordeon4-content-inner">
+      <!-- Contenido para evaluar espacio -->
+      <div>
+      <button class="button-evaluar" onclick="window.location.href = 'https://alessvilla.github.io/SIEA/public/index.html'">⬅️ VOLVER AL INICIO</button>
+      </div>
+      <button class="alternarConsulta" onclick="alternarEvaluacion()">Click aquí para evaluar satisfacción de un evento</button>
+      <button class="alternarConsulta" onclick="limpiarEvaluacion()">Borrar todo</button>
+
+      <div class="evaluar-group" id="evaluar-espacio" style="display: none;">
+      <!-- Botón para alternar entre evaluar espacio y evaluar evento -->
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL ESPACIO 🏢</p></h2>
+        <div class="row">
+          <div class="half">
+            <label for="nombre-asistente"><b>Nombre completo del asistente: *</b></label>
+            <input type="text" id="nombre-asistente" placeholder="Ingresa tu nombre.">
+            <label for="telefono-asistente"><b>Teléfono asistente (opcional): </b></label>
+            <input type="tel" id="telefono-asistente" placeholder="Ingresa tu número de teléfono.">
+          </div>
+          <div class="half">
+            <label for="correo-asistente"><b>Correo del asistente: *</b></label>
+            <input type="text" id="correo-asistente" placeholder="Correo ANEIAP preferiblemente.">
+            <label for="capitulo-espacio"><b>Capítulo organizador: *</b></label>
+            <select id="capitulo-espacio">
+              <option value="" disabled selected hidden>Selecciona el capítulo que organizó el espacio.</option>
+              <option value="uniguajira">UNIGUAJIRA</option>
+              <option value="unimagdalena">UNIMAGDALENA</option>
+              <option value="uniatlantico">UNIATLÁNTICO</option>
+              <option value="uninorte">UNINORTE</option>
+              <option value="unisimon">UNISIMÓN</option>
+              <option value="cuc">CUC</option>
+              <option value="librequilla">LIBREQUILLA</option>
+              <option value="utb">UTB</option>
+              <option value="upbmonteria">UPBMONTERÍA</option>
+              <option value="unicordoba">UNICÓRDOBA</option>
+              <option value="ufps">UFPS</option>
+              <option value="unalmed">UNALMED</option>
+              <option value="udea">UDEA</option>
+              <option value="upbmed">UPBMED</option>
+              <option value="utp">UTP</option>
+              <option value="unalma">UNALMA</option>
+              <option value="udistrital">UDISTRITAL</option>
+              <option value="unalbog">UNALBOG</option>
+              <option value="univalle">UNIVALLE</option>
+              <option value="icesi">ICESI</option>
+              <option value="uao">UAO</option>
+              <option value="usc">USC</option>
+              <option value="nacional">ANEIAP NACIONAL</option>
+            </select>
+          </div>
+        </div>
+        <label for="nombre-espacio"><b>Nombre del espacio a evaluar: *</b></label>
+        <select id="nombre-espacio">
+          <option value="" disabled selected hidden>Debes seleccionar primero un capítulo para seleccionar el espacio.</option>
+          <!-- Aquí puedes agregar opciones para los espacios disponibles -->
+        </select>
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL ESPACIO 📝</p></h2>
+        <h3 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">SOLO ES OBLIGATORIO EVALUAR LOS ESPACIOS DE FORMACIÓN DE VALOR AGREGADO, EL RESTO SON OPCIONALES (A CONSIDERACIÓN DE LA JUNTA / DCA)</p></h3>
+        <p>Evalúa del 1 al 10 los siguientes aspectos siendo 1 la menor nota y 10 la máxima nota:</p>
+        <div class="row">
+          <div class="half">
+            <label for="pregunta1"><b>1️⃣ </b> ¿Qué tan satisfecho te sientes con el espacio? *</label>
+            <select id="pregunta1">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="half">
+            <label for="pregunta2"><b>2️⃣ </b> ¿Qué tanto aprendiste por haber asistido al espacio? *</label>
+            <select id="pregunta2">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="half">
+            <label for="pregunta3"><b>3️⃣ </b> Evalúa la calidad del ponente/organizador del espacio. *</label>
+            <select id="pregunta3">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="half">
+            <label for="pregunta4"><b>4️⃣ </b> Deja acá tus comentarios, sugerencias y retroalimentaciones.</label>
+            <textarea id="pregunta4" rows="1" placeholder="Escribe tus comentarios y sugerencias aquí en caso de que tengas alguno (recomendado)."></textarea>
+          </div>
+        </div>
+        <button class="button-evaluar" onclick="evaluarEspacio()">Enviar evaluación</button>
+      </div>
+
+      <!-- Contenido para evaluar evento (inicialmente oculto) -->
+      <div class="evaluar-group" id="evaluar-evento" style="display: block;">
+
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL EVENTO CAPITULAR/NACIONAL 🏢</p></h2>
+          <div class="row">
+            <div class="half">
+              <label for="evento-crm"><b>Evento al que asististe: *</b></label>
+              <select id="evento-crm">
+                <option value="" disabled selected hidden>Selecciona el evento.</option>
+                <!-- Agrega opciones para otros eventos -->
+              </select>
+            </div>
+            <div class="half">
+              <label for="crm-nombre-asistente"><b>Nombre completo asistente: *</b></label>
+              <input type="text" id="crm-nombre-asistente" placeholder="Ingresa tu nombre.">
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="half">
+              <label for="crm-correo-asistente"><b>Correo del asistente: *</b></label>
+              <input type="text" id="crm-correo-asistente" placeholder="Ingresa tu correo electrónico.">
+            </div>
+            <div class="half">
+              <label for="crm-telefono-asistente"><b>Teléfono asistente (opcional): </b></label>
+              <input type="tel" id="crm-telefono-asistente" placeholder="Ingresa tu número de teléfono.">
+            </div>
+          </div>
+
+
+        <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">EVALÚA EL EVENTO 📝</p></h2>
+        <p>Recientemente estuviste en un evento organizado por la ANEIAP. Del 0 al 10, siendo 10 el puntaje máximo.</p>
+        <div class="row">
+          <div class="half">
+            <label for="crm-pregunta1"><b>1️⃣ </b> ¿Qué tan probable es que recomiendes los eventos de la ANEIAP a otras personas? *</label>
+            <select id="crm-pregunta1">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="half">
+            <label for="crm-pregunta2"><b>2️⃣ </b> ¿Qué tan adecuadas considera que fueron las instalaciones para el evento? *</label>
+            <select id="crm-pregunta2">
+              <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="half">
+              <label for="crm-pregunta3"><b>3️⃣ </b> ¿Cómo calificarías la puntualidad en las actividades? *</label>
+              <select id="crm-pregunta3">
+                  <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+              </select>
+          </div>
+          <div class="half">
+              <label for="crm-pregunta4"><b>4️⃣ </b> ¿Cómo calificarías tu paso por la mesa de acreditación? *</label>
+              <select id="crm-pregunta4">
+                  <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+              </select>
+          </div>
+          </div>
+          <!-- Repite el mismo patrón para las siguientes preguntas -->
+          <!-- Pregunta 5 -->
+          <div class="row">
+              <!-- Primer half -->
+              <div class="half">
+                  <label for="crm-pregunta5"><b>5️⃣ </b> ¿Cómo calificarías la apertura del evento? *</label>
+                  <select id="crm-pregunta5">
+                      <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                  </select>
+              </div>
+              <!-- Segundo half -->
+              <div class="half">
+                <label for="crm-pregunta6"><b>6️⃣ </b> ¿Cómo calificarías la logística del comité? *</label>
+                <select id="crm-pregunta6">
+                    <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+          </div>
+          <!-- Pregunta 7 -->
+          <div class="row">
+              <!-- Primer half -->
+              <div class="half">
+                  <label for="crm-pregunta7"><b>7️⃣ </b> ¿Cómo calificarías la atención del comité? *</label>
+                  <select id="crm-pregunta7">
+                      <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                  </select>
+              </div>
+              <!-- Segundo half -->
+              <div class="half">
+                <label for="crm-pregunta8"><b>8️⃣ </b> ¿Cómo calificarías la agenda del evento? *</label>
+                <select id="crm-pregunta8">
+                    <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+              </div>
+          </div>
+          <!-- Repite el mismo patrón para las siguientes preguntas -->
+          <!-- Pregunta 9 -->
+          <div class="row">
+              <!-- Primer half -->
+              <div class="half">
+                <label for="crm-pregunta9"><b>9️⃣ </b> ¿Cómo calificarías al(los) conferencista(s) del evento? *</label>
+                <select id="crm-pregunta9">
+                    <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+              </div>
+              <!-- Segundo half -->
+              <div class="half">
+                <label for="crm-pregunta10"><b>1️⃣0️⃣ </b> ¿Cómo calificarías las temáticas del evento? *</label>
+                <select id="crm-pregunta10">
+                    <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+              </div>
+          </div>
+          <!-- Repite el mismo patrón para las siguientes preguntas -->
+          <!-- Pregunta 11 -->
+          <div class="row">
+              <!-- Primer half -->
+              <div class="half">
+                  <label for="crm-pregunta11"><b>1️⃣1️⃣ </b> ¿Qué tan adecuada fue la publicidad para el evento? *</label>
+                  <select id="crm-pregunta11">
+                      <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                  </select>
+              </div>
+              <!-- Segundo half -->
+              <div class="half">
+                <label for="crm-pregunta12" style="display: none;"><b>1️⃣2️⃣ </b> Pregunta 12 *</label>
+                <select id="crm-pregunta12" style="display: none;">
+                    <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+              </div>
+          </div>
+          <!-- Repite el mismo patrón para las siguientes preguntas -->
+          <!-- Pregunta 13 -->
+          <div class="row">
+            <!-- Primer half -->
+            <div class="half">
+                <label for="crm-pregunta13" style="display: none;"><b>1️⃣3️⃣ </b> Pregunta 13 *</label>
+                <select id="crm-pregunta13" style="display: none;">
+                    <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <!-- Segundo half -->
+            <div class="half">
+              <label for="crm-pregunta14" style="display: none;"><b>1️⃣4️⃣ </b> Pregunta 14 *</label>
+              <select id="crm-pregunta14" style="display: none;">
+                  <option value="" disabled selected hidden>Califica del 1 al 10.</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+              </select>
+            </div>
+          </div>
+          ㅤ
+        <label for="crm-comentarios"><b></b> Comentarios, sugerencias, recomendaciones sobre el evento.</label>
+        <input type="text" id="crm-comentarios" placeholder="Escriba acá todos tus comentarios sobre el evento al que asististe.">
+        <button class="button-evaluar" onclick="evaluarEvento()">Enviar evaluación de evento</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+
+    // Variables para la evaluación del espacio dentro del Acordeón 4 y actualización de info del espacio en Acordeón 5:
+    var fechaHoy = new Date().toISOString().slice(0, 10);
+    var capituloEspacioSelect = document.getElementById("capitulo-espacio");
+
+    // Función para que los nombres de los espacios que están disponibles para evaluar se actualicen a
+    // Todos aquellos que tengan una fecha de evento entre HOY y hace 3 SEMANAS, luego de 3 semanas no se podrá evaluar
+    capituloEspacioSelect.addEventListener("change", function() {
+        var capituloSeleccionado = document.getElementById("capitulo-espacio").value;
+        // Calcular la fecha de hace tres semanas
+        var tresSemanasAtras = new Date();
+        tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21); // Restar 21 días para tres semanas
+        
+        // Formatear la fecha de tres semanas atrás en el formato YYYY-MM-DD
+        var dia = String(tresSemanasAtras.getDate()).padStart(2, '0');
+        var mes = String(tresSemanasAtras.getMonth() + 1).padStart(2, '0');
+        var año = tresSemanasAtras.getFullYear();
+        var fechaTresSemanasAtras = año + '-' + mes + '-' + dia;
+        console.log("la fecha de hace 3 semanas es con función " + fechaTresSemanasAtras);
+        // Obtener las reservas para el capítulo y dentro del rango de fechas
+        var reservasRef = firebase.firestore().collection("reservas");
+        var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloSeleccionado)
+                                  .where("fechaEvento", ">=", fechaTresSemanasAtras)
+                                  .where("fechaEvento", "<=", fechaHoy)
+                                  .where("crm", "==", "no")
+
+        consulta.get().then(function(querySnapshot) {
+          var nombresEventos = [];
+          querySnapshot.forEach(function(doc) {
+              nombresEventos.push(doc.data().nombreEvento);
+          });
+          nombresEventos.sort(); // Orden alfabético
+          // Agregar opciones al select
+          var nombreEspacioSelect = document.getElementById("nombre-espacio");
+          nombreEspacioSelect.innerHTML = ""; // Limpiar opciones anteriores
+          if (nombresEventos.length === 0) {
+              // Si no hay eventos disponibles, mostrar un mensaje indicando que no hay eventos en el rango de fechas
+              var option = document.createElement("option");
+              option.text = "No hay ningún evento cuya fecha sea entre HOY y hace 3 SEMANAS para este capítulo o ya pasó el plazo máximo del evento que buscas evaluar.";
+              option.value = "";
+              option.disabled = true;
+              option.selected = true;
+              nombreEspacioSelect.add(option);
+          } else {
+              // Si hay eventos disponibles, agregar cada nombre como una opción
+              nombresEventos.forEach(function(nombre) {
+                  var option = document.createElement("option");
+                  option.text = nombre;
+                  option.value = nombre;
+                  nombreEspacioSelect.add(option);
+              });
+          }
+        }).catch(function(error) {
+            console.log("Error obteniendo reservas:", error);
+            // Manejar el error aquí
+        });
+    });
+
+    // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
+    var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
+    var capituloUsuario = "";
+
+    // Esta función se utiliza cuando se hace clic en la barra "EVALUAR ESPACIO (AC4)" para ocultar
+    // las demás barras de información en la interfaz. Su propósito es mejorar la experiencia del usuario
+    // al centrarse en la acción de eliminar una reserva sin distracciones innecesarias.
+    function toggleEvaluarEspacio() {
+      // Obtener la referencia al contenido de la barra "ELIMINAR RESERVA (AC3)"
+      var content = document.getElementById("acordeon4-content");
+      
+      // Comprobar el estado actual de visualización (oculto o mostrado)
+      if (content.style.display === "none") {
+        // Si está oculto, cambiarlo a mostrado (display: block)
+        content.style.display = "block";
+      } else {
+        // Si está mostrado, cambiarlo a oculto (display: none)
+        content.style.display = "none";
+      }
+
+      // A continuación, ocultar las otras barras de información (AC0, AC1, AC2, AC3 y AC5) para centrarse en la eliminación
+
+      var content = document.getElementById("acordeon5-content");
+      content.style.display = "none";
+
+      var content = document.getElementById("acordeon3-content");
+      content.style.display = "none";
+
+      var content0 = document.getElementById("acordeon0-content");
+      content0.style.display = "none";
+
+      var content1 = document.getElementById("acordeon1-content");
+      content1.style.display = "none";
+
+      var content2 = document.getElementById("acordeon2-content");
+      content2.style.display = "none";
+
+      document.getElementById("nombre-asistente").value = "";
+      document.getElementById("telefono-asistente").value = "";
+      document.getElementById("correo-asistente").value = "";
+      document.getElementById("capitulo-espacio").value = "";
+      document.getElementById("nombre-espacio").value = "";
+      document.getElementById("pregunta1").value = "";
+      document.getElementById("pregunta2").value = "";
+      document.getElementById("pregunta3").value = "";
+      document.getElementById("pregunta4").value = "";
+    }
+
+    // Esta función permite la acción de mostrar un mensaje de éxito al momento de evaluar una reserva.
+    function mostrarMensajeEvaluar() {
+      Swal.fire({
+      title: '¡EVALUACIÓN DEL ESPACIO/EVENTO COMPLETADA!',
+      text: 'Acabas de evaluar el espacio/evento que escogiste con ÉXITO, gracias por contribuir a la mejora continua.',
+      icon: 'success',
+      showConfirmButton: true, // Muestra el botón de confirmación
+      allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
+      allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
+      imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
+      imageWidth: 120, // Ancho de la imagen en píxeles
+      imageHeight: 235, // Alto de la imagen en píxeles
+      imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+      }).then((result) => {
+      // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
+      });
+    }
+/*
+    const modoSwitch = document.getElementById('modo-switch');
+    const body = document.body;
+    const logos = document.querySelectorAll('.logo');
+
+    modoSwitch.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+
+      // Verifica si el body tiene la clase dark-mode
+      if (body.classList.contains('dark-mode')) {
+        // Si está en modo oscuro, muestra el logo dark y oculta el logo light
+        logos.forEach((logo) => {
+          if (logo.classList.contains('dark-mode')) {
+            logo.style.display = 'block';
+          } else {
+            logo.style.display = 'none';
+          }
+        });
+      } else {
+        // Si está en modo claro, muestra el logo light y oculta el logo dark
+        logos.forEach((logo) => {
+          if (logo.classList.contains('light-mode')) {
+            logo.style.display = 'block';
+          } else {
+            logo.style.display = 'none';
+          }
+        });
+      }
+    });
+*/
+    // Función para convertir números en emojis
+    function numeroAEmoji(numero) {
+      if (numero < 10) {
+        switch (numero) {
+          case 0:
+            return "0️⃣";
+          case 1:
+            return "1️⃣";
+          case 2:
+            return "2️⃣";
+          case 3:
+            return "3️⃣";
+          case 4:
+            return "4️⃣";
+          case 5:
+            return "5️⃣";
+          case 6:
+            return "6️⃣";
+          case 7:
+            return "7️⃣";
+          case 8:
+            return "8️⃣";
+          case 9:
+            return "9️⃣";
+          default:
+            return numero; // Si el número no está entre 0 y 9, devolver el mismo número
+        }
+      } else {
+        // Obtener el primer dígito
+        let primerDigito = Math.floor(numero / 10);
+        // Obtener el segundo dígito
+        let segundoDigito = numero % 10;
+        // Convertir ambos dígitos a emojis
+        let emojiPrimerDigito = numeroAEmoji(primerDigito);
+        let emojiSegundoDigito = numeroAEmoji(segundoDigito);
+        // Devolver ambos emojis concatenados
+        return `${emojiPrimerDigito}${emojiSegundoDigito}`;
+      }
+    }
+
+    function limpiarEvaluacion() {
+      // Limpiar los datos cuando se evalúa un espacio.
+      document.getElementById("pregunta1").value = "";
+      document.getElementById("pregunta2").value = "";
+      document.getElementById("pregunta3").value = "";
+      document.getElementById("pregunta4").value = "";
+      document.getElementById("nombre-asistente").value = "";
+      document.getElementById("telefono-asistente").value = "";
+      document.getElementById("correo-asistente").value = "";
+      document.getElementById("capitulo-espacio").value = "";
+        // Limpiar y configurar el desplegable "nombre-espacio"
+        var nombreEspacioSelect = document.getElementById("nombre-espacio");
+        nombreEspacioSelect.innerHTML = ""; // Vaciar opciones actuales
+        
+        var option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Debes seleccionar primero un capítulo para seleccionar el espacio."; // Texto inicial deshabilitado
+        option.disabled = true;
+        option.selected = true; // Para que aparezca seleccionado
+        nombreEspacioSelect.appendChild(option);
+
+      // Limpiar los datos cuando se evalúa un evento.
+      document.getElementById("crm-nombre-asistente").value = "";
+      document.getElementById("crm-telefono-asistente").value = "";
+      document.getElementById("crm-correo-asistente").value = "";
+      document.getElementById("evento-crm").value = "";
+      document.getElementById("crm-pregunta1").value = "";
+      document.getElementById("crm-pregunta2").value = "";
+      document.getElementById("crm-pregunta3").value = "";
+      document.getElementById("crm-pregunta4").value = "";
+      document.getElementById("crm-pregunta5").value = "";
+      document.getElementById("crm-pregunta6").value = "";
+      document.getElementById("crm-pregunta7").value = "";
+      document.getElementById("crm-pregunta8").value = "";
+      document.getElementById("crm-pregunta9").value = "";
+      document.getElementById("crm-pregunta10").value = "";
+      document.getElementById("crm-pregunta11").value = "";
+      document.getElementById("crm-pregunta12").value = "";
+      document.getElementById("crm-pregunta13").value = "";
+      document.getElementById("crm-pregunta14").value = "";
+      document.getElementById("crm-comentarios").value = "";
+    }
+
+    function evaluarEspacio() {
+      var nombreEspacio = document.getElementById("nombre-espacio").value;
+      var capituloEspacio = document.getElementById("capitulo-espacio").value;
+
+      var fechaHoy = new Date();
+      // Formatear la fecha de hoy en el formato YYYY-MM-DD
+      var dia = String(fechaHoy.getDate()).padStart(2, '0');
+      var mes = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+      var año = fechaHoy.getFullYear();
+      var fechaHoy = año + '-' + mes + '-' + dia;
+
+      var tresSemanasAtras = new Date();
+      tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21); // Restar 21 días para tres semanas
+      // Formatear la fecha de tres semanas atrás en el formato YYYY-MM-DD
+      var diaa = String(tresSemanasAtras.getDate()).padStart(2, '0');
+      var mess = String(tresSemanasAtras.getMonth() + 1).padStart(2, '0');
+      var añoo = tresSemanasAtras.getFullYear();
+      var fechaTresSemanasAtras = añoo + '-' + mess + '-' + diaa;
+      console.log("fechaTresSemanasAtras")
+      console.log(fechaTresSemanasAtras)
+      console.log("fechaHoy")
+      console.log(fechaHoy)
+
+      // Verificar si hay campos faltantes
+      if (nombreEspacio === "" || capituloEspacio === "") {
+          // Decirle al usuario que no ha seleccionado un espacio a evaluar.
+          Swal.fire({
+              icon: 'error',
+              title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR!',
+              text: 'Debes seleccionar el nombre del espacio que quieres evaluar antes de continuar.',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: true,
+              backdrop: true,
+              allowEscapeKey: true,
+              imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+              imageWidth: 120, // Ancho de la imagen en píxeles
+              imageHeight: 235, // Alto de la imagen en píxeles
+              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener el proceso de evaluación
+      }
+        // Obtener los valores de los campos
+      var nombreAsistente = document.getElementById("nombre-asistente").value;
+      var telefonoAsistente = document.getElementById("telefono-asistente").value;
+      var correoAsistente = document.getElementById("correo-asistente").value;
+      correoAsistente = correoAsistente.toLowerCase();
+      var pregunta1 = document.getElementById("pregunta1").value;
+      var pregunta2 = document.getElementById("pregunta2").value;
+      var pregunta3 = document.getElementById("pregunta3").value;
+      var comentarios = document.getElementById("pregunta4").value;
+
+      // Validar la longitud de comentarios
+      if (comentarios.length > 100) {
+          // Mostrar el mensaje de error utilizando Swal.fire
+          Swal.fire({
+              title: '¡Comentario demasiado largo!',
+              text: 'El comentario no puede tener más de 100 caracteres.',
+              icon: 'warning',
+              confirmButtonText: 'Aceptar'
+          });
+          return; // Detener el proceso de evaluación
+      }
+      
+      var telefonoAsistenteRegex = /^3\d{9}$/; // Esta expresión regular verifica que solo haya 10 dígitos y nada más.
+      // Aquí ajustamos la condición para que verifique correctamente si el teléfono no coincide con el patrón en caso de haberlo diligenciado pues es opcional
+      if (telefonoAsistente !== "" && !telefonoAsistenteRegex.test(telefonoAsistente)) {
+        Swal.fire({
+          title: '¡TELÉFONO INCORRECTO!',
+          text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener la operación actual, como el envío de un formulario o la continuación de un proceso
+      }
+      
+      var reservasRef = firebase.firestore().collection("reservas");
+      var eventoRef = reservasRef.where("capitulosOrganizadores", "array-contains", capituloEspacio).where("nombreEvento", "==", nombreEspacio)
+                                 .where("fechaEvento", ">=", fechaTresSemanasAtras).where("fechaEvento", "<=", fechaHoy);
+
+      eventoRef.get().then(function(querySnapshot) {
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach(function(doc) {
+              var data = doc.data();
+              var correosAsistentes = (data.correosAsistentes || "").toLowerCase(); // Obtener la cadena de correos o usar una cadena vacía si es null o undefined
+              if (correoAsistente !== "" && correosAsistentes.includes(correoAsistente)) {
+                  // El usuario ya evaluó este espacio
+                  Swal.fire({
+                      icon: 'warning',
+                      title: '¡YA EVALUASTE ESTE ESPACIO!',
+                      html: 'Ya has enviado una evaluación para este espacio recientemente con tu correo: <strong>' + correoAsistente + '</strong>.<br>' +
+                            'Recuerda que solo puedes evaluar cada espacio una vez. Si necesitas consultar tu respuesta o crees que se trata de un error, por favor comunícate con tu DCA.',
+                      confirmButtonText: 'Aceptar',
+                      allowOutsideClick: true,
+                      backdrop: true,
+                      allowEscapeKey: true,
+                      imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+                      imageWidth: 120, // Ancho de la imagen en píxeles
+                      imageHeight: 235, // Alto de la imagen en píxeles
+                      imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                  });
+                  return; // Detener el proceso de evaluación
+              }
+            // En caso de que no esté ya registrado el correo, le dejará seguir el proceso de evaluación
+            // Crear una lista para almacenar los nombres de los campos faltantes
+            var camposFaltantes = [];
+
+            // Verificar si cada campo está vacío y agregar su nombre a la lista si es el caso
+            if (nombreAsistente.trim() === "") {camposFaltantes.push(" - Nombre del asistente");}
+            //if (telefonoAsistente.trim() === "") {camposFaltantes.push(" - Teléfono del asistente");}
+            //Se hizo opcional el telefono del asistente
+            if (correoAsistente.trim() === "") {camposFaltantes.push(" - Correo del asistente");}
+            if (capituloEspacio === "") {camposFaltantes.push(" - Capítulo que organizó el espacio");}
+            if (nombreEspacio === "") {camposFaltantes.push(" - Nombre del espacio a evaluar");}
+            if (pregunta1 === "") {camposFaltantes.push(" - Pregunta 1");}
+            if (pregunta2 === "") {camposFaltantes.push(" - Pregunta 2");}
+            if (pregunta3 === "") {camposFaltantes.push(" - Pregunta 3");}
+            // Verificar si hay campos faltantes
+            if (camposFaltantes.length > 0) {
+                // Mostrar una alerta con los campos faltantes
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
+                    text: 'Los siguientes campos son obligatorios y están vacíos:\n' + camposFaltantes.join('\n'),
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: true,
+                    backdrop: true,
+                    allowEscapeKey: true,
+                    imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+                    imageWidth: 120, // Ancho de la imagen en píxeles
+                    imageHeight: 235, // Alto de la imagen en píxeles
+                    imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                });
+                return; // Detener el proceso de evaluación
+            }
+
+
+            // Si todos los campos están diligenciados, continuar con el proceso de evaluación
+            // Actualizar la información del evento en la base de datos
+            eventoRef.get().then(function(querySnapshot) {
+              querySnapshot.forEach(function(doc) {
+                  var data = doc.data();
+
+                  // Incrementar los contadores según las respuestas a las preguntas
+                  if (pregunta1 === "1" || pregunta1 === "2" || pregunta1 === "3" || pregunta1 === "4" || pregunta1 === "5" || pregunta1 === "6") {
+                      // Detractor
+                      data.detractores = (data.detractores || 0) + 1;
+                  } else if (pregunta1 === "7" || pregunta1 === "8") {
+                      // Pasivo
+                      data.pasivos = (data.pasivos || 0) + 1;
+                  } else {
+                      // Promotor
+                      data.promotores = (data.promotores || 0) + 1;
+                  }
+
+                  if (pregunta2 === "1" || pregunta2 === "2" || pregunta2 === "3" || pregunta2 === "4" || pregunta2 === "5" || pregunta2 === "6") {
+                      data.detractores = (data.detractores || 0) + 1;
+                  } else if (pregunta2 === "7" || pregunta2 === "8") {
+                      data.pasivos = (data.pasivos || 0) + 1;
+                  } else {
+                      data.promotores = (data.promotores || 0) + 1;
+                  }
+
+                  if (pregunta3 === "1" || pregunta3 === "2" || pregunta3 === "3" || pregunta3 === "4" || pregunta3 === "5" || pregunta3 === "6") {
+                      data.detractores = (data.detractores || 0) + 1;
+                  } else if (pregunta3 === "7" || pregunta3 === "8") {
+                      data.pasivos = (data.pasivos || 0) + 1;
+                  } else {
+                      data.promotores = (data.promotores || 0) + 1;
+                  }
+
+                  // Almacenar respuestas en los campos correspondientes
+                  data.respuestas1 = (data.respuestas1 || "") + pregunta1 + "|" ;
+                  data.respuestas2 = (data.respuestas2 || "") + pregunta2 + "|" ;
+                  data.respuestas3 = (data.respuestas3 || "") + pregunta3 + "|" ;
+
+                  // Actualizar comentarios y datos personales del asistente
+                  if (comentarios.trim() !== "") {
+                      data.comentarios = (data.comentarios || "") + comentarios + "|" ;
+                  } else {data.comentarios = (data.comentarios || "") + "Ninguno.|"}
+
+                  data.asistentes = (data.asistentes || "") + nombreAsistente + "|";
+                  data.correosAsistentes = (data.correosAsistentes || "") + correoAsistente + "|" ;
+                  data.telefonosAsistentes = (data.telefonosAsistentes || "") +  telefonoAsistente + "|" ;
+
+                  // Recalcular satisfacción
+                  console.log("Promotores:", data.promotores);
+                  console.log("Pasivos:", data.pasivos);
+                  console.log("Detractores:", data.detractores);
+                  var satisfaccion = (data.promotores - data.detractores) / (data.promotores + data.pasivos + data.detractores);
+                  console.log("La satisfacción es: " + satisfaccion)
+                  data.satisfaccion = satisfaccion;
+
+                  // Actualizar el evento en la base de datos
+                  reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
+                      // Mostrar mensaje de éxito
+                      mostrarMensajeEvaluar();
+
+                      // Reiniciar los campos del formulario en caso de que quiera volver a llenar para otro espacio diferente.
+                      limpiarEvaluacion();
+
+                      var content = document.getElementById("acordeon4-content");
+                      content.style.display = "none";
+                      }).catch(function(error) {
+                          console.error("Error actualizando el evento:", error);
+                          // Mostrar mensaje de error
+                          Swal.fire({
+                              icon: 'error',
+                              title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
+                              text: 'Ocurrió un error al actualizar la información del evento. Por favor, intenta nuevamente.',
+                              confirmButtonText: 'Aceptar'
+                          });
+                      });
+                  });
+              }).catch(function(error) {
+                  console.error("Error obteniendo el evento:", error);
+                  // Mostrar mensaje de error
+                  Swal.fire({
+                      icon: 'error',
+                      title: '¡ERROR AL OBTENER EL EVENTO!',
+                      text: 'Ocurrió un error al obtener la información del evento. Por favor, contáctate con el administrador.',
+                      confirmButtonText: 'Aceptar'
+                  });
+              });
+
+            //Se termina el proceso de evaluación
+          });
+        }
+      }).catch(function(error) {
+        console.error("Error al verificar la evaluación del espacio:", error);
+        // Mostrar mensaje de error
+        Swal.fire({
+            icon: 'error',
+            title: '¡ERROR AL VERIFICAR LA EVALUACIÓN!',
+            text: 'Ocurrió un error al verificar si ya has evaluado este espacio. Por favor, intenta nuevamente.',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+      });
+
+    }
+
+    // Función para alternar la visibilidad de la tabla de evaluaciones y cambiar el texto del botón
+    function toggleEvaluaciones() {
+      var tabla = document.getElementById("tabla-evaluaciones");
+      var boton = document.getElementById("toggleEvaluaciones");
+      var estadoTabla = document.getElementById("estadoTablaEvaluaciones");
+      if (tabla.style.display === "none") {
+        tabla.style.display = "block";
+        boton.textContent = "Ocultar tabla de evaluaciones";
+        estadoTabla.style.display = "none"; // Oculta el mensaje de estado
+        consultarEvaluaciones();
+      } else {
+        tabla.style.display = "none";
+        boton.textContent = "Mostrar tabla de evaluaciones";
+        estadoTabla.style.display = "block"; // Muestra el mensaje de estado
+      }
+    }
+
+    // Event listener para detectar cambios en el desplegable "evento-crm"
+    document.getElementById("evento-crm").addEventListener("change", function() {
+        // Obtener el valor seleccionado del desplegable
+        var eventoSeleccionado = this.value;
+
+        // Realizar la consulta a Firebase para obtener los campos "crmPreguntaAdicional1", "crmPreguntaAdicional2" y "crmPreguntaAdicional3"
+        var reservasRef = firebase.firestore().collection("crmeventos").where("crm", "==", "si");
+        var consultaEvento = reservasRef.where("nombrecrmEvento", "==", eventoSeleccionado);
+
+        // Obtener los valores de los campos "crmPreguntaAdicional1", "crmPreguntaAdicional2" y "crmPreguntaAdicional3" y actualizar el texto de las preguntas correspondientes
+        consultaEvento.get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                var eventoConsultado = doc.data();
+                console.log("eventoConsultado")
+                console.log(eventoConsultado)
+                // Obtener los valores de las preguntas adicionales
+                var preguntaAdicional1 = eventoConsultado.crmExtra1;
+                var preguntaAdicional2 = eventoConsultado.crmExtra2;
+                var preguntaAdicional3 = eventoConsultado.crmExtra3;
+
+                // Obtener el desplegable y el texto de la pregunta 12
+                var desplegablePregunta12 = document.getElementById("crm-pregunta12");
+                var labelPregunta12 = document.querySelector("label[for='crm-pregunta12']");
+                if (preguntaAdicional1 === "") {
+                    // Si crmExtra1 está vacío, ocultar el desplegable y el texto de la pregunta 12
+                    desplegablePregunta12.style.display = "none";
+                    labelPregunta12.style.display = "none";
+                } else {
+                    // Si crmExtra1 tiene valor, mostrar el desplegable y el texto de la pregunta 12
+                    desplegablePregunta12.style.display = "block"; // O "inline-block" según corresponda al diseño
+                    labelPregunta12.style.display = "block"; // O "inline-block" según corresponda al diseño
+                }
+
+                // Obtener el desplegable y el texto de la pregunta 13
+                var desplegablePregunta13 = document.getElementById("crm-pregunta13");
+                var labelPregunta13 = document.querySelector("label[for='crm-pregunta13']");
+                if (preguntaAdicional2 === "") {
+                    // Si crmExtra2 está vacío, ocultar el desplegable y el texto de la pregunta 13
+                    desplegablePregunta13.style.display = "none";
+                    labelPregunta13.style.display = "none";
+                } else {
+                    // Si crmExtra2 tiene valor, mostrar el desplegable y el texto de la pregunta 13
+                    desplegablePregunta13.style.display = "block"; // O "inline-block" según corresponda al diseño
+                    labelPregunta13.style.display = "block"; // O "inline-block" según corresponda al diseño
+                }
+
+                // Obtener el desplegable y el texto de la pregunta 14
+                var desplegablePregunta14 = document.getElementById("crm-pregunta14");
+                var labelPregunta14 = document.querySelector("label[for='crm-pregunta14']");
+                if (preguntaAdicional3 === "") {
+                    // Si crmExtra3 está vacío, ocultar el desplegable y el texto de la pregunta 14
+                    desplegablePregunta14.style.display = "none";
+                    labelPregunta14.style.display = "none";
+                } else {
+                    // Si crmExtra2 tiene valor, mostrar el desplegable y el texto de la pregunta 13
+                    desplegablePregunta14.style.display = "block"; // O "inline-block" según corresponda al diseño
+                    labelPregunta14.style.display = "block"; // O "inline-block" según corresponda al diseño
+                }
+
+                console.log("preguntaAdicional1: " + preguntaAdicional1);
+                console.log("preguntaAdicional2: " + preguntaAdicional2);
+                console.log("preguntaAdicional3: " + preguntaAdicional3);
+                // Actualizar el texto de las etiquetas <label> con los valores obtenidos
+                document.querySelector("label[for='crm-pregunta12']").innerHTML = "<b>1️⃣2️⃣ </b>" + preguntaAdicional1;
+                document.querySelector("label[for='crm-pregunta13']").innerHTML = "<b>1️⃣3️⃣ </b>" + preguntaAdicional2;
+                document.querySelector("label[for='crm-pregunta14']").innerHTML = "<b>1️⃣4️⃣ </b>" + preguntaAdicional3;
+            });
+        }).catch((error) => {
+            console.log("Error obteniendo evento:", error);
+        });
+    });
+
+    // la función que cambia entre la evaluación de espacio y la evaluación de evento
+    function alternarEvaluacion() {
+      // Decirle al usuario que está en construcción la parte del CRM del evento
+      /*
+      Swal.fire({
+            title: '¡𝐂𝐎𝐌𝐈𝐍𝐆 𝐒𝐎𝐎𝐍... 🛠️⚙️🧰!',
+            text: 'Esta funcionalidad de SIEA (Evaluar eventos magnos, SCC, nacionales, etc.) por medio del CRM (Antes era un formulario de google) estará disponible 𝐌𝐔𝐘 𝐏𝐑𝐎𝐍𝐓𝐎, por ahora disfruta de la evaluación de espacios capitulares (capacitaciones, integraciones, etc.)',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+          });
+          return; // Detener la edición de la reserva
+      // Obtener el contenedor de la evaluación de espacio
+      */
+      const evaluarEspacio = document.getElementById("evaluar-espacio");
+      // Obtener el contenedor de la evaluación de evento
+      const evaluarEvento = document.getElementById("evaluar-evento");
+      // Obtener el botón de alternar consulta
+      const alternarBoton = document.querySelector(".alternarConsulta");
+
+      // Obtener el estilo computado de evaluarEspacio
+      const estiloEspacio = window.getComputedStyle(evaluarEspacio);
+      // Obtener el estilo computado de evaluarEvento
+      const estiloEvento = window.getComputedStyle(evaluarEvento);
+
+      // Verificar el estado actual de los contenedores
+      if (estiloEspacio.display === "block") {
+          // Si el modo actual es espacio, cambiar a evento
+          evaluarEspacio.style.display = "none";
+          evaluarEvento.style.display = "block";
+          // Cambiar el texto del botón
+          alternarBoton.textContent = "Volver a la evaluación de espacios";
+          consultarEventosCRM()
+      } else {
+          // Si el modo actual es evento, cambiar a espacio
+          evaluarEspacio.style.display = "block";
+          evaluarEvento.style.display = "none";
+          // Cambiar el texto del botón
+          alternarBoton.textContent = "Click aquí para evaluar satisfacción de un evento.";
+          consultarEventosCRM()
+        }
+    }
+
+    async function consultarEventosCRM() {
+        const capitulos = {
+            "uniguajira": "UNIGUAJIRA",
+            "unimagdalena": "UNIMAGDALENA",
+            "uniatlantico": "UNIATLÁNTICO",
+            "uninorte": "UNINORTE",
+            "unisimon": "UNISIMÓN",
+            "cuc": "CUC",
+            "librequilla": "LIBREQUILLA",
+            "utb": "UTB",
+            "upbmonteria": "UPBMONTERÍA",
+            "unicordoba": "UNICÓRDOBA",
+            "ufps": "UFPS",
+            "unalmed": "UNALMED",
+            "udea": "UDEA",
+            "upbmed": "UPBMED",
+            "utp": "UTP",
+            "unalma": "UNALMA",
+            "udistrital": "UDISTRITAL",
+            "unalbog": "UNALBOG",
+            "univalle": "UNIVALLE",
+            "icesi": "ICESI",
+            "uao": "UAO",
+            "usc": "USC",
+            "nacional": "ANEIAP NACIONAL"
+        };
+
+        Swal.fire({
+            title: 'Selecciona el capítulo que organizó el evento',
+            html: '<p style="font-size: 14px; color: gray;">Si el evento que calificarás es un evento nacional, selecciona <b>"ANEIAP Nacional"</b></p>',
+            input: 'select',
+            inputOptions: capitulos,
+            inputPlaceholder: 'Selecciona un capítulo',
+            showCancelButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonText: 'Aceptar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes seleccionar un capítulo antes de continuar';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                const capituloSeleccionadoSwalfire = result.value;
+                console.log("Capítulo seleccionado: " + capituloSeleccionadoSwalfire);
+
+                var reservasRef = firebase.firestore().collection("crmeventos");
+                var consultaEventos = reservasRef
+                    .where("crm", "==", "si")
+                    .where("capitulosOrganizadores", "array-contains", capituloSeleccionadoSwalfire);
+
+                var selectEvento = document.getElementById("evento-crm");
+                selectEvento.innerHTML = '<option value="" disabled selected hidden>Selecciona un evento capitular/nacional</option>';
+
+                consultaEventos.get().then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        selectEvento.innerHTML = '<option value="">No hay ningún evento con CRM pendiente.</option>';
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            console.log("Documento encontrado:", doc.id);
+                            console.log("Datos del documento:", doc.data());
+                            
+                            var nombrecrmEvento = doc.data().nombrecrmEvento;
+                            var option = document.createElement("option");
+                            option.text = nombrecrmEvento;
+                            option.value = nombrecrmEvento;
+                            selectEvento.add(option);
+                        });
+                    }
+                }).catch((error) => {
+                    console.log("Error obteniendo eventos:", error);
+                });
+            }
+        });
+    }
+
+    function evaluarEvento() {
+
+      var eventoSeleccionado = document.getElementById("evento-crm").value;
+      console.log(eventoSeleccionado)
+      if (eventoSeleccionado === "") {
+        Swal.fire({
+            title: '¡NO HAS SELECCIONADO UN EVENTO AÚN!',
+            text: 'Debes seleccionar un evento (magno, scc, capitular, regional, nacional, etc.) primero para poder evlauarlo.',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: true,
+            backdrop: true,
+            allowEscapeKey: true,
+            imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+            imageWidth: 120, // Ancho de la imagen en píxeles
+            imageHeight: 235, // Alto de la imagen en píxeles
+            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return;
+      }
+
+      // Verificar el formato del teléfono del ponente (debe empezar por 3 y tener 10 dígitos) si está diligenciado
+      var crmTelefonoAsistente = document.getElementById("crm-telefono-asistente").value;
+      var crmTelefonoAsistenteRegex = /^3\d{9}$/;
+      if (crmTelefonoAsistente !== "" && (!crmTelefonoAsistenteRegex.test(crmTelefonoAsistente)  || crmTelefonoAsistente.length !== 10)) {
+        Swal.fire({
+          title: '¡TELÉFONO INCORRECTO!',
+          text: 'Digita un número de teléfono válido, debe ser de 10 dígitos y sin espacios, símbolos o letras.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
+          imageWidth: 120, // Ancho de la imagen en píxeles
+          imageHeight: 235, // Alto de la imagen en píxeles
+          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+        });
+        return; // Detener la edición de la reserva
+      }
+
+      // Realizar la consulta a Firebase para obtener los eventos
+      var reservasRef = firebase.firestore().collection("crmeventos").where("crm", "==", "si");
+      var consultaEvento = reservasRef.where("nombrecrmEvento", "==", eventoSeleccionado);
+
+      consultaEvento.get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            var eventoConsultado = doc.data();
+            // Verificar que todos los campos estén llenos
+            var preguntas = [
+                { id: "crm-nombre-asistente", nombre: "Nombre completo asistente" },
+              //{ id: "crm-telefono-asistente", nombre: "Teléfono del asistente" },
+                { id: "crm-correo-asistente", nombre: "Correo del asistente" },
+                { id: "evento-crm", nombre: "Evento al que asististe" },
+                { id: "crm-pregunta1", nombre: "Pregunta 1" },
+                { id: "crm-pregunta2", nombre: "Pregunta 2" },
+                { id: "crm-pregunta3", nombre: "Pregunta 3" },
+                { id: "crm-pregunta4", nombre: "Pregunta 4" },
+                { id: "crm-pregunta5", nombre: "Pregunta 5" },
+                { id: "crm-pregunta6", nombre: "Pregunta 6" },
+                { id: "crm-pregunta7", nombre: "Pregunta 7" },
+                { id: "crm-pregunta8", nombre: "Pregunta 8" },
+                { id: "crm-pregunta9", nombre: "Pregunta 9" },
+                { id: "crm-pregunta10", nombre: "Pregunta 10" },
+                { id: "crm-pregunta11", nombre: "Pregunta 11" }
+            ];
+
+            // Verificar si la pregunta 12 está activa (tiene texto en el label)
+            var pregunta12 = eventoConsultado.crmExtra1;
+            var pregunta13 = eventoConsultado.crmExtra2;
+            var pregunta14 = eventoConsultado.crmExtra3;
+            if (pregunta12 !== "") {
+                preguntas.push({ id: "crm-pregunta12", nombre: "Pregunta 12" });
+            }
+            if (pregunta13 !== "") {
+                preguntas.push({ id: "crm-pregunta13", nombre: "Pregunta 13" });
+            }
+            if (pregunta14 !== "") {
+                preguntas.push({ id: "crm-pregunta14", nombre: "Pregunta 14" });
+            }
+
+            var camposFaltantes = preguntas.filter(pregunta => document.getElementById(pregunta.id).value.trim() === "").map(pregunta => pregunta.nombre);
+
+            if (camposFaltantes.length > 0) {
+              var mensaje = "No has diligenciado los siguientes campos o preguntas:\n";
+              camposFaltantes.forEach(function (campo) {
+                  mensaje += "- " + campo + "\n";
+              });
+              Swal.fire({
+                  title: '¡FALTAN CAMPOS POR DILIGENCIAR!',
+                  text: mensaje,
+                  icon: 'warning',
+                  confirmButtonText: 'Aceptar',
+                  allowOutsideClick: true,
+                  backdrop: true,
+                  allowEscapeKey: true,
+                  imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
+                  imageWidth: 120, // Ancho de la imagen en píxeles
+                  imageHeight: 235, // Alto de la imagen en píxeles
+                  imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+              });
+              return;
+            }
+           
+            // Obtener la clave del evento de la reserva consultada
+            var claveEvento = eventoConsultado.clavecrmEvento;
+            console.log("Esta es la clave del evento a evaluar")
+            console.log(claveEvento)
+
+            var respuestasCRM = {};
+            var limitepreguntas = 14;
+            if (eventoConsultado.crmExtra1 === "") {limitepreguntas = limitepreguntas - 1;}
+            if (eventoConsultado.crmExtra2 === "") {limitepreguntas = limitepreguntas - 1;}
+            if (eventoConsultado.crmExtra3 === "") {limitepreguntas = limitepreguntas - 1;}
+            console.log("El total de preguntas en este CRM es: ")
+            console.log(limitepreguntas)
+
+            for (var i = 1; i <= limitepreguntas; i++) {
+                var preguntaID = "crm-pregunta" + i;
+                var respuesta = document.getElementById(preguntaID).value;
+                respuestasCRM["respuesta" + i] = respuesta + "|";
+            }
+            console.log("Las respuestas del CRM son: ")
+            console.log(respuestasCRM)
+
+            // Verificar que de verdad funcione así
+            console.log("Ahora nos vamos a la parte donde las metemos a 'respuetasConcatenadas'")
+            var respuestasConcatenadas = Object.values(respuestasCRM);
+            console.log("respuestasConcatenadas:")
+            console.log(respuestasConcatenadas)
+
+            var nombrescrmAsistentes = eventoConsultado.nombrescrmAsistentes + document.getElementById("crm-nombre-asistente").value + "|"
+            var correoscrmAsistentes = eventoConsultado.correoscrmAsistentes + document.getElementById("crm-correo-asistente").value + "|"
+            var telefonoscrmAsistentes = eventoConsultado.telefonoscrmAsistentes + document.getElementById("crm-telefono-asistente").value + "|"
+            var comentarioscrm = eventoConsultado.comentarioscrm + document.getElementById("crm-comentarios").value + "|"
+
+            var eventoRef = firebase.firestore().collection("crmeventos").doc(claveEvento);
+            console.log("Este es el evento en firebase al que se le hará la evaluación CRM: ")
+            console.log(eventoRef)
+
+            eventoRef.get()
+              .then((doc) => {
+                if (doc.exists) {
+                  // El documento existe, actualizar los datos del evento
+                  var updateData = {
+                    nombrescrmAsistentes: eventoConsultado.nombrescrmAsistentes + document.getElementById("crm-nombre-asistente").value + "|",
+                    correoscrmAsistentes: eventoConsultado.correoscrmAsistentes + document.getElementById("crm-correo-asistente").value + "|",
+                    telefonoscrmAsistentes: eventoConsultado.telefonoscrmAsistentes + document.getElementById("crm-telefono-asistente").value + "|",
+                    comentarioscrm: eventoConsultado.comentarioscrm + document.getElementById("crm-comentarios").value + "|",
+                    respuestascrm1: eventoConsultado.respuestascrm1 + respuestasConcatenadas[0],
+                    respuestascrm2: eventoConsultado.respuestascrm2 + respuestasConcatenadas[1],
+                    respuestascrm3: eventoConsultado.respuestascrm3 + respuestasConcatenadas[2],
+                    respuestascrm4: eventoConsultado.respuestascrm4 + respuestasConcatenadas[3],
+                    respuestascrm5: eventoConsultado.respuestascrm5 + respuestasConcatenadas[4],
+                    respuestascrm6: eventoConsultado.respuestascrm6 + respuestasConcatenadas[5],
+                    respuestascrm7: eventoConsultado.respuestascrm7 + respuestasConcatenadas[6],
+                    respuestascrm8: eventoConsultado.respuestascrm8 + respuestasConcatenadas[7],
+                    respuestascrm9: eventoConsultado.respuestascrm9 + respuestasConcatenadas[8],
+                    respuestascrm10: eventoConsultado.respuestascrm10 + respuestasConcatenadas[9],
+                    respuestascrm11: eventoConsultado.respuestascrm11 + respuestasConcatenadas[10],
+                  };
+                  // Actualiza las preguntas adicionales solo si están disponibles
+                  if (limitepreguntas >= 12) {updateData.respuestascrm12 = eventoConsultado.respuestascrm12 + respuestasConcatenadas[11];}
+                  if (limitepreguntas >= 13) {updateData.respuestascrm13 = eventoConsultado.respuestascrm13 + respuestasConcatenadas[12];}
+                  if (limitepreguntas === 14) {updateData.respuestascrm14 = eventoConsultado.respuestascrm14 + respuestasConcatenadas[13];}
+                  // Realiza la actualización con todos los datos preparados
+                  console.log("updateData");
+                  console.log(updateData)
+                  return eventoRef.update(updateData);
+                } else {
+                  // El documento no existe, mostrar un mensaje indicando que el evento no se encontró
+                  Swal.fire({
+                    title: 'Evento no encontrado',
+                    text: 'No se ha encontrado un evento con este nombre, ponte en contacto con el administrador.',
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar'
+                  });
+                  return Promise.reject("Evento no encontrado");
+                }
+              })
+              .then(() => {
+                // Éxito: el evento se ha actualizado correctamente en el documento existente
+                // Aquí puedes agregar cualquier otra lógica que desees después de actualizar el evento
+                // Muestra el mensaje de actualización completada
+                mostrarMensajeEvaluar();
+
+                // Oculta el contenido del acordeón
+                var content = document.getElementById("acordeon4-content");
+                content.style.display = "none";
+              })
+              .catch((error) => {
+                // Error: hubo un problema al actualizar el evento
+                console.error("ERROR AL EVALUAR EL EVENTO: ", error);
+                if (error !== "Evento no encontrado") {
+                  Swal.fire({
+                    title: '¡ERROR!',
+                    text: 'Ha ocurrido un error al evaluar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
+                    icon: 'error',
+                    imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
+                    confirmButtonText: 'Aceptar',
+                    imageWidth: 342, // Ancho de la imagen en píxeles
+                    imageHeight: 200, // Alto de la imagen en píxeles
+                    imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+                  });
+                }
+              });
+
+        });
+
+      }).catch((error) => {
+          console.log("Error obteniendo evento inicial a diligenciar evaluaciones: ", error);
+      });
+
+    }
+
+  </script>
+
+</body>
+</html>
+
+
+
+
