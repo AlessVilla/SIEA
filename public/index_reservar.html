@@ -958,7 +958,7 @@
 
         // Verificar el formato del teléfono del organizador (debe empezar por 3 y tener 10 dígitos)
         var telefonoOrganizador = document.getElementById("telefono-organizador").value;
-        var telefonoOrganizadorRegex = /^3\d{9}$/;
+        var telefonoOrganizadorRegex = /^(?:3\d{9})(?:;(?:3\d{9}))*$/;
 
         // Validación de datos para que el teléfono del organizador efectivamente sea un celular válido.
         if (!telefonoOrganizadorRegex.test(telefonoOrganizador)) {
@@ -979,7 +979,7 @@
         var telefonoPonente = document.getElementById("telefono-ponente").value;
         // En caso de haber diligenciado el teléfono del ponente, valida que sea una celular válido.
         if (telefonoPonente !== "") {
-          var telefonoPonenteRegex = /^3\d{9}$/;
+          var telefonoPonenteRegex = /^(?:3\d{9})(?:;(?:3\d{9}))*$/;
 
           if (!telefonoPonenteRegex.test(telefonoPonente)) {
             Swal.fire({
@@ -1969,6 +1969,7 @@
 
 </body>
 </html>
+
 
 
 
