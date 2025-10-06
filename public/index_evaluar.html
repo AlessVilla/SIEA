@@ -1308,8 +1308,10 @@
         if (!querySnapshot.empty) {
           querySnapshot.forEach(function(doc) {
               var data = doc.data();
-              var correosAsistentes = (data.correosAsistentes || "").toLowerCase(); // Obtener la cadena de correos o usar una cadena vacía si es null o undefined
-              if (correoAsistente !== "" && correosAsistentes.includes(correoAsistente)) {
+              var correosAsistentesStr = (data.correosAsistentes || "").toLowerCase();
+              var correosArray = correosAsistentesStr.split("|").map(function(s){ return s.trim(); }).filter(Boolean);
+
+              if (correoAsistente !== "" && correosArray.includes(correoAsistente.toLowerCase())) {
                   // El usuario ya evaluó este espacio
                   Swal.fire({
                       icon: 'warning',
@@ -1900,6 +1902,7 @@
 
 </body>
 </html>
+
 
 
 
