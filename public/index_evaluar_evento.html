@@ -989,6 +989,10 @@
 
   <script>
 
+    document.addEventListener("DOMContentLoaded", function() {
+      consultarEventosCRM();
+    });
+    
     // Variables para la evaluación del espacio dentro del Acordeón 4 y actualización de info del espacio en Acordeón 5:
     var fechaHoy = new Date().toISOString().slice(0, 10);
     var capituloEspacioSelect = document.getElementById("capitulo-espacio");
@@ -1903,6 +1907,7 @@
 
 </body>
 </html>
+
 
 
 
