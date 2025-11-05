@@ -6275,24 +6275,71 @@
               // Vaciar los campos de correo y contraseña
               document.getElementById("correo").value = "";
               document.getElementById("contrasena").value = "";
-            } else if (correo.startsWith("mercadeo_") || correo === "mercadeo@aneiap.co") {
-              if (correo.startsWith("mercadeo_")) {
-                // Si el correo empieza por "academico_", extraer el nombre del capítulo y asignarlo a capituloUsuario
-                var inicio = "mercadeo_";
-                var fin = "@aneiap.co";
-                var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
-                capituloUsuario = capitulo;
-              } else {
-                // Si el correo no empieza por "academico_", asignar "nacional"
-                capituloUsuario = "nacional";
-              }
-              // Mostrar mensaje de inicio de sesión exitoso
-              mostrarMensajeInicioSesion();
-              // Vaciar los campos de correo y contraseña
-              document.getElementById("correo").value = "";
-              document.getElementById("contrasena").value = "";
-              desplegarInterfazCRM();
-              return;
+              } else if (correo.startsWith("mercadeo_") || correo === "mercadeo@aneiap.co") {
+                if (correo.startsWith("mercadeo_")) {
+                  // Si el correo empieza por "mercadeo_", extraer el nombre del capítulo y asignarlo a capituloUsuario
+                  var inicio = "mercadeo_";
+                  var fin = "@aneiap.co";
+                  var capitulo = correo.substring(inicio.length, correo.indexOf(fin));
+                  capituloUsuario = capitulo;
+              
+                  // Mostrar mensaje de inicio de sesión exitoso
+                  mostrarMensajeInicioSesion();
+                  console.log("El capítulo del usuario es: " + capituloUsuario);
+                  // Vaciar los campos de correo y contraseña
+                  document.getElementById("correo").value = "";
+                  document.getElementById("contrasena").value = "";
+                  desplegarInterfazCRM();
+                  return;
+              
+                } else {
+                  // Si el correo es "mercadeo@aneiap.co", mostrar selección de capítulo
+                  Swal.fire({
+                    title: 'Selecciona el capítulo sobre el cual deseas consultar información:',
+                    input: 'select',
+                    inputOptions: {
+                      'uniguajira': 'UNIGUAJIRA',
+                      'unimagdalena': 'UNIMAGDALENA',
+                      'uniatlantico': 'UNIATLÁNTICO',
+                      'uninorte': 'UNINORTE',
+                      'unisimon': 'UNISIMÓN',
+                      'cuc': 'CUC',
+                      'librequilla': 'LIBREQUILLA',
+                      'utb': 'UTB',
+                      'upbmonteria': 'UPBMONTERÍA',
+                      'unicordoba': 'UNICÓRDOBA',
+                      'ufps': 'UFPS',
+                      'unalmed': 'UNALMED',
+                      'udea': 'UDEA',
+                      'upbmed': 'UPBMED',
+                      'utp': 'UTP',
+                      'unalma': 'UNALMA',
+                      'udistrital': 'UDISTRITAL',
+                      'unalbog': 'UNALBOG',
+                      'univalle': 'UNIVALLE',
+                      'icesi': 'ICESI',
+                      'uao': 'UAO',
+                      'usc': 'USC',
+                      'nacional': 'NACIONAL',
+                    },
+                    inputPlaceholder: 'Selecciona un capítulo',
+                    confirmButtonText: 'Aceptar',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                  }).then((result) => {
+                    if (result.isConfirmed && result.value !== "") {
+                      capituloUsuario = result.value;
+                      console.log("El capítulo del usuario es: " + capituloUsuario);
+                      mostrarMensajeInicioSesion();
+                      document.getElementById("correo").value = "";
+                      document.getElementById("contrasena").value = "";
+                      // Ejecutar interfaz CRM después de elegir el capítulo
+                      desplegarInterfazCRM();
+                    }
+                  });
+                  return;
+                }
             } else {
               // Si no se cumple ninguna de las condiciones anteriores, asignar valor "general" a capituloUsuario
               capituloUsuario = "nacional";
@@ -11429,6 +11476,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
