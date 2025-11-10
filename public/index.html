@@ -640,6 +640,7 @@
     <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
     <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformeFI(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe FI</button>
     <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe IE</button>
+    <button type="button" id="btnDirectorio" class="button-descargas" onclick="mostrarDirectorioGeneral()" style="background-color: #22a536; color: white; display: none;">Ver Directorios</button>
     <button type="button" class="button-descargas" onclick="generarAgendaFormativaFI(event)" style="background-color: #7ba460; color: white;">Agenda FI</button>
     <button type="button" class="button-descargas" onclick="generarAgendaFormativaIE(event)" style="background-color: #7ba460; color: white;">Agenda IE</button>
 
@@ -11340,6 +11341,215 @@ Este texto es ejemplar de como usted debe escribir la parte analizando los 3 mej
       });
     }
 
+    async function mostrarDirectorioGeneral() {
+      const direc_ie = firebase.firestore().collection("directorio_ie");
+      const direc_ponentes = firebase.firestore().collection("directorio_ponentes");
+    
+      const { value: tipo } = await Swal.fire({
+        title: "📘 Consultar Directorio",
+        text: "Selecciona el tipo de directorio que deseas consultar:",
+        input: "select",
+        inputOptions: {
+          ie: "Directorio IE",
+          ponentes: "Directorio Ponentes"
+        },
+        inputPlaceholder: "Selecciona una opción",
+        showCancelButton: true,
+        cancelButtonText: "Salir",
+        confirmButtonText: "Consultar",
+        allowOutsideClick: false
+      });
+    
+      if (!tipo) return;
+    
+      const snapshot = await (tipo === "ie" ? direc_ie.get() : direc_ponentes.get());
+      if (snapshot.empty) {
+        await Swal.fire("Sin datos", "No se encontraron registros en esta colección.", "info");
+        return;
+      }
+    
+      const data = snapshot.docs.map(doc => doc.data());
+    
+      const CONFIG = {
+        ponentes: {
+          columnas: [
+            { key: "nombrePonente", label: "Nombre ponente" },
+            { key: "emailPonente", label: "Correo" },
+            { key: "telefonoPonente", label: "Teléfono" },
+            { key: "tipoEvento", label: "Tipo espacio" },
+            { key: "areaTrabajo", label: "Área trabajo" },
+            { key: "nombreEvento", label: "Nombre espacio" },
+            { key: "fechaEvento", label: "Fecha" },
+            { key: "capitulo_seccional", label: "Capítulo_Seccional" },
+            { key: "modalidadEvento", label: "Modalidad" }
+          ],
+          ocultar: ["Id"]
+        },
+        ie: {
+          columnas: [
+            { key: "nombreEvento", label: "Nombre espacio" },
+            { key: "nombrePonente", label: "Empresa/Ponente" },
+            { key: "emailPonente", label: "Correo" },
+            { key: "telefonoPonente", label: "Teléfono" },
+            { key: "areaTrabajo", label: "Área trabajo" },
+            { key: "capitulo_seccional", label: "Capítulo_Seccional" },
+            { key: "lugarPresencial", label: "Lugar físico" }
+          ],
+          ocultar: ["claveReserva"]
+        }
+      };
+    
+      const { columnas, ocultar } = CONFIG[tipo];
+    
+      const traducirTipoEvento = {
+        "valor-agregado": "Valor A.",
+        "entrenamiento-interno": "Entrenamiento I.",
+        "escuela-directores": "Escuela Direc.",
+        "intergracion-entorno": "Integra. Entorno"
+      };
+    
+      const traducirArea = {
+        "visita-tecnica-industrial": "Visita tec/ind.",
+        "foro-conversatorio": "Foro/Conversatorio",
+        "voluntariado-campana": "Volunt./Campaña",
+        "escuela-directores": "Escuela Direc.",
+        "habilidades-blandas": "Habil. Blandas",
+        "habilidades-duras": "Habil. Duras",
+        "conocimiento-aneiap": "Conoc. ANEIAP"
+      };
+    
+      // Función para obtener valor traducido si aplica
+      const valorTraducido = (key, val) => {
+        if (key === "tipoEvento") return traducirTipoEvento[val] || val;
+        if (key === "areaTrabajo") return traducirArea[val] || val;
+        return val || "";
+      };
+    
+      // Fila de encabezados
+      const tableHeaders = columnas
+        .filter(c => !ocultar.includes(c.key))
+        .map(c => `
+          <th style="
+            border-bottom: 2px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            background-color: #f8f8f8;
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            font-size: 13px;
+            white-space: nowrap;
+          ">${c.label}</th>
+        `).join('');
+    
+      // Filas de datos
+      const tableRows = data.map(row => {
+        return `
+          <tr>
+            ${columnas
+              .filter(c => !ocultar.includes(c.key))
+              .map(c => {
+                let valor = valorTraducido(c.key, row[c.key]);
+    
+                const columnasAmplias = ["nombreEvento", "telefonoPonente", "emailPonente", "nombrePonente"];
+                const estilo = columnasAmplias.includes(c.key)
+                  ? "white-space: normal; word-wrap: break-word; max-width: 250px;"
+                  : "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px;";
+    
+                return `<td style="border-bottom:1px solid #eee;padding:8px;font-size:13px;vertical-align:top;${estilo}">${valor}</td>`;
+              }).join('')}
+          </tr>
+        `;
+      }).join('');
+    
+      // Función para obtener opciones únicas traducidas
+      const obtenerOpcionesUnicas = (clave) => {
+        const set = new Set(data.map(d => valorTraducido(clave, d[clave])).filter(v => v));
+        return Array.from(set).sort();
+      };
+    
+      Swal.fire({
+        title: tipo === "ie" ? "Directorio IE" : "Directorio Ponentes",
+        html: `
+          <input type="text" id="searchInput" placeholder="🔍 Buscar global..." 
+            style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;">
+          <div style="max-height:480px;overflow:auto;border:1px solid #eee;border-radius:6px;">
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                  <tr>${tableHeaders}</tr>
+                  <tr id="filterRow" style="background-color:#f0f0f0; position: sticky; top:36px; z-index:2;">
+                    ${columnas
+                      .filter(c => !ocultar.includes(c.key))
+                      .map(c => {
+                        if (["areaTrabajo", "capitulo_seccional", "tipoEvento", "modalidadEvento"].includes(c.key)) {
+                          const opciones = obtenerOpcionesUnicas(c.key)
+                            .map(op => `<option value="${op}">${op}</option>`).join('');
+                          return `<th style="padding:4px;">
+                            <select style="width:100%;padding:4px;font-size:12px;border:1px solid #ccc;border-radius:4px;" data-key="${c.key}">
+                              <option value="">Todos</option>
+                              ${opciones}
+                            </select>
+                          </th>`;
+                        } else {
+                          return `<th style="padding:4px;"><input type="text" placeholder="Filtrar ${c.label}" 
+                            style="width:100%;padding:4px;font-size:12px;border:1px solid #ccc;border-radius:4px;"
+                            data-key="${c.key}"></th>`;
+                        }
+                      }).join('')}
+                  </tr>
+                </thead>
+                <tbody id="tableBody">${tableRows}</tbody>
+              </table>
+            </div>
+          </div>
+        `,
+        width: '98%',
+        showCancelButton: true,
+        cancelButtonText: "Volver",
+        confirmButtonText: "Salir",
+        allowOutsideClick: false,
+        didOpen: () => {
+          const searchInput = document.getElementById("searchInput");
+          const tableBody = document.getElementById("tableBody");
+    
+          // Filtro global
+          searchInput.addEventListener("input", () => {
+            const filter = searchInput.value.toLowerCase();
+            const rows = tableBody.querySelectorAll("tr");
+            rows.forEach(row => {
+              const text = row.textContent.toLowerCase();
+              row.style.display = text.includes(filter) ? "" : "none";
+            });
+          });
+    
+          // Filtro por columna (inputs y selects)
+          const filterInputs = document.querySelectorAll("#filterRow input, #filterRow select");
+          filterInputs.forEach(input => {
+            input.addEventListener("input", aplicarFiltros);
+            input.addEventListener("change", aplicarFiltros);
+          });
+    
+          function aplicarFiltros() {
+            const filters = Array.from(filterInputs).map(i => i.value.toLowerCase());
+            const rows = tableBody.querySelectorAll("tr");
+            rows.forEach(row => {
+              const cells = row.querySelectorAll("td");
+              let visible = true;
+              cells.forEach((cell, idx) => {
+                if (filters[idx] && !cell.textContent.toLowerCase().includes(filters[idx])) {
+                  visible = false;
+                }
+              });
+              row.style.display = visible ? "" : "none";
+            });
+          }
+        }
+      }).then(result => {
+        if (result.isDismissed) mostrarDirectorioGeneral();
+      });
+    }
+  
 async function descargarDatosMultiplesColeccionesExcel() {
     // Referencias a las colecciones de Firebase
     const colecciones = [
@@ -11476,6 +11686,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
