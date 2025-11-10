@@ -635,19 +635,27 @@
     </button>-->
 
   <!-- Formulario con campos de correo, contraseña y botón para iniciar sesión-->
+  
   <form>
-    <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
-    <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
-    <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformeFI(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe FI</button>
-    <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe IE</button>
-    <button type="button" id="btnDirectorio" class="button-descargas" onclick="mostrarDirectorioGeneral()" style="background-color: #22a536; color: white; display: none;">Ver Directorios</button>
-    <button type="button" class="button-descargas" onclick="generarAgendaFormativaFI(event)" style="background-color: #7ba460; color: white;">Agenda FI</button>
-    <button type="button" class="button-descargas" onclick="generarAgendaFormativaIE(event)" style="background-color: #7ba460; color: white;">Agenda IE</button>
-
-    <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>  
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+      <input type="email" id="correo" name="correo" required placeholder="Correo ANEIAP">
+      <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" onkeydown="if(event.keyCode === 13) validar_login()">
+      <button type="button" id="btnInformeFI" class="button-descargas" onclick="generarInformeFI(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe FI</button>
+      <button type="button" id="btnInformeIE" class="button-descargas" onclick="generarInformeIE(event)" style="background-color: #006d37; color: white; display: none;">Generar Informe IE</button>
+      <button type="button" id="btnDirectorio" class="button-descargas" onclick="mostrarDirectorioGeneral()" style="background-color: #22a536; color: white; display: none;">Ver Directorios</button>
+      <button type="button" class="button-login" onclick="generarAgendaFormativaFI(event)" style="background-color: #7ba460; color: white;">Agenda FI</button>
+      <button type="button" class="button-login" onclick="generarAgendaFormativaIE(event)" style="background-color: #7ba460; color: white;">Agenda IE</button>
+      <button type="button" class="button-admin" onclick="EjecutarAdmin(event)" style="font-size: 12px; padding: 2px 5px; border: none; background: none; cursor: pointer;">✏</button>
+    </div>
   </form>
+
+  <audio id="backgroundMusic" loop="false"></audio>
+  
   <button type="button" class="button-login" onclick="validar_login()">Loguéate</button>
   <button type="button" class="button-cambio-credenciales" onclick="cambiar_credenciales()">Cambiar Credenciales</button>
+  <button id="playBtn" onclick="toggleMusic('play')">▶️</button>
+  <button id="nextBtn" onclick="toggleMusic('next')">⏭️</button>
+  
   <!-- Elemento para mostrar el saludo -->
   <div id="saludoUsuario" style="color: orange;">¡Hola, ANEIAPo!</div>
 
@@ -1794,6 +1802,71 @@
 
   <script>
 
+    const baseRuta = "https://raw.githubusercontent.com/AlessVilla/SIEA/master/public/";
+    const canciones = [
+      "z_90sFlav - Call me.mp3", 
+      //"z_C418 - Sweden - Minecraft Volume Alpha.mp3", //CHECK
+      "z_CKay - Love Nwantiti (TikTok Remix) (Lyrics) I am so obsessed I want to chop your nkwobi.mp3", //CHECK
+      "z_Lone Tusker - Birds Of A Feather (Deep House Remix).mp3", //CHECK
+      "z_Lone Tusker - Coastline (Hollow Coves Deep House Remix).mp3", //CHECK
+      "z_Steven Universe theme song but it's lofi hip hop.mp3", //CHECK
+      "z_Wii Music - Gaming Background Music (HD).mp3", //CHECK
+      "z_public_for-her-chill-upbeat-summel-travel-vlog-and-ig-music-royalty-free-use-202298.mp3" //CHECK
+      
+    ];
+
+    const audio = new Audio();
+    let isPlaying = false;
+    const button = document.getElementById("playBtn");
+
+    function toggleMusic(action) {
+      // Función interna para reproducir una canción aleatoria
+      function reproducirAleatoria() {
+        const indice = Math.floor(Math.random() * canciones.length);
+        const cancion = canciones[indice];
+        audio.src = `${baseRuta}${encodeURIComponent(cancion)}`;
+        audio.volume = 0.15;
+        console.log("Reproduciendo:", audio.src);
+        audio.play();
+        isPlaying = true;
+        button.textContent = "⏸️";
+
+        // Al terminar, reproduce otra aleatoria
+        audio.onended = () => reproducirAleatoria();
+      }
+
+      if (action === "play") {
+        if (!isPlaying) {
+          // Si no está reproduciendo, reanuda si ya hay src o elige una nueva
+          if (!audio.src) {
+            reproducirAleatoria();
+          } else {
+            audio.play();
+            isPlaying = true;
+            button.textContent = "⏸️";
+          }
+        } else {
+          // Si está reproduciendo, pausa
+          audio.pause();
+          isPlaying = false;
+          button.textContent = "▶️";
+        }
+      }
+
+      if (action === "next") {
+        // Si está sonando, pasa a la siguiente aleatoria
+        if (isPlaying) {
+          reproducirAleatoria();
+        } else {
+          // Si está en pausa, carga otra pero no la reproduce
+          const indice = Math.floor(Math.random() * canciones.length);
+          const cancion = canciones[indice];
+          audio.src = `${baseRuta}${encodeURIComponent(cancion)}`;
+          console.log("Preparada siguiente:", audio.src);
+        }
+      }
+    }
+    
     // Variables para la evaluación del espacio dentro del Acordeón 4 y actualización de info del espacio en Acordeón 5:
     var fechaHoy = new Date().toISOString().slice(0, 10);
     var capituloEspacioSelect = document.getElementById("capitulo-espacio");
@@ -11689,6 +11762,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
