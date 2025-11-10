@@ -6248,6 +6248,7 @@
                   // Mostrar botones para generar informes
                   document.getElementById("btnInformeFI").style.display = "inline-block";
                   document.getElementById("btnInformeIE").style.display = "inline-block";
+                  document.getElementById("btnDirectorio").style.display = "inline-block";
                   
                   var storedTelefonoCuenta = doc.data().telefonoDCA;
                   telefonoCuenta = storedTelefonoCuenta;
@@ -6263,11 +6264,13 @@
                 // Mostrar botones para generar informes
                 document.getElementById("btnInformeFI").style.display = "inline-block";
                 document.getElementById("btnInformeIE").style.display = "inline-block";
+                document.getElementById("btnDirectorio").style.display = "inline-block";
               } else {
                 // Si el correo no empieza por "academico_", asignar "nacional"
                 capituloUsuario = "nacional";
                 document.getElementById("btnInformeFI").style.display = "inline-block";
                 document.getElementById("btnInformeIE").style.display = "inline-block";
+                document.getElementById("btnDirectorio").style.display = "inline-block";
               }
               var storedTelefonoCuenta = doc.data().telefonoDCA;
               telefonoCuenta = storedTelefonoCuenta;
@@ -11686,6 +11689,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
