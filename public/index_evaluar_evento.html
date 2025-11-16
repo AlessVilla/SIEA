@@ -1693,9 +1693,22 @@
 
     function evaluarEvento() {
 
+      // Mostrar alerta de carga para evitar doble clic
+      Swal.fire({
+        title: 'Enviando evaluación...',
+        text: 'No cierres la ventana ni vuelvas a dar clic. Estamos procesando tu evaluación.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
       var eventoSeleccionado = document.getElementById("evento-crm").value;
       console.log(eventoSeleccionado)
       if (eventoSeleccionado === "") {
+        Swal.close(); // Cierra el modal de carga
         Swal.fire({
             title: '¡NO HAS SELECCIONADO UN EVENTO AÚN!',
             text: 'Debes seleccionar un evento (magno, scc, capitular, regional, nacional, etc.) primero para poder evlauarlo.',
@@ -1716,6 +1729,7 @@
       var crmTelefonoAsistente = document.getElementById("crm-telefono-asistente").value;
       var crmTelefonoAsistenteRegex = /^3\d{9}$/;
       if (crmTelefonoAsistente !== "" && (!crmTelefonoAsistenteRegex.test(crmTelefonoAsistente)  || crmTelefonoAsistente.length !== 10)) {
+        Swal.close(); // Cierra el modal de carga
         Swal.fire({
           title: '¡TELÉFONO INCORRECTO!',
           text: 'Digita un número de teléfono válido, debe ser de 10 dígitos y sin espacios, símbolos o letras.',
@@ -1776,6 +1790,7 @@
               camposFaltantes.forEach(function (campo) {
                   mensaje += "- " + campo + "\n";
               });
+              Swal.close(); // Cierra el modal de carga
               Swal.fire({
                   title: '¡FALTAN CAMPOS POR DILIGENCIAR!',
                   text: mensaje,
@@ -1872,6 +1887,7 @@
                 // Éxito: el evento se ha actualizado correctamente en el documento existente
                 // Aquí puedes agregar cualquier otra lógica que desees después de actualizar el evento
                 // Muestra el mensaje de actualización completada
+                Swal.close(); // Cierra el modal de carga
                 mostrarMensajeEvaluar();
 
                 // Oculta el contenido del acordeón
@@ -1882,6 +1898,7 @@
                 // Error: hubo un problema al actualizar el evento
                 console.error("ERROR AL EVALUAR EL EVENTO: ", error);
                 if (error !== "Evento no encontrado") {
+                  Swal.close(); // Cierra el modal de carga
                   Swal.fire({
                     title: '¡ERROR!',
                     text: 'Ha ocurrido un error al evaluar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
@@ -1907,6 +1924,7 @@
 
 </body>
 </html>
+
 
 
 
