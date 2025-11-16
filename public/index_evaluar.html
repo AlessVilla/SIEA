@@ -1225,6 +1225,19 @@
     }
 
     function evaluarEspacio() {
+
+      // Mostrar alerta de carga para evitar doble clic
+      Swal.fire({
+        title: 'Enviando evaluación...',
+        text: 'No cierres la ventana ni vuelvas a dar clic. Estamos procesando tu evaluación.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
       var nombreEspacio = document.getElementById("nombre-espacio").value;
       var capituloEspacio = document.getElementById("capitulo-espacio").value;
 
@@ -1250,6 +1263,7 @@
       // Verificar si hay campos faltantes
       if (nombreEspacio === "" || capituloEspacio === "") {
           // Decirle al usuario que no ha seleccionado un espacio a evaluar.
+          Swal.close(); // Cierra el modal de carga
           Swal.fire({
               icon: 'error',
               title: '¡NO HAS SELECCIONADO EL ESPACIO QUE QUIERES EVALUAR!',
@@ -1278,6 +1292,7 @@
       // Validar la longitud de comentarios
       if (comentarios.length > 100) {
           // Mostrar el mensaje de error utilizando Swal.fire
+          Swal.close(); // Cierra el modal de carga
           Swal.fire({
               title: '¡Comentario demasiado largo!',
               text: 'El comentario no puede tener más de 100 caracteres.',
@@ -1290,6 +1305,7 @@
       var telefonoAsistenteRegex = /^3\d{9}$/; // Esta expresión regular verifica que solo haya 10 dígitos y nada más.
       // Aquí ajustamos la condición para que verifique correctamente si el teléfono no coincide con el patrón en caso de haberlo diligenciado pues es opcional
       if (telefonoAsistente !== "" && !telefonoAsistenteRegex.test(telefonoAsistente)) {
+        Swal.close(); // Cierra el modal de carga
         Swal.fire({
           title: '¡TELÉFONO INCORRECTO!',
           text: 'Por favor, introduce un número de teléfono válido. Debe ser exactamente 10 dígitos sin espacios, símbolos o letras.',
@@ -1316,6 +1332,7 @@
 
               if (correoAsistente !== "" && correosArray.includes(correoAsistente.toLowerCase())) {
                   // El usuario ya evaluó este espacio
+                  Swal.close(); // Cierra el modal de carga
                   Swal.fire({
                       icon: 'warning',
                       title: '¡YA EVALUASTE ESTE ESPACIO!',
@@ -1349,6 +1366,7 @@
             // Verificar si hay campos faltantes
             if (camposFaltantes.length > 0) {
                 // Mostrar una alerta con los campos faltantes
+                Swal.close(); // Cierra el modal de carga
                 Swal.fire({
                     icon: 'error',
                     title: '¡NO HAS DILIGENCIADO TODOS LOS CAMPOS!',
@@ -1425,6 +1443,7 @@
                   // Actualizar el evento en la base de datos
                   reservasRef.doc(doc.id).set(data, { merge: true }).then(function() {
                       // Mostrar mensaje de éxito
+                      Swal.close(); // Cierra el modal de carga
                       mostrarMensajeEvaluar();
 
                       // Reiniciar los campos del formulario en caso de que quiera volver a llenar para otro espacio diferente.
@@ -1435,6 +1454,7 @@
                       }).catch(function(error) {
                           console.error("Error actualizando el evento:", error);
                           // Mostrar mensaje de error
+                          Swal.close(); // Cierra el modal de carga
                           Swal.fire({
                               icon: 'error',
                               title: '¡ERROR AL ENVIAR LA EVALUACIÓN!',
@@ -1446,6 +1466,7 @@
               }).catch(function(error) {
                   console.error("Error obteniendo el evento:", error);
                   // Mostrar mensaje de error
+                  Swal.close(); // Cierra el modal de carga
                   Swal.fire({
                       icon: 'error',
                       title: '¡ERROR AL OBTENER EL EVENTO!',
@@ -1460,6 +1481,7 @@
       }).catch(function(error) {
         console.error("Error al verificar la evaluación del espacio:", error);
         // Mostrar mensaje de error
+        Swal.close(); // Cierra el modal de carga
         Swal.fire({
             icon: 'error',
             title: '¡ERROR AL VERIFICAR LA EVALUACIÓN!',
@@ -1905,6 +1927,7 @@
 
 </body>
 </html>
+
 
 
 
