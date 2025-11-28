@@ -8394,8 +8394,125 @@
             return respuestas;
         };
 
-        // Función para mostrar la tabla de respuestas
-        const mostrarTablaRespuestas = (respuestas) => {
+        const eliminarDuplicados = (eventoData) => {
+            console.log("=== eliminarDuplicados: inicio ===");
+
+            if (!eventoData) {
+                console.log("ERROR: eventoData es falsy (null/undefined). Saliendo.");
+                return {};
+            }
+
+            // Helpers
+            const safeSplit = (s, allowEmpty = false) => {
+                if (s === undefined || s === null) return [];
+                const arr = s.split("|");
+                console.log(`safeSplit -> entrada: "${s}", allowEmpty=${allowEmpty}, salida:`, arr);
+                if (allowEmpty) return arr; // mantiene vacíos internos
+                return arr.filter(x => x !== "");
+            };
+
+            const joinWithPipe = (arr) => {
+                if (!Array.isArray(arr)) return "";
+                return arr.join("|") + (arr.length > 0 ? "|" : "");
+            };
+
+            // 1) Leer y convertir todos los campos
+            console.log("Leyendo campos del documento...");
+            const correos = safeSplit(eventoData.correoscrmAsistentes);
+            const nombres = safeSplit(eventoData.nombrescrmAsistentes);
+            const telefonos = safeSplit(eventoData.telefonoscrmAsistentes, true); // permite vacíos
+            const comentarios = safeSplit(eventoData.comentarioscrm, true);       // permite vacíos
+
+            console.log("Arrays después de split:");
+            console.log("correos:", correos);
+            console.log("nombres:", nombres);
+            console.log("telefonos:", telefonos);
+            console.log("comentarios:", comentarios);
+
+            // 2) Respuestas dinámicas (respuestascrm1..respuestascrm14)
+            const respuestas = {};
+            for (let i = 1; i <= 14; i++) {
+                const key = "respuestascrm" + i;
+                if (eventoData[key] !== undefined) {
+                    respuestas[key] = safeSplit(eventoData[key]);
+                    console.log(`respuestas[${key}] =`, respuestas[key]);
+                } else {
+                    console.log(`respuestas[${key}] no existe`);
+                }
+            }
+
+            // 3) Detectar duplicados en correos
+            const setCorreos = new Set();
+            const indicesValidos = [];
+            const indicesEliminados = [];
+
+            correos.forEach((correo, index) => {
+                const correoLimpio = (correo || "").trim().toLowerCase();
+                if (!setCorreos.has(correoLimpio)) {
+                    setCorreos.add(correoLimpio);
+                    indicesValidos.push(index);
+                    console.log(`Índice ${index} -> "${correo}" agregado como válido.`);
+                } else {
+                    indicesEliminados.push(index);
+                    console.log(`Índice ${index} -> "${correo}" marcado COMO DUPLICADO y será eliminado.`);
+                }
+            });
+
+            console.log("Indices válidos:", indicesValidos);
+            console.log("Indices eliminados:", indicesEliminados);
+
+            // 4) Función para filtrar arrays por índices válidos (manejo especial para vacíos)
+            const filtrarPorIndices = (arr, allowEmpty = false) => {
+                const result = indicesValidos.map(i => {
+                    if (i < arr.length) return arr[i] !== undefined ? arr[i] : (allowEmpty ? "" : null);
+                    console.warn(`AVISO: índice ${i} fuera de rango para arreglo con longitud ${arr.length}.`);
+                    return allowEmpty ? "" : null;
+                }).filter(v => v !== null);
+                console.log(`filtrarPorIndices -> input length: ${arr.length}, allowEmpty=${allowEmpty}, output length: ${result.length}`);
+                return result;
+            };
+
+            // 5) Construir nuevos valores sin duplicados
+            const nuevosDatos = {};
+            nuevosDatos.correoscrmAsistentes = joinWithPipe(filtrarPorIndices(correos));
+            nuevosDatos.nombrescrmAsistentes = joinWithPipe(filtrarPorIndices(nombres));
+            nuevosDatos.telefonoscrmAsistentes = joinWithPipe(filtrarPorIndices(telefonos, true));
+            nuevosDatos.comentarioscrm = joinWithPipe(filtrarPorIndices(comentarios, true));
+
+            console.log("Campos reconstruidos sin duplicados:");
+            console.log("correoscrmAsistentes:", nuevosDatos.correoscrmAsistentes);
+            console.log("nombrescrmAsistentes:", nuevosDatos.nombrescrmAsistentes);
+            console.log("telefonoscrmAsistentes:", nuevosDatos.telefonoscrmAsistentes);
+            console.log("comentarioscrm:", nuevosDatos.comentarioscrm);
+
+            // 6) Respuestas reconstruidas
+            for (let i = 1; i <= 14; i++) {
+                const key = "respuestascrm" + i;
+                if (respuestas[key]) {
+                    const filtradas = filtrarPorIndices(respuestas[key]);
+                    nuevosDatos[key] = joinWithPipe(filtradas);
+                    console.log(`${key} -> original length: ${respuestas[key].length}, nuevo length: ${filtradas.length}`);
+                }
+            }
+
+            // 7) Resumen final
+            console.log("=== Resumen final ===");
+            console.log("Correos originales:", correos.length, "-> finales:", safeSplit(nuevosDatos.correoscrmAsistentes).length);
+            console.log("Nombres originales:", nombres.length, "-> finales:", safeSplit(nuevosDatos.nombrescrmAsistentes).length);
+            console.log("Telefonos originales:", telefonos.length, "-> finales:", safeSplit(nuevosDatos.telefonoscrmAsistentes, true).length);
+            console.log("Comentarios originales:", comentarios.length, "-> finales:", safeSplit(nuevosDatos.comentarioscrm, true).length);
+            Object.keys(respuestas).forEach(k => {
+                const orig = respuestas[k].length;
+                const fin = nuevosDatos[k] ? safeSplit(nuevosDatos[k]).length : 0;
+                console.log(`${k}: original=${orig} -> final=${fin}`);
+            });
+
+            console.log("=== eliminarDuplicados: fin ===");
+            return nuevosDatos;
+        };
+
+        // Función para mostrar la tabla de respuestas y eliminar duplicados
+        const mostrarTablaRespuestas = (respuestas, eventoOriginal) => {
             Swal.fire({
                 title: "Respuestas del Evento",
                 html: `
@@ -8424,26 +8541,80 @@
                         </table>
                     </div>
                 `,
-                width: "95%",  // Usamos el 90% del ancho de la pantalla
-                heightAuto: false, // Esto evita que se estire más de lo necesario
+                width: "95%",
+                heightAuto: false,
+                showDenyButton: true,
                 showCancelButton: true,
-                cancelButtonText: "Volver",
+                showConfirmButton: true,
+
                 confirmButtonText: "Descargar respuestas",
-                cancelButtonColor: "#007bff",
+                denyButtonText: "Eliminar duplicados",
+                cancelButtonText: "Volver",
+
                 confirmButtonColor: "#3085d6",
+                denyButtonColor: "#d33",
+                cancelButtonColor: "#007bff",
+
                 didOpen: () => {
-                    // Asegurarnos de que el modal tiene suficiente espacio para mostrar la tabla correctamente
                     const swalModal = document.querySelector(".swal2-popup");
-                    swalModal.style.width = "100%";  // Forzar el modal a ocupar el 100% del ancho disponible
-                    swalModal.style.maxWidth = "none";  // Eliminar cualquier restricción de maxWidth
-                    swalModal.style.padding = "20px";  // Aseguramos que haya suficiente espacio dentro del modal
+                    swalModal.style.width = "100%";
+                    swalModal.style.maxWidth = "none";
+                    swalModal.style.padding = "20px";
                 },
+
                 preConfirm: () => {
-                    // Llamar a la función para descargar el Excel con las respuestas
-                    descargarExcelRespuestas(respuestas);  // 'respuestas' es el array con los datos que obtuviste anteriormente
+                    descargarExcelRespuestas(respuestas);
                 },
+
+                preDeny: async () => {
+                    descargarExcelRespuestas(respuestas);
+                    Swal.fire({
+                        title: "Eliminando duplicados",
+                        html: "Por favor espera unos segundos..., se descargó una copia de las respuestas por seguridad.",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+
+                    try {
+                        // Referencia más segura
+                        const eventoRef = firebase.firestore()
+                            .collection("crmeventos")
+                            .doc(eventoOriginal.id);
+
+                        // 1. Limpiar duplicados
+                        const datosLimpios = eliminarDuplicados(eventoOriginal);
+
+                        // 2. Actualizar en Firebase
+                        await eventoRef.update(datosLimpios);
+
+                        // 3. Leer el nuevo estado actualizado
+                        const docRef = await eventoRef.get();
+                        const eventoNuevo = docRef.data();
+
+                        const respuestasActualizadas = obtenerRespuestasDeEvento(eventoNuevo);
+
+                        // 4. Esperar 3 segundos ANTES del swal final
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Duplicados eliminados",
+                            text: "La tabla ha sido actualizada.",
+                            confirmButtonColor: "#3085d6"
+                        }).then(() => {
+                            mostrarTablaRespuestas(respuestasActualizadas, eventoNuevo);
+                        });
+
+                    } catch (error) {
+                        Swal.fire("Error", "Hubo un problema eliminando duplicados: " + error.message, "error");
+                    }
+
+                    return false;
+                },
+
                 willClose: () => {
-                    // Cuando se hace clic en "Volver", ejecutamos la función mostrarInterfazInicial
                     mostrarInterfazInicial();
                 }
             });
@@ -11774,6 +11945,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
