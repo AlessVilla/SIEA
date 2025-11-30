@@ -7971,7 +7971,7 @@
 
             const opcionesEventos = eventos.map(evento => `
             <option value="${evento.id}">
-                ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}
+                ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(0, 4)}
             </option>`
             ).join("");
 
@@ -8260,7 +8260,7 @@
             // Creamos el listado de opciones de eventos
             const opcionesEventos = eventos.map(evento => `
                 <option value="${evento.id}">
-                    ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}
+                    ${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(0, 4)}
                 </option>`
             ).join("");
 
@@ -8889,7 +8889,7 @@
           }
       
           const opcionesEventos = eventos.map(evento => `
-              <option value="${evento.id}">${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(-3)}</option>`
+              <option value="${evento.id}">${evento.nombrecrmEvento} | ${evento.clavecrmEvento.slice(0, 4)}</option>`
           ).join("");
       
           Swal.fire({
@@ -11945,6 +11945,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
