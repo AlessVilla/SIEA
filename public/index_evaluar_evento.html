@@ -1642,7 +1642,20 @@
             "usc": "USC",
             "nacional": "ANEIAP NACIONAL"
         };
-
+    
+        // 🧊 Función para formatear la fecha del evento
+        const formatearFechaBonita = (fechaStr) => {
+            const dias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+            const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+    
+            const fecha = new Date(fechaStr + "T00:00:00"); 
+            const diaSemana = dias[fecha.getDay()];
+            const dia = fecha.getDate();
+            const mes = meses[fecha.getMonth()];
+    
+            return `${diaSemana}, ${dia} de ${mes}`;
+        };
+    
         Swal.fire({
             title: 'Selecciona el capítulo que organizó el evento',
             html: '<p style="font-size: 14px; color: gray;">Si el evento que calificarás es un evento nacional, selecciona <b>"ANEIAP Nacional"</b></p>',
@@ -1659,36 +1672,75 @@
                 }
             }
         }).then((result) => {
+    
             if (result.isConfirmed && result.value) {
-                const capituloSeleccionadoSwalfire = result.value;
-                console.log("Capítulo seleccionado: " + capituloSeleccionadoSwalfire);
-
+    
+                const capituloSeleccionado = result.value;
+                console.log("Capítulo seleccionado:", capituloSeleccionado);
+    
                 var reservasRef = firebase.firestore().collection("crmeventos");
+    
                 var consultaEventos = reservasRef
                     .where("crm", "==", "si")
-                    .where("capitulosOrganizadores", "array-contains", capituloSeleccionadoSwalfire);
-
+                    .where("capitulosOrganizadores", "array-contains", capituloSeleccionado);
+    
                 var selectEvento = document.getElementById("evento-crm");
                 selectEvento.innerHTML = '<option value="" disabled selected hidden>Selecciona un evento capitular/nacional</option>';
-
+    
                 consultaEventos.get().then((querySnapshot) => {
-                    if (querySnapshot.empty) {
-                        selectEvento.innerHTML = '<option value="">No hay ningún evento con CRM pendiente.</option>';
+    
+                    let eventos = [];
+    
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        eventos.push({
+                            id: doc.id,
+                            nombre: data.nombrecrmEvento,
+                            fecha: data.fechaEvento
+                        });
+                    });
+    
+                    // ==============================
+                    // 🔥 Filtro: últimos 30 días
+                    // ==============================
+                    let hoy = new Date();
+                    let hace30 = new Date();
+                    hace30.setDate(hoy.getDate() - 30);
+    
+                    let yyyy = hace30.getFullYear();
+                    let mm = String(hace30.getMonth() + 1).padStart(2, "0");
+                    let dd = String(hace30.getDate()).padStart(2, "0");
+                    let fechaLimite = `${yyyy}-${mm}-${dd}`;
+    
+                    eventos = eventos.filter(e => e.fecha >= fechaLimite);
+    
+                    // ==============================
+                    // 🔥 Ordenar de reciente → antiguo
+                    // ==============================
+                    eventos.sort((a, b) => {
+                        if (a.fecha > b.fecha) return -1;
+                        if (a.fecha < b.fecha) return 1;
+                        return a.nombre.localeCompare(b.nombre);
+                    });
+    
+                    // ==============================
+                    // 🔥 Llenar el <select>
+                    // ==============================
+                    if (eventos.length === 0) {
+                        selectEvento.innerHTML = '<option value="">No hay eventos recientes (últimos 30 días).</option>';
                     } else {
-                        querySnapshot.forEach((doc) => {
-                            console.log("Documento encontrado:", doc.id);
-                            console.log("Datos del documento:", doc.data());
-                            
-                            var nombrecrmEvento = doc.data().nombrecrmEvento;
+                        eventos.forEach(ev => {
                             var option = document.createElement("option");
-                            option.text = nombrecrmEvento;
-                            option.value = nombrecrmEvento;
+                            option.text = `${ev.nombre} (${formatearFechaBonita(ev.fecha)})`;
+                            option.value = ev.nombre;
                             selectEvento.add(option);
                         });
                     }
+    
                 }).catch((error) => {
                     console.log("Error obteniendo eventos:", error);
                 });
+    
             }
         });
     }
@@ -1926,6 +1978,7 @@
 
 </body>
 </html>
+
 
 
 
