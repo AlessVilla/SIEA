@@ -997,55 +997,91 @@
     // Función para que los nombres de los espacios que están disponibles para evaluar se actualicen a
     // Todos aquellos que tengan una fecha de evento entre HOY y hace 3 SEMANAS, luego de 3 semanas no se podrá evaluar
     capituloEspacioSelect.addEventListener("change", function() {
+
         var capituloSeleccionado = document.getElementById("capitulo-espacio").value;
-        // Calcular la fecha de hace tres semanas
+
+        // Calcular la fecha de hace 3 semanas
         var tresSemanasAtras = new Date();
-        tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21); // Restar 21 días para tres semanas
-        
-        // Formatear la fecha de tres semanas atrás en el formato YYYY-MM-DD
+        tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21);
+
+        // Formatear fecha YYYY-MM-DD
         var dia = String(tresSemanasAtras.getDate()).padStart(2, '0');
         var mes = String(tresSemanasAtras.getMonth() + 1).padStart(2, '0');
         var año = tresSemanasAtras.getFullYear();
-        var fechaTresSemanasAtras = año + '-' + mes + '-' + dia;
-        console.log("la fecha de hace 3 semanas es con función " + fechaTresSemanasAtras);
-        // Obtener las reservas para el capítulo y dentro del rango de fechas
+        var fechaTresSemanasAtras = `${año}-${mes}-${dia}`;
+
+        console.log("La fecha de hace 3 semanas es: " + fechaTresSemanasAtras);
+
+        // Consulta a Firestore
         var reservasRef = firebase.firestore().collection("reservas");
-        var consulta = reservasRef.where("capitulosOrganizadores", "array-contains", capituloSeleccionado)
-                                  .where("fechaEvento", ">=", fechaTresSemanasAtras)
-                                  .where("fechaEvento", "<=", fechaHoy)
-                                  .where("crm", "==", "no")
+        var consulta = reservasRef
+            .where("capitulosOrganizadores", "array-contains", capituloSeleccionado)
+            .where("fechaEvento", ">=", fechaTresSemanasAtras)
+            .where("fechaEvento", "<=", fechaHoy)
+            .where("crm", "==", "no");
 
         consulta.get().then(function(querySnapshot) {
-          var nombresEventos = [];
-          querySnapshot.forEach(function(doc) {
-              nombresEventos.push(doc.data().nombreEvento);
-          });
-          nombresEventos.sort(); // Orden alfabético
-          // Agregar opciones al select
-          var nombreEspacioSelect = document.getElementById("nombre-espacio");
-          nombreEspacioSelect.innerHTML = ""; // Limpiar opciones anteriores
-          if (nombresEventos.length === 0) {
-              // Si no hay eventos disponibles, mostrar un mensaje indicando que no hay eventos en el rango de fechas
-              var option = document.createElement("option");
-              option.text = "No hay ningún evento cuya fecha sea entre HOY y hace 3 SEMANAS para este capítulo o ya pasó el plazo máximo del evento que buscas evaluar.";
-              option.value = "";
-              option.disabled = true;
-              option.selected = true;
-              nombreEspacioSelect.add(option);
-          } else {
-              // Si hay eventos disponibles, agregar cada nombre como una opción
-              nombresEventos.forEach(function(nombre) {
-                  var option = document.createElement("option");
-                  option.text = nombre;
-                  option.value = nombre;
-                  nombreEspacioSelect.add(option);
-              });
-          }
+            
+            var eventos = [];
+
+            querySnapshot.forEach(function(doc) {
+                eventos.push({
+                    nombre: doc.data().nombreEvento,
+                    fecha: doc.data().fechaEvento      // <-- IMPORTANTE
+                });
+            });
+
+            // Ordenar: primero por fecha más reciente, luego por nombre
+            eventos.sort((a, b) => {
+                if (a.fecha > b.fecha) return -1;
+                if (a.fecha < b.fecha) return 1;
+                return a.nombre.localeCompare(b.nombre);
+            });
+
+            // Limpiar select
+            var nombreEspacioSelect = document.getElementById("nombre-espacio");
+            nombreEspacioSelect.innerHTML = "";
+
+            if (eventos.length === 0) {
+
+                var option = document.createElement("option");
+                option.text =
+                    "No hay eventos entre HOY y hace 3 semanas para este capítulo.";
+                option.value = "";
+                option.disabled = true;
+                option.selected = true;
+                nombreEspacioSelect.add(option);
+
+            } else {
+
+                // Arrays para formatear la fecha
+                const diasSemana = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+                const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+                eventos.forEach(function(e) {
+
+                    // Convertir "YYYY-MM-DD" → Date
+                    const partes = e.fecha.split("-");
+                    const fechaObj = new Date(partes[0], partes[1] - 1, partes[2]);
+
+                    // Formatear
+                    const diaNombre = diasSemana[fechaObj.getDay()];
+                    const diaNumero = fechaObj.getDate();
+                    const mesNombre = meses[fechaObj.getMonth()];
+                    const fechaFormateada = `${diaNombre}, ${diaNumero} de ${mesNombre}`;
+
+                    var option = document.createElement("option");
+                    option.text = `${e.nombre} | ${fechaFormateada}`;
+                    option.value = e.nombre; // si quieres usar el ID, me dices
+                    nombreEspacioSelect.add(option);
+                });
+            }
+
         }).catch(function(error) {
             console.log("Error obteniendo reservas:", error);
-            // Manejar el error aquí
         });
     });
+
 
     // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
     var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
@@ -1928,6 +1964,7 @@
 
 </body>
 </html>
+
 
 
 
