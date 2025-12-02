@@ -9063,10 +9063,51 @@
                       var muestraMinima = calcularMuestraMinima(totalAsistentes);
                       var cumplimiento_logrado = parseFloat(calcularCumplimientoMuestra(respuestasObtenidas, muestraMinima));
       
+                      // --- CALCULAR NPS GLOBAL DE LAS 11 PREGUNTAS ---
+
+                      let totalPromotoresGeneral = 0;
+                      let totalPasivosGeneral = 0;
+                      let totalDetractoresGeneral = 0;
+
+                      for (let iGeneral = 1; iGeneral <= 11; iGeneral++) {
+
+                          let cadenaGeneral = datosEvento["respuestascrm" + iGeneral];
+
+                          if (!cadenaGeneral) continue;
+
+                          let valoresGeneral = cadenaGeneral.split("|").filter(vGeneral => vGeneral !== "");
+
+                          valoresGeneral.forEach(vGeneral => {
+                              console.log(datosEvento["respuestascrm" + iGeneral])
+                              let scoreGeneral = parseInt(vGeneral);
+
+                              if (!isNaN(scoreGeneral)) {
+                                  if (scoreGeneral >= 9 && scoreGeneral <= 10) {
+                                      totalPromotoresGeneral++;
+                                  } else if (scoreGeneral >= 7 && scoreGeneral <= 8) {
+                                      totalPasivosGeneral++;
+                                  } else if (scoreGeneral >= 0 && scoreGeneral <= 6) {
+                                      totalDetractoresGeneral++;
+                                  }
+                              }
+                          });
+                      }
+
+                      // Totales generales
+                      let totalRespuestasGeneral = totalPromotoresGeneral + totalPasivosGeneral + totalDetractoresGeneral;
+
+                      // Calcular NPS General
+                      let npsFinalGeneral = 0;
+                      if (totalRespuestasGeneral > 0) {
+                          npsFinalGeneral = ((totalPromotoresGeneral - totalDetractoresGeneral) / totalRespuestasGeneral) * 100;
+                      }
+
+                      npsFinalGeneral = npsFinalGeneral.toFixed(2);
+
                       var confiabilidad = cumplimiento_logrado >= 100
-                          ? "este informe se puede considerar que es de confianza ya que se cumple con la muestra mínima necesaria."
-                          : "este informe puede tener limitaciones en su confiabilidad, ya que la muestra utilizada parece no haber alcanzado la muestra mínima necesaria para garantizar resultados plenamente representativos.";
-      
+                      ? "este informe se puede considerar que es de confianza ya que se cumple con la muestra mínima necesaria. La satisfacción promedio de este evento fue de: " + npsFinalGeneral + "%."
+                      : "este informe puede tener limitaciones en su confiabilidad, ya que la muestra utilizada parece no haber alcanzado la muestra mínima necesaria para garantizar resultados plenamente representativos. La satisfacción promedio de este evento fue de: " + npsFinalGeneral + "%.";
+
                       // 🔹 Título
                       // Ajuste del ancho máximo permitido para el título
                       const maxWidthTitulo = pdf.internal.pageSize.getWidth() - 80; // Margen de 20px a cada lado
@@ -11946,6 +11987,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
