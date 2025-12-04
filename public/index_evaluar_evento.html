@@ -63,6 +63,14 @@
   <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      font-family: Arial, sans-serif;
+      color: white;
+  
       /* Establece la imagen de fondo */
       background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
       /* Fija la imagen de fondo para que no se desplace con el contenido */
@@ -73,6 +81,22 @@
       background-position: center;
       /* Establece un color de fondo de respaldo */
       background-color: #f8f8f8; /* Este color será visible si la imagen no se carga */
+    }
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      user-select: none;
+      pointer-events: none;
+      animation-name: fall;
+      animation-duration: 10s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
     }
     @font-face {
       font-family: 'Century Gothic';
@@ -568,7 +592,21 @@
   <div class="main-content">
     <!-- El contenido principal de tu página va aquí -->
   </div>
-
+  
+  <script>
+    const numeroCopos = 50; // cantidad de copos
+    for (let i = 0; i < numeroCopos; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.innerHTML = '❄'; // puedes cambiar por "*"
+      snowflake.style.left = Math.random() * window.innerWidth + 'px';
+      snowflake.style.fontSize = (Math.random() * 30 + 10) + 'px';
+      snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      snowflake.style.opacity = Math.random();
+      document.body.appendChild(snowflake);
+    }
+  </script>
+  
   <!-- DETALLES DEL ACORDEÓN 4 PARA EVALUACIÓN DE SATISFACCIÓN DEL ESPACIO -->
   <div class="acordeon4">EVALÚA UN ESPACIO / EVENTO 🌟</div>
   <div id="acordeon4-content" style="display: block">
@@ -1978,6 +2016,7 @@
 
 </body>
 </html>
+
 
 
 
