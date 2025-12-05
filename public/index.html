@@ -7832,40 +7832,105 @@
         }
     }
 
-    // Función para consultar las evaluaciones del evento seleccionado
     function consultarEvaluaciones() {
-    // Obtener el nombre del evento seleccionado
-    var nombreEvento = document.getElementById("nombre-espacio-consultar-evaluaciones").value;
-    // Obtener las fechas seleccionadas
-    var fechaInicial = document.getElementById("fecha-inicial-evaluaciones").value;
-    var fechaFinal = document.getElementById("fecha-final-evaluaciones").value;
+        var nombreEvento = document.getElementById("nombre-espacio-consultar-evaluaciones").value;
+        var fechaInicial = document.getElementById("fecha-inicial-evaluaciones").value;
+        var fechaFinal = document.getElementById("fecha-final-evaluaciones").value;
 
-    // Realizar la consulta a Firebase para obtener las evaluaciones del evento seleccionado
-    var reservasRef = firebase.firestore().collection("reservas");
-    var consultaEvaluaciones = reservasRef.where("nombreEvento", "==", nombreEvento)
-        .where("fechaEvento", ">=", fechaInicial)
-        .where("fechaEvento", "<=", fechaFinal)
-        .where("capitulosOrganizadores", "array-contains", capituloUsuario);
+        var reservasRef = firebase.firestore().collection("reservas");
+        var consultaEvaluaciones = reservasRef.where("nombreEvento", "==", nombreEvento)
+            .where("fechaEvento", ">=", fechaInicial)
+            .where("fechaEvento", "<=", fechaFinal)
+            .where("capitulosOrganizadores", "array-contains", capituloUsuario);
 
-    consultaEvaluaciones.get().then(function(querySnapshot) {
-        var tablaBody = document.getElementById("tabla-evaluaciones").getElementsByTagName("tbody")[0];
-        tablaBody.innerHTML = ""; // Limpiar el contenido actual de la tabla
+        consultaEvaluaciones.get().then(function(querySnapshot) {
+            var tablaBody = document.getElementById("tabla-evaluaciones").getElementsByTagName("tbody")[0];
+            tablaBody.innerHTML = "";
 
-        if (querySnapshot.empty) {
-            // Si no hay datos, mostrar mensaje en lugar de la tabla
-            var mensaje = document.createElement("tr");
-            var mensajeCell = document.createElement("td");
-            mensajeCell.setAttribute("colspan", "7"); // Colspan para ocupar todas las columnas
-            mensajeCell.textContent = "No hay respuestas en la evaluación de satisfacción en este momento para el evento.";
-            mensaje.appendChild(mensajeCell);
-            tablaBody.appendChild(mensaje);
-            var estadoTabla = document.getElementById("estadoTablaEvaluaciones");
-            estadoTabla.style.display = "none"; // Oculta el mensaje de estado
-        } else {
-            // Si hay datos, construir la tabla
+            if (querySnapshot.empty) {
+                var mensaje = document.createElement("tr");
+                var mensajeCell = document.createElement("td");
+                mensajeCell.setAttribute("colspan", "7");
+                mensajeCell.textContent = "No hay respuestas en la evaluación de satisfacción en este momento para el evento.";
+                mensaje.appendChild(mensajeCell);
+                tablaBody.appendChild(mensaje);
+                document.getElementById("estadoTablaEvaluaciones").style.display = "none";
+                return;
+            }
+
+            // -----------------------------
+            // VARIABLES PARA EL RESUMEN
+            // -----------------------------
+            var totalRespuestas = 0;
+            var detractores = 0;
+            var pasivos = 0;
+            var promotores = 0;
+            var totalAsistentesFirebase = 0;
+            var porcentajeSatisfaccionFirebase = 0;
+
             querySnapshot.forEach(function(doc) {
                 var data = doc.data();
-                // Dividir las respuestas que están separadas por "|"
+
+                // Guardar valores de Firebase (solo una vez)
+                if (totalAsistentesFirebase === 0 && data.totalAsistentes) {
+                    totalAsistentesFirebase = data.totalAsistentes;
+                }
+                if (porcentajeSatisfaccionFirebase === 0 && data.satisfaccion) {
+                    porcentajeSatisfaccionFirebase = data.satisfaccion;
+                }
+
+                var respuestas1 = data.respuestas1.split("|");
+
+                // Contabilizar respuestas NPS
+                for (var i = 0; i < respuestas1.length - 1; i++) {
+                    var score = parseInt(respuestas1[i]);
+                    if (!isNaN(score)) {
+                        totalRespuestas++;
+                        if (score >= 0 && score <= 6) detractores++;
+                        else if (score == 7 || score == 8) pasivos++;
+                        else if (score == 9 || score == 10) promotores++;
+                    }
+                }
+            });
+
+            // Cálculos finales
+            var porcentajeRespuestas = (totalRespuestas > 0 && totalAsistentesFirebase > 0)
+                ? ((totalRespuestas / totalAsistentesFirebase) * 100).toFixed(1) + "%"
+                : "0%";
+
+            var porcentajeSatisfaccion = porcentajeSatisfaccionFirebase 
+                ? porcentajeSatisfaccionFirebase + "%" 
+                : "0%";
+
+            // -----------------------------
+            // AGREGAR FILA DE RESUMEN
+            // -----------------------------
+            var filaResumen = tablaBody.insertRow();
+            filaResumen.style.background = "#13315c";
+            filaResumen.style.color = "white";
+            filaResumen.style.fontWeight = "bold";
+
+            var celda = filaResumen.insertCell(0);
+            celda.colSpan = 7;
+            celda.innerHTML =
+                "📊 <b>RESUMEN DE SATISFACCIÓN</b><br>" +
+                "Total respuestas: " + totalRespuestas +
+                " — Detractores: " + (totalRespuestas > 0 ? detractores : 0) +
+                " — Pasivos: " + (totalRespuestas > 0 ? pasivos : 0) +
+                " — Promotores: " + (totalRespuestas > 0 ? promotores : 0) +
+                "<br>% respuestas: " + (totalRespuestas > 0 
+                    ? (porcentajeRespuestas * 100).toFixed(2) + "%" 
+                    : "0.00%") +
+                " — % satisfacción Firebase: " + (porcentajeSatisfaccionFirebase 
+                    ? (porcentajeSatisfaccionFirebase * 100).toFixed(2) + "%" 
+                    : "N/A");
+
+            // -----------------------------
+            // AHORA AGREGAR LAS RESPUESTAS NORMALES
+            // -----------------------------
+            querySnapshot.forEach(function(doc) {
+                var data = doc.data();
+
                 var asistentes = data.asistentes.split("|");
                 var correosAsistentes = data.correosAsistentes.split("|");
                 var telefonosAsistentes = data.telefonosAsistentes.split("|");
@@ -7874,7 +7939,6 @@
                 var respuestas3 = data.respuestas3.split("|");
                 var comentarios = data.comentarios.split("|");
 
-                // Insertar cada respuesta en una fila de la tabla
                 for (var i = 0; i < asistentes.length - 1; i++) {
                     var fila = tablaBody.insertRow();
                     fila.insertCell(0).textContent = asistentes[i];
@@ -7886,11 +7950,11 @@
                     fila.insertCell(6).textContent = comentarios[i];
                 }
             });
-        }
-    }).catch(function(error) {
-        console.error("Error al consultar las evaluaciones:", error);
-    });
-}
+
+        }).catch(function(error) {
+            console.error("Error al consultar las evaluaciones:", error);
+        });
+    }
 
     // la función que cambia entre la evaluación de espacio y la evaluación de evento
     function alternarEvaluacion() {
@@ -12029,6 +12093,7 @@ async function descargarDatosMultiplesColeccionesExcel() {
 
 </body>
 </html>
+
 
 
 
