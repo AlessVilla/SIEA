@@ -88,29 +88,7 @@
       font-weight: normal;
       font-style: normal;
     }
-    /* Contenedor de nieve: ocupa toda la pantalla pero no bloquea scroll */
-    #snow-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none; /* IMPORTANTE: no bloquea clics ni scroll */
-      overflow: hidden; /* mantiene copos dentro */
-      z-index: 2; /* nieve por encima */
-    }
-    .snowflake {
-      position: absolute;
-      top: -10px;
-      color: white;
-      font-size: 1em;
-      user-select: none;
-      pointer-events: none;
-      animation-name: fall;
-      animation-duration: 10s;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
+
     @keyframes fall {
       0% { transform: translateY(0) rotate(0deg); }
       100% { transform: translateY(100vh) rotate(360deg); }
@@ -599,19 +577,7 @@
     <!-- El contenido principal de tu página va aquí -->
   </div>
   
-  <script>
-    const numeroCopos = 50; // cantidad de copos
-    for (let i = 0; i < numeroCopos; i++) {
-      const snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      snowflake.innerHTML = '❄'; // puedes cambiar por "*"
-      snowflake.style.left = Math.random() * window.innerWidth + 'px';
-      snowflake.style.fontSize = (Math.random() * 30 + 10) + 'px';
-      snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
-      snowflake.style.opacity = Math.random();
-      document.body.appendChild(snowflake);
-    }
-  </script>
+
   
   <!-- DETALLES DEL ACORDEÓN 1 QUE CORRESPONDE A REGISTRAR LA RESERVA DEL EVENTO-->
   <div class="acordeon1">REGISTRA TU ESPACIO ✏️</div>
