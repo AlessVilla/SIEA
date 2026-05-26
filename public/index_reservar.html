@@ -1,2008 +1,298 @@
 <!DOCTYPE html>
-<html lang="en">
-<!-- Descargar SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<html lang="es">
 <head>
-  <title>¡RESERVA TUS ESPACIOS CON SIEA! 💚💙</title>
-  <title>Reserva tu espacio, evento, capacitación, integración, etc., de forma automática en SIEA 💚💙</title>
-  <!-- Agrega la biblioteca Google API Client Library para JavaScript -->
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <!-- incluir el plugin de anotación de Chart.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
-  <!-- Agrega el SDK de Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
-  <!-- Agrega el bloque del SDK de Firebase Realtime Database -->
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
-  <!-- Agrega el bloque del SDK de Firebase Authentication -->
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
-  <!-- Agrega el bloque del SDK de Firebase Cloud Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
-  <!-- Agrega la biblioteca para enviar correos en Email.js -->  
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <!-- Agrega la biblioteca para enviar correos por API Gmail -->  
-  <script src="https://apis.google.com/js/client.js"></script>
-  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
-  <script src="https://smtpjs.com/v3/smtp.js"></script>
-  <!-- Importar el google auth provider para autenticar con google -->  
-  <!-- <script import { GoogleAuthProvider } from "firebase/auth"></script> -->  
-  <!-- Agrega la biblioteca para enviar correos por SMTPJS -->  
-  <script src="https://smtpjs.com/v3/smtp.js"></script>
-  <!-- Agrega la biblioteca Google API Client -->  
-  <script src="https://apis.google.com/js/api.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="style.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIEA 💚💙</title>
-  <link rel="stylesheet" href="styles.css">
-  <!-- Incluir Chart.js desde una CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Incluir el archivo JavaScript desde la carpeta config dentro del repositorio -->
-  <script>
-    /*ENCUESTAS DE SATISFACCIÓN SIEA
-    Evalúa tu espacio o evento de forma automática con el Sistema Integral de Espacios Documental.*/
-    var firebaseConfig = {
-        apiKey: "AIzaSyBoPvkQzuVG5LA_HXqw34MiHzB4Y3ro7Kw",
-        authDomain: "bddreservaaneiapuninorte.firebaseapp.com",
-        projectId: "bddreservaaneiapuninorte",
-        storageBucket: "bddreservaaneiapuninorte.appspot.com",
-        messagingSenderId: "227754886829",
-        appId: "1:227754886829:web:00047755b1aaa727242824",
-        measurementId: "G-S0LH1M6FQ4" // Esta línea es opcional, solo si estás utilizando Firebase Analytics
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const firestore = firebase.firestore();
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualización de Enlaces - SIEA</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #0f172a;
+            --accent-color: #10b981;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+            --gray-btn: #64748b;
+        }
 
-  <title>SIEA (Sistema Integral de Espacios ANEIAP)</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      color: rgb(0, 0, 0);
-      
-      /* Establece la imagen de fondo */
-      background-image: url('https://i.ibb.co/gzwRXW2/FOTO-FONDO-SIEA-SNC2023-1.jpg');
-      /* Fija la imagen de fondo para que no se desplace con el contenido */
-      background-attachment: fixed;
-      /* Escala la imagen para cubrir todo el cuerpo */
-      background-size: contain;
-      /* Centra la imagen */
-      background-position: center;
-      /* Establece un color de fondo de respaldo */
-      background-color: #000000; /* Este color será visible si la imagen no se carga */
-    }
-    @font-face {
-      font-family: 'Century Gothic';
-      src: url('ruta/a/la/fuente/CenturyGothic.woff2') format('woff2'),
-          url('ruta/a/la/fuente/CenturyGothic.woff') format('woff');
-      /* Agrega más formatos de fuentes si es necesario */
-      font-weight: normal;
-      font-style: normal;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(360deg); }
-    }
-    /* Estilos para el contenedor de la imagen */
-    .centered-text {
-      text-align: center;
-    }
-    .image-container {
-      display: flex;
-      justify-content: center;
-      animation: slide-in 2s ease-in-out;
-    }
-    @keyframes slide-in {
-      0% {
-        transform: translateX(-100%);
-      }
-      100% {
-        transform: translateX(0);
-      }
-    }
-    .image-container img {
-      max-width: 15%;
-      height: auto;
-      transition: transform 6s ease-in-out;
-    }
-    .image-container img:hover {
-      transform: rotate(4320deg);
-    }
-    /* Estilos para el cuadro de datos generales del evento */
-    .datos-generales,
-    .datos-organizador,
-    .datos-ponente {
-      background-color: rgb(253, 198, 166);
-      padding: 10px;
-      margin-bottom: 20px;
-    }
-    /* Estilos para los campos de formulario */
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 18px;
-    }
-    select, textarea, input[type="text"], input[type="date"], input[type="email"], input[type="tel"] {
-      width: 100%;
-      margin-top: 5px;
-      font-size: 18px;
-    }
-    h2 {
-      font-size: 22px;
-      text-transform: uppercase;
-    }
-    .reserva {
-      background-color: darkgreen;
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 20px;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-    }
-    .row .half {
-      width: 48%;
-    }
-    .third {
-      flex-basis: 33.33%;
-      padding: 0 15px;
-      box-sizing: border-box;
-    }
-    .disponibilidad-group {
-      margin-bottom: 15px;
-      background-color: #c3d6ff; /* Color de fondo azul muy claro */
-      padding: 10px;
-      border: 1px solid #0004ff; /* Borde azul */
-      border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }    
-    .reservar-group {
-      margin-bottom: 15px;
-      background-color: #a8f7a1D9; /* Color de fondo verde muy claro */
-      padding: 10px;
-      border: 1px solid #15ff00D9; /* Borde verde claro */
-      border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }
-    .editar-group {
-      margin-bottom: 15px;
-      background-color: #ffc67c; /* Color de fondo naranja muy claro */
-      padding: 10px;
-      border: 1px solid #ff9100; /* Borde naranja claro */
-      border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }
-    .eliminar-group {
-      margin-bottom: 15px;
-      background-color: #fd8c8ca4; /* Color de fondo rojo muy claro */
-      padding: 10px;
-      border: 1px solid #ff0000a4; /* Borde rojo */
-      border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }
-    .acordeon4-content-inner {
-      margin-bottom: 15px;
-      background-color: #D55DFF; /* Color de fondo rojo muy claro */
-      padding: 10px;
-      border: 1px solid #9900CC; /* Borde rojo */
-      border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }
-    .actualizar-group {
-      margin-bottom: 15px;
-      background-color: #cccccc; /* Color de fondo rojo muy claro */
-      padding: 10px;
-      border: 1px solid #4d4d4d; /* Borde rojo */
-      border-radius: 8px; /* Bordes redondeados para el contenedor */
-    }
-    .radio-buttons-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px; /* Espacio entre los botones SÍ y NO */
-    }
-    .custom-file-input {
-      display: inline-block;
-      position: relative;
-    }
-    .custom-file-input input[type="file"] {
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      cursor: pointer;
-    }
-    .custom-file-input label {
-      background-color: #3498db;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }    
-    .field-container {
-      background-color: #fff;
-      padding: 10px; /* Ajusta el valor según el espacio deseado entre el contenido y el borde */
-      border-radius: 5px; /* Ajusta el valor para cambiar la curvatura de las esquinas */
-    }
-    /* Estilos para los acordeones */
-    .acordeon0, .acordeon1, .acordeon2, .acordeon3, .acordeon4, .acordeon5 {
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .acordeon0 {
-      background-color: #307B98;
-    }
-    .acordeon0-content, .acordeon1-content, .acordeon2-content, .acordeon3-content, .acordeon4-content, .acordeon5-content {
-      background-color: white;
-      padding: 10px;
-      margin-bottom: 20px;
-    }
-    .acordeon1 {
-      background-color: #00B30F;
-    }
-    .acordeon2 {
-      background-color: #F47B28;
-    }
-    .acordeon3 {
-      background-color: #DC1E1E;
-    }
-    .acordeon4 {
-      background-color: #600082;
-    }
-    .acordeon5 {
-      background-color: #4d4d4d;
-    }
-    .button-consultar-disponibilidad, .button-reservar, .button-consultar, .button-consultar, .button-evaluar, .button-eliminar, .button-actualizar {
-      color: white;
-      padding: 5px 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 10px; /* Añadido para separar el botón de los campos */
-      width: 353px; /* Ocupar el ancho del contenedor */
-    }
-    .button-consultar-disponibilidad {
-      background-color: rgb(0, 4, 255);
-    }
-    .button-reservar {
-      background-color: rgb(0, 141, 37);
-    }
-    .button-consultar {
-      background-color: orange;
-    }
-    .button-eliminar {
-      background-color: red;
-    }
-    .button-evaluar {
-      background-color: #600082;
-    }
-    .button-actualizar {
-      background-color: #4d4d4d;
-    }
-    /* Estilo para los campos de correo del forms y contraseña */
-    input[type="email"],
-    input[type="password"] {
-      font-size: 18px; /* Mismo tamaño de fuente que el botón */
-      padding: 5px 10px;
-      margin-bottom: 10px; /* Espaciado inferior */
-      width: 150px; /* Ocupar el ancho del contenedor */
-    }
-    .disponibilidad-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .disponibilidad-item {
-      width: 100px;
-      height: 50px;
-      margin: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .disponibilidad-item.green {
-      background-color: green;
-    }
-    .disponibilidad-item.red {
-      background-color: red;
-    }
-    .disponibilidad-item.gray {
-      background-color: rgb(185, 185, 185);
-    }
-    /* Estilos para las pestañas */
-    .tab-container {
-      display: flex;
-    }
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      border: 1px solid #9900CC;
-      background-color: #f7d1f3;
-      border-radius: 8px 8px 0 0;
-    }
-    .tab:hover {
-      background-color: #f0f0f0;
-    }
-    /* Estilos para los contenidos de las pestañas */
-    .tab-content {
-      display: none;
-      padding: 10px;
-      border: 3px solid #D55DFF;
-      background-color: #f7d1f3;
-      border-radius: 20 20px 20px 20px;
-      width: 100%
-    }
-    /* Mostrar el contenido de la pestaña activa */
-    .tab-content.active {
-      display: block;
-    }    
-    /* Estilos para el botón */
-    #modo-switch {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      width: 60px; /* Aumenta el ancho del botón */
-      height: 40px; /* Aumenta la altura del botón */
-      background-color: #777777; /* Color de fondo del botón en light mode */
-      border-radius: 50%; /* Hace que el botón sea circular */
-      cursor: pointer;
-      border: none;
-      outline: none;
-      padding: 2px;
-      display: flex; /* Para centrar verticalmente el emoji */
-      justify-content: center; /* Para centrar horizontalmente el emoji */
-      align-items: center; /* Para centrar verticalmente el emoji */
-    }
-    /* Estilos para el ícono del sol */
-    .icon::before {
-      content: "\2600"; /* Código Unicode para el sol */
-      font-size: 28px; /* Aumenta el tamaño del emoji */
-      color: #ffcc00; /* Color del sol en light mode */
-      display: inline-block;
-    }
-    /* Estilos para el ícono de la luna */
-    .dark-mode .icon::before {
-      content: "\1F319"; /* Código Unicode para la luna */
-      color: #333; /* Color de la luna en dark mode */
-    }
-    body.light-mode {
-      background-color: white; /* Fondo blanco en el modo claro */
-      transition: background-color 1s ease; /* Efecto de transición suave */
-    }
-    body.dark-mode {
-      background-color: rgb(29, 29, 29); /* Fondo negro en el modo oscuro */
-      transition: background-color 1s ease; /* Efecto de transición suave */
-    }
-    body {
-      transition: background-color 1s ease; /* Efecto de transición suave para todo el cuerpo */
-      font-family: 'Century Gothic', sans-serif;
-    }
-    /* Estilo del texto en modo claro */
-    .light-mode {
-      color: black; /* Color del texto en modo claro */
-    }
-    .logo.dark-mode {
-      display: none; /* Oculta el logo del dark mode por defecto */
-    }
-    /* Estilo del texto en modo oscuro */
-    .dark-mode .light-mode {
-      color: white; /* Color del texto en modo oscuro */
-    }
-    /* Estilos para los títulos de documentos */
-    .document-title a {
-      text-decoration: none;
-      color: black;
-      font-weight: bold;
-    }
-    /* Estilos para los enlaces "AQUÍ" */
-    .document-link a {
-      text-decoration: none;
-      color: blue;
-      font-weight: bold;
-    }
-    /* Estilos para el icono de Word */
-    .document-link img {
-      width: 16px;
-      height: 16px;
-      margin-left: 5px;
-    }
-    .swal2-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .swal2-input {
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 10px; /* Ajusta según sea necesario */
-    }
-    /* Estilos para la tabla resumen */
-    #tabla-resumen {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        overflow-x: auto; /* Permitir desplazamiento horizontal */
-    }
-    #tabla-resumen-container {
-    width: 100%;
-    overflow-x: auto; /* Permitir desplazamiento horizontal si es necesario */
-    }
-    #tabla-resumen th,
-    #tabla-resumen td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-    #tabla-resumen th {
-        background-color: #76c04e;
-    }
-    #tabla-resumen tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    #tabla-resumen tbody tr:hover {
-        background-color: #76c04e;
-        transition: background-color 0.3s ease;
-    }
-    #tabla-resumen td:nth-child(n + 8) {
-        text-align: center;
-    }
-    #tabla-resumen td:nth-child(13) {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-        font-size: 10px;
-        overflow: hidden;
-    }
-    /* Ajuste de anchos de columnas */
-    #tabla-resumen th,
-    #tabla-resumen td {
-        width: auto; /* Permitir que las columnas se ajusten automáticamente */
-    }
-    #tabla-evaluaciones {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow-x: auto; /* Permitir desplazamiento horizontal */
-    }
-    #tabla-evaluaciones th,
-    #tabla-evaluaciones td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-    #tabla-evaluaciones th {
-        background-color: #76c04e;
-    }
-    #tabla-evaluaciones tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    #tabla-evaluaciones tbody tr:hover {
-        background-color: #76c04e;
-        transition: background-color 0.3s ease;
-    }
-    /* Ajuste de anchos de columnas */
-    #tabla-evaluaciones th,
-    #tabla-evaluaciones td {
-        width: auto; /* Permitir que las columnas se ajusten automáticamente */
-    }
-    /* Alineación de columnas */
-    #tabla-evaluaciones td:nth-child(1),
-    #tabla-evaluaciones td:nth-child(2),
-    #tabla-evaluaciones td:nth-child(7) {
-        text-align: left; /* Columnas de nombre del asistente, correo asistente y comentarios alineadas a la izquierda */
-    }
-    #tabla-evaluaciones td {
-        text-align: center; /* Resto de columnas centradas */
-    }
-    /* Estilos para el contenedor del calendario */
-    #calendario-semanal {
-      margin: 20px auto; /* Margen externo para centrar el calendario */
-      width: 100%; /* Ancho del calendario */
-    }
-    /* Estilos para la tabla del calendario */
-    .calendario-semanal-table {
-      width: 100%; /* Ancho de la tabla */
-      border-collapse: collapse; /* Colapso de bordes de celda */
-    }
-    /* Estilos para las celdas del encabezado */
-    .calendario-semanal-table th {
-      background-color: #618796; /* Color de fondo */
-      padding: 10px; /* Espaciado interno */
-      text-align: left; /* Alineación de texto a la izquierda */
-      border-bottom: 1px solid #ddd; /* Borde inferior */
-      color: #fff; /* Color del texto */
-    }
-    /* Estilos para las celdas del cuerpo */
-    .calendario-semanal-table td {
-      padding: 10px; /* Espaciado interno */
-      border-bottom: 1px solid #ddd; /* Borde inferior */
-    }
-    /* Estilos para las filas impares del cuerpo */
-    .calendario-semanal-table tbody tr:nth-child(odd) {
-      background-color: #f9f9f9; /* Color de fondo para filas impares */
-    }
-    /* Estilos para la primera columna (día de la semana) */
-    .calendario-semanal-table tbody td:first-child {
-      width: 15%; /* Ancho del 10% para la primera columna */
-    }
-    /* Estilos para la segunda columna (eventos reservados) */
-    .calendario-semanal-table tbody td:nth-child(2) {
-      width: 85%; /* Ancho del 90% para la segunda columna */
-      margin: 0; /* Eliminar margen interno del párrafo */
-    }
-    /* Estilos para las filas al pasar el mouse */
-    .calendario-semanal-table tbody tr:hover {
-      background-color: #76c04e; /* Cambio de color al pasar el mouse */
-      cursor: pointer; /* Cambio de cursor al pasar el mouse */
-    }
-    /* Estilos para centrar los encabezados */
-    .calendario-semanal-table th {
-      text-align: center; /* Alineación centrada */
-    }
+        .container {
+            max-width: 650px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
 
-  </style>
+        .header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 30px 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #93c5fd;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 30px 24px;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #475569;
+        }
+
+        .links-section {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .links-section h2 {
+            font-size: 16px;
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .link-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .link-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .link-info {
+            margin-bottom: 12px;
+        }
+
+        .link-label {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .link-url {
+            font-size: 13px;
+            color: #64748b;
+            word-break: break-all;
+            font-family: monospace;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-access {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .btn-access:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-access.main-btn {
+            background-color: var(--accent-color);
+        }
+
+        .btn-access.main-btn:hover {
+            background-color: #059669;
+        }
+
+        .btn-copy {
+            background-color: #e2e8f0;
+            color: var(--secondary-color);
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-copy:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn-copy.copied {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-color: #a7f3d0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 0 24px 30px 24px;
+            font-size: 13px;
+            color: #94a3b8;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
 </head>
-<body class="dark-mode">
+<body>
 
-    <!-- Botón de modo de visualización-->
-    <!--<button id="modo-switch" class="light-mode">
-      <span class="icon"></span>
-    </button>-->
-
-  <script src="script.js"></script>
-  <div class="main-content">
-    <!-- El contenido principal de tu página va aquí -->
-  </div>
-  
-
-  
-  <!-- DETALLES DEL ACORDEÓN 1 QUE CORRESPONDE A REGISTRAR LA RESERVA DEL EVENTO-->
-  <div class="acordeon1">REGISTRA TU ESPACIO ✏️</div>
-  <div id="acordeon1-content" style="display: block;">
-    <div class="acordeon1-content-inner">
-      <div class="reservar-group">
-        <div>
-        <button class="button-reservar" onclick="window.location.href = 'https://alessvilla.github.io/SIEA/public/index.html'">⬅️ VOLVER AL INICIO</button>
+    <div class="container">
+        <div class="header">
+            <h1>ACTUALIZACIÓN DE INFRAESTRUCTURA</h1>
+            <p>Sistema SIEA</p>
         </div>
-      <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS GENERALES DEL EVENTO 🦉</p></h2>
-      <div class="row">
-      <div class="half">
-      <label for="nombre-evento"><b>Nombre del evento: *</b></label>
-      <input type="text" id="nombre-evento" placeholder="Ingresa el nombre de tu evento.">
-      <label for="fecha-evento"><b>Fecha del evento: *</b></label>
-      <input type="date" id="fecha-evento">
-      <label for="hora-evento"><b>Hora para el evento: *</b></label>
-      <select id="hora-evento">
-        <option value="" disabled selected hidden>Selecciona la hora de la reserva.</option>
-        <option value="480">08:00</option>
-        <option value="510">08:30</option>
-        <option value="540">09:00</option>
-        <option value="570">09:30</option>
-        <option value="600">10:00</option>
-        <option value="630">10:30</option>
-        <option value="660">11:00</option>
-        <option value="690">11:30</option>
-        <option value="720">12:00</option>
-        <option value="750">12:30</option>
-        <option value="780">13:00</option>
-        <option value="810">13:30</option>
-        <option value="840">14:00</option>
-        <option value="870">14:30</option>
-        <option value="900">15:00</option>
-        <option value="930">15:30</option>
-        <option value="960">16:00</option>
-        <option value="990">16:30</option>
-        <option value="1020">17:00</option>
-        <option value="1050">17:30</option>
-        <option value="1080">18:00</option>
-        <option value="1110">18:30</option>
-        <option value="1140">19:00</option>
-        <option value="1170">19:30</option>
-        <option value="1200">20:00</option>
-        <option value="1230">20:30</option>
-        <option value="1260">21:00</option>
-      </select>
-      </div>
-      <div class="half">
-      <label for="duracion-evento"><b>Duración del evento (en horas): *</b></label>
-      <select id="duracion-evento">
-        <option value="" disabled selected hidden>Selecciona la duración del evento.</option>
-        <option value="30">media hora</option>
-        <option value="60">1 hora</option>
-        <option value="90">1 hora y media</option>
-        <option value="120">2 horas</option>
-        <option value="150">2 horas y media</option>
-        <option value="180">3 horas</option>
-        <option value="210">3 horas y media</option>
-        <option value="240">4 horas</option>
-        <option value="270">4 horas y media</option>
-        <option value="300">5 horas</option>
-        <option value="330">5 horas y media</option>
-        <option value="360">6 horas</option>
-      </select>
-      <label for="modalidad-evento"><b>Modalidad evento: *</b></label>
-      <select id="modalidad-evento" onchange="toggleUbicacionPlataforma()">
-        <option value="" disabled selected hidden>Selecciona la modalidad del evento.</option>
-        <option value="virtual">Virtual</option>
-        <option value="presencial">Presencial</option>
-      </select>
-      <div id="ubicacion-plataforma-container" style="display: none;">
-        <label for="ubicacion-plataforma"><b>Ubicación/Plataforma en la reserva: *</b></label>
-        <select id="ubicacion-plataforma">
-          <option value="" disabled selected hidden>Selecciona la plataforma para el evento.</option>
-          <option value="meet">Meet</option>
-          <option value="zoom">Zoom</option>
-          <option value="teams">Teams</option>
-          <option value="otro">Otro</option>
-        </select>
-      </div>
-      <div id="lugar-presencial-container" style="display: none;">
-        <label for="lugar-presencial"><b>Especifica el lugar físico del evento: *</b></label>
-        <input type="text" id="lugar-presencial" placeholder="Escribe el lugar donde el evento se realizará.">
-      </div>
-      </div>
-      </div>
-      <div class="row">
-      <div class="half">
-      <label for="plan-evento"><b>Plan del evento: *</b></label>
-      <textarea id="plan-evento" rows="5" placeholder="Detalla el paso a paso de lo que se realizará en el evento y cuáles son las estrategias para garantizar que este sí se lleve a cabo de forma exitosa."></textarea>
-      </div>
-      <div class="half">
-      <label for="observaciones-evento"><b>Observaciones:</b></label>
-      <textarea id="observaciones-evento" rows="5" placeholder="Especifica cualquier observación adicional que desees que sea tenida en cuenta para el desarrollo del evento."></textarea>
-      </div>
-      </div>
-      <div class="row">
-        <div class="half">
-          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL ORGANIZADOR</p></h2>
-          <label for="nombre-organizador"><b>Nombre del organizador: *</b></label>
-          <input type="text" id="nombre-organizador" placeholder="Ingresa tu nombre.">
-          <div class="row">
-            <div class="half">
-                <label for="email-organizador"><b>Email: *</b></label>
-                <input type="text" id="email-organizador" placeholder="Ingresa tu email.">
-            </div>
-            <div class="half">
-                <label for="capitulo-organizador"><b>Capítulo:</b></label>
-                <select id="capitulo-organizador">
-                  <option value="" disabled selected hidden>Selecciona el capítulo para el que aplica la reserva.</option>
-                  <option value="uniguajira">UNIGUAJIRA</option>
-                  <option value="unimagdalena">UNIMAGDALENA</option>
-                  <option value="usasm">USASM</option>
-                  <option value="unicaribe">UNICARIBE</option>
-                  <option value="uniatlantico">UNIATLÁNTICO</option>
-                  <option value="uninorte">UNINORTE</option>
-                  <option value="unisimon">UNISIMÓN</option>
-                  <option value="cuc">CUC</option>
-                  <option value="librequilla">LIBREQUILLA</option>
-                  <option value="utb">UTB</option>
-                  <option value="upbmonteria">UPBMONTERÍA</option>
-                  <option value="unicordoba">UNICÓRDOBA</option>
-                  <option value="ufps">UFPS</option>
-                  <option value="unalmed">UNALMED</option>
-                  <option value="udea">UDEA</option>
-                  <option value="upbmed">UPBMED</option>
-                  <option value="utp">UTP</option>
-                  <option value="unalma">UNALMA</option>
-                  <option value="udistrital">UDISTRITAL</option>
-                  <option value="unalbog">UNALBOG</option>
-                  <option value="univalle">UNIVALLE</option>
-                  <option value="icesi">ICESI</option>
-                  <option value="uao">UAO</option>
-                  <option value="usc">USC</option>
-                  <option value="nacional">ANEIAP NACIONAL</option>
-                </select>
-            </div>
-          </div>
-          <label for="telefono-organizador"><b>Teléfono del organizador: *</b></label>
-          <input type="tel" id="telefono-organizador" placeholder="Ingresa tu número de teléfono.">
-        </div>
-        <div class="half">
-          <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS DEL PONENTE</p></h2>
-          <label for="nombre-ponente"><b>Nombre del ponente: *</b></label>
-          <input type="text" id="nombre-ponente" placeholder="Ingresa el nombre del ponente.">
-          <label for="email-ponente"><b>Email ponente:</b></label>
-          <input type="text" id="email-ponente" placeholder="Ingresa el email del ponente.">
-          <label for="telefono-ponente"><b>Teléfono del ponente:</b></label>
-          <input type="tel" id="telefono-ponente" placeholder="Ingresa el número de teléfono del ponente.">
-        </div>
-      </div>
-      <h2 style="font-size: 22px; text-transform: uppercase;"><p style="text-align: center;">DATOS PARA EL COMITÉ DE PIEZAS</p></h2>
-      <div class="row">
-        <div class="third">
-          <label for="publicidad-comite"><b>¿Deseas que el comité de piezas capitular te realice la publicidad del espacio? *</b></label>
-          <select id="publicidad-comite">
-            <option value="si">SÍ</option>
-            <option value="no">NO</option>
-          </select>
-        </div>
-        <div class="third">
-          <label for="observaciones-publicidad"><b>Observaciones para que el comité de piezas tenga en cuenta al hacer tu publicidad:</b></label>
-          <textarea id="observaciones-publicidad" rows="1" placeholder="Ingresa observaciones para la publicidad del evento."></textarea>
-        </div>
-        <div class="third">
-          <label for="foto-ponente"><b>Enlace de Google Drive de la foto del ponente para colocar en la pieza:</b></label>
-          <input type="text" id="foto-ponente" placeholder="Ingresa el enlace de Google Drive, debe estar compartido para cualquier correo.">
-        </div>
-      </div>
-      <button class="button-reservar" onclick="registrarEvento()">Registrar evento</button>
-      <button onclick="iniciarSesionJDN()">JDN</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-
-    // Variable global del correo del usuario para mirar si inició sesión un DCA o DNA.
-    var correoUsuario = ""; //deben estar vacías, solo que tengo flojera de iniciar sesión.
-    var capituloUsuario = "";
-    var escogioPublicidadNacional = "no";
-
-    // Esta función permite cambiar la visibilidad de los campos "ubicación/plataforma" y "lugar presencial"
-    // en la sección "REGISTRAR RESERVA (AC1)" según la modalidad seleccionada.
-    function toggleUbicacionPlataforma() {
-      // Obtenemos los elementos HTML correspondientes a los contenedores de ubicación/plataforma y lugar presencial.
-      var ubicacionPlataformaContainer = document.getElementById("ubicacion-plataforma-container");
-      var lugarPresencialContainer = document.getElementById("lugar-presencial-container");
-      
-      // Obtenemos el valor seleccionado en el campo "modalidad-evento".
-      var modalidadEvento = document.getElementById("modalidad-evento").value;
-
-      // Comparamos el valor seleccionado con las opciones.
-      if (modalidadEvento === "virtual") {
-        // Si la modalidad es "virtual", mostramos el campo "ubicación/plataforma" y ocultamos "lugar presencial".
-        ubicacionPlataformaContainer.style.display = "block";
-        lugarPresencialContainer.style.display = "none";
-      } else if (modalidadEvento === "presencial") {
-        // Si la modalidad es "presencial", mostramos "lugar presencial" y ocultamos "ubicación/plataforma".
-        ubicacionPlataformaContainer.style.display = "none";
-        lugarPresencialContainer.style.display = "block";
-      } else {
-        // En caso contrario, ocultamos ambos campos.
-        ubicacionPlataformaContainer.style.display = "none";
-        lugarPresencialContainer.style.display = "none";
-      }
-    }
-
-    // Acá está la función para agregar un evento en la colección "reservas" y documento "basededatos",
-    // también tiene en cuenta la posibilidad de adjuntar imagen del ponente y reiniciará los campos cuando se registren.
-    function agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL) {
-      // Obtener una referencia a la colección "reservas" en Firestore
-      const db = firebase.firestore().collection("reservas").doc(claveEvento);
-
-      db.set({
-        nombreEvento: nombreEvento,
-        claveEvento: claveEvento,
-        fechaEvento: fechaEvento,
-        horaEvento: horaEvento,
-        duracionEvento: duracionEvento,
-        modalidadEvento: modalidadEvento,
-        ubicacionPlataforma: ubicacionPlataforma,
-        lugarPresencial: lugarPresencial,
-        planEvento: planEvento,
-        observacionesEvento: observacionesEvento,
-        nombreOrganizador: nombreOrganizador,
-        emailOrganizador: emailOrganizador,
-        capitulo: capitulo,
-        capitulosOrganizadores: [capitulo],
-        telefonoOrganizador: telefonoOrganizador,
-        nombrePonente: nombrePonente,
-        emailPonente: emailPonente,
-        telefonoPonente: telefonoPonente,
-        publicidadComite: publicidadComite,
-        observacionesPublicidad: observacionesPublicidad,
-        fotoPonenteURL: fotoPonenteURL,
-        // Agrega aquí los demás campos del evento que deseas guardar
-        // ...
-        detractores: 0,
-        pasivos: 0,
-        promotores: 0,
-        satisfaccion: 0,
-        crm: "no",
-        tipoEvento:"",
-        areaTrabajo:"",
-        respuestas1:"",
-        respuestas2:"",
-        respuestas3:"",
-        satisfaccion:0,
-        totalAsistentes:0,
-      })
-      .then((docRef) => {
-        // Éxito: el evento se ha registrado correctamente en el documento existente
-        // Aquí puedes agregar cualquier otra lógica que desees después de agregar el evento
-        // Muestra el mensaje de reserva completada
-        mostrarMensajeReservar();
-      })
-      .catch((error) => {
-        // Error: hubo un problema al registrar el evento
-        console.error("ERROR AL REGISTRAR EL EVENTO: ", error);
-        Swal.fire({
-          title: '¡ERROR!',
-          text: 'Ha ocurrido un error al registrar el evento. Inténtalo nuevamente más tarde o consulta en el link de dudas, reclamos e inquietudes arriba.',
-          icon: 'error',
-          imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png', // URL de la imagen
-          confirmButtonText: 'Aceptar',
-          imageWidth: 342, // Ancho de la imagen en píxeles
-          imageHeight: 200, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-      });
-    }    
-
-    // Esta función genera una clave de evento aleatoria.
-    // La clave tiene siempre una cantidad total de 15 caracteres (letras mayúsculas y dígitos) de forma aleatoria.
-    function generarClaveEvento() {
-      // Definimos una cadena de caracteres que contendrá letras mayúsculas y dígitos.
-      var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789";
-      
-      // Especificamos la longitud deseada para la clave generada.
-      var longitud = 15;
-      
-      // Inicializamos una variable para almacenar la clave generada.
-      var claveGenerada = "";
-
-      // Iniciamos un bucle para generar cada carácter de la clave.
-      for (var i = 0; i < longitud; i++) {
-        // Generamos un número aleatorio entre 0 (inclusive) y la longitud de la cadena de caracteres.
-        var indiceAleatorio = Math.floor(Math.random() * caracteres.length);
         
-        // Agregamos el carácter correspondiente al índice aleatorio a la clave generada.
-        claveGenerada += caracteres.charAt(indiceAleatorio);
-      }
+        <div class="content">
+            <p>Estimado usuario, con el objetivo de fortalecer la identidad institucional y centralizar nuestros servicios, se ha realizado un cambio de links de acceso general para la plataforma.</p>
+            
+            <p>Los accesos anteriores bajo el dominio personal han sido dados de baja. A continuación, compartimos las nuevas direcciones oficiales de publicación junto con sus herramientas de acceso rápido:</p>
+            
+            <div class="links-section">
+                <h2>ENLACES OFICIALES DE ACCESO</h2>
+                
+                <div class="link-card">
+                    <div class="link-info">
+                        <span class="link-label">Plataforma principal (General)</span>
+                        <span class="link-url">https://aneiap.github.io/siea/general.html</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="https://aneiap.github.io/siea/general.html" class="btn btn-access main-btn" target="_blank">Acceder al sitio</a>
+                        <button class="btn btn-copy" onclick="copyLink('https://aneiap.github.io/siea/general.html', this)">Copiar enlace</button>
+                    </div>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-info">
+                        <span class="link-label">Reserva de espacios</span>
+                        <span class="link-url">https://aneiap.github.io/siea/reservar.html</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="https://aneiap.github.io/siea/reservar.html" class="btn btn-access" target="_blank">Acceder al sitio</a>
+                        <button class="btn btn-copy" onclick="copyLink('https://aneiap.github.io/siea/reservar.html', this)">Copiar enlace</button>
+                    </div>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-info">
+                        <span class="link-label">Encuesta de satisfacción</span>
+                        <span class="link-url">https://aneiap.github.io/siea/satisfaccion.html</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="https://aneiap.github.io/siea/satisfaccion.html" class="btn btn-access" target="_blank">Acceder al sitio</a>
+                        <button class="btn btn-copy" onclick="copyLink('https://aneiap.github.io/siea/satisfaccion.html', this)">Copiar enlace</button>
+                    </div>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-info">
+                        <span class="link-label">Evaluación de eventos</span>
+                        <span class="link-url">https://aneiap.github.io/siea/eventos.html</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="https://aneiap.github.io/siea/eventos.html" class="btn btn-access" target="_blank">Acceder al sitio</a>
+                        <button class="btn btn-copy" onclick="copyLink('https://aneiap.github.io/siea/eventos.html', this)">Copiar enlace</button>
+                    </div>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-info">
+                        <span class="link-label">Solicitud de piezas publicitarias</span>
+                        <span class="link-url">https://aneiap.github.io/siea/piezas.html</span>
+                    </div>
+                    <div class="button-group">
+                        <a href="https://aneiap.github.io/siea/piezas.html" class="btn btn-access" target="_blank">Acceder al sitio</a>
+                        <button class="btn btn-copy" onclick="copyLink('https://aneiap.github.io/siea/piezas.html', this)">Copiar enlace</button>
+                    </div>
+                </div>
+            </div>
+            
+            <p>Le solicitamos actualizar los marcadores de su navegador y actualizar los registros o acortadores locales que apunten a las versiones anteriores del sistema.</p>
+        </div>
 
-      // Devolvemos la clave generada como resultado.
-      return claveGenerada;
-    }
+        <div class="footer">
+            Administración del Sistema SIEA &copy; ANEIAP
+        </div>
+    </div>
 
-    function registrarEvento() {
-
-      // Validar que todos los campos estén llenos
-      var camposValidos = validarCamposRegistrarReserva();
-
-      // Si todos los campos están llenos, proceder con la reserva
-      if (camposValidos) {
-        // Verificar si la fecha del evento es válida (mayor a la fecha actual)
-        var fechaEvento = new Date(document.getElementById("fecha-evento").value);
-        var horaEvento = new Date(document.getElementById("hora-evento").value);
-        console.log("horaEvento: " + horaEvento);
-        console.log("duracionEvento: " + duracionEvento);
-        var duracionEvento = new Date(document.getElementById("duracion-evento").value);
-
-        var fechaActual = new Date();
-        console.log("Fecha actual antes de restar un día:", fechaActual);
-        fechaActual.setDate(fechaActual.getDate() - 2); // Restar 2 días a la fecha actual
-        var fechaActualISOS = fechaActual.toISOString().slice(0, 10);
-        console.log("Fecha actual en formato ISO después de restar un día:", fechaActualISOS);
-        fechaActual.setDate(fechaActual.getDate() + 1); // Recuperar (sumar) 1 día a la fecha actual
-        console.log("Fecha actual después de restar un día:", fechaActual);
-
-        var emailOrganizador = document.getElementById("email-organizador").value;
-        // Verificar si el correo es igual a "aneiap_nacional@aneiap.co"
-        if (emailOrganizador === "aneiap_nacional@aneiap.co") {
-          Swal.fire({
-            title: '¡CORREO PROHIBIDO!',
-            text: 'El correo aneiap_nacional@aneiap.co no puede ser organizador, recuerda que acá va el correo de quien es el organizador. Por favor, utiliza un correo diferente.',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener la edición de la reserva
-        }
-
-        // Verificar si el correo comienza con "capitulo" o "directivos"
-        if (emailOrganizador.toLowerCase().startsWith("capitulo") || emailOrganizador.toLowerCase().startsWith("directivos")) {
-          Swal.fire({
-            title: '¡CORREO PROHIBIDO!',
-            text: 'Los correos que comienzan con "capitulo" o "directivos" están prohibidos para ser organizador, recuerda que solo el correo del organizador es lo que se escribe acá. Por favor, utiliza un correo diferente.',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener la edición de la reserva
-        }
-
-        // Verificar si el correo termina con "@aneiap.co"
-        if (!emailOrganizador.toLowerCase().endsWith("@aneiap.co")) {
-            Swal.fire({
-                title: '¡CORREO INCORRECTO!',
-                text: 'El correo electrónico debe terminar con "@aneiap.co". Por favor, utiliza un correo válido.',
-                icon: 'warning',
-                confirmButtonText: 'Aceptar',
-                imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-                imageWidth: 120, // Ancho de la imagen en píxeles
-                imageHeight: 235, // Alto de la imagen en píxeles
-                imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
+    <script>
+        function copyLink(url, button) {
+            navigator.clipboard.writeText(url).then(() => {
+                const originalText = button.innerText;
+                button.innerText = "¡Copiado!";
+                button.classList.add("copied");
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove("copied");
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar el enlace: ', err);
             });
-            return; // Detener la edición de la reserva
         }
-
-        // Verificar que el correo sea de alguien de la jdn cuando se reserve a nivel nacional ya que estos eventos bloquean el calendario de todos los capítulos.
-        var capitulo = document.getElementById("capitulo-organizador").value;
-        if (capitulo === "nacional" && capituloUsuario !== "nacional") {
-          console.log("el usuario quiere reservar a nivel nacional.")
-          Swal.fire({
-            title: '¡NO TIENES PERMISOS PARA RESERVAR A NIVEL NACIONAL!',
-            text: 'Solo los homólogos nacionales (junta nacional) tienen permiso para reservar a nivel nacional, si deseas hacer una reserva nacional, contáctate con ellos.',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener la edición de la reserva
-        }
-
-        // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
-        if ((fechaEvento < fechaActual) || (fechaEvento < fechaActualISOS)) {
-          Swal.fire({
-            title: '¡FECHA INCORRECTA!',
-            text: 'Debes reservar al menos con UN (1) día de anticipación, debes reiniciar la plataforma y volver a llenar la información, si ya se venció el plazo y deseas hacerlo igualmente, contacta al administrador.',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener el registro del evento
-        }
-
-        // Verificar el formato del teléfono del organizador (debe empezar por 3 y tener 10 dígitos)
-        var telefonoOrganizador = document.getElementById("telefono-organizador").value;
-        var telefonoOrganizadorRegex = /^(?:3\d{9})(?: (?:3\d{9}))*$/;
-
-        // Validación de datos para que el teléfono del organizador efectivamente sea un celular válido.
-        if (!telefonoOrganizadorRegex.test(telefonoOrganizador)) {
-          Swal.fire({
-            title: '¡TELÉFONO DEL ORGANIZADOR INCORRECTO!',
-            text: 'Digita un número de teléfono válido.',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-            imageWidth: 120, // Ancho de la imagen en píxeles
-            imageHeight: 235, // Alto de la imagen en píxeles
-            imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-          });
-          return; // Detener el registro del evento
-        }
-
-        // Verificar el formato del teléfono del ponente (si fue diligenciado)
-        var telefonoPonente = document.getElementById("telefono-ponente").value;
-        // En caso de haber diligenciado el teléfono del ponente, valida que sea una celular válido.
-        if (telefonoPonente !== "") {
-          var telefonoPonenteRegex = /^(?:3\d{9})(?: (?:3\d{9}))*$/;
-
-          if (!telefonoPonenteRegex.test(telefonoPonente)) {
-            Swal.fire({
-              title: '¡TELÉFONO DEL PONENTE INCORRECTO!',
-              text: 'Digita un número de teléfono válido.',
-              icon: 'warning',
-              confirmButtonText: 'Aceptar',
-              imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-            });
-            return; // Detener el registro del evento
-          }
-        }
-
-          // Obtener el enlace del usuario
-          var enlaceGoogleDrive = document.getElementById("foto-ponente").value;
-          // Expresión regular para verificar el formato del enlace de Google Drive
-          var enlaceGoogleDriveRegex = /^https:\/\/drive\.google\.com\/.*$/;
-          var publicidadComite = document.getElementById("publicidad-comite").value
-
-          // Validar el enlace utilizando la expresión regular
-          if (publicidadComite === "si") {
-          if (enlaceGoogleDrive !== "") {
-          if (!enlaceGoogleDriveRegex.test(enlaceGoogleDrive)) {
-            Swal.fire({
-              title: "¡ENLACE INVÁLIDO!",
-              text: "Por favor, ingresa un enlace de Google Drive válido para la foto del ponente.",
-              icon: "warning",
-              confirmButtonText: 'Aceptar',
-              imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png', // URL de la imagen
-              imageWidth: 120, // Ancho de la imagen en píxeles
-              imageHeight: 235, // Alto de la imagen en píxeles
-              imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-            });
-            return; // Detener el registro del evento
-            }
-          }
-
-          }
-
-        // Si todas las verificaciones son exitosas, continuar con el registro del evento
-        //PRIMERO VERIFICA QUE HAYA DISPONIBILIDAD PARA CUANDO INGRESÓ LA FECHA, HORA Y DURACIÓN
-        verificarDisponibilidadRegistro().then(function(result) {
-          if (!result) {
-          // Si no se muestra ningún swal.fire, ejecuta el código a continuación
-          } else {
-            // Generar clave evento aleatoria de 10 caracteres (mayúsculas y números)
-            var claveEvento = generarClaveEvento();
-            // ACÁ EMPIEZA EL PROCESO PARA INSERTAR LA DATA EN LA BASE DE DATOS.
-            // Obtenemos todos los campos individualmente
-            var nombreEvento = document.getElementById("nombre-evento").value;
-            var fechaEvento = document.getElementById("fecha-evento").value;
-            var horaEvento = document.getElementById("hora-evento").value;
-            var duracionEvento = document.getElementById("duracion-evento").value;
-            var modalidadEvento = document.getElementById("modalidad-evento").value;
-            var ubicacionPlataforma = document.getElementById("ubicacion-plataforma").value;
-            var lugarPresencial = document.getElementById("lugar-presencial").value;
-            var planEvento = document.getElementById("plan-evento").value;
-            var observacionesEvento = document.getElementById("observaciones-evento").value;
-            var nombreOrganizador = document.getElementById("nombre-organizador").value;
-            var emailOrganizador = document.getElementById("email-organizador").value;
-            var capitulo = document.getElementById("capitulo-organizador").value;
-            var telefonoOrganizador = document.getElementById("telefono-organizador").value;
-            var nombrePonente = document.getElementById("nombre-ponente").value;
-            var emailPonente = document.getElementById("email-ponente").value;
-            var telefonoPonente = document.getElementById("telefono-ponente").value;
-            var publicidadComite = document.getElementById("publicidad-comite").value;
-            var observacionesPublicidad = document.getElementById("observaciones-publicidad").value;
-            var fotoPonenteURL = document.getElementById("foto-ponente").value;
-
-            if (publicidadComite === "si") {
-              // Mostrar swal.fire para que el usuario seleccione la opción de publicidad
-              swal.fire({
-                  title: '¿Desea enviar la solicitud de publicidad a nivel nacional o capitular?',
-                  showDenyButton: true,
-                  showCloseButton: false, // Oculta el botón de cerrar
-                  allowOutsideClick: false, // Impide cerrar haciendo clic afuera
-                  confirmButtonText: `Nacional`,
-                  denyButtonText: `Capitular`,
-              }).then((result) => {
-                  if (result.isConfirmed) {
-                      // Si el usuario elige enviar a nivel nacional
-                      console.log("El usuario seleccionó publicidad a nivel nacional.");
-                      enviarSolicitudPublicidadRegistroEmailJS(claveEvento, "si");
-                      agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-                      console.log("Llamando a enviarCorreoRegistroEmailJS para publicidad nacional.");
-                      enviarCorreoRegistroEmailJS(claveEvento);
-                  } else if (result.isDenied) {
-                      // Si el usuario elige enviar a nivel capitular
-                      console.log("El usuario seleccionó publicidad a nivel capitular.");
-                      enviarSolicitudPublicidadRegistroEmailJS(claveEvento, "no");
-                      console.log("Terminando de llamar a enviarCorreoRegistroEmailJS para publicidad capitular.");
-                      agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-                      console.log("Llamando a enviarCorreoRegistroEmailJS para publicidad capitular.");
-                      enviarCorreoRegistroEmailJS(claveEvento);
-                  }
-              });
-            } else {
-              console.log("No se solicitó publicidad, se procede a enviar el correo de confirmación directamente.");
-              agregarEventoFirestore(nombreEvento, claveEvento, fechaEvento, horaEvento, duracionEvento, modalidadEvento, ubicacionPlataforma, lugarPresencial, planEvento, observacionesEvento, nombreOrganizador, emailOrganizador, capitulo, telefonoOrganizador, nombrePonente, emailPonente, telefonoPonente, publicidadComite, observacionesPublicidad, fotoPonenteURL);
-              console.log("Llamando a enviarCorreoRegistroEmailJS sin publicidad.");
-              enviarCorreoRegistroEmailJS(claveEvento);
-            }
-
-          }
-        }).catch(function(error) {
-            // Maneja cualquier error que pueda ocurrir durante la verificación
-            console.error("Error al verificar la disponibilidad:", error);
-        }); 
-        }
-    }
-
-    // Esta función permite la acción de mostrar un mensaje de éxito al momento de registrar una reserva.        
-    function mostrarMensajeReservar() {
-      Swal.fire({
-      title: '¡RESERVA COMPLETADA!',
-      text: 'Su reserva ha sido registrada y APROBADA con ÉXITO, revisa tu correo para confirmar la reserva y obtener tu CLAVE de evento.',
-      icon: 'success',
-      showConfirmButton: true, // Muestra el botón de confirmación
-      allowOutsideClick: false, // Bloquea la interacción fuera del mensaje emergente
-      allowEscapeKey: false, // Bloquea la interacción con la tecla Esc
-      imageUrl: 'https://i.ibb.co/r31wpYT/AVATAR-EXITO-removebg-preview.png', // URL de la imagen
-      imageWidth: 120, // Ancho de la imagen en píxeles
-      imageHeight: 235, // Alto de la imagen en píxeles
-      imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-      }).then((result) => {
-      // Esta función se ejecutará después de que el usuario haga clic en el botón de confirmación
-      });
-    }
-
-    // Esta función verifica si hacen falta campos obligatorios en la sección "REGISTRAR RESERVA" y en caso de hacer 
-    // falta arrojará una alerta diciendo que hacen falta campos y te dirá también cuáles campos son los que faltan.
-    function validarCamposRegistrarReserva() {
-      // Obtener los valores de los campos
-      var nombreEvento = document.getElementById("nombre-evento").value;
-      var fechaEvento = document.getElementById("fecha-evento").value;
-      var horaEvento = document.getElementById("hora-evento").value;
-      var duracionEvento = document.getElementById("duracion-evento").value;
-      var modalidadEvento = document.getElementById("modalidad-evento").value;
-      var ubicacionPlataforma = document.getElementById("ubicacion-plataforma").value;
-      var lugarPresencial = document.getElementById("lugar-presencial").value;
-      var planEvento = document.getElementById("plan-evento").value;
-      var observacionesEvento = document.getElementById("observaciones-evento").value;
-      var nombreOrganizador = document.getElementById("nombre-organizador").value;
-      var emailOrganizador = document.getElementById("email-organizador").value;
-      var capitulo = document.getElementById("capitulo-organizador").value;
-      var telefonoOrganizador = document.getElementById("telefono-organizador").value;
-      var nombrePonente = document.getElementById("nombre-ponente").value;
-      var emailPonente = document.getElementById("email-ponente").value;
-      var telefonoPonente = document.getElementById("telefono-ponente").value;
-      var publicidadComite = document.getElementById("publicidad-comite").value.toLowerCase();
-      var fotoPonente = document.getElementById("foto-ponente").value;
-
-      // Lista para almacenar los campos faltantes
-      var camposFaltantes = [];
-
-      // Verificar qué campos están vacíos y agregar sus nombres a la lista
-      if (nombreEvento.trim() === "") {
-        camposFaltantes.push("Nombre del evento");
-      }
-      if (fechaEvento.trim() === "") {
-        camposFaltantes.push("Fecha del evento");
-      }
-      if (horaEvento.trim() === "") {
-        camposFaltantes.push("Hora del evento");
-      }
-      if (duracionEvento.trim() === "") {
-        camposFaltantes.push("Duración del evento");
-      }
-      if (modalidadEvento.trim() === "") {
-        camposFaltantes.push("Modalidad del evento");
-      }
-      if (ubicacionPlataforma.trim() === "" && lugarPresencial.trim() === "") {
-            camposFaltantes.push("Ubicación en plataforma o Lugar presencial");
-        }
-      if (planEvento.trim() === "") {
-        camposFaltantes.push("Plan del evento");
-      }
-      if (nombreOrganizador.trim() === "") {
-        camposFaltantes.push("Nombre del organizador");
-      }
-      if (emailOrganizador.trim() === "") {
-        camposFaltantes.push("Email del organizador");
-      }
-      if (capitulo.trim() === "") {
-        camposFaltantes.push("Capítulo");
-      }
-      if (telefonoOrganizador.trim() === "") {
-        camposFaltantes.push("Teléfono del organizador");
-      }
-      if (nombrePonente.trim() === "") {
-        camposFaltantes.push("Nombre del ponente");
-      }
-      if (publicidadComite === "") {
-          camposFaltantes.push("Publicidad SÍ/NO");
-      }   
-      if (publicidadComite === "si" && fotoPonente.trim() === "") {
-        camposFaltantes.push("Foto del ponente");
-      }
-
-      // Mostrar la alerta si hay campos faltantes con la concatenación de los campos faltantes.
-      if (camposFaltantes.length > 0) {
-        var mensaje = "Faltan campos por diligenciar:\n";
-        for (var i = 0; i < camposFaltantes.length; i++) {
-          mensaje += "- " + camposFaltantes[i] + "\n";
-        }
-
-        Swal.fire({
-          title: '¡FALTAN CAMPOS POR DILIGENCIAR EN TU RESERVA!',
-          text: mensaje,
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: true,
-          backdrop: true,  
-          allowEscapeKey: true,
-          imageUrl: 'https://i.ibb.co/CBcrYmF/AVATAR-FALTANCAMPOS-removebg-preview.png', // URL de la imagen
-          imageWidth: 120, // Ancho de la imagen en píxeles
-          imageHeight: 235, // Alto de la imagen en píxeles
-          imagePosition: 'top-start' // Posición de la imagen ('top-start', 'top', 'top-end', 'center', 'center-start', 'center-end', 'bottom-start', 'bottom', 'bottom-end')
-        });
-        return false;
-      }
-
-      return true; // Todos los campos están llenos
-    }
-
-    function obtenerCorreoRegistrar(correoElectronico, capitulo) {
-        // Banco de correos asociados a cada capítulo
-        const bancoCorreos = {
-            uniguajira: "academico_uniguajira@aneiap.co, interventoria_uniguajira@aneiap.co",
-            unimagdalena: "academico_unimagdalena@aneiap.co",
-            usasm: "academico_usasm@aneiap.co, interventoria_usasm@aneiap.co",
-            unicaribe: "academico_unicaribe@aneiap.co, interventoria_unicaribe@aneiap.co",
-            uniatlantico: "academico_uniatlantico@aneiap.co",
-            uninorte: "academico_uninorte@aneiap.co, interventoria_uninorte@aneiap.co",
-            unisimon: "academico_unisimon@aneiap.co, interventoria_unisimon@aneiap.co",
-            cuc: "academico_cuc@aneiap.co, interventoria_cuc@aneiap.co",
-            librequilla: "academico_librequilla@aneiap.co",
-            utb: "academico_utb@aneiap.co",
-            upbmonteria: "academico_upbmonteria@aneiap.co, interventoria_upbmonteria@aneiap.co",
-            unicordoba: "academico_unicordoba@aneiap.co, interventoria_unicordoba@aneiap.co",
-            ufps: "academico_ufps@aneiap.co, interventoria_ufps@aneiap.co",
-            unalmed: "academico_unalmed@aneiap.co",
-            udea: "academico_udea@aneiap.co",
-            upbmed: "academico_upbmed@aneiap.co",
-            utp: "academico_utp@aneiap.co, interventoria_utp@aneiap.co",
-            unalma: "academico_unalma@aneiap.co, interventoria_unalma@aneiap.co",
-            udistrital: "academico_udistrital@aneiap.co",
-            unalbog: "academico_unalbog@aneiap.co",
-            univalle: "academico_univalle@aneiap.co",
-            icesi: "academico_icesi@aneiap.co",
-            uao: "academico_uao@aneiap.co, interventoria_uao@aneiap.co",
-            usc: "academico_usc@aneiap.co, interventoria_usc@aneiap.co",
-            nacional: "academico@aneiap.co, interventoria@aneiap.co"
-        };
-
-        // Correo de usuario y correos asociados al capítulo
-        const correosUsuario = correoElectronico ? correoElectronico + ", " : "";
-        const correosCapitulo = bancoCorreos[capitulo.toLowerCase()] || "";
-
-        // Devolver todos los correos concatenados
-        return correosUsuario + correosCapitulo;
-    }
-
-    // Función para enviar el correo de edición de reserva
-    function enviarCorreoRegistro(claveReservaCreada) {
-      // Obtener el correo del organizador para enviarle el correo
-      const correoDestino = document.getElementById("email-organizador").value;
-      const claveReserva = claveReservaCreada;
-
-      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
-      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
-      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-      const asunto = `Confirmación de registro de reserva - Clave: ${claveReserva}`;
-
-      // Datos adicionales de la reserva
-      const nombreOrganizadorReserva= document.getElementById("nombre-organizador").value;
-      const nombreEventoReserva= document.getElementById("nombre-evento").value;
-      const fechaReserva = document.getElementById("fecha-evento").value;
-      const horaReserva = document.getElementById("hora-evento").value;
-      const duracionReserva = document.getElementById("duracion-evento").value;
-      const planEvento = document.getElementById("plan-evento").value;
-      const capitulo = document.getElementById("capitulo-organizador").value;
-      const modalidadReserva = document.getElementById("modalidad-evento").value;
-      const nombrePonente = document.getElementById("nombre-ponente").value;
-      const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
-      const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad").value;
-      const fotoPonenteURLReserva = document.getElementById("foto-ponente").value;
-      const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma").value;
-      const lugarPresencialReserva = document.getElementById("lugar-presencial").value;
-
-      const destinatario = obtenerCorreoRegistrar(correoDestino, capitulo); // Reemplaza con la dirección de correo del destinatario junto al bancoCorreos
-
-      // Convertir duración a formato horas + minutos
-      const duracionHoras = Math.floor(duracionReserva / 60);
-      const duracionMinutos = duracionReserva % 60;
-
-      // Convertir minutos a formato militar (HH:MM)
-      const horasMilitar = Math.floor(horaReserva / 60);
-      const minutosMilitar = horaReserva % 60;
-      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
-
-      // Datos adicionales para la publicidad
-      let publicidad = "";
-      if (publicidadComiteReserva === "si") {
-        publicidad = `
-          <p>El organizador ha solicitado la realización de la publicidad para el evento. A continuación, se adjuntan las observaciones:</p>
-          <p>${observacionesPublicidadReserva}</p>
-          <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
-        `;
-      }
-
-      // Mensaje de correo con los datos adicionales
-      const mensaje = `
-        <html>
-          <body>
-            <h1 style="color: #007BFF;">Su registro de reserva ha sido confirmado ☑️</h1>
-            <p>Estimado(a) <strong>${nombreOrganizadorReserva}</strong>,</p>
-            <p>Le confirmamos que su registro de reserva para el evento <strong>${nombreEventoReserva}</strong> ha sido procesado correctamente.</p>
-            <p>A continuación, encontrará los detalles de su reserva:</p>
-            <ul>
-              <li><strong>Clave de la reserva:</strong> ${claveReserva}</li>
-              <li><strong>Fecha de la reserva:</strong> ${fechaReserva}</li>
-              <li><strong>Hora de la reserva:</strong> ${horaMilitar}</li>
-              <li><strong>Capítulo:</strong> ${capitulo}</li>
-              <li><strong>Duración de la reserva:</strong> ${duracionHoras} hora(s) ${duracionMinutos} minuto(s)</li>
-              <li><strong>Plan del evento:</strong> ${planEvento}</li>
-              <li><strong>Modalidad de la reserva:</strong> ${modalidadReserva}</li>
-              ${modalidadReserva === "virtual" ? `<li><strong>Plataforma:</strong> ${ubicacionPlataformaReserva}</li>` : `<li><strong>Ubicación/Salón:</strong> ${lugarPresencialReserva}</li>`}
-              <li><strong>Nombre del ponente:</strong> ${nombrePonente}</li>
-            </ul>
-            ${publicidad}
-            <p>Si tiene alguna pregunta, inquietud o necesita asistencia adicional, no dude en <a href="http://wa.me/3002252099" target="_blank">hacer clic aquí</a> para comunicarse con nosotros a través de WhatsApp.</p>
-            <p>Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚</p>
-            <p>Agradecemos su confianza en nosotros, recuerde que este correo es automático y NO debe ser respondido. Esperamos seguir construyendo A.L.M.A. 💙💚</p>
-            <p style="font-style: italic;">Cordialmente,</p>
-            <p style="font-style: italic;">Alessandro Villanueva Cantillo</p>
-            <p style="font-style: italic;">Administrador y creador SIEA</p>
-          </body>
-        </html>
-      `;
-
-      Email.send({
-        Host: emailHost,
-        Username: emailUsername,
-        Password: emailPassword,
-        To: `${destinatario}, siea@aneiap.co`, // Usuario que está registrando la reserva
-     //   Cc: "siea@aneiap.co", // Copia a siea para siempre tener registro de correos
-        From: emailUsername, // Debería ser la misma dirección de correo de Username
-        Subject: asunto,
-        Body: mensaje,
-        ContentType: "text/html", // Indicar que el mensaje es de tipo HTML
-      })
-        .then((message) => {
-          console.log("Mensaje de SMTPJS:", message);
-
-            // Limpia los campos del formulario después de registrar el evento
-            document.getElementById("nombre-evento").value = "";
-            document.getElementById("fecha-evento").value = "";
-            document.getElementById("hora-evento").value = "";
-            document.getElementById("duracion-evento").value = "";
-            document.getElementById("modalidad-evento").value = "";
-            document.getElementById("ubicacion-plataforma").value = "";
-            document.getElementById("lugar-presencial").value = "";
-            document.getElementById("plan-evento").value = "";
-            document.getElementById("observaciones-evento").value = "";
-            document.getElementById("nombre-organizador").value = "";
-            document.getElementById("email-organizador").value = "";
-            document.getElementById("email-organizador").value = "";
-            document.getElementById("telefono-organizador").value = "";
-            document.getElementById("nombre-ponente").value = "";
-            document.getElementById("email-ponente").value = "";
-            document.getElementById("telefono-ponente").value = "";
-            document.getElementById("publicidad-comite").value = "";
-            document.getElementById("observaciones-publicidad").value = "";
-            document.getElementById("foto-ponente").value = "";
-
-          if (message === "OK") {
-            console.log("Correo enviado con éxito");
-            // Puedes eliminar la alerta ya que no es necesaria
-          } else {
-            console.error("Error al enviar el correo:", message);
-            // Puedes manejar el error de otra manera si lo deseas
-          }
-        })
-        .catch((error) => {
-          console.error("Error en la función de envío de correo:", error);
-          // Puedes manejar el error de otra manera si lo deseas
-        });
-    }
-
-    //ALESSANDRO
-    // Función para enviar el correo de confirmación de registro de la reserva usando EmailJS
-    function enviarCorreoRegistroEmailJS(claveReservaCreada) {
-        emailjs.init("2vq1EFo6RmswvD4Ey");
-        console.log("Función enviarCorreoRegistroEmailJS llamada");
-
-        const correoOrganizador = document.getElementById("email-organizador").value;
-        const capitulo = document.getElementById("capitulo-organizador").value;
-        const destinatario = obtenerCorreoRegistrar(correoOrganizador, capitulo) + ", siea@aneiap.co";;
-
-        const subject = `Confirmación de registro de reserva - Clave: ${claveReservaCreada}`;
-        const modalidad = document.getElementById("modalidad-evento").value;
-        const ubicacionOPlataforma = modalidad === "virtual" ? 
-            document.getElementById("ubicacion-plataforma").value || "" : 
-            document.getElementById("lugar-presencial").value || "";
-
-        // Verificar URL de la foto del ponente
-        const fotoPonenteURL = document.getElementById("foto-ponente").value || "";
-        const fotoPonenteTexto = fotoPonenteURL ? "Link de la foto del ponente: " : "";
-
-        // Parámetros para la plantilla de confirmación de reserva
-        const params = {
-            tituloCorreo: "Su registro de reserva ha sido confirmado ☑️",
-            saludoInicial: `Estimado(a) ${document.getElementById("nombre-organizador").value}`,
-            mensajeIntroduccion: `Le confirmamos que su registro de reserva para el evento "${document.getElementById("nombre-evento").value}" ha sido procesado correctamente.`,
-            claveEventoReserva: claveReservaCreada || "",
-            fechaReserva: document.getElementById("fecha-evento").value || "",
-            horaReserva: `${Math.floor(document.getElementById("hora-evento").value / 60)
-                .toString().padStart(2, "00")}:${(document.getElementById("hora-evento").value % 60)
-                .toString().padStart(2, "00")}` || "",
-            duracionEvento: `${Math.floor(document.getElementById("duracion-evento").value / 60)} hora(s) ${document.getElementById("duracion-evento").value % 60} minuto(s)`,
-            planEvento: document.getElementById("plan-evento").value || "",
-            observacionesReserva: document.getElementById("observaciones-evento").value || "No se especificaron observaciones.",
-            capitulo: capitulo || "",
-            modalidadReserva: modalidad || "",
-            ubicacionOPlataforma: ubicacionOPlataforma,
-            nombrePonente: document.getElementById("nombre-ponente").value || "",
-            mensajePublicidad: document.getElementById("publicidad-comite").value === "si" ? "El organizador ha solicitado la realización de la publicidad para el evento." : "",
-            observacionesPublicidad: document.getElementById("observaciones-publicidad").value ? `Observaciones de la publicidad: ${document.getElementById("observaciones-publicidad").value}` : "",
-            fotoPonenteTexto: fotoPonenteTexto,
-            fotoPonenteURL: fotoPonenteURL,
-            mensajeFinal: "Recuerde que todas las claves son personales e intransferibles, no las comparta con nadie. 💙💚",
-            despedida: "Cordialmente, Alessandro Villanueva Cantillo - Administrador y creador SIEA",
-            to_email: destinatario,
-            //to_email: "avillanuevacantillo@gmail.com",
-            subject: subject
-        };
-
-        emailjs.send("siea_6zoabdr", "registro_reservas", params)
-            .then((response) => {
-                console.log("Params enviados a emailjs:", params);
-                console.log("Correo de confirmación de reserva enviado exitosamente", response.status, response.text);
-                alert("Confirmación de reserva enviada exitosamente.");
-            })
-            .catch((error) => {
-                console.error("Error al enviar el correo de confirmación de reserva:", error);
-                alert(`Error al enviar el correo de confirmación de reserva: ${error.text || "Error desconocido"}. Por favor, consulta con el administrador.`);
-            });
-    }
-
-    // Función para enviar el correo de solicitud de publicidad
-    function enviarSolicitudPublicidadRegistro(claveReservaCreada, escogioPublicidadNacional) {
-    // Función para enviar el correo de solicitud de publicidad
-      // Obtener el correo del comité de piezas publicitarias
-      const capitulo = document.getElementById("capitulo-organizador").value;
-      // Banco de correos asociados a cada capítulo
-      const bancoCorreos = {
-        uniguajira: "comunicaciones_uniguajira@aneiap.co",
-        unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
-        usasm: "comunicaciones_usasm@aneiap.co",
-        unicaribe: "comunicaciones_unicaribe@aneiap.co",
-        uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
-        uninorte: "comunicaciones_uninorte@aneiap.co, mariana.murcia@aneiap.co",
-        unisimon: "comunicaciones_unisimon@aneiap.co",
-        cuc: "comunicaciones_cuc@aneiap.co",
-        librequilla: "comunicaciones_librequilla@aneiap.co",
-        utb: "comunicaciones_utb@aneiap.co",
-        upbmonteria: "comunicaciones_upbmonteria@aneiap.co",
-        unicordoba: "comunicaciones_unicordoba@aneiap.co",
-        ufps: "comunicaciones_ufps@aneiap.co",
-        unalmed: "comunicaciones_unalmed@aneiap.co",
-        udea: "comunicaciones_udea@aneiap.co",
-        upbmed: "comunicaciones_upbmed@aneiap.co",
-        utp: "comunicaciones_utp@aneiap.co",
-        unalma: "comunicaciones_unalma@aneiap.co",
-        udistrital: "comunicaciones_udistrital@aneiap.co",
-        unalbog: "comunicaciones_unalbog@aneiap.co",
-        univalle: "comunicaciones_univalle@aneiap.co",
-        icesi: "comunicaciones_icesi@aneiap.co",
-        uao: "comunicaciones_uao@aneiap.co",
-        usc: "comunicaciones_usc@aneiap.co",
-        nacional: "proy_diseno_nacional@aneiap.co"
-      };
-
-      // Obtener el correo de destino dependiendo de la elección del usuario
-      let correoDestino = "";
-      if (escogioPublicidadNacional === "no") {
-          // Obtener el correo del comité de piezas publicitarias del capítulo
-          correoDestino = bancoCorreos[capitulo];
-      } else if (escogioPublicidadNacional === "si") {
-          // Enviar la solicitud al comité de piezas publicitarias nacional
-          correoDestino = "proy_diseno_nacional@aneiap.co";
-      }
-
-      // Datos adicionales de la solicitud de publicidad
-      const emailOrganizadorReserva = document.getElementById("email-organizador").value;
-      const nombreOrganizadorReserva = document.getElementById("nombre-organizador").value;
-      const nombreEventoReserva= document.getElementById("nombre-evento").value;
-      const fechaReserva = document.getElementById("fecha-evento").value;
-      const horaReserva = document.getElementById("hora-evento").value;
-      const planEvento = document.getElementById("plan-evento").value;
-      const nombrePonente = document.getElementById("nombre-ponente").value;
-      const publicidadComiteReserva = document.getElementById("publicidad-comite").value;
-      const observacionesPublicidadReserva = document.getElementById("observaciones-publicidad").value;
-      const fotoPonenteURLReserva = document.getElementById("foto-ponente").value;
-      const modalidadEventoReserva = document.getElementById("modalidad-evento").value;
-      const ubicacionPlataformaReserva = document.getElementById("ubicacion-plataforma").value;
-      const lugarPresencialReserva = document.getElementById("lugar-presencial").value;
-
-      const emailHost = "smtp.elasticemail.com"; // Reemplaza con el servidor SMTP correcto
-      const emailUsername = "siea@aneiap.co"; // Reemplaza con tu nombre de usuario SMTP
-      const emailPassword = "D20D124D2A2129252882BEE9DAC2B79F4E70"; // Reemplaza con tu contraseña SMTP
-      const destinatario = correoDestino; // Reemplaza con la dirección de correo del destinatario
-      const cc = `${emailOrganizadorReserva}, siea@aneiap.co`; // Copia de carbono (CC)
-      const claveReserva = claveReservaCreada;
-      const asunto = `Solicitud de Publicidad para el Espacio - "${nombreEventoReserva}" con clave de reserva terminada en ***********${claveReserva.slice(-4)}`;
-
-      // Convertir minutos a formato militar (HH:MM)
-      const horasMilitar = Math.floor(horaReserva / 60);
-      const minutosMilitar = horaReserva % 60;
-      const horaMilitar = `${horasMilitar.toString().padStart(2, "0")}:${minutosMilitar.toString().padStart(2, "0")}`;
-
-      // Datos adicionales para la publicidad
-      let publicidad = "";
-      publicidad = `
-        <p>El organizador ha solicitado la realización de la publicidad para el evento. A continuación, se adjuntan las observaciones:</p>
-        <p>${observacionesPublicidadReserva}</p>
-        <p>Puede encontrar la foto del ponente en el siguiente enlace: <a href="${fotoPonenteURLReserva}" target="_blank">FOTO PONENTE</a></p>
-      `;
-
-      // Mensaje de correo con los datos para la publicidad
-      const mensaje = `
-        <html>
-          <body>
-            <h1 style="color: #007BFF;">Solicitud de Publicidad para el Evento</h1>
-            <p>Estimado Comité de Piezas Publicitarias,</p>
-            <p>Solicitamos la realización de publicidad para el siguiente evento:</p>
-            <ul>
-              <li><strong>Nombre del Evento:</strong> ${nombreEventoReserva}</li>
-              <li><strong>Fecha del Evento:</strong> ${fechaReserva}</li>
-              <li><strong>Hora del Evento:</strong> ${horaMilitar}</li>
-              <li><strong>Capitulo:</strong> ${capitulo}</li>
-              <li><strong>Plan del Evento:</strong> ${planEvento}</li>
-              <li><strong>Nombre del Ponente:</strong> ${nombrePonente}</li>
-              <li><strong>Modalidad:</strong> ${modalidadEventoReserva}</li>
-              ${
-                modalidadEventoReserva === "presencial"
-                  ? `<li><strong>Ubicación:</strong> ${lugarPresencialReserva}</li>`
-                  : `<li><strong>Plataforma:</strong> ${ubicacionPlataformaReserva}</li>`
-              }
-            </ul>
-            ${publicidad}
-            <p>Por favor, revise esta solicitud y proporcione detalles sobre la publicidad requerida.</p>
-            <p>Si tiene alguna pregunta o necesita información adicional, no dude en ponerse en contacto con nosotros.</p>
-            <p>Recuerde que esta es una solicitud de publicidad proveniente de una RESERVA NUEVA y no contiene datos privados de la reserva.</p>
-            <p>La pieza publicitaria debe ser enviada como respuesta a TODOS los destinatarios de este correo.</p>
-            <p>Atentamente,</p>
-            <p>${nombreOrganizadorReserva}</p>
-            <p style="font-style: italic;">Organizador de la reserva</p>
-          </body>
-        </html>
-      `;
-
-      Email.send({
-        Host: emailHost,
-        Username: emailUsername,
-        Password: emailPassword,
-        To: destinatario,
-        Cc: cc,
-        From: emailUsername,
-        Subject: asunto,
-        Body: mensaje,
-        ContentType: "text/html",
-      })
-        .then((message) => {
-          console.log("Mensaje de SMTPJS:", message);
-
-          if (message === "OK") {
-            console.log("Correo enviado con éxito");
-          } else {
-            console.error("Error al enviar el correo:", message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error en la función de envío de correo:", error);
-        });
-    }
-
-    function escogerCorreoDestino(capitulo, escogioPublicidadNacional, correoOrganizador) {
-        // Banco de correos asociados a cada capítulo
-        const bancoCorreos = {
-            uniguajira: "comunicaciones_uniguajira@aneiap.co",
-            unimagdalena: "comunicaciones_unimagdalena@aneiap.co",
-            usasm: "comunicaciones_usasm@aneiap.co",
-            unicaribe: "comunicaciones_unicaribe@aneiap.co",
-            uniatlantico: "comunicaciones_uniatlantico@aneiap.co",
-            uninorte: "comunicaciones_uninorte@aneiap.co, mariana.murcia@aneiap.co",
-            unisimon: "comunicaciones_unisimon@aneiap.co",
-            cuc: "comunicaciones_cuc@aneiap.co",
-            librequilla: "comunicaciones_librequilla@aneiap.co",
-            utb: "comunicaciones_utb@aneiap.co",
-            upbmonteria: "comunicaciones_upbmonteria@aneiap.co",
-            unicordoba: "comunicaciones_unicordoba@aneiap.co",
-            ufps: "comunicaciones_ufps@aneiap.co",
-            unalmed: "comunicaciones_unalmed@aneiap.co",
-            udea: "comunicaciones_udea@aneiap.co",
-            upbmed: "comunicaciones_upbmed@aneiap.co",
-            utp: "comunicaciones_utp@aneiap.co",
-            unalma: "comunicaciones_unalma@aneiap.co",
-            udistrital: "comunicaciones_udistrital@aneiap.co",
-            unalbog: "comunicaciones_unalbog@aneiap.co",
-            univalle: "comunicaciones_univalle@aneiap.co",
-            icesi: "comunicaciones_icesi@aneiap.co",
-            uao: "comunicaciones_uao@aneiap.co",
-            usc: "comunicaciones_usc@aneiap.co",
-            nacional: "proy_diseno_nacional@aneiap.co"
-        };
-
-        // Obtener el correo de destino dependiendo de la elección del usuario
-        let correoDestino = "";
-        if (escogioPublicidadNacional === "no") {
-            // Obtener el correo del comité de piezas publicitarias del capítulo
-            correoDestino = bancoCorreos[capitulo.toLowerCase()] || "";
-        } else if (escogioPublicidadNacional === "si") {
-            // Enviar la solicitud al comité de piezas publicitarias nacional
-            correoDestino = "proy_diseno_nacional@aneiap.co";
-        }
-
-        // Añadir el correo del organizador como destinatario
-        if (correoDestino) {
-            correoDestino = `${correoOrganizador}, ${correoDestino}`;
-        } else {
-            correoDestino = correoOrganizador; // Solo el organizador si no hay correo del capítulo
-        }
-
-        return correoDestino;
-    }
-
-    //ALESSANDRO
-    // Función para enviar el correo de solicitud de publicidad de la reserva usando EmailJS
-    function enviarSolicitudPublicidadRegistroEmailJS(claveReservaCreada, escogioPublicidadNacional) {
-        emailjs.init("2vq1EFo6RmswvD4Ey");
-
-        const correoOrganizador = document.getElementById("email-organizador").value;
-        const capitulo = document.getElementById("capitulo-organizador").value;
-        const correoDestino = escogerCorreoDestino(capitulo, escogioPublicidadNacional, correoOrganizador);
-        const subject = `Solicitud de Publicidad para el Espacio - "${document.getElementById("nombre-evento").value}" con clave de reserva terminada en ***********${claveReservaCreada.slice(-4)}`;
-        const modalidad = document.getElementById("modalidad-evento").value;
-        const ubicacionOPlataforma = modalidad === "presencial" ? 
-            document.getElementById("lugar-presencial").value || "" : 
-            document.getElementById("ubicacion-plataforma").value || "";
-
-        // Verificar URL de la foto del ponente
-        const fotoPonenteURL = document.getElementById("foto-ponente").value.trim();
-        const fotoPonenteTexto = fotoPonenteURL ? "Link de la foto del ponente: " : "";
-        // Log para verificar el valor de fotoPonenteURL
-        console.log("Foto Ponente URL:", fotoPonenteURL);
-
-        // Parámetros para la plantilla de solicitud de publicidad
-        const params = {
-            tituloCorreo: "Solicitud de Publicidad para el Evento",
-            saludoInicial: "Estimado Comité de Piezas Publicitarias",
-            mensajeIntroduccion: "Solicitamos la realización de publicidad para el siguiente evento:",
-            claveEventoReserva: "***********" + claveReservaCreada.slice(-4),
-            fechaReserva: document.getElementById("fecha-evento").value || "",
-            horaReserva: `${Math.floor(document.getElementById("hora-evento").value / 60)
-                .toString().padStart(2, "00")}:${(document.getElementById("hora-evento").value % 60)
-                .toString().padStart(2, "00")}` || "",
-            duracionEvento: `${Math.floor(document.getElementById("duracion-evento").value / 60)} hora(s) ${document.getElementById("duracion-evento").value % 60} minuto(s)`,
-            planEvento: document.getElementById("plan-evento").value || "",
-            observacionesReserva: document.getElementById("observaciones-evento").value || "No se especificaron observaciones.",
-            capitulo: capitulo || "",
-            modalidadReserva: modalidad || "",
-            ubicacionOPlataforma: ubicacionOPlataforma,
-            nombrePonente: document.getElementById("nombre-ponente").value || "",
-            mensajePublicidad: "El organizador ha solicitado la realización de la publicidad para el evento.",
-            observacionesPublicidad: document.getElementById("observaciones-publicidad").value ? `Observaciones de la publicidad: ${document.getElementById("observaciones-publicidad").value}` : "No se especificaron observaciones.",
-            fotoPonenteTexto: fotoPonenteTexto,
-            fotoPonenteURL: fotoPonenteURL,
-            mensajeFinal: "Por favor, revise esta solicitud y proporcione detalles sobre la publicidad requerida.",
-            despedida: "Atentamente, organizadores del espacio.",
-            to_email: correoDestino,
-            //to_email: "avillanuevacantillo@gmail.com",
-            subject: subject
-        };
-
-        // Log para verificar los parámetros enviados
-        console.log("Params enviados a emailjs PUBLICIDAD:", params);
-
-        emailjs.send("siea_6zoabdr", "registro_reservas", params)
-            .then((response) => {
-                console.log("Correo de solicitud de publicidad enviado exitosamente", response.status, response.text);
-                alert("Solicitud de publicidad enviada exitosamente.");
-            })
-            .catch((error) => {
-                console.error("Error al enviar la solicitud de publicidad:", error);
-                alert(`Error al enviar la solicitud de publicidad: ${error.text || "Error desconocido"}. Por favor, consulta al administrador.`);
-            });
-    }
-
-    function verificarDisponibilidadRegistro() {
-      return new Promise((resolve, reject) => {
-        var disponibilidadHorarios = Array(28).fill(true); // Inicialmente, todos los intervalos están disponibles
-    
-        // var claveEvento = document.getElementById("clave-evento").value; // ya no es necesario esto
-        var nuevaFecha = document.getElementById("fecha-evento").value;
-        var nuevaHora = Number(document.getElementById("hora-evento").value);
-        var nuevaDuracion = Number(document.getElementById("duracion-evento").value);
-        var nuevoCapitulo = document.getElementById("capitulo-organizador").value;
-    
-        // Validación de datos para que la fecha con la que se registrará el evento sea mayor a la de hoy.
-        if (nuevaDuracion + nuevaHora > 1321) {
-          Swal.fire({
-            title: '¡ESTÁS INTENTANDO RESERVAR DESPUÉS DE LAS 22:00 (10PM)!',
-            text: 'El evento debe estar programado para finalizar a más tardar hasta las 22:00, ve a la duración del mismo y edítala de tal forma que no se excedan las 22:00 (10pm)',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            imageUrl: 'https://i.ibb.co/kJ6gs4J/AVATAR-VALIDACIONDATOS-removebg-preview.png',
-            imageWidth: 120,
-            imageHeight: 235,
-            imagePosition: 'top-start'
-          });
-          resolve(false);
-          return; // Detener el registro del evento
-        }
-    
-        // Realiza una consulta a la base de datos para obtener las reservas en la nueva fecha
-        var reservasRef = firebase.firestore().collection("reservas");
-        var consulta;
-    
-        // Primera consulta: Filtrar por "fechaEvento" igual a "nuevaFecha"
-        if (nuevoCapitulo === "nacional") {
-          // Si se seleccionó "ANEIAP NACIONAL", consultar solo las reservas para toda la Asociación
-          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "==", "nacional");
-        } else {
-          // Consultar las reservas para el capítulo seleccionado y para toda la Asociación (ANEIAP NACIONAL)
-          consulta = reservasRef.where("fechaEvento", "==", nuevaFecha).where("capitulo", "in", [nuevoCapitulo, "nacional"]);
-        }
-    
-        // Realizar el filtrado para obtener intervalos disponibles y no disponibles
-        consulta.get().then(function(querySnapshot) {
-          console.log("entramos a hacer consulta");
-    
-          // Ciclo para revisar cada evento reservado para la nueva fecha
-          querySnapshot.forEach(function(doc) {
-            var data = doc.data();
-    
-            // ---------- FILTRO ADICIONAL ----------
-            // Ignorar (no marcar como ocupados) los eventos que sean:
-            // capitulo === "nacional"  &&  tipoEvento === "escuela-directores"
-            if (data && data.capitulo === "nacional" && data.tipoEvento === "escuela-directores") {
-              console.log("Ignorando (escuela-directores nacional) doc:", doc.id);
-              return; // saltar este documento
-            }
-            // ---------------------------------------
-    
-            console.log("este es el doc: " + doc.id);
-            var horaEvento = Number(data.horaEvento); // Hora en minutos (ej. 540 para 09:00)
-            var duracionEvento = Number(data.duracionEvento); // Duración en minutos (ej. 120 para 2 horas)
-            console.log("hora del evento con clave: " + data.claveEvento + ": " + horaEvento);
-            console.log("duracion del evento con clave: " + data.claveEvento + ": " + duracionEvento);
-            // Calcular los índices de inicio y fin del intervalo que ocupará el evento
-            var inicioIntervalo = Math.floor((horaEvento - 480) / 30);
-            var finIntervalo = inicioIntervalo + Math.floor(duracionEvento / 30);
-            console.log("inicio intervalo: " + inicioIntervalo);
-            console.log("fin intervalo: " + finIntervalo);
-    
-            // Asegurar límites válidos
-            inicioIntervalo = Math.max(0, inicioIntervalo);
-            finIntervalo = Math.min(28, finIntervalo);
-    
-            // Marcar los intervalos como ocupados en el arreglo de disponibilidad
-            for (var i = inicioIntervalo; i < finIntervalo; i++) {
-              disponibilidadHorarios[i] = false;
-            }
-            console.log("estas son las disponibilidades de los intervalos:");
-            console.log(disponibilidadHorarios);
-          });
-    
-          // Calcula los índices de inicio y fin de los intervalos para la nueva hora y duración
-          var inicioNuevoIntervalo = Math.floor((nuevaHora - 480) / 30);
-          var finNuevoIntervalo = inicioNuevoIntervalo + Math.floor(nuevaDuracion / 30);
-    
-          // Asegurar límites válidos
-          inicioNuevoIntervalo = Math.max(0, inicioNuevoIntervalo);
-          finNuevoIntervalo = Math.min(28, finNuevoIntervalo);
-    
-          var disponibilidadMatutino = true;
-          var disponibilidadVesperino = true;
-          var disponibilidadNocturno = true;
-    
-          // Colocar los intervalos de un mismo paquete horario (matutino, vesperino o nocturno) ocupados
-          // Verificar el paquete horario matutino (intervalos 0 al 9, es decir, 8:00 a 13:00)
-          for (var i = 0; i <= 9; i++) {
-            if (!disponibilidadHorarios[i]) {
-              for (var j = 0; j <= 9; j++) {
-                disponibilidadHorarios[j] = false;
-              }
-              disponibilidadMatutino = false;
-              break; // Al menos un intervalo está ocupado, salir del ciclo
-            }
-          }
-    
-          // Verificar el paquete horario vespertino (intervalos 10 al 19, es decir, 13:00 a 18:00)
-          for (var i = 10; i <= 19; i++) {
-            if (!disponibilidadHorarios[i]) {
-              for (var j = 10; j <= 19; j++) {
-                disponibilidadHorarios[j] = false;
-              }
-              disponibilidadVesperino = false;
-              break; // Al menos un intervalo está ocupado, salir del ciclo
-            }
-          }
-    
-          // Verificar el paquete horario nocturno (intervalos 20 al 27, es decir, 18:00 a 22:00)
-          for (var i = 20; i <= 27; i++) {
-            if (!disponibilidadHorarios[i]) {
-              for (var j = 20; j <= 27; j++) {
-                disponibilidadHorarios[j] = false;
-              }
-              disponibilidadNocturno = false;
-              break; // Al menos un intervalo está ocupado, salir del ciclo
-            }
-          }
-    
-          // Verifica si alguno de los nuevos intervalos está ocupado
-          var algunIntervaloOcupado = false;
-          for (var k = inicioNuevoIntervalo; k < finNuevoIntervalo; k++) {
-            console.log("esta es la disponibilidad del intervalo " + k + ": " + disponibilidadHorarios[k]);
-            if (!disponibilidadHorarios[k]) {
-              console.log("está ocupado el intervalo " + k);
-              algunIntervaloOcupado = true;
-              break; // Si uno está ocupado, no es necesario verificar los demás
-            }
-          }
-    
-          if (algunIntervaloOcupado) {
-            // Al menos uno de los intervalos no está disponible
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar TODO EL DÍA ocupado
-            if (!disponibilidadMatutino && !disponibilidadVesperino && !disponibilidadNocturno) {
-              Swal.fire({
-                title: '¡SIN DISPONIBILIDAD EN TODO EL DÍA! 📅',
-                text: 'Ya no es posible reservar en ningún espacio del día debido a que los 3 horarios para este día están ocupados. Prueba a consultar la disponibilidad en la sección azul y escoger otro día.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar',
-                allowOutsideClick: true,
-                backdrop: true,
-                allowEscapeKey: true,
-                imageUrl: 'https://i.ibb.co/LPTDqcy/AVATAR-NODISPOTODODIA-removebg-preview.png',
-                imageWidth: 120,
-                imageHeight: 235,
-                imagePosition: 'top-start'
-              });
-              resolve(false);
-              return; // Detener la ejecución de la función
-            }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario matutino.
-            if (!disponibilidadMatutino && inicioNuevoIntervalo <= 9) {
-              Swal.fire({
-                title: '¡SIN DISPONIBILIDAD EN EL HORARIO MATUTINO! 🌤️',
-                text: 'El horario matutino ya está ocupado (8:00 a 13:00). Prueba cambiar el día, hora o duración.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar',
-                allowOutsideClick: true,
-                backdrop: true,
-                allowEscapeKey: true,
-                imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png',
-                imageWidth: 120,
-                imageHeight: 235,
-                imagePosition: 'top-start'
-              });
-              resolve(false);
-              return; // Detener la ejecución de la función
-            }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario vespertino.
-            if (!disponibilidadVesperino && inicioNuevoIntervalo <= 19) {
-              Swal.fire({
-                title: '¡SIN DISPONIBILIDAD EN EL HORARIO VESPERTINO! ☀️',
-                text: 'El horario vespertino ya está ocupado (13:00 a 18:00). Prueba cambiar el día, hora o duración.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar',
-                allowOutsideClick: true,
-                backdrop: true,
-                allowEscapeKey: true,
-                imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png',
-                imageWidth: 120,
-                imageHeight: 235,
-                imagePosition: 'top-start'
-              });
-              resolve(false);
-              return; // Detener la ejecución de la función
-            }
-            // Mostrar alerta al usuario con SweetAlert2 en caso de estar ocupado el horario nocturno.
-            if (!disponibilidadNocturno) {
-              Swal.fire({
-                title: '¡SIN DISPONIBILIDAD EN EL HORARIO NOCTURNO! 🌕',
-                text: 'El horario nocturno ya está ocupado (18:00 a 22:00). Prueba cambiar el día, hora o duración.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar',
-                allowOutsideClick: true,
-                backdrop: true,
-                allowEscapeKey: true,
-                imageUrl: 'https://i.ibb.co/4p0C8SC/AVATAR-HORARIOSNODISPO-removebg-preview.png',
-                imageWidth: 120,
-                imageHeight: 235,
-                imagePosition: 'top-start'
-              });
-              resolve(false);
-              return; // Detener la ejecución de la función
-            }
-          } else {
-            // Todos los intervalos están disponibles
-            // Realiza la edición de la reserva
-            // ...
-            resolve(true); // Resolver la promesa con 'true' si todos los intervalos están disponibles
-            return;
-          }
-        }).catch(function(error) {
-          Swal.fire({
-            title: '¡ERROR DE CONSULTA!',
-            text: 'Ocurrió un error al obtener las reservas. Por favor, inténtalo de nuevo más tarde o comunícate con el creador de la plataforma.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: true,
-            backdrop: true,
-            allowEscapeKey: true,
-            imageUrl: 'https://i.ibb.co/PZ7KXF9/AVATAR-ERRORES-removebg-preview.png',
-            imageWidth: 120,
-            imageHeight: 235,
-            imagePosition: 'top-start'
-          });
-          console.log(error);
-          resolve(false); // Resolver la promesa con 'false' en caso de error
-          return;
-        });
-      });
-    }
-
-    
-    function iniciarSesionJDN() {
-        Swal.fire({
-            title: 'Validación requerida',
-            text: 'Ingresa la contraseña para la cuenta jdn@aneiap.co y poder reservar a nivel nacional.',
-            input: 'password',
-            inputLabel: 'Contraseña de JDN',
-            inputPlaceholder: 'Ingresa la contraseña',
-            inputAttributes: {
-                maxlength: 20,
-                autocapitalize: 'off',
-                autocorrect: 'off'
-            },
-            showCancelButton: false,
-            confirmButtonText: 'Validar',
-            showLoaderOnConfirm: true,
-            preConfirm: (password) => {
-                return firebase.firestore().collection("cuentas").doc("jdn@aneiap.co").get()
-                    .then(doc => {
-                        if (!doc.exists) {
-                            throw new Error('No se encontró la cuenta');
-                        }
-                        if (doc.data().pass !== password) {
-                            Swal.showValidationMessage('La contraseña es incorrecta.');
-                            return false; // Retornar false para que no se cierre el Swal
-                        }
-                        return true; // Retornar true para cerrar el Swal
-                    })
-                    .catch(error => {
-                        Swal.showValidationMessage(`Error: ${error}`);
-                        return false; // Retornar false para que no se cierre el Swal
-                    });
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Si la validación es exitosa
-                Swal.fire({
-                    title: 'Inicio de sesión exitoso',
-                    text: '¡Has iniciado sesión correctamente!',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
-                });
-                // Asignar valores a las variables globales
-                correoUsuario = "jdn@aneiap.co";
-                capituloUsuario = "nacional";
-            }
-        });
-    }
-
-  </script>
-
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
